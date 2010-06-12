@@ -1,0 +1,16 @@
+Index: target/linux/x86/image/menu.lst
+===================================================================
+--- target/linux/x86/image/menu.lst     (revision 15571)
++++ target/linux/x86/image/menu.lst     (working copy)
+@@ -1,8 +1,8 @@
+ serial --unit=0 --speed=@BAUDRATE@ --word=8 --parity=no --stop=1
+-terminal --timeout=2 console serial
++terminal serial
+
+ default 0
+-timeout 5
++timeout 3
+
+ title   OpenWrt
+ root    (hd0,0)
+

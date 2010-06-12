@@ -1,0 +1,13 @@
+--- a/config.mk
++++ b/config.mk
+@@ -256,8 +256,8 @@ endif
+ 
+ CONFIG_P54_PCI=m
+ 
+-CONFIG_B44=m
+-CONFIG_B44_PCI=y
++# CONFIG_B44=m
++# CONFIG_B44_PCI=y
+ 
+ CONFIG_RTL8180=m
+ 

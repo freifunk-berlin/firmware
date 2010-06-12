@@ -1,0 +1,58 @@
+Index: package/kernel/modules/network.mk
+===================================================================
+--- package/kernel/modules/network.mk	(revision 19434)
++++ package/kernel/modules/network.mk	(working copy)
+@@ -714,12 +714,14 @@
+ 
+ $(eval $(call KernelPackage,e100))
+ 
+-
+ define KernelPackage/e1000
+   SUBMENU:=$(NETWORK_DEVICES_MENU)
+   TITLE:=Intel(R) PRO/1000 cards kernel support
+   DEPENDS:=@TARGET_x86
+-  KCONFIG:=CONFIG_E1000
++  KCONFIG:= \
++	    CONFIG_E1000 \
++	    CONFIG_E1000_NAPI=n \
++	    CONFIG_E1000_DISABLE_PACKET_SPLIT=n
+   FILES:=$(LINUX_DIR)/drivers/net/e1000/e1000.$(LINUX_KMOD_SUFFIX)
+   AUTOLOAD:=$(call AutoLoad,50,e1000)
+ endef
+@@ -730,6 +732,36 @@
+ 
+ $(eval $(call KernelPackage,e1000))
+ 
++define KernelPackage/e1000e
++  SUBMENU:=$(NETWORK_DEVICES_MENU)
++  TITLE:=Intel(R) PRO/1000 cards kernel support
++  DEPENDS:=@TARGET_x86
++  KCONFIG:=CONFIG_E1000E
++  FILES:=$(LINUX_DIR)/drivers/net/e1000e/e1000e.$(LINUX_KMOD_SUFFIX)
++  AUTOLOAD:=$(call AutoLoad,50,e1000e)
++endef
++
++define KernelPackage/e1000/description
++ Kernel modules for Intel(R) PRO/1000 Ethernet adapters.
++endef
++
++$(eval $(call KernelPackage,e1000e))
++
++define KernelPackage/igb
++  SUBMENU:=$(NETWORK_DEVICES_MENU)
++  TITLE:=Intel(R) PRO/1000 cards kernel support
++  DEPENDS:=@TARGET_x86
++  KCONFIG:=CONFIG_IGB
++  FILES:=$(LINUX_DIR)/drivers/net/igb/igb.$(LINUX_KMOD_SUFFIX)
++  AUTOLOAD:=$(call AutoLoad,50,igb)
++endef
++
++define KernelPackage/igb/description
++ Kernel modules for Intel(R) PRO/1000 Ethernet adapters.
++endef
++
++$(eval $(call KernelPackage,igb))
++
+ define KernelPackage/b44
+   TITLE:=Broadcom 44xx driver
+   FILES:=$(LINUX_DIR)/drivers/net/b44.$(LINUX_KMOD_SUFFIX)

@@ -1,0 +1,16 @@
+Index: package/madwifi/patches/900-txpower.patch
+===================================================================
+--- package/madwifi/patches/900-txpower.patch	(revision 0)
++++ package/madwifi/patches/900-txpower.patch	(revision 0)
+@@ -0,0 +1,11 @@
++--- a/ath/if_ath.c	2009-08-23 02:50:01.873965902 +0200
+++++ b/ath/if_ath.c	2009-08-23 02:50:51.833967155 +0200
++@@ -10488,7 +10488,7 @@
++ ath_get_clamped_maxtxpower(struct ath_softc *sc)
++ {
++ 	u_int32_t clamped_maxtxpower;
++-	(void)ath_hal_getmaxtxpow(sc->sc_ah, &clamped_maxtxpower);
+++	(void)ath_hal_gettxpowlimit(sc->sc_ah, &clamped_maxtxpower);
++ 	clamped_maxtxpower += sc->sc_poweroffset;
++ 	return clamped_maxtxpower;
++ }

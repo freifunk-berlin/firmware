@@ -1,0 +1,38 @@
+Index: scripts/ff-combined-image.sh
+===================================================================
+--- scripts/ff-combined-image.sh	(revision 0)
++++ scripts/ff-combined-image.sh	(revision 0)
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++[ -f "$1" -a -n "$2" -a -f "$3" -a -n "$4" ] || {
++	echo "Usage: $0 /path/to/kernel.image kernel_name /path/to/rootfs.image rootfs_name [output-file]"
++	exit 1
++}
++
++( printf "FF%08x%-16s%08x%-16s%65486s" \
++	$(stat -c "%s" "$1") ${2:-vmlinux.bin.l7} \
++	$(stat -c "%s" "$3") ${4:-rootfs} "";
++	cat "$1" "$3"
++) > ${5:-openwrt-atheros-combined.img}
+Index: target/linux/atheros/image/Makefile
+===================================================================
+--- target/linux/atheros/image/Makefile	(revision 18078)
++++ target/linux/atheros/image/Makefile	(working copy)
+@@ -46,6 +46,16 @@
+ 		"$(BIN_DIR)/openwrt-$(BOARD)-vmlinux.lzma" \
+ 		"$(BIN_DIR)/openwrt-$(BOARD)-root.$(1)" \
+ 		"$(BIN_DIR)/openwrt-$(BOARD)-combined.img"
++
++	-sh $(TOPDIR)/scripts/ff-combined-image.sh \
++		"$(BIN_DIR)/openwrt-$(BOARD)-vmlinux.lzma" "vmlinux.bin.l7" \
++		"$(BIN_DIR)/openwrt-$(BOARD)-root.$(1)" "rootfs" \
++		"$(BIN_DIR)/openwrt-fonera-combined.img"
++
++	-sh $(TOPDIR)/scripts/ff-combined-image.sh \
++		"$(BIN_DIR)/openwrt-$(BOARD)-vmlinux.lzma" "kernel" \
++		"$(BIN_DIR)/openwrt-$(BOARD)-root.$(1)" "rootfs" \
++		"$(BIN_DIR)/openwrt-ubiquity-combined.img"
+   endif
+ endef
+ 

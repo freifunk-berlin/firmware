@@ -1,0 +1,67 @@
+diff --git a/applications/luci-ffwizard-leipzig/luasrc/model/cbi/ffwizard.lua b/applications/luci-ffwizard-leipzig/luasrc/model/cbi/ffwizard.lua
+index 724da13..d3306c5 100644
+--- a/applications/luci-ffwizard-leipzig/luasrc/model/cbi/ffwizard.lua
++++ b/applications/luci-ffwizard-leipzig/luasrc/model/cbi/ffwizard.lua
+@@ -101,6 +101,18 @@ function client.cfgvalue(self, section)
+ 	return uci:get("freifunk", "wizard", "dhcp_splash") or "0"
+ end
+ 
++dhcpmeshsplash = f:field(Value, "dhcpmeshsplash", "Mesh WLAN-DHCP anbieten", "Netzweit eindeutiges DHCP Netz")
++dhcpmeshsplash.rmempty = false
++dhcpmeshsplash:depends("client", "1")
++function client.cfgvalue(self, section)
++	return uci:get("freifunk", "wizard", "dhcp_mesh_splash")
++end
++function dhcpmeshsplash.validate(self, value)
++	local x = ip.IPv4(value)
++	return ( x and x:prefix() == 32 ) and x:string() or ""
++end
++
++
+ olsr = f:field(Flag, "olsr", "OLSR einrichten")
+ olsr.rmempty = true
+ 
+@@ -382,6 +394,19 @@ function olsr.write(self, section, value)
+ 		lon         = lonval and string.format("%.15f", lonval) or ""
+ 	})
+ 
++	-- Collect MESH DHCP IP NET
++	local dhcp_mesh_splash = dhcpmeshsplash:formvalue(section)
++	-- Write new HNA4 dhcp settings
++	if dhcp_mesh_splash then
++		local splashnet = luci.ip.IPv4(dhcp_mesh_splash)
++		local splash_mask = splashnet:mask():string()
++		local splash_network = splashnet:network():string()
++		uci:section("olsrd", "Hna4", nil, {
++			    netmask  = splash_mask,
++			    netaddr  = splash_network
++		})
++	end
++
+ 	-- Save latlon to system too
+ 	if latval and lonval then
+ 		uci:foreach("system", "system", function(s)
+@@ -496,12 +521,21 @@ function client.write(self, section, value)
+ 	-- Collect IP-Address
+ 	local node_ip = meship:formvalue(section)
+ 
++	-- Collect MESH DHCP IP NET
++	local dhcp_mesh_splash = dhcpmeshsplash:formvalue(section)
++
+ 	if not node_ip then return end
+ 
+ 	local community = net:formvalue(section)
+ 	local external  = community and uci:get("freifunk", community, "external") or ""
+-	local splash_ip, splash_mask = mksubnet(community, node_ip)
+-
++	if not dhcp_mesh_splash then
++		local splash_ip, splash_mask = mksubnet(community, node_ip)
++	else
++		local splashnet = luci.ip.IPv4(dhcp_mesh_splash)
++		local splash_ip = splashnet:minhost():string()
++		local splash_mask = splashnet:mask():string()
++		uci:set("freifunk", "wizard", "dhcp_mesh_splash", dhcp_mesh_splash)
++	end
+ 	-- Delete old alias
+ 	uci:delete("network", device .. "dhcp")
+ 

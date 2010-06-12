@@ -1,0 +1,122 @@
+diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
+index 837873a..a635a98 100644
+--- a/applications/luci-olsr/luasrc/controller/olsr.lua
++++ b/applications/luci-olsr/luasrc/controller/olsr.lua
+@@ -179,39 +179,38 @@ end
+ function fetch_txtinfo(otable)
+ 	require("luci.sys")
+ 	otable = otable or ""
+-	local rawdata = luci.sys.httpget("http://127.0.0.1:2006/"..otable)
+-
+-	if #rawdata == 0 then
+-		if nixio.fs.access("/proc/net/ipv6_route", "r") then
+-			rawdata = luci.sys.httpget("http://[::1]:2006/"..otable)
+-			if #rawdata == 0 then
+-				return nil
+-			end
+-		else
+-			return nil
+-		end
+-	end
+-
++ 	local rawdata = luci.sys.httpget("http://127.0.0.1:2006/"..otable)
++ 	local rawdatav6 = luci.sys.httpget("http://[::1]:2006/"..otable)
+ 	local data = {}
++	local dataindex = 0
+ 
+-	local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
+-
+-
+-	for i, tbl in ipairs(tables) do
++	if #rawdata == 0 then
++	else
++	    local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
++	    for i, tbl in ipairs(tables) do
+ 		local lines = luci.util.split(tbl, "\r?\n", nil, true)
+ 		local name  = table.remove(lines, 1):sub(8)
+ 		local keys  = luci.util.split(table.remove(lines, 1), "\t")
+ 		local split = #keys - 1
+-
+-		data[name] = {}
+-
++		if not data[name] then
++		  data[name] = {}
++		end
+ 		for j, line in ipairs(lines) do
++			dataindex = j
+ 			local fields = luci.util.split(line, "\t", split)
+ 			data[name][j] = {}
+ 			for k, key in pairs(keys) do
+-				data[name][j][key] = fields[k]
++				if key == "Remote IP" or key == "Dest. IP" then
++				    hostname = nixio.getnameinfo(fields[k], "inet")
++				    if hostname then
++				      data[name][j][key] = hostname
++				    else
++				      data[name][j][key] = fields[k]
++				    end
++				else
++				    data[name][j][key] = fields[k]
++			        end
+ 			end
+-
+ 			if data[name][j].Linkcost then
+ 				data[name][j].LinkQuality,
+ 				data[name][j].NLQ,
+@@ -219,7 +218,54 @@ function fetch_txtinfo(otable)
+ 				data[name][j].Linkcost:match("([%w.]+)/([%w.]+)[%s]+([%w.]+)")
+ 			end
+ 		end
+-	end
++	    end
++        end
+ 
+-	return data
++	if #rawdatav6 == 0 then
++	else
++	    local tables = luci.util.split(luci.util.trim(rawdatav6), "\r?\n\r?\n", nil, true)
++	    for i, tbl in ipairs(tables) do
++		local lines = luci.util.split(tbl, "\r?\n", nil, true)
++		local name  = table.remove(lines, 1):sub(8)
++		local keys  = luci.util.split(table.remove(lines, 1), "\t")
++		local split = #keys - 1
++		if not data[name] then
++		  data[name] = {}
++		end
++		for j, line in ipairs(lines) do
++			mi = ( j + dataindex )
++			local fields = luci.util.split(line, "\t", split)
++			data[name][mi] = {}
++			for k, key in pairs(keys) do
++				if key == "Remote IP" then
++				    hostname = nixio.getnameinfo(fields[k], "inet6")
++				    if hostname then
++				      data[name][mi][key] = hostname
++				    else
++				      data[name][mi][key] = "[" .. fields[k] .. "]"
++				    end
++				elseif key == "Dest. IP" then
++				    data[name][mi][key] = "[" .. fields[k] .. "]"
++				elseif key == "Last hop IP" then
++				    data[name][mi][key] = "[" .. fields[k] .. "]"
++				elseif key == "IP address" then
++				    data[name][mi][key] = "[" .. fields[k] .. "]"
++				elseif key == "Gateway" then
++				    data[name][mi][key] = "[" .. fields[k] .. "]"
++				else
++				    data[name][mi][key] = fields[k]
++			        end
++			end
++			if data[name][mi].Linkcost then
++				data[name][mi].LinkQuality,
++				data[name][mi].NLQ,
++				data[name][mi].ETX =
++				data[name][mi].Linkcost:match("([%w.]+)/([%w.]+)[%s]+([%w.]+)")
++			end
++		end
++	    end
++        end
++	if data then
++	    return data
++	end
+ end

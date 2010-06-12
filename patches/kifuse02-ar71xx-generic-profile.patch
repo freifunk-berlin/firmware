@@ -1,0 +1,26 @@
+Index: target/linux/ar71xx/Makefile
+===================================================================
+--- target/linux/ar71xx/Makefile	(revision 16280)
++++ target/linux/ar71xx/Makefile	(working copy)
+@@ -22,3 +22,21 @@
+ endef
+ 
+ $(eval $(call BuildTarget))
++
++BOARDNAME:=Generic
++
++define Target/Description
++	Build firmware images for ar71xx based boards 
++	(e.g : ubrs, ...)
++endef
++
++define Profile/Generic
++  NAME:=Generic
++  PACKAGES:= kmod-madwifi
++endef
++
++define Profile/Generic/Description
++	Generic Profile
++endef
++
++$(eval $(call Profile,Generic))

@@ -6,7 +6,7 @@ usage:
 	#mkdir ff-build
 	#cd ff-build
 	then clone this git repo
-	#git clone ssh://openwrt@cloud.inolares.net/var/git/ff-control.git
+	#git clone git@github.com:stargieg/ff-control.git
 	copy the default config or use your own config
 	#cp ff-control/default.config ./config
 	change the config if you want

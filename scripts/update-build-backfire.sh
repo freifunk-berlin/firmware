@@ -6,7 +6,7 @@ for board in $boards ; do
 	echo "to see the log just type:"
 	echo "tail -f update-build-$verm-$board.log"
 	>update-build-$verm-$board.log
-#	(
+	(
 	echo "Board: $board"
 	mkdir -p $verm/$board
 	cd $verm/$board
@@ -150,5 +150,5 @@ EOF
 	mkdir -p $wwwdir/$verm/$ver/$board
 	rsync -av --delete bin/$board/ $wwwdir/$verm/$ver/$board
 	cd ../../
-#	) >update-build-$verm-$board.log 2>&1
+	) >update-build-$verm-$board.log 2>&1
 done

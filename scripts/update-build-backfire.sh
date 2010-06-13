@@ -94,7 +94,7 @@ EOF
 	scripts/feeds install -p ffcontrol motion
 #	wget -O build.config $server/$board/build.config
 #	mv build.config .config
-	sed -i -e 's/downloads\.openwrt\.org/openwrt\.cloud\.inolares\.net/' package/opkg/files/opkg.conf
+	sed -i -e "s/downloads\.openwrt\.org/$servername/" package/opkg/files/opkg.conf
 	# enable hart reboot via echo "b" >/proc/sys/kernel/sysrq
 	# kernel 2.4 sysrq is enable by default
 	sed -i -e 's/.*\(CONFIG_MAGIC_SYSRQ\).*/\1=y/' target/linux/generic-2.6/config-2.6.30

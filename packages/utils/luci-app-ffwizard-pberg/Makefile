@@ -20,7 +20,22 @@ define Package/luci-app-ffwizard-pberg
    +luci-web +luci-app-splash
 endef
 
+define Package/luci-app-ffwizard-pberg/description
+  Freifunk Wizard for pberg
+endef
+
+define Build/Prepare
+	mkdir -p $(PKG_BUILD_DIR)
+endef
+
+define Build/Configure
+endef
+
+define Build/Compile
+endef
+
 define Package/luci-app-ffwizard-pberg/install
+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
 	$(CP) ./luasrc/* $(1)/usr/lib/lua/luci
 endef
 

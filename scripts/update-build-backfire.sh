@@ -33,7 +33,7 @@ for board in $boards ; do
 #	svn co svn://svn.openwrt.org/openwrt/$verm ./
 	svn co svn://svn.openwrt.org/openwrt/branches/$verm ./
 	svn up
-	rm -rf package/mac80211
+	#rm -rf package/mac80211
 	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 	echo "Generate feeds.conf"
 	>feeds.conf

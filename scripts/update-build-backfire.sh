@@ -33,7 +33,7 @@ for board in $boards ; do
 #	svn co svn://svn.openwrt.org/openwrt/$verm ./
 	svn co svn://svn.openwrt.org/openwrt/branches/$verm ./
 	svn up
-	# rm -rf package/mac80211
+	rm -rf package/mac80211
 	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 	echo "Generate feeds.conf"
 	>feeds.conf
@@ -92,6 +92,8 @@ EOF
 	scripts/feeds install -p ffcontrol uhttpd
 	scripts/feeds uninstall motion
 	scripts/feeds install -p ffcontrol motion
+	scripts/feeds uninstall olsrd-luci
+	scripts/feeds install -p ffcontrol olsrd-luci
 #	wget -O build.config $server/$board/build.config
 #	mv build.config .config
 	sed -i -e "s/downloads\.openwrt\.org/$servername/" package/opkg/files/opkg.conf
@@ -146,7 +148,7 @@ EOF
 	echo "make V=99 world"
 	make V=99 world
 	echo "copy ImageBuilder"
-	cp bin/$board/OpenWrt-ImageBuilder-$board-for-$builarch.tar.bz2 ../
+	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	mkdir -p $wwwdir/$verm/$ver/$board
 	rsync -av --delete bin/$board/ $wwwdir/$verm/$ver/$board
 	cd ../../

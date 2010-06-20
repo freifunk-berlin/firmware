@@ -1,0 +1,16 @@
+Index: package/mac80211/files/lib/wifi/mac80211.sh
+===================================================================
+--- package/mac80211/files/lib/wifi/mac80211.sh	(Revision 21840)
++++ package/mac80211/files/lib/wifi/mac80211.sh	(Arbeitskopie)
+@@ -372,6 +372,11 @@
+ 				;;
+ 			esac
+ 			mac80211_start_vif "$vif" "$ifname"
++			case "$mode" in
++				adhoc)
++					iw dev "$ifname" ibss join "$ssid" $freq ${fixed:+fixed-freq} $bssid
++				;;
++			esac
+ 		fi
+ 	done
+ 

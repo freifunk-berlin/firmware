@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 #PKG_MD5SUM:=473c310b124992df9b21189f8c93592b
 
 PKG_BRANCH:=trunk
-PKG_SOURCE_URL:=http://cloud.pberg.freifunk.net/dl/$(PKG_BRANCH)
+PKG_SOURCE_URL:=http://cloud.pberg.freifunk.net/dl/
 PKG_REV:=176
 #PKG_REV:=$(shell LC_ALL=C svn info ${PKG_SOURCE_URL} | sed -ne's/^Last Changed Rev: //p')
 
@@ -20,8 +20,6 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
-PKG_SOURCE_PROTO:=svn
-PKG_SOURCE_VERSION:=$(PKG_REV)
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 

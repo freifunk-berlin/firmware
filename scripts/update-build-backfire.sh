@@ -146,9 +146,9 @@ EOF
 	time make V=99 world
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	mkdir -p $wwwdir/$verm/$ver/$board
-	mkdir -p $wwwdir/$verm/$ver-$timestamp/$board
-	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver-$timestamp/$board
-	cp ../../VERSION.txt $wwwdir/$verm/$ver-$timestamp/$board
+	mkdir -p $wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	cp ../../VERSION.txt $wwwdir/$verm/$ver-timestamp/$timestamp/$board
 	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver/$board
 	cp ../../VERSION.txt $wwwdir/$verm/$ver/$board
 	cd ../../

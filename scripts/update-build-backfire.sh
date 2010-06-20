@@ -2,9 +2,13 @@
 
 . ./config
 
+for board in $boards ; do
+	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
+done
+
 timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
-date +"%Y/%m/%d %H:%M">VERSION.txt||exit
+date +"%Y/%m/%d %H:%M">VERSION.txt
 
 for board in $boards ; do
 	echo "to see the log just type:"
@@ -12,7 +16,7 @@ for board in $boards ; do
 	>update-build-$verm-$board.log
 	(
 	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not rm update-build-$verm-$board.lock" && return 0
-	touch update-build-$verm-$board.lock
+	touch "update-build-$verm-$board.lock"
 	echo "Board: $board"
 	mkdir -p $verm/$board
 	cd $verm/$board
@@ -24,7 +28,7 @@ for board in $boards ; do
 	rm -rf ./feeds/*.index
 	rm -rf ./package/feeds/*
 	rm -rf ./bin
-	rm -rf build_dir/*/*luci*
+#	rm -rf build_dir/*/*luci*
 #	rm -rf build_dir/*/lua*
 #	rm -rf dl/*luci*
 	rm -rf $(find . | grep \.rej$)
@@ -139,7 +143,7 @@ EOF
 	sed -i -e 's/.*\(CONFIG_IB\).*/\1=y/' .config
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	time make V=99 world
+	#time make V=99 world
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	mkdir -p $wwwdir/$verm/$ver/$board
 	mkdir -p $wwwdir/$verm/$ver-$timestamp/$board

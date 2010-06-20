@@ -37,6 +37,8 @@ endef
 define Package/luci-app-ffwizard-pberg/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
 	$(CP) ./luasrc/* $(1)/usr/lib/lua/luci
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
 endef
 
 $(eval $(call BuildPackage,luci-app-ffwizard-pberg))

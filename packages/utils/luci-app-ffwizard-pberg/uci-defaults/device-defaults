@@ -1,0 +1,56 @@
+#!/bin/sh
+
+. /etc/functions.sh
+
+config_load wireless
+
+set_default_config()
+{
+	local cfg="$1"
+	#local type=""
+	config_get type "$cfg" "type"
+	echo $type
+	case $type in
+		atheros)
+			uci set freifunk.wifi_device.channel=1
+			uci set freifunk.wifi_device.diversity=1
+			uci set freifunk.wifi_device.disabled=0
+			uci set freifunk.wifi_device.txpower=""
+			uci set freifunk.wifi_device.country=276
+			uci set freifunk.wifi_device.regdomain="0x37"
+			uci set freifunk.wifi_iface=defaults
+			uci set freifunk.wifi_iface.mode=adhoc
+			uci set freifunk.wifi_iface.bssid="02:CA:FF:EE:BA:BE"
+			uci set freifunk.wifi_iface.sw_merge=1
+			uci commit freifunk
+		;;
+		mac80211)
+			uci set freifunk.wifi_device.channel=1
+			uci set freifunk.wifi_device.diversity=""
+			uci set freifunk.wifi_device.disabled=0
+			uci set freifunk.wifi_device.txpower=""
+			uci set freifunk.wifi_device.country=DE
+			uci set freifunk.wifi_iface=defaults
+			uci set freifunk.wifi_iface.mode=adhoc
+			uci set freifunk.wifi_iface.bssid="02:CA:FF:EE:BA:BE"
+			uci set freifunk.wifi_iface.sw_merge=""
+			uci commit freifunk
+		;;
+		broadcom)
+			uci set freifunk.wifi_device.channel=1
+			uci set freifunk.wifi_device.diversity=""
+			uci set freifunk.wifi_device.disabled=0
+			uci set freifunk.wifi_device.txpower=""
+			uci set freifunk.wifi_device.country=DE
+			uci set freifunk.wifi_device.txantenna=0
+			uci set freifunk.wifi_device.rxantenna=0
+			uci set freifunk.wifi_iface=defaults
+			uci set freifunk.wifi_iface.mode=adhoc
+			uci set freifunk.wifi_iface.bssid="02:CA:FF:EE:BA:BE"
+			uci set freifunk.wifi_iface.sw_merge=""
+			uci commit freifunk
+		;;
+	esac
+}
+
+config_foreach set_default_config wifi-device

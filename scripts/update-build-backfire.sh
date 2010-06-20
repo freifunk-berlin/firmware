@@ -39,9 +39,9 @@ for board in $boards ; do
 	>feeds.conf
 	cat <<EOF >> feeds.conf
 src-svn packages svn://svn.openwrt.org/openwrt/packages
-src-svn ffx http://svn.ffx.subsignal.org/packages
 src-link ffcontrol ../../../ff-control
 EOF
+	#src-svn ffx http://svn.ffx.subsignal.org/packages
 	#src-svn luci http://svn.luci.subsignal.org/luci/branches/luci-0.9/contrib/package
 	#src-svn luci http://svn.luci.subsignal.org/luci/trunk/contrib/package
 	

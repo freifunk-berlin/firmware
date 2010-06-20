@@ -6,7 +6,7 @@ for board in $boards ; do
 	echo "to see the log just type:"
 	echo "tail -f update-build-$verm-$board.log"
 	>update-build-$verm-$board.log
-	(
+	time (
 	echo "Board: $board"
 	mkdir -p $verm/$board
 	cd $verm/$board
@@ -145,7 +145,7 @@ EOF
 	sed -i -e 's/.*\(CONFIG_IB\).*/\1=y/' .config
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	time make V=99 world
+	make V=99 world
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	mkdir -p $wwwdir/$verm/$ver/$board
 	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver/$board

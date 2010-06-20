@@ -2,6 +2,10 @@
 
 . ./config
 
+timestamp=`date "+%F_%H-%M"`
+echo $timestamp >timestamp
+date +"%Y/%m/%d %H:%M">VERSION.txt||exit
+
 for board in $boards ; do
 	echo "to see the log just type:"
 	echo "tail -f update-build-$verm-$board.log"
@@ -25,9 +29,8 @@ for board in $boards ; do
 	rm -rf $(find . | grep \.orig$)
 #	rm -rf ./build_dir
 #	rm -rf ./staging_dir
-
-	openwrt_revision=$(wget -q -O - $server/$board/VERSION.txt | grep OpenWrt | sed -e 's/.*(r\(.*\)).*/\1/')
-	echo "switch to openwrt revision: $openwrt_revision"
+	rm -rf ./files
+	mkdir -p ./files
 	rm -rf $(svn status)
 #	svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/branches/8.09
 #	svn co svn://svn.openwrt.org/openwrt/$verm ./
@@ -35,6 +38,7 @@ for board in $boards ; do
 	svn up
 	#rm -rf package/mac80211
 	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+	echo Built `cat ../../VERSION.txt` on `hostname`>> package/base-files/files/etc/banner
 	echo "Generate feeds.conf"
 	>feeds.conf
 	cat <<EOF >> feeds.conf
@@ -46,7 +50,7 @@ EOF
 	#src-svn luci http://svn.luci.subsignal.org/luci/trunk/contrib/package
 	
 	if [ -d ../../piratenfreifunk-packages ] ; then
-		echo "update piratenluci manual git pull"
+		echo "update piratenfreifunk-packages manual git pull"
 		#cd ../../piratenluci.git;git pull; cd ../8.09/$board
 	else
 		echo "create piratenluci git clone"
@@ -136,6 +140,8 @@ EOF
 #	echo "CONFIG_SCHED_MC=y" >> target/linux/$board/generic/config-default
 ###############################################################################################
 	PATCHES="$PATCHES mac80211-adhoc.patch"
+	PATCHES="$PATCHES base-passwd-admin.patch"
+	PATCHES="$PATCHES base-system.patch"
 	for i in $PATCHES ; do
 		pparm='-p0'
 		echo "Patch: $i"
@@ -149,7 +155,11 @@ EOF
 	time make V=99 world
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	mkdir -p $wwwdir/$verm/$ver/$board
+	mkdir -p $wwwdir/$verm/$ver/$timestamp/$board
+	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver/$timestamp/$board
+	cp ../../VERSION.txt $wwwdir/$verm/$ver/$timestamp/$board
 	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver/$board
+	cp ../../VERSION.txt $wwwdir/$verm/$ver/$board
 	cd ../../
 	) >update-build-$verm-$board.log 2>&1 &
 done

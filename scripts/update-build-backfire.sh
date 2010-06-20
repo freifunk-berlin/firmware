@@ -11,6 +11,8 @@ for board in $boards ; do
 	echo "tail -f update-build-$verm-$board.log"
 	>update-build-$verm-$board.log
 	(
+	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not rm update-build-$verm-$board.lock" && return 0
+	touch update-build-$verm-$board.lock
 	echo "Board: $board"
 	mkdir -p $verm/$board
 	cd $verm/$board
@@ -146,5 +148,8 @@ EOF
 	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver/$board
 	cp ../../VERSION.txt $wwwdir/$verm/$ver/$board
 	cd ../../
+	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1 &
+	pid=$!
+	echo $pid > update-build-$verm-$board.pid
 done

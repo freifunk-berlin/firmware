@@ -81,8 +81,6 @@ EOF
 		cd $verm/$board
 	fi
 	echo "src-link luci ../../../luci-0.9" >> feeds.conf
-	
-	
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"
@@ -98,14 +96,11 @@ EOF
 	scripts/feeds install -p ffcontrol motion
 	scripts/feeds uninstall olsrd-luci
 	scripts/feeds install -p ffcontrol olsrd-luci
-#	wget -O build.config $server/$board/build.config
-#	mv build.config .config
 	sed -i -e "s/downloads\.openwrt\.org/$servername/" package/opkg/files/opkg.conf
 	# enable hart reboot via echo "b" >/proc/sys/kernel/sysrq
 	# kernel 2.4 sysrq is enable by default
 #	sed -i -e 's/.*\(CONFIG_MAGIC_SYSRQ\).*/\1=y/' target/linux/generic-2.6/config-2.6.30
 #	sed -i -e 's/.*\(CONFIG_MAGIC_SYSRQ\).*/\1=y/' target/linux/generic-2.6/config-2.6.32
-
 #	sed -i -e 's/.*\(CONFIG_IDEDISK_MULTI_MODE\).*/\1=y/' target/linux/$board/config-default
 #	sed -i -e 's/.*\(CONFIG_BLK_DEV_PIIX\).*/\1=y/' target/linux/$board/config-default
 #	echo "CONFIG_PCIEAER=y" >> target/linux/$board/config-default
@@ -121,16 +116,6 @@ EOF
 #	echo "CONFIG_8139TOO_TUNE_TWISTER=n" >> target/linux/$board/config-default
 #	echo "CONFIG_8139TOO_8129=y" >> target/linux/$board/config-default
 #	echo "CONFIG_8139_OLD_RX_RESET=n" >> target/linux/$board/config-default
-#	echo "Generate /etc/config/system"
-#	mkdir -p files/etc/config
-#	> files/etc/config/system
-#	cat <<EOF >> files/etc/config/system 
-#config 'system'
-#	option 'hostname' 'OpenWrt'
-#	option 'zonename' 'Europe/Berlin'
-#	option 'timezone' 'CET-1CEST,M3.5.0,M10.5.0/3'
-#EOF
-
 ######################FEAUTURE#################################################################
 #	echo "CONFIG_SMP=y" >> target/linux/$board/generic/config-default
 #	echo "CONFIG_X86_BIGSMP=y" >> target/linux/$board/generic/config-default
@@ -147,7 +132,7 @@ EOF
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i
 	done
-	cp  ../../ff-control/configs/kifuse02-$verm-$board.config .config
+	cp  ../../ff-control/configs/$verm-$board.config .config
 	echo "add ImageBuilder (IB) to config"
 	sed -i -e 's/.*\(CONFIG_IB\).*/\1=y/' .config
 	mkdir -p ../../dl

@@ -15,7 +15,7 @@ for board in $boards ; do
 	echo "tail -f update-build-$verm-$board.log"
 	>update-build-$verm-$board.log
 	(
-	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not rm update-build-$verm-$board.lock" && return 0
+	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && return 0
 	touch "update-build-$verm-$board.lock"
 	echo "Board: $board"
 	mkdir -p $verm/$board

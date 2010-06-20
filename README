@@ -14,3 +14,8 @@ usage:
 	run the buildscript
 	#./ff-control/scripts/update-build-backfire.sh
 	go sleeping ;-)
+	build only one package for all boards do
+	#ff-control/scripts/update-build-pkg-backfire.sh packetname
+	e.g.
+	#ff-control/scripts/update-build-pkg-backfire.sh luci-app-ffwizard-piraten
+	...

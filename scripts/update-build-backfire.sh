@@ -138,12 +138,13 @@ EOF
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i
 	done
+	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 	cp  ../../ff-control/configs/$verm-$board.config .config
 	echo "add ImageBuilder (IB) to config"
 	sed -i -e 's/.*\(CONFIG_IB\).*/\1=y/' .config
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	time make V=99 world
+	#time make V=99 world
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	mkdir -p $wwwdir/$verm/$ver/$board
 	mkdir -p $wwwdir/$verm/$ver-timestamp/$timestamp/$board

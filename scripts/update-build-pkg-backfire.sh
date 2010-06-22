@@ -2,19 +2,24 @@
 
 . ./config
 
-option1="$1"
+pkgname="$1"
 DIR=$PWD
 
-for i in $boards ; do
-      cd $verm/$i/
-      option2=$(find package | grep /$option1$)
-      make $option2/clean V=99 && \
-      make $option2/compile V=99 && \
-      make $option2/install V=99 && \
-      make package/index && \
-      mkdir -p $wwwdir/$verm/$ver/$i && \
-      rsync -av --delete bin/$i/ $wwwdir/$verm/$ver/$i
-      cd ../../
+for board in $boards ; do
+	(
+	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
+	touch "update-build-$verm-$board.lock"
+	cd $verm/$board/
+	option2=$(find package | grep /$pkgname$)
+	make $option2/clean V=99 && \
+	make $option2/compile V=99 && \
+	make $option2/install V=99 && \
+	make package/index && \
+	mkdir -p $wwwdir/$verm/$ver/$board && \
+	rsync -av --delete bin/$board/ $wwwdir/$verm/$ver/$board
+	cd ../../
+	rm update-build-$verm-$board.lock
+	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1 &
 done
 
 # for i in $BOARD ; do

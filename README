@@ -19,3 +19,20 @@ usage:
 	e.g.
 	#ff-control/scripts/update-build-pkg-backfire.sh luci-app-ffwizard-piraten
 	...
+	Um eine eigen openwrt config zu benutzen kann man
+	#mkdir configs
+	#cp ff-control/configs ./
+	#cp ff-control/configs/* ./configs/
+	#vi configs/backfire-ar71xx.config
+
+	Das hat den vorteil das bei einem
+	#cd ff-control && git pull && cd ..
+	die änderungen nicht überschrieben werden und den nachteil das neue änderungen aus dem
+	git nicht übernommen werden. #TODO
+
+testing:
+	wget http://cloud.pberg.freifunk.net/backfire/10.03/x86/openwrt-x86-generic-combined-ext2.img.gz
+	gunzip openwrt-x86-generic-combined-ext2.img.gz
+	sudo ln -s /bin/true /etc/qemu-ifup
+	sudo qemu -net nic -net tap,ifname=tap1 openwrt-x86-generic-combined-ext2.img
+

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+config_get ifname $INTERFACE ifname
+
+if [ "$INTERFACE" = "wan" ] && [ "$ACTION" = "ifup" ] ;then
+  PPP_LOCAL=$(uci -p /var/state get network.$INTERFACE.ipaddr)
+  modprobe ipv6
+  PPP_LOCAL_IP6TO4=$(printf "2002:%02x%02x:%02x%02x::1" $(echo $PPP_LOCAL | tr . ' '))
+  ip tunnel add tun6to4 mode sit remote any local $PPP_LOCAL ttl 64
+  ip link set dev tun6to4 up
+  ip addr add $PPP_LOCAL_IP6TO4/16 dev tun6to4
+  ip route add 2000::/3 via ::192.88.99.1 dev tun6to4 metric 1
+fi

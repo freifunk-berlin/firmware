@@ -1,28 +1,22 @@
 #!/bin/sh
 
-#set -x
-#BOARDS="atheros brcm-2.4 x86"
-#BOARDS="$BOARDS brcm-2.4"
-#BOARDS="$BOARDS atheros"
-#BOARDS="$BOARDS ar71xx"
-BOARDS="$BOARDS x86"
-#buildarch="Darwin-i386"
-#buildarch="Linux-i686"
-buildarch="Linux-x86_64"
-
-OPENWRT_VER="10.03"
-verm="backfire"
+. ./config
 
 DIR=$PWD
+
+for board in $boards ; do
+	[ -f "update-build-$verm-$board.lock" ] && echo "build update $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
+done
+
 # rm -f openwrt-wib/database/dev.db
-for BOARD in $BOARDS ; do
->update-wib-$BOARD.log
+for board in $boards ; do
+#>update-wib-$board.log
 #(
 #  wget -O $DIR/OpenWrt-ImageBuilder-$BOARD-for-Linux-$buildarch.tar.bz2 \
 #  http://firmware.leipzig.freifunk.net/kamikaze/$BOARD/OpenWrt-ImageBuilder-$BOARD-for-Linux-$buildarch.tar.bz2
-  rm -rf $DIR/$verm/OpenWrt-ImageBuilder-$BOARD-for-$buildarch
-  tar -xvf $DIR/$verm/$BOARD/bin/*/OpenWrt-ImageBuilder-$BOARD-for-$buildarch.tar.bz2 -C $DIR/$verm
-  mkdir -p $DIR/$verm/openwrt-downloads/$OPENWRT_VER/$BOARD/packages
+  rm -rf $DIR/$verm/OpenWrt-ImageBuilder-$board-for-$buildarch
+  tar -xvf $DIR/$verm/$board/bin/*/OpenWrt-ImageBuilder-$board-for-$buildarch.tar.bz2 -C $DIR/$verm
+  mkdir -p $DIR/$verm/openwrt-downloads/$ver/$board/packages
   #rsync -av --delete rsync://download.openwrt.org/openwrt-downloads/kamikaze/$OPENWRT_VER/$BOARD/packages \
   #$DIR/openwrt-downloads/kamikaze/$OPENWRT_VER/$BOARD
 #  cd $DIR/openwrt-downloads
@@ -37,9 +31,9 @@ for BOARD in $BOARDS ; do
 #	rm -f $DIR/$verm/tmp/downloads/kamikaze/$OPENWRT_VER/$BOARD/packages/"$i"_*
 #  done
 #  cp $DIR/$verm/tmp/downloads/$OPENWRT_VER/$BOARD/packages/*.ipk $DIR/$verm/OpenWrt-ImageBuilder-$BOARD-for-$buildarch/packages
-  make -C  $DIR/$verm/OpenWrt-ImageBuilder-$BOARD-for-$buildarch package_index
-  mkdir -p /var/www/kamikaze/$OPENWRT_VER/$BOARD/packages
-  rsync -av --delete $DIR/OpenWrt-ImageBuilder-$BOARD-for-$buildarch/packages /var/www/kamikaze/$OPENWRT_VER/$BOARD
+  make -C  $DIR/$verm/OpenWrt-ImageBuilder-$board-for-$buildarch package_index
+#  mkdir -p /var/www/kamikaze/$ver/$board/packages
+#  rsync -av --delete $DIR/OpenWrt-ImageBuilder-$board-for-$buildarch/packages /var/www/kamikaze/$ver/$board
 #   cd $DIR/openwrt-wib
 #   if [ -f database/dev.db ] ; then
 #     ./seed.pl ../OpenWrt-ImageBuilder-$BOARD-for-Linux-$buildarch

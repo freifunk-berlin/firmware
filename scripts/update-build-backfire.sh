@@ -28,9 +28,10 @@ for board in $boards ; do
 	rm -rf ./feeds/*.index
 	rm -rf ./package/feeds/*
 	rm -rf ./bin
-	rm -rf build_dir/*/*luci*
+#	rm -rf build_dir/*/*luci*
 #	rm -rf build_dir/*/lua*
 #	rm -rf dl/*luci*
+#	rm -rf build_dir/*/compat-wireless*
 	rm -rf $(find . | grep \.rej$)
 	rm -rf $(find . | grep \.orig$)
 #	rm -rf ./build_dir
@@ -131,8 +132,10 @@ EOF
 #	echo "CONFIG_SCHED_MC=y" >> target/linux/$board/generic/config-default
 ###############################################################################################
 	PATCHES="$PATCHES mac80211-adhoc.patch"
+	PATCHES="$PATCHES wl0-to-wlan0.patch"
 	PATCHES="$PATCHES base-passwd-admin.patch"
 	PATCHES="$PATCHES base-system.patch"
+	PATCHES="$PATCHES ipkg-utils-fast-zip.patch"
 	for i in $PATCHES ; do
 		pparm='-p0'
 		echo "Patch: $i"

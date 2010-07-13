@@ -33,6 +33,8 @@ usage:
 testing:
 	wget http://cloud.pberg.freifunk.net/backfire/10.03/x86/openwrt-x86-generic-combined-ext2.img.gz
 	gunzip openwrt-x86-generic-combined-ext2.img.gz
+	sudo apt-get install qemu qemu-kvm qemu-kvm-extras
+	sudo mv /etc/qemu-ifup /etc/qemu-ifup.orig
 	sudo ln -s /bin/true /etc/qemu-ifup
 	sudo qemu -net nic -net tap,ifname=tap1 openwrt-x86-generic-combined-ext2.img
 

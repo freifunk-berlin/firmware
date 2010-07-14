@@ -102,8 +102,11 @@ end
 
 olsr = f:field(Flag, "olsr", "OLSR einrichten")
 olsr.rmempty = true
+olsr.size=0
+olsr.forcewrite = true
 
 lat = f:field(Value, "lat", "Latitude")
+lat.rmempty=true
 lat:depends("olsr", "1")
 function lat.cfgvalue(self, section)
 	return uci:get("freifunk", "wizard", "latitude")
@@ -114,6 +117,7 @@ function lat.write(self, section, value)
 end
 
 lon = f:field(Value, "lon", "Longitude")
+lon.rmempty=true
 lon:depends("olsr", "1")
 function lon.cfgvalue(self, section)
 	return uci:get("freifunk", "wizard", "longitude")
@@ -123,6 +127,44 @@ function lon.write(self, section, value)
 	uci:save("freifunk")
 end
 
+
+--[[ 
+	*Opens an OpenStreetMap iframe or popup
+	*Makes use of resources/OSMLatLon.htm and htdocs/resources/osm.js
+	(is that the right place for files like these?)
+]]--
+
+local class = util.class
+
+OpenStreetMapLonLat = class(AbstractValue)
+
+function OpenStreetMapLonLat.__init__(self, ...)
+	AbstractValue.__init__(self, ...)
+	self.template = "cbi/osmll_value"
+	self.latfield = nil
+	self.lonfield = nil
+	self.centerlat = "0"
+	self.centerlon = "0"
+	self.zoom = "0"
+	self.width = "100%"	--popups will ignore the %-symbol, "100%" is interpreted as "100"
+	self.height = "600"
+	self.popup = false
+	self.displaytext="OpenStretMap" --text on button, that loads and displays the OSMap
+	self.hidetext="X"	-- text on button, that hides OSMap
+end
+
+osm = f:field(OpenStreetMapLonLat, "latlon", "Geokoordinaten mit OpenStreetMap ermitteln:")
+osm:depends("olsr", "1")
+osm.latfield = "lat"
+osm.lonfield = "lon"
+osm.centerlat = uci:get("freifunk", "wizard", "latitude") or "52"
+osm.centerlon = uci:get("freifunk", "wizard", "longitude") or "10"
+osm.width = "100%"
+osm.height = "600"
+osm.popup = false
+osm.zoom = "11"
+osm.displaytext="OpenStreetMap anzeigen"
+osm.hidetext="OpenStreetMap verbergen"
 
 share = f:field(Flag, "sharenet", "Eigenen Internetzugang freigeben")
 share.rmempty = true

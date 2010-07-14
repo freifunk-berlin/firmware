@@ -11,13 +11,12 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 include $(INCLUDE_DIR)/package.mk
 
 define Package/auto-ipv6
-  SECTION:=luci
-  CATEGORY:=LuCI
-  SUBMENU:=Components
-  TITLE:=Freifunk Prenzlauerberg configuration wizard
+  SECTION:=ipv6
+  CATEGORY:=IPv6
+  TITLE:=Auto IPv6 Tunnel to 192.88.99.1
   URL:=http://pberg.freifunk.net
   DEPENDS+= \
-   +luci-web +luci-app-splash
+   +kmod-sit
 endef
 
 define Package/auto-ipv6/description

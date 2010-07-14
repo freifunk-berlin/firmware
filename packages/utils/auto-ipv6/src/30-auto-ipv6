@@ -1,7 +1,5 @@
 #!/bin/sh
 
-config_get ifname $INTERFACE ifname
-
 if [ "$INTERFACE" = "wan" ] && [ "$ACTION" = "ifup" ] ;then
   PPP_LOCAL=$(uci -p /var/state get network.$INTERFACE.ipaddr)
   modprobe ipv6

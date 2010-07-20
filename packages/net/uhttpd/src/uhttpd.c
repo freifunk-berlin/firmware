@@ -912,7 +912,9 @@ int main (int argc, char **argv)
 						/* 404 */
 						else
 						{
-							//splash
+							/* redirect to splash page on 404 error */
+							// TODO: read network interface addr from cur_fd 
+							// 	 and add it as url below 
 							if( (pin = uh_path_lookup(cl, "/luci/splash/index.html")) != NULL )
 							{
 								if( uh_auth_check(cl, req, pin) )

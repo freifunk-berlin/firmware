@@ -48,16 +48,26 @@ f = SimpleForm("ffwizward", "Freifunkassistent",
  "Dieser Assistent unterstüzt bei der Einrichtung des Routers für das Freifunknetz.")
 
 
+main = f:field(Flag, "wifi", "Freifunkzugang über WLAN einrichten")
+
 dev = f:field(ListValue, "device", "WLAN-Gerät")
 uci:foreach("wireless", "wifi-device",
 	function(section)
 		dev:value(section[".name"])
 	end)
 
+-- main = f:field(Flag, "lan_olsr", "Freifunkzugang über LAN einrichten")
+-- dev = f:field(ListValue, "device", "LAN-Gerät")
+-- dev.rmempty = true
+-- dev:depends("lan_olsr", "1")
+-- uci:foreach("network", "interface",
+-- 	function(section)
+-- 		if section[".name"] ~= "loopback" then
+-- 			dev:value(section[".name"])
+-- 		end
+-- 	end)
 
-main = f:field(Flag, "wifi", "Freifunkzugang einrichten")
-
-net = f:field(Value, "net", "Freifunk Community", "Mesh Netzbereich")
+net = f:field(Value, "net", "Freifunk Community", "Mesh WLAN Netzbereich")
 net.rmempty = true
 net:depends("wifi", "1")
 uci:foreach("freifunk", "community", function(s)
@@ -72,7 +82,7 @@ function net.write(self, section, value)
 	uci:save("freifunk")
 end
 
-meship = f:field(Value, "meship", "Mesh IP Adresse", "Netzweit eindeutige Identifikation")
+meship = f:field(Value, "meship", "Mesh WLAN IP Adresse", "Netzweit eindeutige Identifikation")
 meship.rmempty = true
 meship:depends("wifi", "1")
 function meship.cfgvalue(self, section)
@@ -100,13 +110,39 @@ function dhcpmeshsplash.cfgvalue(self, section)
 	return uci:get("freifunk", "wizard", "dhcp_mesh_splash")
 end
 
+-- meshlanip = f:field(Value, "meshlanip", "Mesh LAN IP Adresse", "Netzweit eindeutige Identifikation")
+-- meshlanip.rmempty = true
+-- meshlanip:depends("lan_olsr", "1")
+-- 
+-- function meshlanip.cfgvalue(self, section)
+-- 	return uci:get("freifunk", "wizard", "meshlanip")
+-- end
+-- function meshlanip.write(self, section, value)
+-- 	uci:set("freifunk", "wizard", "meshlanip", value)
+-- 	uci:save("freifunk")
+-- end
+-- function meshlanip.validate(self, value)
+-- 	local x = ip.IPv4(value)
+-- 	return ( x and x:prefix() == 32 ) and x:string() or ""
+-- end
+-- clientlan = f:field(Flag, "clientlan", "LAN-DHCP anbieten")
+-- clientlan:depends("lan_olsr", "1")
+-- clientlan.rmempty = false
+-- function clientlan.cfgvalue(self, section)
+-- 	return uci:get("freifunk", "wizard", "dhcplan_splash") or "0"
+-- end
+-- 
+-- dhcplanmeshsplash = f:field(Value, "dhcplanmeshsplash", "Mesh WLAN-DHCP anbieten", "Netzweit eindeutiges DHCP Netz")
+-- dhcplanmeshsplash:depends("clientlan", "1")
+-- function dhcplanmeshsplash.cfgvalue(self, section)
+-- 	return uci:get("freifunk", "wizard", "dhcplan_mesh_splash")
+-- end
+
+
 olsr = f:field(Flag, "olsr", "OLSR einrichten")
 olsr.rmempty = true
-olsr.size=0
-olsr.forcewrite = true
 
 lat = f:field(Value, "lat", "Latitude")
-lat.rmempty=true
 lat:depends("olsr", "1")
 function lat.cfgvalue(self, section)
 	return uci:get("freifunk", "wizard", "latitude")
@@ -117,7 +153,6 @@ function lat.write(self, section, value)
 end
 
 lon = f:field(Value, "lon", "Longitude")
-lon.rmempty=true
 lon:depends("olsr", "1")
 function lon.cfgvalue(self, section)
 	return uci:get("freifunk", "wizard", "longitude")
@@ -127,11 +162,10 @@ function lon.write(self, section, value)
 	uci:save("freifunk")
 end
 
-
---[[ 
-	*Opens an OpenStreetMap iframe or popup
-	*Makes use of resources/OSMLatLon.htm and htdocs/resources/osm.js
-	(is that the right place for files like these?)
+--[[
+*Opens an OpenStreetMap iframe or popup
+*Makes use of resources/OSMLatLon.htm and htdocs/resources/osm.js
+(is that the right place for files like these?)
 ]]--
 
 local class = util.class
@@ -139,18 +173,18 @@ local class = util.class
 OpenStreetMapLonLat = class(AbstractValue)
 
 function OpenStreetMapLonLat.__init__(self, ...)
-	AbstractValue.__init__(self, ...)
-	self.template = "cbi/osmll_value"
-	self.latfield = nil
-	self.lonfield = nil
-	self.centerlat = "0"
-	self.centerlon = "0"
-	self.zoom = "0"
-	self.width = "100%"	--popups will ignore the %-symbol, "100%" is interpreted as "100"
-	self.height = "600"
-	self.popup = false
-	self.displaytext="OpenStretMap" --text on button, that loads and displays the OSMap
-	self.hidetext="X"	-- text on button, that hides OSMap
+AbstractValue.__init__(self, ...)
+self.template = "cbi/osmll_value"
+self.latfield = nil
+self.lonfield = nil
+self.centerlat = "0"
+self.centerlon = "0"
+self.zoom = "0"
+self.width = "100%" --popups will ignore the %-symbol, "100%" is interpreted as "100"
+self.height = "600"
+self.popup = false
+self.displaytext="OpenStretMap" --text on button, that loads and displays the OSMap
+self.hidetext="X" -- text on button, that hides OSMap
 end
 
 osm = f:field(OpenStreetMapLonLat, "latlon", "Geokoordinaten mit OpenStreetMap ermitteln:")
@@ -209,6 +243,7 @@ function main.write(self, section, value)
 
 	local device = dev:formvalue(section)
 	local node_ip, external
+	local netname = "wireless"
 
 	-- Collect IP-Address
 	local community = net:formvalue(section)
@@ -232,8 +267,9 @@ function main.write(self, section, value)
 
 	-- Cleanup
 	tools.wifi_delete_ifaces(device)
-	tools.network_remove_interface(device)
-	tools.firewall_zone_remove_interface("freifunk", device)
+--	tools.network_remove_interface(device)
+	tools.network_remove_interface(netname)
+	tools.firewall_zone_remove_interface("freifunk", netname)
 
 	-- Tune community settings
 	if community and uci:get("freifunk", community) then
@@ -249,7 +285,7 @@ function main.write(self, section, value)
 	local ifconfig = uci:get_all("freifunk", "wifi_iface")
 	util.update(ifconfig, uci:get_all(external, "wifi_iface") or {})
 	ifconfig.device = device
-	ifconfig.network = device
+	ifconfig.network = netname
 	ifconfig.ssid = uci:get("freifunk", community, "ssid")
 	uci:section("wireless", "wifi-iface", nil, ifconfig)
 
@@ -312,11 +348,11 @@ function main.write(self, section, value)
 	util.update(netconfig, uci:get_all(external, "interface") or {})
 	netconfig.proto = "static"
 	netconfig.ipaddr = node_ip:string()
-	uci:section("network", "interface", device, netconfig)
+	uci:section("network", "interface", netname, netconfig)
 
 	uci:save("network")
 
-	tools.firewall_zone_add_interface("freifunk", device)
+	tools.firewall_zone_add_interface("freifunk", netname)
 
 
 	local new_hostname = node_ip:string():gsub("%.", "-")
@@ -345,7 +381,7 @@ function olsr.write(self, section, value)
 
 
 	local device = dev:formvalue(section)
-
+	local netname = "wireless"
 	local community = net:formvalue(section)
 	local external  = community and uci:get("freifunk", community, "external") or ""
 
@@ -354,12 +390,12 @@ function olsr.write(self, section, value)
 
 
 	-- Delete old interface
-	uci:delete_all("olsrd", "Interface", {interface=device})
+	uci:delete_all("olsrd", "Interface", {interface=netname})
 
 	-- Write new interface
 	local olsrbase = uci:get_all("freifunk", "olsr_interface")
 	util.update(olsrbase, uci:get_all(external, "olsr_interface") or {})
-	olsrbase.interface = device
+	olsrbase.interface = netname
 	olsrbase.ignore    = "0"
 	uci:section("olsrd", "Interface", nil, olsrbase)
 
@@ -461,6 +497,7 @@ function client.write(self, section, value)
 	end
 
 	local device = dev:formvalue(section)
+	local netname = "wireless"
 
 	-- Collect IP-Address
 	local node_ip = meship:formvalue(section)
@@ -485,28 +522,28 @@ function client.write(self, section, value)
 	end
 
 	-- Delete old alias
-	uci:delete("network", device .. "dhcp")
+	uci:delete("network", netname .. "dhcp")
 
 	-- Create alias
 	local aliasbase = uci:get_all("freifunk", "alias")
 	util.update(aliasbase, uci:get_all(external, "alias") or {})
-	aliasbase.interface = device
+	aliasbase.interface = netname
 	aliasbase.ipaddr = splash_ip
 	aliasbase.netmask = splash_mask
 	aliasbase.proto = "static"
-	uci:section("network", "alias", device .. "dhcp", aliasbase)
+	uci:section("network", "alias", netname .. "dhcp", aliasbase)
 	uci:save("network")
 
 
 	-- Create dhcp
 	local dhcpbase = uci:get_all("freifunk", "dhcp")
 	util.update(dhcpbase, uci:get_all(external, "dhcp") or {})
-	dhcpbase.interface = device .. "dhcp"
+	dhcpbase.interface = netname .. "dhcp"
 --	dhcpbase.start = dhcpbeg
 --	dhcpbase.limit = limit
 	dhcpbase.force = 1
 
-	uci:section("dhcp", "dhcp", device .. "dhcp", dhcpbase)
+	uci:section("dhcp", "dhcp", netname .. "dhcp", dhcpbase)
 	uci:save("dhcp")
 
 	uci:delete_all("firewall", "rule", {
@@ -548,10 +585,10 @@ function client.write(self, section, value)
 	uci:save("firewall")
 
 	-- Delete old splash
-	uci:delete_all("luci_splash", "iface", {network=device.."dhcp", zone="freifunk"})
+	uci:delete_all("luci_splash", "iface", {network=netname.."dhcp", zone="freifunk"})
 
 	-- Register splash
-	uci:section("luci_splash", "iface", nil, {network=device.."dhcp", zone="freifunk"})
+	uci:section("luci_splash", "iface", nil, {network=netname.."dhcp", zone="freifunk"})
 	uci:save("luci_splash")
 	
 	-- Make sure that luci_splash is enabled

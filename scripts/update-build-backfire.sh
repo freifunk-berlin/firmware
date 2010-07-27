@@ -28,7 +28,7 @@ for board in $boards ; do
 	rm -rf ./feeds/*.index
 	rm -rf ./package/feeds/*
 	rm -rf ./bin
-#	rm -rf build_dir/*/*luci*
+	rm -rf build_dir/*/*luci*
 #	rm -rf build_dir/*/lua*
 #	rm -rf dl/*luci*
 #	rm -rf build_dir/*/compat-wireless*
@@ -131,8 +131,8 @@ EOF
 #	echo "CONFIG_SCHED_SMT=y" >> target/linux/$board/generic/config-default
 #	echo "CONFIG_SCHED_MC=y" >> target/linux/$board/generic/config-default
 ###############################################################################################
-	PATCHES="$PATCHES mac80211-adhoc.patch"
-	PATCHES="$PATCHES wl0-to-wlan0.patch"
+#	PATCHES="$PATCHES mac80211-adhoc.patch"
+#	PATCHES="$PATCHES wl0-to-wlan0.patch"
 	PATCHES="$PATCHES base-passwd-admin.patch"
 	PATCHES="$PATCHES base-system.patch"
 	PATCHES="$PATCHES ipkg-utils-fast-zip.patch"
@@ -147,8 +147,9 @@ EOF
 	sed -i -e 's/.*\(CONFIG_IB\).*/\1=y/' .config
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	time make V=99 world
+	time make V=99 world || ( rm update-build-$verm-$board.lock ; exit 1 )
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
+	cp build_dir/target-$arch*/root-$board/usr/lib/opkg/status ../opkg-$board.status
 	mkdir -p $wwwdir/$verm/$ver/$board
 	mkdir -p $wwwdir/$verm/$ver-timestamp/$timestamp/$board
 	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver-timestamp/$timestamp/$board

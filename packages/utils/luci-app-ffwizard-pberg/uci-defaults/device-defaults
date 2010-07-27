@@ -1,9 +1,5 @@
 #!/bin/sh
 
-. /etc/functions.sh
-
-config_load wireless
-
 set_default_config()
 {
 	local cfg="$1"
@@ -53,8 +49,12 @@ set_default_config()
 	esac
 }
 
+(
+sleep 30
+config_load wireless
 config_foreach set_default_config wifi-device
 
 uci set freifunk.wizard.latitude="52.47598"
 uci set freifunk.wizard.longitude="13.40168"
 uci commit freifunk
+) >/dev/null &

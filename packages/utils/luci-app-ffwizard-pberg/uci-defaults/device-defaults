@@ -53,8 +53,10 @@ set_default_config()
 		;;
 	esac
 }
+
+config_load wireless && wifie=1
+
 if [ $wifie -eq 1 ] ; then
-config_load wireless
 config_foreach set_default_config wifi-device
 
 uci set freifunk.wizard.latitude="52.47598"

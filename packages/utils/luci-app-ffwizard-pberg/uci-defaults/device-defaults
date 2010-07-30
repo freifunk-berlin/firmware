@@ -1,10 +1,5 @@
 #!/bin/sh
 
-(
-while true ; do
-sleep 30
-wifie=0
-
 set_default_config()
 {
 	local cfg="$1"
@@ -54,15 +49,22 @@ set_default_config()
 	esac
 }
 
-config_load wireless && wifie=1
 
-if [ $wifie -eq 1 ] ; then
-config_foreach set_default_config wifi-device
 
-uci set freifunk.wizard.latitude="52.47598"
-uci set freifunk.wizard.longitude="13.40168"
-uci commit freifunk
-exit 0
-fi
+(
+while true ; do
+	sleep 30
+	wifie=0
+
+	config_load wireless && wifie=1
+
+	if [ $wifie -eq 1 ] ; then
+		config_foreach set_default_config wifi-device
+
+		uci set freifunk.wizard.latitude="52.47598"
+		uci set freifunk.wizard.longitude="13.40168"
+		uci commit freifunk
+		exit 0
+	fi
 done
 ) >/dev/null &

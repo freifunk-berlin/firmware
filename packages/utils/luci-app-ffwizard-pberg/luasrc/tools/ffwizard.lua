@@ -450,6 +450,8 @@ function olsr.write(self, section, value)
 		NonOlsrIf   = landevice .. " " .. netname
 	})
 
+	-- Delete old nameservice settings
+	uci:delete_all("olsrd", "LoadPlugin", {library="olsrd_nameservice.so.0.3"})
 	-- Write new nameservice settings
 	uci:section("olsrd", "LoadPlugin", nil, {
 		library     = "olsrd_nameservice.so.0.3",

@@ -590,10 +590,8 @@ function client.write(self, section, value)
 	end
 
 	-- Delete old alias
-	uci:delete("network", netname)
 	uci:delete("network", netname .. "dhcp")
 	if lansplashnet then 
-		uci:delete("network", lannetname)
 		uci:delete("network", lannetname .. "dhcp")
 	end
 
@@ -617,6 +615,13 @@ function client.write(self, section, value)
 		uci:save("network")
 	end
 
+	-- Delete old dhcp
+	uci:delete("dhcp", "dhcp", netname)
+	uci:delete("dhcp", "dhcp", netname .. "dhcp")
+	if lansplashnet then
+		uci:delete("dhcp", "dhcp", lannetname)
+		uci:delete("dhcp", "dhcp", lannetname .. "dhcp")
+	end
 	-- Create dhcp
 	local dhcpbase = uci:get_all("freifunk", "dhcp")
 	util.update(dhcpbase, uci:get_all(external, "dhcp") or {})

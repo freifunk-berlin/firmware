@@ -17,7 +17,7 @@ $Id$
 
 local uci = require "luci.model.uci".cursor()
 local tools = require "luci.tools.ffwizard"
--- local util = require "luci.util"
+local util = require "luci.util"
 local sys = require "luci.sys"
 local ip = require "luci.ip"
 
@@ -590,8 +590,12 @@ function client.write(self, section, value)
 	end
 
 	-- Delete old alias
+	uci:delete("network", netname)
 	uci:delete("network", netname .. "dhcp")
-	if lansplashnet then uci:delete("network", lannetname .. "dhcp") end
+	if lansplashnet then 
+		uci:delete("network", lannetname)
+		uci:delete("network", lannetname .. "dhcp")
+	end
 
 	-- Create alias
 	local aliasbase = uci:get_all("freifunk", "alias")

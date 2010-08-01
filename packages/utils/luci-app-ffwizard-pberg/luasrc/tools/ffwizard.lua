@@ -441,8 +441,14 @@ function olsr.write(self, section, value)
 		interval = "30"
 	})
 
-	-- Delete old nameservice settings
-	uci:delete_all("olsrd", "LoadPlugin", {library="olsrd_nameservice.so.0.3"})
+	-- Delete old mdns settings
+	uci:delete_all("olsrd", "LoadPlugin", {library="olsrd_mdns.so.1.0.0"})
+	-- Write new nameservice settings
+	uci:section("olsrd", "LoadPlugin", nil, {
+		library     = "olsrd_mdns.so.1.0.0",
+		ignore      = 0,
+		NonOlsrIf   = landevice .. " " .. netname
+	})
 
 	-- Write new nameservice settings
 	uci:section("olsrd", "LoadPlugin", nil, {

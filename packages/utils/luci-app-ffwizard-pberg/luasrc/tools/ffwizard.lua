@@ -16,7 +16,6 @@ $Id$
 
 
 local uci = require "luci.model.uci".cursor()
-local tools = require "luci.tools.ffwizard"
 local util = require "luci.util"
 local sys = require "luci.sys"
 local ip = require "luci.ip"

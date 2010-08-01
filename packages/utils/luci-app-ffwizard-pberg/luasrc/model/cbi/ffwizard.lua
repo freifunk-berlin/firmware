@@ -56,16 +56,16 @@ uci:foreach("wireless", "wifi-device",
 		dev:value(section[".name"])
 	end)
 
--- main = f:field(Flag, "lan_olsr", "Freifunkzugang über LAN einrichten")
--- dev = f:field(ListValue, "device", "LAN-Gerät")
--- dev.rmempty = true
--- dev:depends("lan_olsr", "1")
--- uci:foreach("network", "interface",
--- 	function(section)
--- 		if section[".name"] ~= "loopback" then
--- 			dev:value(section[".name"])
--- 		end
--- 	end)
+mainlan = f:field(Flag, "lan_olsr", "Freifunkzugang über LAN einrichten")
+devlan = f:field(ListValue, "device", "LAN-Gerät")
+devlan.rmempty = true
+devlan:depends("lan_olsr", "1")
+uci:foreach("network", "interface",
+	function(section)
+		if section[".name"] ~= "loopback" then
+			dev:value(section[".name"])
+		end
+	end)
 
 net = f:field(Value, "net", "Freifunk Community", "Mesh WLAN Netzbereich")
 net.rmempty = true
@@ -97,47 +97,44 @@ function meship.validate(self, value)
 	return ( x and x:prefix() == 32 ) and x:string() or ""
 end
 
+lanip = f:field(Value, "lanip", "Mesh LAN IP Adresse", "Netzweit eindeutige Identifikation")
+lanip.rmempty = true
+lanip:depends("lan_olsr", "1")
+function lanip.cfgvalue(self, section)
+	return uci:get("freifunk", "wizard", "lanip")
+end
+function lanip.write(self, section, value)
+	uci:set("freifunk", "wizard", "lanip", value)
+	uci:save("freifunk")
+end
+function lanip.validate(self, value)
+	local x = ip.IPv4(value)
+	return ( x and x:prefix() == 32 ) and x:string() or ""
+end
+
 client = f:field(Flag, "client", "WLAN-DHCP anbieten")
 client:depends("wifi", "1")
 client.rmempty = false
 function client.cfgvalue(self, section)
 	return uci:get("freifunk", "wizard", "dhcp_splash") or "0"
 end
-
 dhcpmeshsplash = f:field(Value, "dhcpmeshsplash", "Mesh WLAN-DHCP anbieten", "Netzweit eindeutiges DHCP Netz")
 dhcpmeshsplash:depends("client", "1")
 function dhcpmeshsplash.cfgvalue(self, section)
 	return uci:get("freifunk", "wizard", "dhcp_mesh_splash")
 end
 
--- meshlanip = f:field(Value, "meshlanip", "Mesh LAN IP Adresse", "Netzweit eindeutige Identifikation")
--- meshlanip.rmempty = true
--- meshlanip:depends("lan_olsr", "1")
--- 
--- function meshlanip.cfgvalue(self, section)
--- 	return uci:get("freifunk", "wizard", "meshlanip")
--- end
--- function meshlanip.write(self, section, value)
--- 	uci:set("freifunk", "wizard", "meshlanip", value)
--- 	uci:save("freifunk")
--- end
--- function meshlanip.validate(self, value)
--- 	local x = ip.IPv4(value)
--- 	return ( x and x:prefix() == 32 ) and x:string() or ""
--- end
--- clientlan = f:field(Flag, "clientlan", "LAN-DHCP anbieten")
--- clientlan:depends("lan_olsr", "1")
--- clientlan.rmempty = false
--- function clientlan.cfgvalue(self, section)
--- 	return uci:get("freifunk", "wizard", "dhcplan_splash") or "0"
--- end
--- 
--- dhcplanmeshsplash = f:field(Value, "dhcplanmeshsplash", "Mesh WLAN-DHCP anbieten", "Netzweit eindeutiges DHCP Netz")
--- dhcplanmeshsplash:depends("clientlan", "1")
--- function dhcplanmeshsplash.cfgvalue(self, section)
--- 	return uci:get("freifunk", "wizard", "dhcplan_mesh_splash")
--- end
-
+lanclient = f:field(Flag, "lanclient", "LAN-DHCP anbieten")
+lanclient:depends("lan_olsr", "1")
+lanclient.rmempty = false
+function lanclient.cfgvalue(self, section)
+	return uci:get("freifunk", "wizard", "dhcplan_splash") or "0"
+end
+landhcpmeshsplash = f:field(Value, "landhcpmeshsplash", "Mesh LAN-DHCP anbieten", "Netzweit eindeutiges DHCP Netz")
+landhcpmeshsplash:depends("clientlan", "1")
+function dhcplanmeshsplash.cfgvalue(self, section)
+	return uci:get("freifunk", "wizard", "landhcp_mesh_splash")
+end
 
 olsr = f:field(Flag, "olsr", "OLSR einrichten")
 olsr.rmempty = true
@@ -244,6 +241,9 @@ function main.write(self, section, value)
 	local device = dev:formvalue(section)
 	local node_ip, external
 	local netname = "wireless"
+	local lannetname = "lan"
+	local landevice = landev:formvalue(section)
+	local lan_ip
 
 	-- Collect IP-Address
 	local community = net:formvalue(section)
@@ -255,6 +255,7 @@ function main.write(self, section, value)
 		external = uci:get("freifunk", community, "external") or ""
 		network = ip.IPv4(uci:get("freifunk", community, "mesh_network") or "104.0.0.0/8")
 		node_ip = meship:formvalue(section) and ip.IPv4(meship:formvalue(section))
+		lan_ip = lanip:formvalue(section) and ip.IPv4(lanip:formvalue(section))
 
 		if not node_ip or not network or not network:contains(node_ip) then
 			meship.tag_missing[section] = true
@@ -267,9 +268,10 @@ function main.write(self, section, value)
 
 	-- Cleanup
 	tools.wifi_delete_ifaces(device)
---	tools.network_remove_interface(device)
 	tools.network_remove_interface(netname)
+	if lan_ip then tools.network_remove_interface(lannetname) end
 	tools.firewall_zone_remove_interface("freifunk", netname)
+	if lan_ip then tools.firewall_zone_remove_interface("freifunk", lannetname) end
 
 	-- Tune community settings
 	if community and uci:get("freifunk", community) then
@@ -353,7 +355,17 @@ function main.write(self, section, value)
 	uci:save("network")
 
 	tools.firewall_zone_add_interface("freifunk", netname)
+	if lan_ip then
+	local netconfig = uci:get_all("freifunk", "interface")
+		util.update(netconfig, uci:get_all(external, "interface") or {})
+		netconfig.proto = "static"
+		netconfig.ipaddr = lan_ip:string()
+		uci:section("network", "interface", lannetname, netconfig)
 
+		uci:save("network")
+
+		tools.firewall_zone_add_interface("freifunk", lannetname)
+	end
 
 	local new_hostname = node_ip:string():gsub("%.", "-")
 	local old_hostname = sys.hostname()
@@ -382,8 +394,10 @@ function olsr.write(self, section, value)
 
 	local device = dev:formvalue(section)
 	local netname = "wireless"
+	local lannetname = "lan"
 	local community = net:formvalue(section)
 	local external  = community and uci:get("freifunk", community, "external") or ""
+	local landevice = landev:formvalue(section)
 
 	local latval = tonumber(lat:formvalue(section))
 	local lonval = tonumber(lon:formvalue(section))
@@ -391,6 +405,7 @@ function olsr.write(self, section, value)
 
 	-- Delete old interface
 	uci:delete_all("olsrd", "Interface", {interface=netname})
+	if landevice then uci:delete_all("olsrd", "Interface", {interface=lannetname}) end
 
 	-- Write new interface
 	local olsrbase = uci:get_all("freifunk", "olsr_interface")
@@ -398,6 +413,15 @@ function olsr.write(self, section, value)
 	olsrbase.interface = netname
 	olsrbase.ignore    = "0"
 	uci:section("olsrd", "Interface", nil, olsrbase)
+	if landevice then
+		local olsrbase = uci:get_all("freifunk", "olsr_interface")
+		util.update(olsrbase, uci:get_all(external, "olsr_interface") or {})
+		olsrbase.interface = lannetname
+		olsrbase.ignore    = "0"
+		uci:section("olsrd", "Interface", nil, olsrbase)
+	else
+		uci:delete_all("olsrd", "Interface", {interface=lannetname})
+	end
 
 	-- Delete old watchdog settings
 	uci:delete_all("olsrd", "LoadPlugin", {library="olsrd_watchdog.so.0.1"})
@@ -444,6 +468,19 @@ function olsr.write(self, section, value)
 		    netaddr  = splash_network
 		})
 	end
+	if landevice then
+		local splashnet = landhcpmeshsplash:formvalue(section) and ip.IPv4(landhcpmeshsplash:formvalue(section))
+		-- Write new HNA4 dhcp settings
+		if splashnet then
+			local splash_mask = splashnet:mask():string()
+			local splash_network = splashnet:network():string()
+			uci:section("olsrd", "Hna4", nil, {
+				netmask  = splash_mask,
+				netaddr  = splash_network
+			})
+		end
+	end
+
 	-- Import hosts
 	uci:foreach("dhcp", "dnsmasq", function(s)
 		uci:set("dhcp", s[".name"], "addnhosts", "/var/etc/hosts.olsr")
@@ -498,14 +535,17 @@ function client.write(self, section, value)
 
 	local device = dev:formvalue(section)
 	local netname = "wireless"
+	local lannetname = "lan"
 
 	-- Collect IP-Address
 	local node_ip = meship:formvalue(section)
+	local lan_ip = lanip:formvalue(section)
 
 	if not node_ip then return end
 
 	-- Collect MESH DHCP IP NET
 	local splashnet = dhcpmeshsplash:formvalue(section) and ip.IPv4(dhcpmeshsplash:formvalue(section))
+	local lansplashnet = landhcpmeshsplash:formvalue(section) and ip.IPv4(landhcpmeshsplash:formvalue(section))
 
 	local community = net:formvalue(section)
 	local external  = community and uci:get("freifunk", community, "external") or ""
@@ -520,9 +560,20 @@ function client.write(self, section, value)
 		uci:delete("freifunk", "wizard", "dhcp_mesh_splash")
 		uci:save("freifunk")
 	end
+	if lansplashnet then
+		lansplash_ip = lansplashnet:minhost():string()
+		lansplash_mask = lansplashnet:mask():string()
+		uci:set("freifunk", "wizard", "landhcp_mesh_splash", lansplashnet:string())
+		uci:save("freifunk")
+	else
+		lansplash_ip, lansplash_mask = mksubnet(community, lan_ip)
+		uci:delete("freifunk", "wizard", "landhcp_mesh_splash")
+		uci:save("freifunk")
+	end
 
 	-- Delete old alias
 	uci:delete("network", netname .. "dhcp")
+	if lansplashnet then uci:delete("network", lannetname .. "dhcp") end
 
 	-- Create alias
 	local aliasbase = uci:get_all("freifunk", "alias")
@@ -533,7 +584,16 @@ function client.write(self, section, value)
 	aliasbase.proto = "static"
 	uci:section("network", "alias", netname .. "dhcp", aliasbase)
 	uci:save("network")
-
+	if lansplashnet then
+		local aliasbase = uci:get_all("freifunk", "alias")
+		util.update(aliasbase, uci:get_all(external, "alias") or {})
+		aliasbase.interface = lannetname
+		aliasbase.ipaddr = lansplash_ip
+		aliasbase.netmask = lansplash_mask
+		aliasbase.proto = "static"
+		uci:section("network", "alias", lannetname .. "dhcp", aliasbase)
+		uci:save("network")
+	end
 
 	-- Create dhcp
 	local dhcpbase = uci:get_all("freifunk", "dhcp")
@@ -542,9 +602,19 @@ function client.write(self, section, value)
 --	dhcpbase.start = dhcpbeg
 --	dhcpbase.limit = limit
 	dhcpbase.force = 1
-
 	uci:section("dhcp", "dhcp", netname .. "dhcp", dhcpbase)
 	uci:save("dhcp")
+	if lansplashnet then
+		local dhcpbase = uci:get_all("freifunk", "dhcp")
+		util.update(dhcpbase, uci:get_all(external, "dhcp") or {})
+		dhcpbase.interface = lannetname .. "dhcp"
+--		dhcpbase.start = dhcpbeg
+--		dhcpbase.limit = limit
+		dhcpbase.force = 1
+		uci:section("dhcp", "dhcp", lannetname .. "dhcp", dhcpbase)
+		uci:save("dhcp")
+	end
+
 
 	uci:delete_all("firewall", "rule", {
 		src="freifunk",
@@ -586,11 +656,15 @@ function client.write(self, section, value)
 
 	-- Delete old splash
 	uci:delete_all("luci_splash", "iface", {network=netname.."dhcp", zone="freifunk"})
+	if lansplashnet then uci:delete_all("luci_splash", "iface", {network=lannetname.."dhcp", zone="freifunk"}) end
 
 	-- Register splash
 	uci:section("luci_splash", "iface", nil, {network=netname.."dhcp", zone="freifunk"})
 	uci:save("luci_splash")
-	
+	if lansplashnet then
+		uci:section("luci_splash", "iface", nil, {network=lannetname.."dhcp", zone="freifunk"})
+		uci:save("luci_splash")
+	end
 	-- Make sure that luci_splash is enabled
 	sys.exec("/etc/init.d/luci_splash enable")
 

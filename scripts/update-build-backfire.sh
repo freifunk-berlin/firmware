@@ -50,17 +50,31 @@ for board in $boards ; do
 	>feeds.conf
 	cat <<EOF >> feeds.conf
 src-svn packages svn://svn.openwrt.org/openwrt/packages
-src-link ffcontrol ../../../ff-control
 EOF
 	#src-svn ffx http://svn.ffx.subsignal.org/packages
 	#src-svn luci http://svn.luci.subsignal.org/luci/branches/luci-0.9/contrib/package
 	#src-svn luci http://svn.luci.subsignal.org/luci/trunk/contrib/package
 	
+	if [ -d ../../packages-pberg ] ; then
+		echo "update packages-pberg git pull"
+		cd ../../packages-pberg
+		git pull
+		cd ../$verm/$board
+	else
+		echo "create packages-pberg git clone"
+		cd ../../
+		git clone git://github.com/stargieg/packages-pberg.git
+		cd $verm/$board
+	fi
+	echo "src-link packagespberg ../../../packages-pberg" >> feeds.conf
+
 	if [ -d ../../piratenfreifunk-packages ] ; then
 		echo "update piratenfreifunk-packages manual git pull"
-		#cd ../../piratenluci.git;git pull; cd ../8.09/$board
+		cd ../../piratenfreifunk-packages
+		git pull
+		cd ../$verm/$board
 	else
-		echo "create piratenluci git clone"
+		echo "create piratenfreifunk-packages git clone"
 		cd ../../
 		git clone git://github.com/basicinside/piratenfreifunk-packages.git
 		cd $verm/$board
@@ -93,16 +107,16 @@ EOF
 	echo "openwrt feeds install"
 	scripts/feeds install -a
 	scripts/feeds uninstall libxslt
-	scripts/feeds install -p ffcontrol libxslt
+	scripts/feeds install -p packagespberg libxslt
 	scripts/feeds uninstall xsltproc
-	scripts/feeds install -p ffcontrol xsltproc
+	scripts/feeds install -p packagespberg xsltproc
 	#scripts/feeds uninstall uhttpd
 	rm -rf package/uhttpd
-	scripts/feeds install -p ffcontrol uhttpd
+	scripts/feeds install -p packagespberg uhttpd
 	scripts/feeds uninstall motion
-	scripts/feeds install -p ffcontrol motion
+	scripts/feeds install -p packagespberg motion
 	scripts/feeds uninstall olsrd-luci
-	scripts/feeds install -p ffcontrol olsrd-luci
+	scripts/feeds install -p packagespberg olsrd-luci
 	sed -i -e "s/downloads\.openwrt\.org/$servername/" package/opkg/files/opkg.conf
 	# enable hart reboot via echo "b" >/proc/sys/kernel/sysrq
 	# kernel 2.4 sysrq is enable by default

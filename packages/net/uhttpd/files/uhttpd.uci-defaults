@@ -1,9 +1,0 @@
-#!/bin/sh
-
-mkdir -p /www/luci/splash
-mv /www/index.html /www/index.back.html
-ln -s /www/luci/splash/index.html /www
-ln -s /www/cgi-bin /www/luci/splash
-ln -s /www/luci-static /www/luci/splash
-uci add_list uhttpd.main.listen_http="0.0.0.0:8082"
-uci commit uhttpd

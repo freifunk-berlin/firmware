@@ -28,7 +28,7 @@ for board in $boards ; do
 	rm -rf ./feeds/*.index
 #	rm -rf ./package/feeds/*
 	rm -rf ./bin
-#	rm -rf build_dir/*/*luci*
+	rm -rf build_dir/*/*luci*
 #	rm -rf build_dir/*/lua*
 #	rm -rf dl/*luci*
 #	rm -rf build_dir/*/compat-wireless*

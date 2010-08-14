@@ -1,0 +1,18 @@
+Index: target/linux/ar71xx/base-files/etc/defconfig/routerstation/network
+===================================================================
+--- target/linux/ar71xx/base-files/etc/defconfig/routerstation/network	(Revision 22557)
++++ target/linux/ar71xx/base-files/etc/defconfig/routerstation/network	(Arbeitskopie)
+@@ -5,12 +5,8 @@
+ 	option netmask	255.0.0.0
+ 
+ config interface lan
+-	option ifname	eth1
++	option ifname	"eth1 eth0"
+ 	option type	bridge
+ 	option proto	static
+ 	option ipaddr	192.168.1.1
+ 	option netmask	255.255.255.0
+-
+-config interface wan
+-	option ifname	eth0
+-	option proto	dhcp

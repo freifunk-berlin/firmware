@@ -26,9 +26,9 @@ for board in $boards ; do
 #	rm -rf ./feeds/*
 	rm -rf ./feeds/*.tmp
 	rm -rf ./feeds/*.index
-	rm -rf ./package/feeds/*
+#	rm -rf ./package/feeds/*
 	rm -rf ./bin
-	rm -rf build_dir/*/*luci*
+#	rm -rf build_dir/*/*luci*
 #	rm -rf build_dir/*/lua*
 #	rm -rf dl/*luci*
 #	rm -rf build_dir/*/compat-wireless*
@@ -110,9 +110,6 @@ EOF
 	scripts/feeds install -p packagespberg libxslt
 	scripts/feeds uninstall xsltproc
 	scripts/feeds install -p packagespberg xsltproc
-	#scripts/feeds uninstall uhttpd
-	rm -rf package/uhttpd
-	scripts/feeds install -p packagespberg uhttpd
 	scripts/feeds uninstall motion
 	scripts/feeds install -p packagespberg motion
 	scripts/feeds uninstall olsrd-luci
@@ -150,6 +147,7 @@ EOF
 	PATCHES="$PATCHES base-passwd-admin.patch"
 	PATCHES="$PATCHES base-system.patch"
 	PATCHES="$PATCHES ipkg-utils-fast-zip.patch"
+	PATCHES="$PATCHES routerstation-bridge-wan-lan.patch"
 	for i in $PATCHES ; do
 		pparm='-p0'
 		echo "Patch: $i"

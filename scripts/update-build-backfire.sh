@@ -114,6 +114,8 @@ EOF
 	scripts/feeds install -p packagespberg motion
 	scripts/feeds uninstall olsrd-luci
 	scripts/feeds install -p packagespberg olsrd-luci
+	rm -rf package/uhttpd
+	scripts/feeds install -p packagespberg uhttpd
 	sed -i -e "s/downloads\.openwrt\.org/$servername/" package/opkg/files/opkg.conf
 	# enable hart reboot via echo "b" >/proc/sys/kernel/sysrq
 	# kernel 2.4 sysrq is enable by default
@@ -159,7 +161,7 @@ EOF
 	sed -i -e 's/.*\(CONFIG_IB\).*/\1=y/' .config
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	time make V=99 world || ( rm update-build-$verm-$board.lock ; exit 1 )
+	time nice -n 10 make V=99 world || ( rm update-build-$verm-$board.lock ; exit 1 )
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	cp build_dir/target-$arch*/root-$board/usr/lib/opkg/status ../opkg-$board.status
 	mkdir -p $wwwdir/$verm/$ver/$board

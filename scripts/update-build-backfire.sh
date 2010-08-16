@@ -45,7 +45,8 @@ for board in $boards ; do
 	svn up
 	#rm -rf package/mac80211
 	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-	echo Built `cat ../../VERSION.txt` on `hostname`>> package/base-files/files/etc/banner
+	echo "Built `cat ../../VERSION.txt` on `hostname`">> package/base-files/files/etc/banner
+	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on `hostname`">> package/base-files/files/etc/banner
 	echo "Generate feeds.conf"
 	>feeds.conf
 	cat <<EOF >> feeds.conf
@@ -114,9 +115,9 @@ EOF
 	scripts/feeds install -p packagespberg motion
 	scripts/feeds uninstall olsrd-luci
 	scripts/feeds install -p packagespberg olsrd-luci
-	rm -rf package/uhttpd
-	scripts/feeds install -p packagespberg uhttpd
-	sed -i -e "s/downloads\.openwrt\.org/$servername/" package/opkg/files/opkg.conf
+# 	rm -rf package/uhttpd
+#	scripts/feeds install -p packagespberg uhttpd
+	sed -i -e "s/downloads\.openwrt\.org.*/$servername/$verm/$ver-timestamp/$timestamp/$board/packages" package/opkg/files/opkg.conf
 	# enable hart reboot via echo "b" >/proc/sys/kernel/sysrq
 	# kernel 2.4 sysrq is enable by default
 #	sed -i -e 's/.*\(CONFIG_MAGIC_SYSRQ\).*/\1=y/' target/linux/generic-2.6/config-2.6.30

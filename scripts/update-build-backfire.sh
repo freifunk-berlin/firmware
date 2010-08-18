@@ -39,23 +39,16 @@ for board in $boards ; do
 	rm -rf ./files
 	mkdir -p ./files
 	rm -rf $(svn status)
-#	svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/branches/8.09
-#	svn co svn://svn.openwrt.org/openwrt/$verm ./
 	svn co svn://svn.openwrt.org/openwrt/branches/$verm ./
 	svn up
-	#rm -rf package/mac80211
 	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-	echo "Built `cat ../../VERSION.txt` on `hostname`">> package/base-files/files/etc/banner
-	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on `hostname`">> package/base-files/files/etc/banner
+	echo "Built $(cat ../../VERSION.txt) on $(hostname)">> package/base-files/files/etc/banner
+	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on $(hostname)">> package/base-files/files/etc/banner
 	echo "Generate feeds.conf"
 	>feeds.conf
 	cat <<EOF >> feeds.conf
 src-svn packages svn://svn.openwrt.org/openwrt/packages
 EOF
-	#src-svn ffx http://svn.ffx.subsignal.org/packages
-	#src-svn luci http://svn.luci.subsignal.org/luci/branches/luci-0.9/contrib/package
-	#src-svn luci http://svn.luci.subsignal.org/luci/trunk/contrib/package
-	
 	if [ -d ../../packages-pberg ] ; then
 		echo "update packages-pberg git pull"
 		cd ../../packages-pberg
@@ -82,20 +75,8 @@ EOF
 	fi
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
 
-# 	if [ -d ../../luci-trunk ] ; then
-# 		echo "update luci-trunk manual svn up"
-# 		#cd ../../piratenluci.git;git pull; cd ../8.09/$board
-# 	else
-# 		echo "create luci-trunk svn co"
-# 		cd ../../
-# 		svn co http://svn.luci.subsignal.org/luci/trunk luci-trunk
-# 		cd $verm/$board
-# 	fi
-# 	echo "src-link luci ../../../luci-trunk" >> feeds.conf
-	
 	if [ -d ../../luci-0.9 ] ; then
 		echo "update luci-0.9 manual svn up"
-		#cd ../../piratenluci.git;git pull; cd ../8.09/$board
 	else
 		echo "create luci-0.9 svn co"
 		cd ../../
@@ -117,7 +98,7 @@ EOF
 	scripts/feeds install -p packagespberg olsrd-luci
 # 	rm -rf package/uhttpd
 #	scripts/feeds install -p packagespberg uhttpd
-	sed -i -e "s/downloads\.openwrt\.org.*/$servername/$verm/$ver-timestamp/$timestamp/$board/packages" package/opkg/files/opkg.conf
+	sed -i -e "s/downloads\.openwrt\.org.*/$servername\/$verm\/$ver-timestamp\/$timestamp\/$board\/packages" package/opkg/files/opkg.conf
 	# enable hart reboot via echo "b" >/proc/sys/kernel/sysrq
 	# kernel 2.4 sysrq is enable by default
 #	sed -i -e 's/.*\(CONFIG_MAGIC_SYSRQ\).*/\1=y/' target/linux/generic-2.6/config-2.6.30

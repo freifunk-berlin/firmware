@@ -1,0 +1,37 @@
+#!/bin/sh
+
+#list of pirate party packages
+PIRATE_PACKETS="
+heartbeat
+luci-app-bugreport
+luci-app-custom-splash
+luci-app-heartbeat 
+luci-theme-piraten
+mac-hash
+node-id
+"
+
+# activate pirate packets
+activate_pirate()
+{
+	for i in $PIRATE_PACKETS;
+	do sed -i -e "s/\(CONFIG_PACKAGE_$i=\)m/\1y/" ff-control/configs/backfire-* ; 
+	done
+	echo "pirate config"
+}
+
+# deactivate pirate packets
+deactivate_pirate()
+{
+	for i in $PIRATE_PACKETS;
+	do sed -i -e "s/\(CONFIG_PACKAGE_$i=\)y/\1m/" ff-control/configs/backfire-* ; 
+	done
+	echo "usual config"
+}
+
+if [ "$1" = "pirate" ] 
+then
+	activate_pirate;
+else
+	deactivate_pirate;
+fi

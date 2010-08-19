@@ -30,6 +30,12 @@ usage:
 	die änderungen nicht überschrieben werden und den nachteil das neue änderungen aus dem
 	git nicht übernommen werden. #TODO
 
+	Piratenpakete aktivieren
+	#ff-control/scripts/make_config pirate
+
+	Piratenpakete deaktivieren
+	#ff-control/scripts/make_config
+
 testing:
 	wget http://cloud.pberg.freifunk.net/backfire/10.03/x86/openwrt-x86-generic-combined-squashfs.img
 	chmod -rw openwrt-x86-generic-combined-squashfs.img
@@ -41,3 +47,5 @@ testing:
         # in einer neuen konsole auf dem host
 	sudo ip addr add 192.168.1.2/24 dev tap1
 	sudo ip link set tap1 up
+
+

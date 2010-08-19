@@ -98,7 +98,7 @@ EOF
 	scripts/feeds install -p packagespberg olsrd-luci
 # 	rm -rf package/uhttpd
 #	scripts/feeds install -p packagespberg uhttpd
-	sed -i -e "s/downloads\.openwrt\.org.*/$servername\/$verm\/$ver-timestamp\/$timestamp\/$board\/packages" package/opkg/files/opkg.conf
+	sed -i -e "s/downloads\.openwrt\.org.*/$servername\/$verm\/$ver-timestamp\/$timestamp\/$board\/packages/" package/opkg/files/opkg.conf
 	# enable hart reboot via echo "b" >/proc/sys/kernel/sysrq
 	# kernel 2.4 sysrq is enable by default
 #	sed -i -e 's/.*\(CONFIG_MAGIC_SYSRQ\).*/\1=y/' target/linux/generic-2.6/config-2.6.30

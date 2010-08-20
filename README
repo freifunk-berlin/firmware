@@ -19,22 +19,14 @@ usage:
 	e.g.
 	#ff-control/scripts/update-build-pkg-backfire.sh luci-app-ffwizard-piraten
 	...
-	Um eine eigen openwrt config zu benutzen kann man
-	#mkdir configs
-	#cp ff-control/configs ./
-	#cp ff-control/configs/* ./configs/
-	#vi configs/backfire-ar71xx.config
-
-	Das hat den vorteil das bei einem
-	#cd ff-control && git pull && cd ..
-	die änderungen nicht überschrieben werden und den nachteil das neue änderungen aus dem
-	git nicht übernommen werden. #TODO
 
 	Piratenpakete aktivieren
 	#ff-control/scripts/make_config pirate
+	siehe default.config
 
 	Piratenpakete deaktivieren
 	#ff-control/scripts/make_config
+	siehe default.config
 
 testing:
 	wget http://cloud.pberg.freifunk.net/backfire/10.03/x86/openwrt-x86-generic-combined-squashfs.img

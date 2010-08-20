@@ -143,7 +143,7 @@ EOF
 	sed -i -e 's/.*\(CONFIG_IB\).*/\1=y/' .config
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	time nice -n 10 make V=99 world $make_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+	time nice -n 10 make V=99 world || ( rm update-build-$verm-$board.lock ; exit 1 )
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	cp build_dir/target-$arch*/root-$board/usr/lib/opkg/status ../opkg-$board.status
 	mkdir -p $wwwdir/$verm/$ver/$board
@@ -152,12 +152,6 @@ EOF
 	cp ../../VERSION.txt $wwwdir/$verm/$ver-timestamp/$timestamp/$board
 	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver/$board
 	cp ../../VERSION.txt $wwwdir/$verm/$ver/$board
-	case $board in
-		ar71xx)
-			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y
-			cp bin/$board/openwrt-ar71xx-ubnt-rs* $wwwdir/$verm/$ver/$board
-		;;
-	esac
 	cd ../../
 	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1 &

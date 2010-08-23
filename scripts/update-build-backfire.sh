@@ -76,13 +76,29 @@ EOF
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
 
 	if [ -d ../../luci-0.9 ] ; then
-		echo "update luci-0.9 manual svn up"
+		echo "update luci-0.9 svn up"
+		cd ../../luci-0.9
+		rm -rf $(svn status)
+		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 ./
+		svn up
+		cd ../$verm/$board
 	else
 		echo "create luci-0.9 svn co"
 		cd ../../
 		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
 		cd $verm/$board
 	fi
+	cd ../../luci-0.9
+	LUCIPATCHES="$LUCIPATCHES luci-olsrd-dnsmasq-addnhosts-list.patch"
+	LUCIPATCHES="$LUCIPATCHES luci-olsrd-lqmult-list.patch"
+	LUCIPATCHES="$LUCIPATCHES luci-olsrd-p2p.patch"
+	for i in $PATCHES ; do
+		pparm='-p0'
+		echo "Patch: $i"
+		patch $pparm < ../ff-control/patches/$i
+	done
+	cd ../$verm/$board
+
 	echo "src-link luci ../../../luci-0.9" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
@@ -160,7 +176,8 @@ EOF
 	esac
 	cd ../../
 	rm update-build-$verm-$board.lock
-	) >update-build-$verm-$board.log 2>&1 &
-	pid=$!
-	echo $pid > update-build-$verm-$board.pid
+	) >update-build-$verm-$board.log 2>&1 
+	#&
+	#pid=$!
+	#echo $pid > update-build-$verm-$board.pid
 done

@@ -1,0 +1,14 @@
+Index: applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
+===================================================================
+--- applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua	(revision 6195)
++++ applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua	(working copy)
+@@ -134,6 +134,9 @@
+ adc.disabled = "no"
+ adc.optional = true
+ 
++lqmult = i:option(DynamicList,"LinkQualityMult")
++lqmult.optional = true
++
+ --[[
+ ipc = m:section(TypedSection, "IpcConnect")
+ ipc.anonymous = true

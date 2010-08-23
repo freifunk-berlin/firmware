@@ -1,0 +1,13 @@
+Index: modules/admin-full/luasrc/model/cbi/admin_services/dnsmasq.lua
+===================================================================
+--- modules/admin-full/luasrc/model/cbi/admin_services/dnsmasq.lua	(revision 6195)
++++ modules/admin-full/luasrc/model/cbi/admin_services/dnsmasq.lua	(working copy)
+@@ -37,7 +37,7 @@
+ s:option(Value, "port").optional = true
+ s:option(Value, "ednspacket_max").optional = true
+ s:option(Value, "dhcpleasemax").optional = true
+-s:option(Value, "addnhosts").optional = true
++s:option(DynamicList,"addnhosts").optional = true
+ s:option(Value, "queryport").optional = true
+ s:option(Flag, "enable_tftp").optional = true
+ s:option(Value, "tftp_root").optional = true

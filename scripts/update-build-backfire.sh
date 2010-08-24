@@ -10,6 +10,49 @@ timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
 date +"%Y/%m/%d %H:%M">VERSION.txt
 
+#update and patch repos
+if [ -d packages-pberg ] ; then
+	echo "update packages-pberg git pull"
+	cd packages-pberg
+	git pull
+	cd ../
+else
+	echo "create packages-pberg git clone"
+	git clone git://github.com/stargieg/packages-pberg.git
+fi
+
+if [ -d piratenfreifunk-packages ] ; then
+	echo "update piratenfreifunk-packages manual git pull"
+	cd piratenfreifunk-packages
+	git pull
+	cd ../
+else
+	echo "create piratenfreifunk-packages git clone"
+	git clone git://github.com/basicinside/piratenfreifunk-packages.git
+fi
+
+if [ -d luci-0.9 ] ; then
+	echo "update luci-0.9 svn up"
+	cd luci-0.9
+	rm -rf $(svn status)
+	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 ./
+	svn up
+	cd ../
+else
+	echo "create luci-0.9 svn co"
+	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
+fi
+
+cd luci-0.9
+LUCIPATCHES="$LUCIPATCHES luci-olsrd-dnsmasq-addnhosts-list.patch"
+LUCIPATCHES="$LUCIPATCHES luci-olsrd-lqmult-list.patch"
+LUCIPATCHES="$LUCIPATCHES luci-olsrd-p2p.patch"
+for i in $LUCIPATCHES ; do
+	pparm='-p0'
+	echo "Patch: $i"
+	patch $pparm < ../ff-control/patches/$i
+done
+
 for board in $boards ; do
 	echo "to see the log just type:"
 	echo "tail -f update-build-$verm-$board.log"
@@ -49,55 +92,10 @@ for board in $boards ; do
 	cat <<EOF >> feeds.conf
 src-svn packages svn://svn.openwrt.org/openwrt/packages
 EOF
-	if [ -d ../../packages-pberg ] ; then
-		echo "update packages-pberg git pull"
-		cd ../../packages-pberg
-		git pull
-		cd ../$verm/$board
-	else
-		echo "create packages-pberg git clone"
-		cd ../../
-		git clone git://github.com/stargieg/packages-pberg.git
-		cd $verm/$board
-	fi
+
 	echo "src-link packagespberg ../../../packages-pberg" >> feeds.conf
 
-	if [ -d ../../piratenfreifunk-packages ] ; then
-		echo "update piratenfreifunk-packages manual git pull"
-		cd ../../piratenfreifunk-packages
-		git pull
-		cd ../$verm/$board
-	else
-		echo "create piratenfreifunk-packages git clone"
-		cd ../../
-		git clone git://github.com/basicinside/piratenfreifunk-packages.git
-		cd $verm/$board
-	fi
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
-
-	if [ -d ../../luci-0.9 ] ; then
-		echo "update luci-0.9 svn up"
-		cd ../../luci-0.9
-		rm -rf $(svn status)
-		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 ./
-		svn up
-		cd ../$verm/$board
-	else
-		echo "create luci-0.9 svn co"
-		cd ../../
-		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
-		cd $verm/$board
-	fi
-	cd ../../luci-0.9
-	LUCIPATCHES="$LUCIPATCHES luci-olsrd-dnsmasq-addnhosts-list.patch"
-	LUCIPATCHES="$LUCIPATCHES luci-olsrd-lqmult-list.patch"
-	LUCIPATCHES="$LUCIPATCHES luci-olsrd-p2p.patch"
-	for i in $PATCHES ; do
-		pparm='-p0'
-		echo "Patch: $i"
-		patch $pparm < ../ff-control/patches/$i
-	done
-	cd ../$verm/$board
 
 	echo "src-link luci ../../../luci-0.9" >> feeds.conf
 	echo "openwrt feeds update"

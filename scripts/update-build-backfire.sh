@@ -35,7 +35,7 @@ if [ -d luci-0.9 ] ; then
 	echo "update luci-0.9 svn up"
 	cd luci-0.9
 	rm -rf $(svn status)
-	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 ./
+#	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 ./
 	svn up
 	cd ../
 else
@@ -52,6 +52,7 @@ for i in $LUCIPATCHES ; do
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i
 done
+cd ..
 
 for board in $boards ; do
 	echo "to see the log just type:"

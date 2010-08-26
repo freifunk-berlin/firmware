@@ -47,6 +47,10 @@ cd luci-0.9
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-dnsmasq-addnhosts-list.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-lqmult-list.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-p2p.patch"
+LUCIPATCHES="$LUCIPATCHES freifunk-BergischesLand.patch"
+LUCIPATCHES="$LUCIPATCHES freifunk-dresden.patch"
+LUCIPATCHES="$LUCIPATCHES freifunk-neuss.patch"
+LUCIPATCHES="$LUCIPATCHES freifunk-pberg.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p0'
 	echo "Patch: $i"

@@ -1,0 +1,27 @@
+--- modules/freifunk/root/etc/config/freifunk	2010-08-25 19:42:07.350000071 +0200
++++ modules/freifunk/root/etc/config/freifunk.copy	2010-08-25 19:43:35.657000069 +0200
+@@ -224,3 +224,14 @@
+ 
+ 
+ 
++config 'community' 'BergischesLand'
++       option 'name' 'Piratenfreifunk Bergisches Land'
++       option 'homepage' 'http://www.piraten-bergisches-land.de'
++       option 'ssid' 'PiratenfunkBL'
++       option 'mesh_network' '10.3.0.0/16'
++       option 'splash_network' '192.168.0.0/16'
++       option 'splash_prefix' '27'
++       option 'external' 'freifunk_bergischesland'
++
++
++
+
+--- modules/freifunk/root/etc/config/freifunk_bergischesland     (Revision 0)
++++ modules/freifunk/root/etc/config/freifunk_bergischesland     (Revision 0)
+@@ -0,0 +1,6 @@
++config 'defaults' 'wifi_device'
++       option 'channel' '11'
++
++config 'defaults' 'wifi_iface'
++       option 'bssid' '02:40:00:42:42:42'
++

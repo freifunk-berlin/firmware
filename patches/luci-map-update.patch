@@ -1,0 +1,13 @@
+Index: modules/freifunk/root/usr/sbin/ff_mapupdate
+===================================================================
+--- modules/freifunk/root/usr/sbin/ff_mapupdate	(Revision 6240)
++++ modules/freifunk/root/usr/sbin/ff_mapupdate	(Arbeitskopie)
+@@ -3,7 +3,7 @@
+ local uci = require "luci.model.uci"
+ local x = uci.cursor()
+ 
+-local update_url = "http://www.layereight.de/freifunkmap.php?update=%.15f,%.15f&olsrip=%s&note=%s&robot=%s"
++local update_url = "http://map.berlin.freifunk.net/freifunkmap.php?update=%.15f,%.15f&olsrip=%s&note=%s&robot=%s"
+ local update_all = ( arg[1] and arg[1] == "all" ) and true or false
+ 
+ local file

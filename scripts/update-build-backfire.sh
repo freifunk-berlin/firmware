@@ -51,11 +51,14 @@ LUCIPATCHES="$LUCIPATCHES freifunk-BergischesLand.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-dresden.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-neuss.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-pberg.patch"
+LUCIPATCHES="$LUCIPATCHES luci-map-update.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p0'
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i
 done
+rm -rf $(find . | grep \.rej$)
+rm -rf $(find . | grep \.orig$)
 cd ..
 
 for board in $boards ; do
@@ -165,12 +168,15 @@ EOF
 	time nice -n 10 make V=99 world $make_options || ( rm update-build-$verm-$board.lock ; exit 1 )
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	cp build_dir/target-$arch*/root-$board/usr/lib/opkg/status ../opkg-$board.status
-	mkdir -p $wwwdir/$verm/$ver/$board
-	mkdir -p $wwwdir/$verm/$ver-timestamp/$timestamp/$board
-	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver-timestamp/$timestamp/$board
-	cp ../../VERSION.txt $wwwdir/$verm/$ver-timestamp/$timestamp/$board
-	rsync -a --delete bin/$board/ $wwwdir/$verm/$ver/$board
-	cp ../../VERSION.txt $wwwdir/$verm/$ver/$board
+
+	mkdir -p 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	cp ../../VERSION.txt 		$wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	cp .config 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board/dot-config
+	mkdir -p 			$wwwdir/$verm/$ver/$board
+	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver/$board
+	cp ../../VERSION.txt		$wwwdir/$verm/$ver/$board
+	cp .config 			$wwwdir/$verm/$ver/$board/dot-config
 	case $board in
 		ar71xx)
 			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y
@@ -183,4 +189,6 @@ EOF
 	#&
 	#pid=$!
 	#echo $pid > update-build-$verm-$board.pid
+	cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/
+	cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/
 done

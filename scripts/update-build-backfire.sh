@@ -52,6 +52,7 @@ LUCIPATCHES="$LUCIPATCHES freifunk-dresden.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-neuss.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-pberg.patch"
 LUCIPATCHES="$LUCIPATCHES luci-map-update.patch"
+LUCIPATCHES="$LUCIPATCHES luci-freifunk_berlin.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p0'
 	echo "Patch: $i"

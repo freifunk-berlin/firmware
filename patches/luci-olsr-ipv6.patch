@@ -1,7 +1,7 @@
-Index: luasrc/controller/olsr.lua
+Index: applications/luci-olsr/luasrc/controller/olsr.lua
 ===================================================================
---- luasrc/controller/olsr.lua	(Revision 6240)
-+++ luasrc/controller/olsr.lua	(Arbeitskopie)
+--- applications/luci-olsr/luasrc/controller/olsr.lua	(Revision 6240)
++++ applications/luci-olsr/luasrc/controller/olsr.lua	(Arbeitskopie)
 @@ -1,5 +1,7 @@
  module("luci.controller.olsr", package.seeall)
  
@@ -187,10 +187,10 @@ Index: luasrc/controller/olsr.lua
 +	    return data
 +	end
  end
-Index: luasrc/view/status-olsr/routes.htm
+Index: applications/luci-olsr/luasrc/view/status-olsr/routes.htm
 ===================================================================
---- luasrc/view/status-olsr/routes.htm	(Revision 6240)
-+++ luasrc/view/status-olsr/routes.htm	(Arbeitskopie)
+--- applications/luci-olsr/luasrc/view/status-olsr/routes.htm	(Revision 6240)
++++ applications/luci-olsr/luasrc/view/status-olsr/routes.htm	(Arbeitskopie)
 @@ -20,6 +20,7 @@
  <tr>
  <th><%:olsrd_network%></th>
@@ -207,10 +207,10 @@ Index: luasrc/view/status-olsr/routes.htm
  <td><%=route.Interface%></td>
  <td><%=route.Metric%></td>
  <td style="background-color:<%=color%>"><%=string.format("%.3f", tonumber(route.ETX) or 0)%></td>
-Index: luasrc/view/status-olsr/index.htm
+Index: applications/luci-olsr/luasrc/view/status-olsr/index.htm
 ===================================================================
---- luasrc/view/status-olsr/index.htm	(Revision 6240)
-+++ luasrc/view/status-olsr/index.htm	(Arbeitskopie)
+--- applications/luci-olsr/luasrc/view/status-olsr/index.htm	(Revision 6240)
++++ applications/luci-olsr/luasrc/view/status-olsr/index.htm	(Arbeitskopie)
 @@ -19,7 +19,9 @@
  <table class="smalltext" cellspacing="0" cellpadding="6">
  <tr>

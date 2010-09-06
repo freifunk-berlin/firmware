@@ -35,7 +35,6 @@ if [ -d luci-0.9 ] ; then
 	echo "update luci-0.9 svn up"
 	cd luci-0.9
 	rm -rf $(svn status)
-#	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 ./
 	svn up
 	cd ../
 else
@@ -44,6 +43,7 @@ else
 fi
 
 cd luci-0.9
+LUCIPATCHES="$LUCIPATCHES luci-olsr-ipv6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-dnsmasq-addnhosts-list.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-lqmult-list.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-p2p.patch"

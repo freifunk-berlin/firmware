@@ -240,3 +240,21 @@ Index: applications/luci-olsr/luasrc/view/status-olsr/index.htm
  <td><%=link.LQ%></td>
  <td><%=link.NLQ%></td>
  <td style="background-color:<%=color%>"><%=string.format("%.3f", link.Cost)%></td>
+Index: applications/luci-olsr/root/etc/init.d/luci_olsr
+===================================================================
+--- applications/luci-olsr/root/etc/init.d/luci_olsr	(Revision 0)
++++ applications/luci-olsr/root/etc/init.d/luci_olsr	(Revision 0)
+@@ -0,0 +1,13 @@
++#!/bin/sh /etc/rc.common
++
++START=99
++
++start() {
++	chmod +r /var/state/*
++	exit 0
++}
++
++
++stop() {
++	exit 0
++}

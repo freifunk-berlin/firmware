@@ -14,7 +14,7 @@ date +"%Y/%m/%d %H:%M">VERSION.txt
 if [ -d packages-pberg ] ; then
 	echo "update packages-pberg git pull"
 	cd packages-pberg
-	git pull
+#	git pull
 	cd ../
 else
 	echo "create packages-pberg git clone"
@@ -58,6 +58,7 @@ for i in $LUCIPATCHES ; do
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i
 done
+chmod +x applications/luci-olsr/root/etc/init.d/luci_olsr
 rm -rf $(find . | grep \.rej$)
 rm -rf $(find . | grep \.orig$)
 cd ..

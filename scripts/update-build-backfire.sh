@@ -14,7 +14,7 @@ date +"%Y/%m/%d %H:%M">VERSION.txt
 if [ -d packages-pberg ] ; then
 	echo "update packages-pberg git pull"
 	cd packages-pberg
-#	git pull
+	git pull
 	cd ../
 else
 	echo "create packages-pberg git clone"
@@ -35,14 +35,29 @@ if [ -d luci-0.9 ] ; then
 	echo "update luci-0.9 svn up"
 	cd luci-0.9
 	rm -rf $(svn status)
-	svn up
+	if [ -z $luci_revision ] ; then
+		svn up
+	else
+		svn sw -r $luci_revision svn://svn.openwrt.org/openwrt/branches/$verm
+	fi
 	cd ../
 else
 	echo "create luci-0.9 svn co"
 	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
+	if [ -z $luci_revision ] ; then
+		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
+	else
+		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
+		cd luci-0.9
+		svn sw -r $luci_revision svn://svn.openwrt.org/openwrt/branches/$verm
+		cd ..
+	fi
 fi
+echo "LUCI Branch: luci-0.9" >> VERSION.txt
 
 cd luci-0.9
+luci_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+echo "LUCI Revision: $luci_revision" >> ../VERSION.txt
 LUCIPATCHES="$LUCIPATCHES luci-olsr-ipv6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-dnsmasq-addnhosts-list.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-lqmult-list.patch"
@@ -53,11 +68,16 @@ LUCIPATCHES="$LUCIPATCHES freifunk-neuss.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-pberg.patch"
 LUCIPATCHES="$LUCIPATCHES luci-map-update.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_berlin.patch"
+LUCIPATCHES="$LUCIPATCHES luci-remove-remoteupdate.patch"
+LUCIPATCHES="$LUCIPATCHES luci-ipv6-status.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p0'
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i
 done
+rm modules/freifunk/luasrc/controller/freifunk/remote_update.lua
+rm modules/freifunk/luasrc/view/freifunk/remote_update.htm
+
 chmod +x applications/luci-olsr/root/etc/init.d/luci_olsr
 rm -rf $(find . | grep \.rej$)
 rm -rf $(find . | grep \.orig$)
@@ -73,6 +93,9 @@ for board in $boards ; do
 	echo "Board: $board"
 	mkdir -p $verm/$board
 	cd $verm/$board
+	cp ../../VERSION.txt .
+	echo "Board: $board" >> VERSION.txt
+	echo "Branch: $verm" >> VERSION.txt
 	echo "clean up"
 	rm -f .config
 	rm -rf ./tmp
@@ -92,9 +115,15 @@ for board in $boards ; do
 	rm -rf ./files
 	mkdir -p ./files
 	rm -rf $(svn status)
+	#openwrt_revision="r23025"
 	svn co svn://svn.openwrt.org/openwrt/branches/$verm ./
-	svn up
+	if [ -z $openwrt_revision ] ; then
+		svn up
+	else
+		svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/branches/$verm
+	fi
 	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+	echo "Revision: $openwrt_revision" >> VERSION.txt
 	echo "Built $(cat ../../VERSION.txt) on $(hostname)">> package/base-files/files/etc/banner
 	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on $(hostname)">> package/base-files/files/etc/banner
 	echo "Generate feeds.conf"
@@ -171,14 +200,14 @@ EOF
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	cp build_dir/target-$arch*/root-$board/usr/lib/opkg/status ../opkg-$board.status
 
-	mkdir -p 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	mkdir -p 						$wwwdir/$verm/$ver-timestamp/$timestamp/$board
 	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver-timestamp/$timestamp/$board
-	cp ../../VERSION.txt 		$wwwdir/$verm/$ver-timestamp/$timestamp/$board
-	cp .config 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board/dot-config
-	mkdir -p 			$wwwdir/$verm/$ver/$board
+	cp VERSION.txt		 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	cp .config 						$wwwdir/$verm/$ver-timestamp/$timestamp/$board/dot-config
+	mkdir -p 						$wwwdir/$verm/$ver/$board
 	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver/$board
-	cp ../../VERSION.txt		$wwwdir/$verm/$ver/$board
-	cp .config 			$wwwdir/$verm/$ver/$board/dot-config
+	cp VERSION.txt					$wwwdir/$verm/$ver/$board
+	cp .config 						$wwwdir/$verm/$ver/$board/dot-config
 	case $board in
 		ar71xx)
 			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y

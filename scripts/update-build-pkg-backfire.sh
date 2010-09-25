@@ -13,8 +13,8 @@ for board in $boards ; do
 	echo "to see the log just type:"
 	echo "tail -f update-build-pkg-$verm-$board-$pkgname.log"
 	(
-	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
-	touch "update-build-$verm-$board.lock"
+	[ -f update-build-$verm-$board.lock ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
+	touch update-build-$verm-$board.lock
 	cd $verm/$board/
 	option2=$(find package | grep /$pkgname$)
 	make $option2/clean V=99 && \

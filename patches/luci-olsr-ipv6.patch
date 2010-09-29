@@ -1,6 +1,6 @@
 Index: applications/luci-olsr/luasrc/controller/olsr.lua
 ===================================================================
---- applications/luci-olsr/luasrc/controller/olsr.lua	(Revision 6240)
+--- applications/luci-olsr/luasrc/controller/olsr.lua	(Revision 6252)
 +++ applications/luci-olsr/luasrc/controller/olsr.lua	(Arbeitskopie)
 @@ -1,5 +1,7 @@
  module("luci.controller.olsr", package.seeall)
@@ -189,7 +189,7 @@ Index: applications/luci-olsr/luasrc/controller/olsr.lua
  end
 Index: applications/luci-olsr/luasrc/view/status-olsr/routes.htm
 ===================================================================
---- applications/luci-olsr/luasrc/view/status-olsr/routes.htm	(Revision 6240)
+--- applications/luci-olsr/luasrc/view/status-olsr/routes.htm	(Revision 6252)
 +++ applications/luci-olsr/luasrc/view/status-olsr/routes.htm	(Arbeitskopie)
 @@ -20,6 +20,7 @@
  <tr>
@@ -209,7 +209,7 @@ Index: applications/luci-olsr/luasrc/view/status-olsr/routes.htm
  <td style="background-color:<%=color%>"><%=string.format("%.3f", tonumber(route.ETX) or 0)%></td>
 Index: applications/luci-olsr/luasrc/view/status-olsr/index.htm
 ===================================================================
---- applications/luci-olsr/luasrc/view/status-olsr/index.htm	(Revision 6240)
+--- applications/luci-olsr/luasrc/view/status-olsr/index.htm	(Revision 6252)
 +++ applications/luci-olsr/luasrc/view/status-olsr/index.htm	(Arbeitskopie)
 @@ -19,7 +19,9 @@
  <table class="smalltext" cellspacing="0" cellpadding="6">
@@ -230,11 +230,13 @@ Index: applications/luci-olsr/luasrc/view/status-olsr/index.htm
  	elseif link.Cost < 4 then
  		color = "#00cc00"
  	elseif link.Cost < 10 then
-@@ -40,7 +44,9 @@
+@@ -39,8 +43,10 @@
+ 	end
  %>
  <tr>
- <td><a href="http://<%=link["Remote IP"]%>/cgi-bin-nodes.html"><%=link["Remote IP"]%></a></td>
-+<td><a href="http://<%=link["Hostname"]%>/cgi-bin-nodes.html"><%=link["Hostname"]%></a></td>
+-<td><a href="http://<%=link["Remote IP"]%>/cgi-bin-nodes.html"><%=link["Remote IP"]%></a></td>
++<td><a href="http://<%=link["Remote IP"]%>/cgi-bin-status.html"><%=link["Remote IP"]%></a></td>
++<td><a href="http://<%=link["Hostname"]%>/cgi-bin-status.html"><%=link["Hostname"]%></a></td>
  <td><%=link["Local IP"]%></td>
 +<td><%=link["Local Device"]%></td>
  <td><%=link.LQ%></td>

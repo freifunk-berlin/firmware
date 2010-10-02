@@ -11,6 +11,8 @@
 +	option 'mesh_network' '104.0.0.0/8'
 +	option 'splash_network' '10.104.0.0/16'
 +	option 'splash_prefix' '27'
++	option 'latitude' '52.5427'
++	option 'longitude' '13.4172'
 +	option 'external' 'freifunk_berlin'
 +
 +

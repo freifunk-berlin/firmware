@@ -93,9 +93,6 @@ for board in $boards ; do
 	echo "Board: $board"
 	mkdir -p $verm/$board
 	cd $verm/$board
-	cp ../../VERSION.txt .
-	echo "Board: $board" >> VERSION.txt
-	echo "Branch: $verm" >> VERSION.txt
 	echo "clean up"
 	rm -f .config
 	rm -rf ./tmp
@@ -123,8 +120,11 @@ for board in $boards ; do
 		svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/branches/$verm
 	fi
 	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-	echo "Revision: $openwrt_revision" >> VERSION.txt
-	echo "Built $(cat ../../VERSION.txt) on $(hostname)">> package/base-files/files/etc/banner
+	cp ../../VERSION.txt VERSION.txt
+	echo "OpenWrt Branch: $verm" >> VERSION.txt
+	echo "OpenWrt Revision: $openwrt_revision" >> VERSION.txt
+	echo "OpenWrt Board: $board" >> VERSION.txt
+	echo "Built $(head -n 1 ../../VERSION.txt) on $(hostname)">> package/base-files/files/etc/banner
 	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on $(hostname)">> package/base-files/files/etc/banner
 	echo "Generate feeds.conf"
 	>feeds.conf

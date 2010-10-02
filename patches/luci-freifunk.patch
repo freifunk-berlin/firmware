@@ -1,0 +1,139 @@
+Index: modules/freifunk/root/etc/config/freifunk
+===================================================================
+--- modules/freifunk/root/etc/config/freifunk	(Revision 6252)
++++ modules/freifunk/root/etc/config/freifunk	(Arbeitskopie)
+@@ -96,6 +96,8 @@
+ 	option 'mesh_network' '104.61.0.0/16'
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
++	option 'latitude' '51.33348'
++	option 'longitude' '12.40297'
+ 
+ config 'community' 'halle'
+ 	option 'name' 'Freifunk Halle'
+@@ -104,6 +106,8 @@
+ 	option 'mesh_network' '104.62.0.0/16'
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
++	option 'latitude' '51.47911'
++	option 'longitude' '11.96901'
+ 
+ config 'community' 'l59'
+ 	option 'name' 'Freifunk L59'
+@@ -112,6 +116,8 @@
+ 	option 'mesh_network' '104.59.0.0/16'
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
++	option 'latitude' '52.26337'
++	option 'longitude' '10.52103'
+ 
+ config 'community' 'berlin'
+ 	option 'name' 'Freifunk Berlin'
+@@ -121,6 +127,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_berlin'
++	option 'latitude' '52.52075'
++	option 'longitude' '13.40948'
+ 
+ config 'community' 'potsdam'
+ 	option 'name' 'Freifunk Potsdam'
+@@ -130,6 +138,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_potsdam'
++	option 'latitude' '52.39349'
++	option 'longitude' '13.06489'
+ 
+ config 'community' 'hamburg'
+ 	option 'name' 'Freifunk Hamburg'
+@@ -139,6 +149,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_hamburg'
++	option 'latitude' '53.56262'
++	option 'longitude' '10.01069'
+ 
+ config 'community' 'hannover'
+ 	option 'name' 'Freifunk Hannover'
+@@ -148,6 +160,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_hannover'
++	option 'latitude' '52.38427'
++	option 'longitude' '9.74359'
+ 
+ config 'community' 'augsburg'
+ 	option 'name' 'Freifunk Augsburg'
+@@ -157,6 +171,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_augsburg'
++	option 'latitude' '48.37071'
++	option 'longitude' '10.89475'
+ 
+ config 'community' 'jena'
+ 	option 'name' 'Freifunk Jena'
+@@ -166,6 +182,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '29'
+ 	option 'external' 'freifunk_jena'
++	option 'latitude' '50.92779'
++	option 'longitude' '11.58431'
+ 
+ config 'community' 'mainz'
+ 	option 'name' 'Freifunk Mainz'
+@@ -175,6 +193,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_mainz'
++	option 'latitude' '49.99635'
++	option 'longitude' '8.27417'
+ 
+ config 'community' 'seefeld'
+ 	option 'name' 'Freifunk Seefeld'
+@@ -184,6 +204,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_seefeld'
++	option 'latitude' '48.03485'
++	option 'longitude' '11.21279'
+ 
+ config 'community' 'duesseldorf'
+ 	option 'name' 'Freifunk Duesseldorf'
+@@ -193,6 +215,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_duesseldorf'
++	option 'latitude' '51.22347'
++	option 'longitude' '6.78449'
+ 
+ config 'community' 'oldenburg'
+ 	option 'name' 'Freifunk Oldenburg'
+@@ -202,6 +226,8 @@
+ 	option 'splash_network' '10.104.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_oldenburg'
++	option 'latitude' '53.14083'
++	option 'longitude' '8.21314'
+ 
+ config 'community' 'kiberpipa'
+ 	option 'name' 'Kiberpipa.net'
+@@ -211,6 +237,8 @@
+ 	option 'splash_network' '10.14.128.0/17'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_kiberpipa'
++	option 'latitude' '46.05063'
++	option 'longitude' '14.50402'
+ 
+ config 'community' 'wlanljubljana'
+ 	option 'name' 'wlan ljubljana'
+@@ -220,4 +248,19 @@
+ 	option 'splash_network' '10.254.120.0/21'
+ 	option 'splash_prefix' '27'
+ 	option 'external' 'freifunk_wlanljubljana'
++	option 'latitude' '46.05063'
++	option 'longitude' '14.50402'
+ 
++
++

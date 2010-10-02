@@ -12,6 +12,8 @@
 +       option 'splash_network' '10.104.0.0/16'
 +       option 'splash_prefix' '27'
 +       option 'external' 'freifunk_dresden'
++	option 'latitude' '51.05081'
++	option 'longitude' '13.73420'
 +
 +
 +

@@ -12,6 +12,8 @@
 +	option 'splash_network' '10.104.0.0/16'
 +	option 'splash_prefix' '27'
 +	option 'external' 'freifunk_neuss'
++	option 'latitude' '51.19045'
++	option 'longitude' '6.69471'
 +
 +
 +

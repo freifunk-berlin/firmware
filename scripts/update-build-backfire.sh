@@ -10,6 +10,33 @@ timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
 date +"%Y/%m/%d %H:%M">VERSION.txt
 
+if [ -d packages ] ; then
+	echo "update packages svn up"
+	cd packages
+	rm -rf $(svn status)
+	if [ -z $packages_revision ] ; then
+		svn up
+	else
+		svn sw -r $packages_revision svn://svn.openwrt.org/openwrt/packages
+	fi
+	cd ../
+else
+	echo "create packages svn co"
+	svn co svn://svn.openwrt.org/openwrt/packages packages
+	if [ -z $packages_revision ] ; then
+		svn co svn://svn.openwrt.org/openwrt/packages packages
+	else
+		svn co svn://svn.openwrt.org/openwrt/packages packages
+		cd packages
+		svn sw -r $packages_revision svn://svn.openwrt.org/openwrt/packages
+		cd ..
+	fi
+fi
+cd packages
+packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+echo "OpenWrt Packages Revision: $packages_revision" >> ../VERSION.txt
+cd ..
+
 #update and patch repos
 if [ -d packages-pberg ] ; then
 	echo "update packages-pberg git pull"
@@ -38,7 +65,7 @@ if [ -d luci-0.9 ] ; then
 	if [ -z $luci_revision ] ; then
 		svn up
 	else
-		svn sw -r $luci_revision svn://svn.openwrt.org/openwrt/branches/$verm
+		svn sw -r $luci_revision http://svn.luci.subsignal.org/luci/branches/luci-0.9
 	fi
 	cd ../
 else
@@ -49,7 +76,7 @@ else
 	else
 		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
 		cd luci-0.9
-		svn sw -r $luci_revision svn://svn.openwrt.org/openwrt/branches/$verm
+		svn sw -r $luci_revision http://svn.luci.subsignal.org/luci/branches/luci-0.9
 		cd ..
 	fi
 fi
@@ -62,6 +89,7 @@ LUCIPATCHES="$LUCIPATCHES luci-olsr-ipv6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-dnsmasq-addnhosts-list.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-lqmult-list.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsrd-p2p.patch"
+LUCIPATCHES="$LUCIPATCHES luci-freifunk.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-BergischesLand.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-dresden.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-neuss.patch"
@@ -126,17 +154,14 @@ for board in $boards ; do
 	echo "OpenWrt Board: $board" >> VERSION.txt
 	echo "Built $(head -n 1 ../../VERSION.txt) on $(hostname)">> package/base-files/files/etc/banner
 	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on $(hostname)">> package/base-files/files/etc/banner
+
 	echo "Generate feeds.conf"
 	>feeds.conf
-	cat <<EOF >> feeds.conf
-src-svn packages svn://svn.openwrt.org/openwrt/packages
-EOF
-
+	echo "src-link packages ../../../packages" >> feeds.conf
 	echo "src-link packagespberg ../../../packages-pberg" >> feeds.conf
-
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
-
 	echo "src-link luci ../../../luci-0.9" >> feeds.conf
+
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"

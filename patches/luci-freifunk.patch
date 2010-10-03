@@ -128,12 +128,13 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'wlanljubljana'
  	option 'name' 'wlan ljubljana'
-@@ -220,4 +248,19 @@
+@@ -220,4 +248,9 @@
  	option 'splash_network' '10.254.120.0/21'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_wlanljubljana'
 +	option 'latitude' '46.05063'
 +	option 'longitude' '14.50402'
  
++
 +
 +

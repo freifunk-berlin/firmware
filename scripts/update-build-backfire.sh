@@ -154,6 +154,7 @@ for board in $boards ; do
 	echo "OpenWrt Board: $board" >> VERSION.txt
 	echo "Built $(head -n 1 ../../VERSION.txt) on $(hostname)">> package/base-files/files/etc/banner
 	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on $(hostname)">> package/base-files/files/etc/banner
+	sed -i -e 's/\(DISTRIB_DESCRIPTION=".*\)"/\1 build date: '$timestamp'"/' package/base-files/files/etc/openwrt_release
 
 	echo "Generate feeds.conf"
 	>feeds.conf
@@ -217,8 +218,6 @@ for board in $boards ; do
 	done
 	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 	cp  ../../ff-control/configs/$verm-$board.config .config
-	echo "add ImageBuilder (IB) to config"
-	sed -i -e 's/.*\(CONFIG_IB\).*/\1=y/' .config
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
 	time nice -n 10 make V=99 world $make_options || ( rm update-build-$verm-$board.lock ; exit 1 )

@@ -2,7 +2,34 @@ Index: modules/freifunk/root/etc/config/freifunk
 ===================================================================
 --- modules/freifunk/root/etc/config/freifunk	(Revision 6252)
 +++ modules/freifunk/root/etc/config/freifunk	(Arbeitskopie)
-@@ -96,6 +96,8 @@
+@@ -82,6 +82,26 @@
+ config 'defaults' 'olsr_interface'
+ 	option 'Ip4Broadcast' '255.255.255.255'
+ 
++config 'defaults' 'olsr_gvpninterface'
++	option 'ignore' '0'
++	option 'interface' 'gvpn'
++	option 'HelloInterval' '10.0'
++	option 'HelloValidityTime' '900.0'
++	option 'MidInterval' '150.0'
++	option 'HnaInterval' '150.0'
++	option 'HnaValidityTime' '900.0'
++	option 'Ip4Broadcast' '255.255.255.255'
++	option 'MidValidityTime' '900.0'
++
++config 'defaults' 'gvpn_node'
++	option 'supernode' 'ns1.pberg.freifunk.net:8719'
++	option 'tundev' 'gvpn'
++	option 'community' 'bbb'
++	option 'localport' '8719'
++	option 'subnet' '255.255.255.192'
++	option 'up' '/etc/l2gvpn/up_down'
++	option 'down' '/etc/l2gvpn/up_down'
++
+ config 'defaults' 'time'
+ 	option 'rdate_servers' '128.138.140.44 171.64.7.77 171.64.7.99 81.169.154.44 130.133.1.10'
+ 
+@@ -96,6 +116,8 @@
  	option 'mesh_network' '104.61.0.0/16'
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
@@ -11,7 +38,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'halle'
  	option 'name' 'Freifunk Halle'
-@@ -104,6 +106,8 @@
+@@ -104,6 +126,8 @@
  	option 'mesh_network' '104.62.0.0/16'
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
@@ -20,7 +47,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'l59'
  	option 'name' 'Freifunk L59'
-@@ -112,6 +116,8 @@
+@@ -112,6 +136,8 @@
  	option 'mesh_network' '104.59.0.0/16'
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
@@ -29,7 +56,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'berlin'
  	option 'name' 'Freifunk Berlin'
-@@ -121,6 +127,8 @@
+@@ -121,6 +147,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_berlin'
@@ -38,7 +65,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'potsdam'
  	option 'name' 'Freifunk Potsdam'
-@@ -130,6 +138,8 @@
+@@ -130,6 +158,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_potsdam'
@@ -47,7 +74,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'hamburg'
  	option 'name' 'Freifunk Hamburg'
-@@ -139,6 +149,8 @@
+@@ -139,6 +169,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_hamburg'
@@ -56,7 +83,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'hannover'
  	option 'name' 'Freifunk Hannover'
-@@ -148,6 +160,8 @@
+@@ -148,6 +180,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_hannover'
@@ -65,7 +92,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'augsburg'
  	option 'name' 'Freifunk Augsburg'
-@@ -157,6 +171,8 @@
+@@ -157,6 +191,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_augsburg'
@@ -74,7 +101,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'jena'
  	option 'name' 'Freifunk Jena'
-@@ -166,6 +182,8 @@
+@@ -166,6 +202,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '29'
  	option 'external' 'freifunk_jena'
@@ -83,7 +110,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'mainz'
  	option 'name' 'Freifunk Mainz'
-@@ -175,6 +193,8 @@
+@@ -175,6 +213,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_mainz'
@@ -92,7 +119,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'seefeld'
  	option 'name' 'Freifunk Seefeld'
-@@ -184,6 +204,8 @@
+@@ -184,6 +224,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_seefeld'
@@ -101,7 +128,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'duesseldorf'
  	option 'name' 'Freifunk Duesseldorf'
-@@ -193,6 +215,8 @@
+@@ -193,6 +235,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_duesseldorf'
@@ -110,7 +137,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'oldenburg'
  	option 'name' 'Freifunk Oldenburg'
-@@ -202,6 +226,8 @@
+@@ -202,6 +246,8 @@
  	option 'splash_network' '10.104.0.0/16'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_oldenburg'
@@ -119,7 +146,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'kiberpipa'
  	option 'name' 'Kiberpipa.net'
-@@ -211,6 +237,8 @@
+@@ -211,6 +257,8 @@
  	option 'splash_network' '10.14.128.0/17'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_kiberpipa'
@@ -128,7 +155,7 @@ Index: modules/freifunk/root/etc/config/freifunk
  
  config 'community' 'wlanljubljana'
  	option 'name' 'wlan ljubljana'
-@@ -220,4 +248,9 @@
+@@ -220,4 +268,9 @@
  	option 'splash_network' '10.254.120.0/21'
  	option 'splash_prefix' '27'
  	option 'external' 'freifunk_wlanljubljana'

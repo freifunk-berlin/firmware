@@ -61,16 +61,24 @@ fi
 if [ -d luci-0.9 ] ; then
 	echo "update luci-0.9 svn up"
 	cd luci-0.9
-	rm -rf $(svn status)
-	if [ -z $luci_revision ] ; then
-		svn up
-	else
-		svn sw -r $luci_revision http://svn.luci.subsignal.org/luci/branches/luci-0.9
-	fi
+	git checkout HEAD .
+	git add .
+	rm $(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)
+	git reset
+	git pull
+	#rm -rf $(svn status)
+	#if [ -z $luci_revision ] ; then
+	#	svn up
+	#else
+	#	svn sw -r $luci_revision http://svn.luci.subsignal.org/luci/branches/luci-0.9
+	#fi
 	cd ../
 else
 	echo "create luci-0.9 svn co"
 	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
+	#git clone git://nbd.name/luci.git luci-0.9
+	#cd luci-0.9
+	#git checkout luci-0.9
 	if [ -z $luci_revision ] ; then
 		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
 	else

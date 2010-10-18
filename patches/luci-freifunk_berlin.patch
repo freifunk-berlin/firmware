@@ -52,7 +52,7 @@ Index: modules/freifunk/root/etc/config/freifunk_berlin
 +	list 'LinkQualityMult' '77.87.48.90 0.2'
 +	list 'LinkQualityMult' '77.87.48.91 0.2'
 +	list 'LinkQualityMult' '77.87.48.92 0.2'
-+	list 'LinkQualityMult' '77.87.48.93 1.0'
++	list 'LinkQualityMult' '77.87.48.93 0.2'
 +	list 'LinkQualityMult' '77.87.48.94 0.2'
 +	list 'LinkQualityMult' '77.87.48.95 0.2'
 +	list 'LinkQualityMult' '77.87.48.96 0.2'

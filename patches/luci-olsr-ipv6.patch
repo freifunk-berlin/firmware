@@ -10,7 +10,7 @@ Index: applications/luci-olsr/luasrc/controller/olsr.lua
  function index()
  	if not nixio.fs.access("/etc/config/olsrd") then
  		return
-@@ -178,48 +180,148 @@
+@@ -178,48 +180,162 @@
  -- Internal
  function fetch_txtinfo(otable)
  	require("luci.sys")
@@ -118,12 +118,26 @@ Index: applications/luci-olsr/luasrc/controller/olsr.lua
  			for k, key in pairs(keys) do
 -				data[name][j][key] = fields[k]
 +				if key == "Remote IP" then
-+				    hostname = nixio.getnameinfo(fields[k], "inet6")
-+				    if hostname then
-+				      data[name][di][key] = hostname
-+				    else
-+				      data[name][di][key] = "[" .. fields[k] .. "]"
-+				    end
++					hostname = nixio.getnameinfo(fields[k], "inet6")
++					if hostname then
++						data[name][di][key] = "[" .. fields[k] .. "]"
++						data[name][di]["Hostname"] = hostname
++					else
++						data[name][di][key] = "[" .. fields[k] .. "]"
++					end
++				elseif key == "Local IP" then
++					data[name][di][key] = fields[k]
++					data[name][di]['Local Device'] = fields[k]
++					uci:foreach("network", "interface",
++						function(s)
++							local localip = string.gsub(fields[k], '	', '')
++							if s.ip6addr then
++								local ip6addr = string.gsub(s.ip6addr, '\/.*', '')
++								if ip6addr == localip then
++									data[name][di]['Local Device'] = s['.name'] or s.interface
++								end
++							end
++					end)
 +				elseif key == "Dest. IP" then
 +				    data[name][di][key] = "[" .. fields[k] .. "]"
 +				elseif key == "Last hop IP" then

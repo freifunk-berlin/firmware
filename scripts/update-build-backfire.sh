@@ -75,18 +75,18 @@ if [ -d luci-0.9 ] ; then
 	cd ../
 else
 	echo "create luci-0.9 svn co"
-	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
-	#git clone git://nbd.name/luci.git luci-0.9
-	#cd luci-0.9
-	#git checkout luci-0.9
-	if [ -z $luci_revision ] ; then
-		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
-	else
-		svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
-		cd luci-0.9
-		svn sw -r $luci_revision http://svn.luci.subsignal.org/luci/branches/luci-0.9
-		cd ..
-	fi
+	#svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
+	git clone git://nbd.name/luci.git luci-0.9
+	cd luci-0.9
+	git checkout origin/luci-0.9
+	#if [ -z $luci_revision ] ; then
+	#	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
+	#else
+	#	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
+	#	cd luci-0.9
+	#	svn sw -r $luci_revision http://svn.luci.subsignal.org/luci/branches/luci-0.9
+	#	cd ..
+	#fi
 fi
 echo "LUCI Branch: luci-0.9" >> VERSION.txt
 
@@ -224,6 +224,7 @@ for board in $boards ; do
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i
 	done
+	cp "../../ff-control/patches/200-fix_ipv6_receiving_with_ipv4_socket.patch" "target/linux/brcm-2.4/patches"
 	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 	cp  ../../ff-control/configs/$verm-$board.config .config
 	mkdir -p ../../dl

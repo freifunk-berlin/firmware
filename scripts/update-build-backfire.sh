@@ -79,6 +79,7 @@ else
 	git clone git://nbd.name/luci.git luci-0.9
 	cd luci-0.9
 	git checkout origin/luci-0.9
+	cd ../
 	#if [ -z $luci_revision ] ; then
 	#	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
 	#else

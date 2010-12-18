@@ -10,4 +10,3 @@ Index: ipv6/radvd/files/radvd.init
 +               ip6addr=$(LANG=C ifconfig "$ifname" 2> /dev/null | sed -n -e 's/^  *inet6 addr: \([A-Fa-f0-9.:]*[/][0-9]*\) Scope:'"$ifconfig_scope"'$/\1/p' | head -n 1)
                 [ -z "$ip6addr" ] && return 1
         fi
-

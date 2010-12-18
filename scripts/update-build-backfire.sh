@@ -35,6 +35,12 @@ fi
 cd packages
 packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 echo "OpenWrt Packages Revision: $packages_revision" >> ../VERSION.txt
+PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch"
+for i in $PACKAGESPATCHES ; do
+	pparm='-p0'
+	echo "Patch: $i"
+	patch $pparm < ../ff-control/patches/$i
+done
 cd ..
 
 #update and patch repos

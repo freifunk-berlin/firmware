@@ -242,14 +242,14 @@ for board in $boards ; do
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	cp build_dir/target-$arch*/root-$board/usr/lib/opkg/status ../opkg-$board.status
 
-	mkdir -p 						$wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	mkdir -p 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board
 	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver-timestamp/$timestamp/$board
-	cp VERSION.txt		 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board
-	cp .config 						$wwwdir/$verm/$ver-timestamp/$timestamp/$board/dot-config
-	mkdir -p 						$wwwdir/$verm/$ver/$board
+	cp VERSION.txt		 	$wwwdir/$verm/$ver-timestamp/$timestamp/$board
+	cp .config 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board/dot-config
+	mkdir -p 			$wwwdir/$verm/$ver/$board
 	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver/$board
-	cp VERSION.txt					$wwwdir/$verm/$ver/$board
-	cp .config 						$wwwdir/$verm/$ver/$board/dot-config
+	cp VERSION.txt			$wwwdir/$verm/$ver/$board
+	cp .config 			$wwwdir/$verm/$ver/$board/dot-config
 	case $board in
 		ar71xx)
 			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y

@@ -1,7 +1,7 @@
 Index: modules/freifunk/root/etc/config/freifunk_berlin
 ===================================================================
---- modules/freifunk/root/etc/config/freifunk_berlin	(Revision 6252)
-+++ modules/freifunk/root/etc/config/freifunk_berlin	(Arbeitskopie)
+--- a/modules/freifunk/root/etc/config/freifunk_berlin	(Revision 6252)
++++ b/modules/freifunk/root/etc/config/freifunk_berlin	(Arbeitskopie)
 @@ -3,3 +3,93 @@
  config 'defaults' 'wifi_device'
  	option 'channel' '10'

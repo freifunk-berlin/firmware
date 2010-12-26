@@ -1,5 +1,5 @@
---- modules/freifunk/root/etc/config/freifunk	2010-08-25 19:46:41.135000064 +0200
-+++ modules/freifunk/root/etc/config/freifunk.copy	2010-08-25 19:47:48.746000068 +0200
+--- a/modules/freifunk/root/etc/config/freifunk	2010-08-25 19:46:41.135000064 +0200
++++ b/modules/freifunk/root/etc/config/freifunk.copy	2010-08-25 19:47:48.746000068 +0200
 @@ -235,3 +235,14 @@
  
  
@@ -17,8 +17,8 @@
 +
 +
 +
---- modules/freifunk/root/etc/config/freifunk_cottbus    1970-01-01 01:00:00.000000000 +0100
-+++ modules/freifunk/root/etc/config/freifunk_cottbus 2010-08-25 17:58:05.187000066 +0200
+--- a/modules/freifunk/root/etc/config/freifunk_cottbus    1970-01-01 01:00:00.000000000 +0100
++++ b/modules/freifunk/root/etc/config/freifunk_cottbus 2010-08-25 17:58:05.187000066 +0200
 @@ -0,0 +1,10 @@
 +package 'freifunk_cottbus'
 +

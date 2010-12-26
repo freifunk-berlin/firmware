@@ -64,66 +64,44 @@ else
 	git clone git://github.com/basicinside/piratenfreifunk-packages.git
 fi
 
-if [ -d luci-0.9 ] ; then
-	echo "update luci-0.9 svn up"
-	cd luci-0.9
+if [ -d luci-master ] ; then
+	echo "update luci-master git pull"
+	cd luci-master
 	git checkout HEAD .
 	git add .
 	rm $(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)
-	git reset
+	git reset --hard
 	git pull
-	#rm -rf $(svn status)
-	#if [ -z $luci_revision ] ; then
-	#	svn up
-	#else
-	#	svn sw -r $luci_revision http://svn.luci.subsignal.org/luci/branches/luci-0.9
-	#fi
 	cd ../
 else
-	echo "create luci-0.9 svn co"
-	#svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
-	git clone git://nbd.name/luci.git luci-0.9
-	cd luci-0.9
-	git checkout origin/luci-0.9
+	echo "create HEAD master"
+	git clone git://nbd.name/luci.git luci-master
+	cd luci-master
+	#git checkout origin/master
 	cd ../
-	#if [ -z $luci_revision ] ; then
-	#	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
-	#else
-	#	svn co http://svn.luci.subsignal.org/luci/branches/luci-0.9 luci-0.9
-	#	cd luci-0.9
-	#	svn sw -r $luci_revision http://svn.luci.subsignal.org/luci/branches/luci-0.9
-	#	cd ..
-	#fi
 fi
-echo "LUCI Branch: luci-0.9" >> VERSION.txt
 
-cd luci-0.9
-luci_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+echo "LUCI Branch: luci-master" >> VERSION.txt
+
+cd luci-master
+luci_revision=$(git rev-parse HEAD)
 echo "LUCI Revision: $luci_revision" >> ../VERSION.txt
-LUCIPATCHES="$LUCIPATCHES luci-olsr-ipv6.patch"
-LUCIPATCHES="$LUCIPATCHES luci-olsrd-dnsmasq-addnhosts-list.patch"
-LUCIPATCHES="$LUCIPATCHES luci-olsrd-lqmult-list.patch"
-LUCIPATCHES="$LUCIPATCHES luci-olsrd-p2p.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-BergischesLand.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-dresden.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-neuss.patch"
+LUCIPATCHES="$LUCIPATCHES luci-olsr-code-cleanup.patch"
+LUCIPATCHES="$LUCIPATCHES luci-olsr-make-default-gw-yellow.patch"
+LUCIPATCHES="$LUCIPATCHES luci-freifunk_l2gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-muenster.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-cottbus.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-pberg.patch"
-LUCIPATCHES="$LUCIPATCHES luci-map-update.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_berlin.patch"
-LUCIPATCHES="$LUCIPATCHES luci-remove-remoteupdate.patch"
-LUCIPATCHES="$LUCIPATCHES luci-ipv6-status.patch"
+LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
 for i in $LUCIPATCHES ; do
-	pparm='-p0'
+	pparm='-p1'
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i
 done
 rm modules/freifunk/luasrc/controller/freifunk/remote_update.lua
 rm modules/freifunk/luasrc/view/freifunk/remote_update.htm
 
-chmod +x applications/luci-olsr/root/etc/init.d/luci_olsr
+#chmod +x applications/luci-olsr/root/etc/init.d/luci_olsr
 rm -rf $(find . | grep \.rej$)
 rm -rf $(find . | grep \.orig$)
 cd ..
@@ -178,7 +156,7 @@ for board in $boards ; do
 	echo "src-link packages ../../../packages" >> feeds.conf
 	echo "src-link packagespberg ../../../packages-pberg" >> feeds.conf
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
-	echo "src-link luci ../../../luci-0.9" >> feeds.conf
+	echo "src-link luci ../../../luci-master" >> feeds.conf
 
 	echo "openwrt feeds update"
 	scripts/feeds update

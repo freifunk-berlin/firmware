@@ -1,0 +1,116 @@
+diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
+index 688e491..cc14982 100644
+--- a/applications/luci-olsr/luasrc/controller/olsr.lua
++++ b/applications/luci-olsr/luasrc/controller/olsr.lua
+@@ -14,6 +14,8 @@ function index()
+ 	page.i18n   = "olsr"
+ 	page.subindex = true
+ 
++	assign({"mini", "status", "olsr"}, {"admin", "status", "olsr"}, "OLSR", 30)
++
+ 	local page  = node("admin", "status", "olsr", "neighbors")
+ 	page.target = call("action_neigh")
+ 	page.title  = i18n("Neighbors")
+@@ -57,6 +59,8 @@ function index()
+ 	ol.i18n = "olsr"
+ 	ol.subindex = true
+ 
++	assign({"mini", "services", "olsrd"}, {"admin", "services", "olsrd"}, "OLSR", 30)
++
+ 	entry(
+ 		{"admin", "services", "olsrd", "iface"},
+ 		cbi("olsr/olsrdiface")
+@@ -65,7 +69,7 @@ function index()
+ 	entry(
+ 		{"admin", "services", "olsrd", "hna"},
+ 		cbi("olsr/olsrdhna"), "HNA Announcements"
+-	)
++	).leaf = true
+ 
+ 	oplg = entry(
+ 		{"admin", "services", "olsrd", "plugins"},
+diff --git a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
+index f7b173c..17f949b 100644
+--- a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
++++ b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
+@@ -286,7 +286,7 @@ av.write = write_float
+ ifs = m:section(TypedSection, "Interface", translate("Interfaces"))
+ ifs.addremove = true
+ ifs.anonymous = true
+-ifs.extedit   = luci.dispatcher.build_url("admin/services/olsrd/iface/%s")
++ifs.extedit   = luci.dispatcher.build_url(unpack(luci.dispatcher.context.requested.path) .. "/services/olsrd/iface/%s")
+ ifs.template  = "cbi/tblsection"
+ 
+ function ifs.create(...)
+diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
+index 8d248b1..ff9190a 100644
+--- a/contrib/package/luci/Makefile
++++ b/contrib/package/luci/Makefile
+@@ -275,10 +275,10 @@ define Package/luci-mod-freifunk/conffiles
+ endef
+ 
+ $(eval $(call module,admin-core,Web UI Core module,+luci-lib-web +luci-i18n-english))
+-$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-mod-admin-core @BROKEN))
++$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-mod-admin-core))
+ $(eval $(call module,admin-full,LuCI Administration - full-featured for full control,+luci-mod-admin-core +luci-lib-ipkg))
+ $(eval $(call module,rpc,LuCI RPC - JSON-RPC API,+luci-lib-json))
+-$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall))
++$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-mini +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall))
+ $(eval $(call module,niu,NIU - Next Generation Interface,+luci-mod-admin-core @BROKEN))
+ 
+ 
+@@ -329,7 +329,7 @@ $(eval $(call application,firewall,Firmware and Portforwarding application,\
+ 	+PACKAGE_luci-app-firewall:firewall))
+ 
+ $(eval $(call application,olsr,OLSR configuration and status module,\
+-	+luci-mod-admin-full +PACKAGE_luci-app-olsr:olsrd +PACKAGE_luci-app-olsr:olsrd-mod-txtinfo))
++	+luci-mod-admin-mini +PACKAGE_luci-app-olsr:olsrd +PACKAGE_luci-app-olsr:olsrd-mod-txtinfo))
+ 
+ $(eval $(call application,olsr-viz,OLSR Visualisation,\
+ 	+PACKAGE_luci-app-olsr-viz:luci-app-olsr +PACKAGE_luci-app-olsr-viz:olsrd-mod-txtinfo))
+diff --git a/modules/admin-mini/luasrc/controller/mini/index.lua b/modules/admin-mini/luasrc/controller/mini/index.lua
+index 81c0846..563dcaa 100644
+--- a/modules/admin-mini/luasrc/controller/mini/index.lua
++++ b/modules/admin-mini/luasrc/controller/mini/index.lua
+@@ -36,6 +36,8 @@ function index()
+ 	entry({"mini", "index", "index"}, form("mini/index"), i18n("General"), 1).ignoreindex = true
+ 	entry({"mini", "index", "luci"}, cbi("mini/luci", {autoapply=true}), i18n("Settings"), 10)
+ 	entry({"mini", "index", "logout"}, call("action_logout"), i18n("Logout"))
++	entry({"mini", "services"}, alias("mini", "services", "index"), i18n("Services"), 30).index = true
++	entry({"mini", "services", "index"}, form("mini/index"), i18n("Services"), 1).ignoreindex = true
+ end
+ 
+ function action_logout()
+diff --git a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
+index b9f551b..c49940b 100644
+--- a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
++++ b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
+@@ -60,22 +60,26 @@ function index()
+ 		assign({"freifunk", "graph"}, {"admin", "statistics", "graph"}, i18n("Statistics"), 40)
+ 	end
+ 
+-	assign({"mini", "freifunk"}, {"admin", "freifunk"}, "Freifunk", 15)
+-	entry({"admin", "freifunk"}, alias("admin", "freifunk", "index"), "Freifunk", 15)
++	entry({"admin", "freifunk"}, alias("admin", "freifunk", "ffwizard"), "Freifunk", 15)
+ 	local page  = node("admin", "freifunk", "index")
+ 	page.target = cbi("freifunk/freifunk")
+ 	page.title  = "Freifunk"
+ 	page.order  = 30
+ 
++	entry({"mini", "freifunk"}, alias("mini", "freifunk", "ffwizard"), "Freifunk", 15)
++	assign({"mini", "freifunk", "index"}, {"admin", "freifunk", "index"}, "Freifunk", 15)
++
+ 	local page  = node("admin", "freifunk", "Index-Page")
+ 	page.target = cbi("freifunk/user_index")
+ 	page.title  = "Index-Page"
+ 	page.order  = 35
++	assign({"mini", "freifunk", "Index-Page"}, {"admin", "freifunk", "Index-Page"}, "Index-Page", 35)
+ 
+ 	local page  = node("admin", "freifunk", "contact")
+ 	page.target = cbi("freifunk/contact")
+ 	page.title  = "Kontakt"
+ 	page.order  = 40
++	assign({"mini", "freifunk", "contact"}, {"admin", "freifunk", "contact"}, "Kontakt", 40)
+ 
+ 	entry({"freifunk", "map"}, template("freifunk-map/frame"), i18n("Karte"), 50)
+ 	entry({"freifunk", "map", "content"}, template("freifunk-map/map"), nil, 51)

@@ -1,0 +1,68 @@
+commit eed7311c8f88070e27377a2d94bc5552207cbfbc
+Author: Patrick Grimm <patrick@lunatiki.de>
+Date:   Thu Dec 23 22:31:58 2010 +0100
+
+    [luci-olsr] make default gw yellow
+
+diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
+index f00ae96..688e491 100644
+--- a/applications/luci-olsr/luasrc/controller/olsr.lua
++++ b/applications/luci-olsr/luasrc/controller/olsr.lua
+@@ -238,6 +238,15 @@ function fetch_txtinfo(otable)
+ 	if #rawdata ~= 0 then
+ 		local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
+ 
++		if otable == "links" then
++			local route = {}
++			for i, route in ipairs(luci.sys.net.routes()) do
++				if route.dest:prefix() == 0 then
++					defaultgw = route.gateway:string()
++				end
++			end
++		end
++
+ 		for i, tbl in ipairs(tables) do
+ 			local lines = luci.util.split(tbl, "\r?\n", nil, true)
+ 			name  = table.remove(lines, 1):sub(8)
+@@ -259,6 +268,11 @@ function fetch_txtinfo(otable)
+ 						if hostname then
+ 							data[name][di]["Hostname"] = hostname
+ 						end
++						if key == "Remote IP" and defaultgw then
++							if defaultgw == fields[k] then
++								data[name][di]["defaultgw"] = 1
++							end
++						end
+ 					elseif key == "Local IP" then
+ 						data[name][di][key] = fields[k]
+ 						data[name][di]['Local Device'] = fields[k]
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm b/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
+index 60afdc3..46ebebf 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
+@@ -39,14 +39,19 @@ $Id: index.htm 6619 2010-12-05 15:02:44Z soma $
+ 	elseif link.Cost < 100 then
+ 		color = "#ff6600"
+ 	end
++
++	defaultgw_color = ""
++	if link.defaultgw == 1 then
++		defaultgw_color = "#ffff99"
++	end
+ %>
+ <tr>
+-<td><a href="http://<%=link["Remote IP"]%>/cgi-bin-status.html"><%=link["Remote IP"]%></a></td>
+-<td><a href="http://<%=link["Hostname"]%>/cgi-bin-status.html"><%=link["Hostname"]%></a></td>
+-<td><%=link["Local IP"]%></td>
+-<td><%=link["Local Device"]%></td>
+-<td><%=link.LQ%></td>
+-<td><%=link.NLQ%></td>
++<td style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Remote IP"]%>/cgi-bin-status.html"><%=link["Remote IP"]%></a></td>
++<td style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Hostname"]%>/cgi-bin-status.html"><%=link["Hostname"]%></a></td>
++<td style="background-color:<%=defaultgw_color%>"><%=link["Local IP"]%></td>
++<td style="background-color:<%=defaultgw_color%>"><%=link["Local Device"]%></td>
++<td style="background-color:<%=defaultgw_color%>"><%=link.LQ%></td>
++<td style="background-color:<%=defaultgw_color%>"><%=link.NLQ%></td>
+ <td style="background-color:<%=color%>"><%=string.format("%.3f", link.Cost)%></td>
+ </tr>
+ <% end %>

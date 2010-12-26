@@ -42,6 +42,32 @@ index f7b173c..17f949b 100644
  ifs.template  = "cbi/tblsection"
  
  function ifs.create(...)
+diff --git a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdiface.lua b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdiface.lua
+index 25692fd..5e196ad 100644
+--- a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdiface.lua
++++ b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdiface.lua
+@@ -26,7 +26,7 @@ m = Map("olsrd", translate("OLSR Daemon - Interface"),
+ 	"It runs on any wifi card that supports ad-hoc mode and of course on any ethernet device. "..
+ 	"Visit <a href='http://www.olsr.org'>olsrd.org</a> for help and documentation."))
+ 
+-m.redirect = luci.dispatcher.build_url("admin/services/olsrd")
++m.redirect = luci.dispatcher.build_url(unpack(luci.dispatcher.context.requested.path) .. "/services/olsrd")
+ 
+ if not arg[1] or m.uci:get("olsrd", arg[1]) ~= "Interface" then
+ 	luci.http.redirect(m.redirect)
+diff --git a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdplugins.lua b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdplugins.lua
+index 2cfccdd..38a87f8 100644
+--- a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdplugins.lua
++++ b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdplugins.lua
+@@ -247,7 +247,7 @@ else
+ 	t.override_scheme = true
+ 	function t.extedit(self, section)
+ 		local lib = self.map:get(section, "library") or ""
+-		return luci.dispatcher.build_url("admin", "services", "olsrd", "plugins") .. "/" .. lib
++		return luci.dispatcher.build_url(unpack(luci.dispatcher.context.requested.path), "services", "olsrd", "plugins") .. "/" .. lib
+ 	end
+ 
+ 	ign = t:option( Flag, "ignore", translate("Enabled") )
 diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
 index 8d248b1..ff9190a 100644
 --- a/contrib/package/luci/Makefile

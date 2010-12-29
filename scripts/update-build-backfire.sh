@@ -93,6 +93,7 @@ LUCIPATCHES="$LUCIPATCHES freifunk-muenster.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-cottbus.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_berlin.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
+LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"

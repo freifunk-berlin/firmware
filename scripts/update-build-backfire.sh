@@ -38,7 +38,7 @@ echo "OpenWrt Packages Revision: $packages_revision" >> ../VERSION.txt
 PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch"
 PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch"
 for i in $PACKAGESPATCHES ; do
-	pparm='-p0'
+	pparm='-p1'
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i
 done

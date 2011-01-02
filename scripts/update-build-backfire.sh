@@ -86,8 +86,6 @@ echo "LUCI Branch: luci-master" >> VERSION.txt
 cd luci-master
 luci_revision=$(git rev-parse HEAD)
 echo "LUCI Revision: $luci_revision" >> ../VERSION.txt
-LUCIPATCHES="$LUCIPATCHES luci-olsr-code-cleanup.patch"
-LUCIPATCHES="$LUCIPATCHES luci-olsr-make-default-gw-yellow.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_l2gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-muenster.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-cottbus.patch"
@@ -103,7 +101,6 @@ done
 rm modules/freifunk/luasrc/controller/freifunk/remote_update.lua
 rm modules/freifunk/luasrc/view/freifunk/remote_update.htm
 
-#chmod +x applications/luci-olsr/root/etc/init.d/luci_olsr
 rm -rf $(find . | grep \.rej$)
 rm -rf $(find . | grep \.orig$)
 cd ..

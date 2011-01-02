@@ -36,6 +36,7 @@ cd packages
 packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 echo "OpenWrt Packages Revision: $packages_revision" >> ../VERSION.txt
 PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch"
+PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch"
 for i in $PACKAGESPATCHES ; do
 	pparm='-p0'
 	echo "Patch: $i"
@@ -167,8 +168,8 @@ for board in $boards ; do
 	scripts/feeds install -p packagespberg xsltproc
 	scripts/feeds uninstall motion
 	scripts/feeds install -p packagespberg motion
-	scripts/feeds uninstall olsrd-luci
-	scripts/feeds install -p packagespberg olsrd-luci
+#	scripts/feeds uninstall olsrd-luci
+#	scripts/feeds install -p packagespberg olsrd-luci
 # 	rm -rf package/uhttpd
 #	scripts/feeds install -p packagespberg uhttpd
 	sed -i -e "s/downloads\.openwrt\.org.*/$servername\/$verm\/$ver-timestamp\/$timestamp\/$board\/packages/" package/opkg/files/opkg.conf

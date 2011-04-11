@@ -69,14 +69,16 @@ index 2cfccdd..38a87f8 100644
  
  	ign = t:option( Flag, "ignore", translate("Enabled") )
 diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
-index 8d248b1..ff9190a 100644
+index 45039a1..255badf 100644
 --- a/contrib/package/luci/Makefile
 +++ b/contrib/package/luci/Makefile
-@@ -275,10 +275,10 @@ define Package/luci-mod-freifunk/conffiles
+@@ -276,11 +276,11 @@ define Package/luci-mod-freifunk/conffiles
+ /etc/config/freifunk
  endef
  
- $(eval $(call module,admin-core,Web UI Core module,+luci-lib-web +luci-i18n-english))
+-$(eval $(call module,admin-core,Web UI Core module,+luci-lib-web +luci-i18n-english))
 -$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-mod-admin-core @BROKEN))
++$(eval $(call module,admin-core,Web UI Core module,+luci-lib-web))
 +$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-mod-admin-core))
  $(eval $(call module,admin-full,LuCI Administration - full-featured for full control,+luci-mod-admin-core +luci-lib-ipkg))
  $(eval $(call module,rpc,LuCI RPC - JSON-RPC API,+luci-lib-json))
@@ -85,28 +87,15 @@ index 8d248b1..ff9190a 100644
  $(eval $(call module,niu,NIU - Next Generation Interface,+luci-mod-admin-core @BROKEN))
  
  
-@@ -329,7 +329,7 @@ $(eval $(call application,firewall,Firmware and Portforwarding application,\
- 	+PACKAGE_luci-app-firewall:firewall))
+@@ -334,7 +334,7 @@ $(eval $(call application,firewall,Firmware and Portforwarding application,\
+        +PACKAGE_luci-app-firewall:firewall))
  
  $(eval $(call application,olsr,OLSR configuration and status module,\
 -	+luci-mod-admin-full +PACKAGE_luci-app-olsr:olsrd +PACKAGE_luci-app-olsr:olsrd-mod-txtinfo))
 +	+luci-mod-admin-mini +PACKAGE_luci-app-olsr:olsrd +PACKAGE_luci-app-olsr:olsrd-mod-txtinfo))
  
  $(eval $(call application,olsr-viz,OLSR Visualisation,\
- 	+PACKAGE_luci-app-olsr-viz:luci-app-olsr +PACKAGE_luci-app-olsr-viz:olsrd-mod-txtinfo))
-diff --git a/modules/admin-mini/luasrc/controller/mini/index.lua b/modules/admin-mini/luasrc/controller/mini/index.lua
-index 81c0846..563dcaa 100644
---- a/modules/admin-mini/luasrc/controller/mini/index.lua
-+++ b/modules/admin-mini/luasrc/controller/mini/index.lua
-@@ -36,6 +36,8 @@ function index()
- 	entry({"mini", "index", "index"}, form("mini/index"), i18n("General"), 1).ignoreindex = true
- 	entry({"mini", "index", "luci"}, cbi("mini/luci", {autoapply=true}), i18n("Settings"), 10)
- 	entry({"mini", "index", "logout"}, call("action_logout"), i18n("Logout"))
-+	entry({"mini", "services"}, alias("mini", "services", "index"), i18n("Services"), 30).index = true
-+	entry({"mini", "services", "index"}, form("mini/index"), i18n("Services"), 1).ignoreindex = true
- end
- 
- function action_logout()
+        +PACKAGE_luci-app-olsr-viz:luci-app-olsr +PACKAGE_luci-app-olsr-viz:olsrd-mod-txtinfo))
 diff --git a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 index b9f551b..c49940b 100644
 --- a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
@@ -140,3 +129,16 @@ index b9f551b..c49940b 100644
  
  	entry({"freifunk", "map"}, template("freifunk-map/frame"), i18n("Karte"), 50)
  	entry({"freifunk", "map", "content"}, template("freifunk-map/map"), nil, 51)
+diff --git a/modules/admin-mini/luasrc/controller/mini/index.lua b/modules/admin-mini/luasrc/controller/mini/index.lua
+index 81c0846..563dcaa 100644
+--- a/modules/admin-mini/luasrc/controller/mini/index.lua
++++ b/modules/admin-mini/luasrc/controller/mini/index.lua
+@@ -36,6 +36,8 @@ function index()
+ 	entry({"mini", "index", "index"}, form("mini/index"), i18n("General"), 1).ignoreindex = true
+ 	entry({"mini", "index", "luci"}, cbi("mini/luci", {autoapply=true}), i18n("Settings"), 10)
+ 	entry({"mini", "index", "logout"}, call("action_logout"), i18n("Logout"))
++	entry({"mini", "services"}, alias("mini", "services", "index"), i18n("Services"), 30).index = true
++	entry({"mini", "services", "index"}, form("mini/index"), i18n("Services"), 1).ignoreindex = true
+ end
+ 
+ function action_logout()

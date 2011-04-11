@@ -2,7 +2,7 @@ Index: modules/freifunk/root/etc/config/freifunk_berlin
 ===================================================================
 --- a/modules/freifunk/root/etc/config/freifunk_berlin	(Revision 6252)
 +++ b/modules/freifunk/root/etc/config/freifunk_berlin	(Arbeitskopie)
-@@ -3,3 +3,93 @@
+@@ -3,3 +3,94 @@
  config 'defaults' 'wifi_device'
  	option 'channel' '10'
  
@@ -23,6 +23,7 @@ Index: modules/freifunk/root/etc/config/freifunk_berlin
 +	option 'Pollrate' '0.025'
 +	option 'TcRedundancy' '2'
 +	option 'NatThreshold' '0.75'
++	option 'LinkQualityAlgorithm' 'etx_ff'
 +
 +config 'defaults' 'olsr_gvpninterface'
 +	list 'LinkQualityMult' '77.87.48.66 0.2'

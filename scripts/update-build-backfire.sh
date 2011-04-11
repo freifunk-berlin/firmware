@@ -10,6 +10,55 @@ timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
 date +"%Y/%m/%d %H:%M">VERSION.txt
 
+#svn co https://www.wgaugsburg.de/svn/kamikaze
+#if [ -d wgaugsburg ] ; then
+#	echo "update wgaugsburg svn up"
+#	cd wgaugsburg
+#	rm -rf $(svn status)
+#	if [ -z $wgaugsburg_revision ] ; then
+#		svn up
+#	else
+#		svn sw -r $packages_revision https://www.wgaugsburg.de/svn/kamikaze
+#	fi
+#	cd ../
+#else
+#	echo "create wgaugsburg svn co"
+#	svn co https://www.wgaugsburg.de/svn/kamikaze wgaugsburg
+#	if [ -z $wgaugsburg_revision ] ; then
+#		svn co https://www.wgaugsburg.de/svn/kamikaze wgaugsburg
+#	else
+#		svn co https://www.wgaugsburg.de/svn/kamikaze wgaugsburg
+#		cd wgaugsburg
+#		svn sw -r $packages_revision https://www.wgaugsburg.de/svn/kamikaze
+#		cd ..
+#	fi
+#fi
+
+#svn http://wurststulle.dyndns.org/yaffmap/svn/trunk/update_agents/package/yaffmap_uci/
+if [ -d update_agents ] ; then
+	echo "update yaffmap_uci svn up"
+	cd update_agents
+	rm -rf $(svn status)
+	if [ -z $update_agents_revision ] ; then
+		svn up
+	else
+		svn sw -r $update_agents_revision http://wurststulle.dyndns.org/yaffmap/svn/trunk/update_agents
+	fi
+	cd ../
+else
+	echo "create yaffmap_uci svn co"
+	#svn co http://wurststulle.dyndns.org/yaffmap/svn/trunk/ update_agents
+	if [ -z $update_agents_revision ] ; then
+		svn co http://wurststulle.dyndns.org/yaffmap/svn/trunk/ update_agents
+	else
+		svn co http://wurststulle.dyndns.org/yaffmap/svn/trunk/ update_agents
+		cd update_agents
+		svn sw -r $update_agents_revision http://wurststulle.dyndns.org/yaffmap/svn/trunk
+		cd ..
+	fi
+fi
+
+
 if [ -d packages ] ; then
 	echo "update packages svn up"
 	cd packages
@@ -32,16 +81,18 @@ else
 		cd ..
 	fi
 fi
+
 cd packages
 packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 echo "OpenWrt Packages Revision: $packages_revision" >> ../VERSION.txt
 PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch"
 PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch"
 for i in $PACKAGESPATCHES ; do
-	pparm='-p1'
+	pparm='-p0'
 	echo "Patch: $i"
-	patch $pparm < ../ff-control/patches/$i
+	patch $pparm < ../ff-control/patches/$i || exit 0
 done
+rm -rf libs/mysql
 cd ..
 
 #update and patch repos
@@ -73,12 +124,13 @@ if [ -d luci-master ] ; then
 	rm $(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)
 	git reset --hard
 	git pull
+	[ -z $luci_revision ] || git checkout $luci_revision
 	cd ../
 else
 	echo "create HEAD master"
 	git clone git://nbd.name/luci.git luci-master
 	cd luci-master
-	#git checkout origin/master
+	git checkout origin/master
 	cd ../
 fi
 
@@ -90,16 +142,19 @@ echo "LUCI Revision: $luci_revision" >> ../VERSION.txt
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_l2gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-muenster.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-cottbus.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-rosbach.patch"
+LUCIPATCHES="$LUCIPATCHES freifunk-bno.patch"
+#LUCIPATCHES="$LUCIPATCHES freifunk-rosbach.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_berlin.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
-LUCIPATCHES="$LUCIPATCHES luci-english-dep.patch"
+#LUCIPATCHES="$LUCIPATCHES luci-english-dep.patch"
+LUCIPATCHES="$LUCIPATCHES luci-freifunk-firewall-natfix.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i
 done
+
 rm modules/freifunk/luasrc/controller/freifunk/remote_update.lua
 rm modules/freifunk/luasrc/view/freifunk/remote_update.htm
 
@@ -129,8 +184,8 @@ for board in $boards ; do
 #	rm -rf build_dir/*/lua*
 #	rm -rf dl/*luci*
 #	rm -rf build_dir/*/compat-wireless*
-	rm -rf $(find . | grep \.rej$)
-	rm -rf $(find . | grep \.orig$)
+#	rm -rf $(find . | grep \.rej$)
+#	rm -rf $(find . | grep \.orig$)
 #	rm -rf ./build_dir
 #	rm -rf ./staging_dir
 	rm -rf ./files
@@ -158,17 +213,18 @@ for board in $boards ; do
 	echo "src-link packagespberg ../../../packages-pberg" >> feeds.conf
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
 	echo "src-link luci ../../../luci-master" >> feeds.conf
-
+#	echo "src-link wgaugsburg ../../../wgaugsburg/packages" >> feeds.conf
+	echo "src-link update_agents ../../../update_agents/update_agents" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"
 	scripts/feeds install -a
-	scripts/feeds uninstall libxslt
-	scripts/feeds install -p packagespberg libxslt
-	scripts/feeds uninstall xsltproc
-	scripts/feeds install -p packagespberg xsltproc
-	scripts/feeds uninstall motion
-	scripts/feeds install -p packagespberg motion
+#	scripts/feeds uninstall libxslt
+#	scripts/feeds install -p packagespberg libxslt
+#	scripts/feeds uninstall xsltproc
+#	scripts/feeds install -p packagespberg xsltproc
+#	scripts/feeds uninstall motion
+#	scripts/feeds install -p packagespberg motion
 #	scripts/feeds uninstall olsrd-luci
 #	scripts/feeds install -p packagespberg olsrd-luci
 # 	rm -rf package/uhttpd
@@ -205,7 +261,7 @@ for board in $boards ; do
 #	PATCHES="$PATCHES wl0-to-wlan0.patch"
 	PATCHES="$PATCHES base-passwd-admin.patch"
 	PATCHES="$PATCHES base-system.patch"
-	PATCHES="$PATCHES ipkg-utils-fast-zip.patch"
+#	PATCHES="$PATCHES ipkg-utils-fast-zip.patch"
 	PATCHES="$PATCHES routerstation-bridge-wan-lan.patch"
 	for i in $PATCHES ; do
 		pparm='-p0'
@@ -215,12 +271,14 @@ for board in $boards ; do
 	cp "../../ff-control/patches/200-fix_ipv6_receiving_with_ipv4_socket.patch" "target/linux/brcm-2.4/patches"
 	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 	cp  ../../ff-control/configs/$verm-$board.config .config
+	cd package/firewall
+	svn co svn://svn.openwrt.org/openwrt/trunk/package/firewall
+	cd ../../
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
 	time nice -n 10 make V=99 world $make_options || ( rm update-build-$verm-$board.lock ; exit 1 )
 	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	cp build_dir/target-$arch*/root-$board/usr/lib/opkg/status ../opkg-$board.status
-
 	mkdir -p 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board
 	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver-timestamp/$timestamp/$board
 	cp VERSION.txt		 	$wwwdir/$verm/$ver-timestamp/$timestamp/$board
@@ -229,12 +287,12 @@ for board in $boards ; do
 	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver/$board
 	cp VERSION.txt			$wwwdir/$verm/$ver/$board
 	cp .config 			$wwwdir/$verm/$ver/$board/dot-config
-	case $board in
-		ar71xx)
-			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y
-			cp bin/$board/openwrt-ar71xx-ubnt-rs* $wwwdir/$verm/$ver/$board
-		;;
-	esac
+#	case $board in
+#		ar71xx)
+#			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y
+#			cp bin/$board/openwrt-ar71xx-ubnt-rs* $wwwdir/$verm/$ver/$board
+#		;;
+#	esac
 	cd ../../
 	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1 
@@ -244,3 +302,4 @@ for board in $boards ; do
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/
 done
+

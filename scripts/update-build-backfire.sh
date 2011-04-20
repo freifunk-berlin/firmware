@@ -139,20 +139,21 @@ echo "LUCI Branch: luci-master" >> VERSION.txt
 cd luci-master
 luci_revision=$(git rev-parse HEAD)
 echo "LUCI Revision: $luci_revision" >> ../VERSION.txt
-LUCIPATCHES="$LUCIPATCHES luci-freifunk_l2gvpn.patch"
+#LUCIPATCHES="$LUCIPATCHES luci-freifunk_l2gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-muenster.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-cottbus.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-bno.patch"
-#LUCIPATCHES="$LUCIPATCHES freifunk-rosbach.patch"
+LUCIPATCHES="$LUCIPATCHES freifunk-pirate-ndb.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_berlin.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
-#LUCIPATCHES="$LUCIPATCHES luci-english-dep.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-firewall-natfix.patch"
+LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
+LUCIPATCHES="$LUCIPATCHES luci-admin-mini-install-full.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
-	patch $pparm < ../ff-control/patches/$i
+	patch $pparm < ../ff-control/patches/$i || exit 0
 done
 
 rm modules/freifunk/luasrc/controller/freifunk/remote_update.lua
@@ -219,54 +220,16 @@ for board in $boards ; do
 	scripts/feeds update
 	echo "openwrt feeds install"
 	scripts/feeds install -a
-#	scripts/feeds uninstall libxslt
-#	scripts/feeds install -p packagespberg libxslt
-#	scripts/feeds uninstall xsltproc
-#	scripts/feeds install -p packagespberg xsltproc
-#	scripts/feeds uninstall motion
-#	scripts/feeds install -p packagespberg motion
-#	scripts/feeds uninstall olsrd-luci
-#	scripts/feeds install -p packagespberg olsrd-luci
-# 	rm -rf package/uhttpd
-#	scripts/feeds install -p packagespberg uhttpd
 	sed -i -e "s/downloads\.openwrt\.org.*/$servername\/$verm\/$ver-timestamp\/$timestamp\/$board\/packages/" package/opkg/files/opkg.conf
-	# enable hart reboot via echo "b" >/proc/sys/kernel/sysrq
-	# kernel 2.4 sysrq is enable by default
-#	sed -i -e 's/.*\(CONFIG_MAGIC_SYSRQ\).*/\1=y/' target/linux/generic-2.6/config-2.6.30
-#	sed -i -e 's/.*\(CONFIG_MAGIC_SYSRQ\).*/\1=y/' target/linux/generic-2.6/config-2.6.32
-#	sed -i -e 's/.*\(CONFIG_IDEDISK_MULTI_MODE\).*/\1=y/' target/linux/$board/config-default
-#	sed -i -e 's/.*\(CONFIG_BLK_DEV_PIIX\).*/\1=y/' target/linux/$board/config-default
-#	echo "CONFIG_PCIEAER=y" >> target/linux/$board/config-default
-#	sed -i -e 's/.*\(CONFIG_PCIEPORTBUS\).*/\1=y/' target/linux/$board/config-default
-#	sed -i -e 's/.*\(CONFIG_PCI_MSI\).*/\1=y/' target/linux/$board/config-default
-#	sed -i -e 's/.*\(CONFIG_kmod-e1000\).*/\1=m/' target/linux/$board/config-default
-#	echo "CONFIG_E1000_NAPI=n" >> target/linux/$board/config-default
-#	echo "CONFIG_E1000_DISABLE_PACKET_SPLIT=n" >> target/linux/$board/config-default
-#	sed -i -e 's/.*\(CONFIG_kmod-e1000e\).*/\1=m/' target/linux/$board/config-default
-#	sed -i -e 's/.*\(CONFIG_kmod-igb\).*/\1=m/' target/linux/$board/config-default
-#	sed -i -e 's/.*\(CONFIG_kmod-8139too\).*/\1=m/' target/linux/$board/config-default
-#	echo "CONFIG_8139TOO_PIO=y" >> target/linux/$board/config-default
-#	echo "CONFIG_8139TOO_TUNE_TWISTER=n" >> target/linux/$board/config-default
-#	echo "CONFIG_8139TOO_8129=y" >> target/linux/$board/config-default
-#	echo "CONFIG_8139_OLD_RX_RESET=n" >> target/linux/$board/config-default
-######################FEAUTURE#################################################################
-#	echo "CONFIG_SMP=y" >> target/linux/$board/generic/config-default
-#	echo "CONFIG_X86_BIGSMP=y" >> target/linux/$board/generic/config-default
-#	echo "CONFIG_X86_HT=y" >> target/linux/$board/generic/config-default
-#	echo "CONFIG_NR_CPUS=32" >> target/linux/$board/generic/config-default
-#	echo "CONFIG_SCHED_SMT=y" >> target/linux/$board/generic/config-default
-#	echo "CONFIG_SCHED_MC=y" >> target/linux/$board/generic/config-default
-###############################################################################################
-#	PATCHES="$PATCHES mac80211-adhoc.patch"
-#	PATCHES="$PATCHES wl0-to-wlan0.patch"
 	PATCHES="$PATCHES base-passwd-admin.patch"
 	PATCHES="$PATCHES base-system.patch"
-#	PATCHES="$PATCHES ipkg-utils-fast-zip.patch"
 	PATCHES="$PATCHES routerstation-bridge-wan-lan.patch"
+	PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch"
+	PATCHES="$PATCHES brcm-2.4-reboot-fix.patch"
 	for i in $PATCHES ; do
 		pparm='-p0'
 		echo "Patch: $i"
-		patch $pparm < ../../ff-control/patches/$i
+		patch $pparm < ../../ff-control/patches/$i || exit 0
 	done
 	cp "../../ff-control/patches/200-fix_ipv6_receiving_with_ipv4_socket.patch" "target/linux/brcm-2.4/patches"
 	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
@@ -287,12 +250,12 @@ for board in $boards ; do
 	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver/$board
 	cp VERSION.txt			$wwwdir/$verm/$ver/$board
 	cp .config 			$wwwdir/$verm/$ver/$board/dot-config
-#	case $board in
-#		ar71xx)
-#			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y
-#			cp bin/$board/openwrt-ar71xx-ubnt-rs* $wwwdir/$verm/$ver/$board
-#		;;
-#	esac
+	case $board in
+		ar71xx)
+			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y
+			cp bin/$board/openwrt-ar71xx-ubnt-rs* $wwwdir/$verm/$ver/$board
+		;;
+	esac
 	cd ../../
 	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1 

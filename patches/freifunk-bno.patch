@@ -5,28 +5,15 @@
  
  
 +config 'community' 'bno'
-+	option 'name' 'Freifunk Berlin Nordost'
++	option 'name' 'Berlin NordOst'
 +	option 'homepage' 'http://www.freifunk-bno.de/'
 +	option 'ssid' 'olsr.freifunk.net'
-+	option 'mesh_network' '10.212.0.0/16'
-+	option 'splash_network' '10.212.255.0/27'
++	option 'mesh_network' ' 104.0.0.0/8'
++	option 'splash_network' '10.104.0.0/16'
 +	option 'splash_prefix' '27'
-+	option 'external' 'freifunk_bno'
-+	option 'latitude' '50.18'
-+	option 'longitude' '8.42'
++	option 'external' 'freifunk_berlin'
++	option 'latitude' '52.55010'
++	option 'longitude' '13.45889'
 +
 +
 +
---- a/modules/freifunk/root/etc/config/freifunk_bno    1970-01-01 01:00:00.000000000 +0100
-+++ b/modules/freifunk/root/etc/config/freifunk_bno 2010-08-25 17:58:05.187000066 +0200
-@@ -0,0 +1,10 @@
-+package 'freifunk_bno'
-+
-+config 'defaults' 'wifi_device'
-+        option 'channel' '13'
-+
-+config 'defaults' 'interface'
-+        option 'netmask' '255.255.0.0'
-+
-+config 'defaults' 'wifi_iface'
-+        option 'bssid' 'D2:CA:FF:EE:BA:BE'

@@ -1,8 +1,8 @@
 diff --git a/modules/admin-mini/luasrc/model/cbi/mini/index.lua b/modules/admin-mini/luasrc/model/cbi/mini/index.lua
-index 71b5daf..1cadf93 100644
+index 71b5daf..2d0e82e 100644
 --- a/modules/admin-mini/luasrc/model/cbi/mini/index.lua
 +++ b/modules/admin-mini/luasrc/model/cbi/mini/index.lua
-@@ -11,4 +11,23 @@ You may obtain a copy of the License at
+@@ -11,4 +11,36 @@ You may obtain a copy of the License at
  
  $Id$
  ]]--
@@ -25,12 +25,25 @@ index 71b5daf..1cadf93 100644
 +	ipkg.install("luci-theme-piraten")
 +	nixio.fs.unlink("/tmp/luci-indexcache")
 +end
++local update_tunnel = luci.http.formvalue("update_tunnel")
++if update_tunnel then
++	ipkg.update()
++	ipkg.install("l2gvpn")
++	ipkg.install("ip")
++	nixio.fs.unlink("/tmp/luci-indexcache")
++end
++local update_statistics = luci.http.formvalue("update_statistics")
++if update_statistics then
++	ipkg.update()
++	ipkg.install("luci-app-statistics")
++	nixio.fs.unlink("/tmp/luci-indexcache")
++end
  return Template("mini/index")
 diff --git a/modules/admin-mini/luasrc/view/mini/index.htm b/modules/admin-mini/luasrc/view/mini/index.htm
-index d9d3ff3..376609f 100644
+index d9d3ff3..17aacce 100644
 --- a/modules/admin-mini/luasrc/view/mini/index.htm
 +++ b/modules/admin-mini/luasrc/view/mini/index.htm
-@@ -13,6 +13,15 @@ $Id$
+@@ -13,6 +13,22 @@ $Id$
  
  -%>
  <h2><a id="content" name="content"><%:Hello!%></a></h2>
@@ -39,9 +52,16 @@ index d9d3ff3..376609f 100644
 +<p>Nur auf geraeten mit mehr als 4MB Flash installieren</p>
 +<p><li><a href="http://wiki.openwrt.org/toh">Table of Hardware</a></li></p>
 +<p></p>
-+<p><em><strong><a href="<%=REQUEST_URI%>?update_wpa=1"><%:Install wpa fuer AP Mode%></a></strong></em></p>
++<p><em><strong><a href="<%=REQUEST_URI%>?update_wpa=1"><%:Install wpad-mini fuer AP Mode auf TP-Link und Ubiquiti Geräten%></a></strong></em></p>
++<p>Anschliessend den Freifunkassistent noch einmal aufrufen</p>
 +<p></p>
 +<p><em><strong><a href="<%=REQUEST_URI%>?update_piraten_theme=1"><%:Install Piraten Theme%></a></strong></em></p>
++<p></p>
++<p><em><strong><a href="<%=REQUEST_URI%>?update_tunnel=1"><%:Install IP Tunnelsoftware l2gvpn%></a></strong></em></p>
++<p>Anschliessend den Freifunkassistent noch einmal aufrufen</p>
++<p></p>
++<p><em><strong><a href="<%=REQUEST_URI%>?update_statistics=1"><%:Install Statistics Software RRDTool und collectd)%></a></strong></em></p>
++<p>Anschliessend Statistics einstellen und neustarten</p>
 +<p></p>
  <p><%_This is the administration area of <abbr title="Lua Configuration Interface">LuCI</abbr>.%></p>
  <p><%_<abbr title="Lua Configuration Interface">LuCI</abbr> is a free, flexible, and user friendly graphical interface for configuring OpenWrt Kamikaze.%><br />

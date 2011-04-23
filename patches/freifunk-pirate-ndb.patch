@@ -8,7 +8,7 @@
 +	option 'name' 'Piraten Niederbayern'
 +	option 'homepage' 'http://freifunk.piraten-niederbayern.de'
 +	option 'ssid' 'Pirate-NDB.freifunk.net'
-+	option 'mesh_network' ' 10.6.0.0/16'
++	option 'mesh_network' '10.6.0.0/16'
 +	option 'splash_network' '192.168.99.0/24'
 +	option 'splash_prefix' '27'
 +	option 'external' 'freifunk_ndb'

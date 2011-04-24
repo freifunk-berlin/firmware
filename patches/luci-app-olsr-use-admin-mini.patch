@@ -1,0 +1,110 @@
+diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
+index f4d52c4..5d2bd24 100644
+--- a/applications/luci-olsr/luasrc/controller/olsr.lua
++++ b/applications/luci-olsr/luasrc/controller/olsr.lua
+@@ -14,6 +14,8 @@ function index()
+ 	page.i18n   = "olsr"
+ 	page.subindex = true
+ 
++	assign({"mini", "status", "olsr"}, {"admin", "status", "olsr"}, "OLSR", 30)
++
+ 	local page  = node("admin", "status", "olsr", "neighbors")
+ 	page.target = call("action_neigh")
+ 	page.title  = i18n("Neighbors")
+@@ -57,6 +59,8 @@ function index()
+ 	ol.i18n = "olsr"
+ 	ol.subindex = true
+ 
++	assign({"mini", "services", "olsrd"}, {"admin", "services", "olsrd"}, "OLSR", 30)
++
+ 	entry(
+ 		{"admin", "services", "olsrd", "iface"},
+ 		cbi("olsr/olsrdiface")
+@@ -65,7 +69,7 @@ function index()
+ 	entry(
+ 		{"admin", "services", "olsrd", "hna"},
+ 		cbi("olsr/olsrdhna"), "HNA Announcements"
+-	)
++	).leaf = true
+ 
+ 	oplg = entry(
+ 		{"admin", "services", "olsrd", "plugins"},
+@@ -234,6 +238,7 @@ function fetch_txtinfo(otable)
+ 	local dataindex = 0
+ 	local name = ""
+ 	local defaultgw
++	local defaultgw6
+ 
+ 	if #rawdata ~= 0 then
+ 		local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
+@@ -304,6 +309,18 @@ function fetch_txtinfo(otable)
+ 
+ 	if #rawdatav6 ~= 0 then
+ 		local tables = luci.util.split(luci.util.trim(rawdatav6), "\r?\n\r?\n", nil, true)
++		if otable == "links" then
++			dr6 = luci.sys.net.defaultroute6()
++			if dr6 then
++				defaultgw6 = dr6.nexthop:string()
++				if defaultgw6 then
++					defaultgw6 = string.gsub(defaultgw6, ':0:', '::',1)
++					defaultgw6 = string.gsub(defaultgw6, ':0:', ':')
++					defaultgw6 = string.gsub(defaultgw6, ':0:', ':')
++					defaultgw6 = string.lower(defaultgw6)
++				end
++			end
++		end
+ 		for i, tbl in ipairs(tables) do
+ 			local lines = luci.util.split(tbl, "\r?\n", nil, true)
+ 			name  = table.remove(lines, 1):sub(8)
+@@ -324,6 +341,12 @@ function fetch_txtinfo(otable)
+ 						if hostname then
+ 							data[name][di]["Hostname"] = hostname
+ 						end
++						if defaultgw6 == fields[k] then
++							data[name][di]["defaultgw"] = 1
++						end
++--						if defaultgw6 then
++--							data[name][di]["Hostname"] = defaultgw6
++--						end
+ 					elseif key == "Local IP" then
+ 						data[name][di][key] = fields[k]
+ 						data[name][di]['Local Device'] = fields[k]
+diff --git a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
+index f7b173c..17f949b 100644
+--- a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
++++ b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
+@@ -286,7 +286,7 @@ av.write = write_float
+ ifs = m:section(TypedSection, "Interface", translate("Interfaces"))
+ ifs.addremove = true
+ ifs.anonymous = true
+-ifs.extedit   = luci.dispatcher.build_url("admin/services/olsrd/iface/%s")
++ifs.extedit   = luci.dispatcher.build_url(unpack(luci.dispatcher.context.requested.path) .. "/services/olsrd/iface/%s")
+ ifs.template  = "cbi/tblsection"
+ 
+ function ifs.create(...)
+diff --git a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdiface.lua b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdiface.lua
+index 25692fd..5e196ad 100644
+--- a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdiface.lua
++++ b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdiface.lua
+@@ -26,7 +26,7 @@ m = Map("olsrd", translate("OLSR Daemon - Interface"),
+ 	"It runs on any wifi card that supports ad-hoc mode and of course on any ethernet device. "..
+ 	"Visit <a href='http://www.olsr.org'>olsrd.org</a> for help and documentation."))
+ 
+-m.redirect = luci.dispatcher.build_url("admin/services/olsrd")
++m.redirect = luci.dispatcher.build_url(unpack(luci.dispatcher.context.requested.path) .. "/services/olsrd")
+ 
+ if not arg[1] or m.uci:get("olsrd", arg[1]) ~= "Interface" then
+ 	luci.http.redirect(m.redirect)
+diff --git a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdplugins.lua b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdplugins.lua
+index 2cfccdd..38a87f8 100644
+--- a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdplugins.lua
++++ b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrdplugins.lua
+@@ -247,7 +247,7 @@ else
+ 	t.override_scheme = true
+ 	function t.extedit(self, section)
+ 		local lib = self.map:get(section, "library") or ""
+-		return luci.dispatcher.build_url("admin", "services", "olsrd", "plugins") .. "/" .. lib
++		return luci.dispatcher.build_url(unpack(luci.dispatcher.context.requested.path), "services", "olsrd", "plugins") .. "/" .. lib
+ 	end
+ 
+ 	ign = t:option( Flag, "ignore", translate("Enabled") )

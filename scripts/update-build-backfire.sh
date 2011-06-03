@@ -87,6 +87,9 @@ packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 echo "OpenWrt Packages Revision: $packages_revision" >> ../VERSION.txt
 PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch"
 PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch"
+PACKAGESPATCHES="$PACKAGESPATCHES package-collectd.patch"
+PACKAGESPATCHES="$PACKAGESPATCHES olsrd.config-rm-wlan-patches.patch"
+
 for i in $PACKAGESPATCHES ; do
 	pparm='-p0'
 	echo "Patch: $i"
@@ -96,15 +99,15 @@ rm -rf libs/mysql
 cd ..
 
 #update and patch repos
-if [ -d packages-pberg ] ; then
-	echo "update packages-pberg git pull"
-	cd packages-pberg
-	git pull
-	cd ../
-else
-	echo "create packages-pberg git clone"
-	git clone git://github.com/stargieg/packages-pberg.git
-fi
+#if [ -d packages-pberg ] ; then
+#	echo "update packages-pberg git pull"
+#	cd packages-pberg
+#	git pull
+#	cd ../
+#else
+#	echo "create packages-pberg git clone"
+#	git clone git://github.com/stargieg/packages-pberg.git
+#fi
 
 if [ -d piratenfreifunk-packages ] ; then
 	echo "update piratenfreifunk-packages manual git pull"
@@ -139,7 +142,6 @@ echo "LUCI Branch: luci-master" >> VERSION.txt
 cd luci-master
 luci_revision=$(git rev-parse HEAD)
 echo "LUCI Revision: $luci_revision" >> ../VERSION.txt
-#LUCIPATCHES="$LUCIPATCHES luci-freifunk_l2gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-muenster.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-cottbus.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-bno.patch"
@@ -151,14 +153,20 @@ LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-firewall-natfix.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-install-full.patch"
+LUCIPATCHES="$LUCIPATCHES luci-admin-mini-backup-style.patch"
+LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sshkeys.patch"
+LUCIPATCHES="$LUCIPATCHES luci-sys-routes6.patch"
+LUCIPATCHES="$LUCIPATCHES luci-app-statistics-add-madwifi-olsr.patch"
+LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd.patch"
+LUCIPATCHES="$LUCIPATCHES luci-freifunk_l2gvpn.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i || exit 0
 done
 
-rm modules/freifunk/luasrc/controller/freifunk/remote_update.lua
-rm modules/freifunk/luasrc/view/freifunk/remote_update.htm
+rm -rf modules/freifunk/luasrc/controller/freifunk/remote_update.lua
+rm -rf modules/freifunk/luasrc/view/freifunk/remote_update.htm
 
 rm -rf $(find . | grep \.rej$)
 rm -rf $(find . | grep \.orig$)
@@ -181,11 +189,11 @@ for board in $boards ; do
 #	rm -rf ./feeds/*.tmp
 #	rm -rf ./feeds/*.index
 ##	rm -rf ./package/feeds/*
-#	rm -rf ./bin
+	rm -rf ./bin
 ##	rm -rf build_dir/*/*luci*
 ##	rm -rf build_dir/*/lua*
 ##	rm -rf dl/*luci*
-##	rm -rf build_dir/*/compat-wireless*
+#	rm -rf build_dir/*/compat-wireless*
 ##	rm -rf $(find . | grep \.rej$)
 ##	rm -rf $(find . | grep \.orig$)
 ##	rm -rf ./build_dir
@@ -227,6 +235,10 @@ for board in $boards ; do
 	PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch"
 	PATCHES="$PATCHES brcm-2.4-reboot-fix.patch"
 	PATCHES="$PATCHES ar5312_flash_4MB_flash.patch"
+	PATCHES="$PATCHES base-disable-ipv6-autoconf.patch"
+	PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
+	#PATCHES="$PATCHES make-art-writeable.patch"
+	cp ../../ff-control/patches/regulatory.bin.pberg dl/regulatory.bin.pberg
 	for i in $PATCHES ; do
 		pparm='-p0'
 		echo "Patch: $i"
@@ -238,10 +250,17 @@ for board in $boards ; do
 	cd package/firewall
 	svn co svn://svn.openwrt.org/openwrt/trunk/package/firewall
 	cd ../../
+#	cd package
+#	rm -rf mac80211
+#	svn co svn://svn.openwrt.org/openwrt/trunk/package/mac80211
+#	cd ../
+	cd package/mac80211
+	svn sw -r 26762 svn://svn.openwrt.org/openwrt/branches/backfire/package/mac80211
+	cd ../../
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
 	time nice -n 10 make V=99 world $make_options || ( rm update-build-$verm-$board.lock ; exit 1 )
-	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
+#	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	cp build_dir/target-$arch*/root-$board/usr/lib/opkg/status ../opkg-$board.status
 	mkdir -p 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board
 	rsync -a --delete bin/$board/ 	$wwwdir/$verm/$ver-timestamp/$timestamp/$board

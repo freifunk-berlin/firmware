@@ -1,0 +1,14 @@
+--- /dev/null	2011-04-25 23:56:55.929096754 +0200
++++ utils/collectd/patches/300-fix-olsrd-get-all.patch	2011-05-08 00:05:28.415691046 +0200
+@@ -0,0 +1,11 @@
++--- collectd-4.10.1/src/olsrd.c	2010-07-09 12:01:59.000000000 +0200
+++++ collectd-4.10.1.working/src/olsrd.c	2011-05-07 23:44:21.404670543 +0200
++@@ -653,7 +653,7 @@
++   if (fh == NULL)
++     return (-1);
++ 
++-  fputs ("\r\n", fh);
+++  fputs ("/all \r\n", fh);
++   fflush (fh);
++ 
++   while (fgets (buffer, sizeof (buffer), fh) != NULL)

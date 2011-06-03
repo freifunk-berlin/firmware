@@ -1,0 +1,13 @@
+Index: package/crda/Makefile
+===================================================================
+--- package/crda/Makefile	(Revision 26794)
++++ package/crda/Makefile	(Arbeitskopie)
+@@ -68,7 +68,7 @@
+ 	$(INSTALL_DIR) $(1)/usr/lib/crda
+ 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/crda $(1)/sbin/
+ 	$(INSTALL_DATA) ./files/hotplug.rule $(1)/etc/hotplug.d/platform/10-regulatory
+-	$(INSTALL_DATA) $(DL_DIR)/$(PKG_REGULATORY_SOURCE) $(1)/usr/lib/crda/regulatory.bin
++	$(INSTALL_DATA) $(DL_DIR)/regulatory.bin.pberg $(1)/usr/lib/crda/regulatory.bin
+ endef
+ 
+ $(eval $(call BuildPackage,crda))

@@ -1,6 +1,6 @@
 Index: ipv6/radvd/files/radvd.init
 ===================================================================
---- ipv6/radvd/files/radvd.init	(Revision 23184)
+--- ipv6/radvd/files/radvd.init	(Revision 25315)
 +++ ipv6/radvd/files/radvd.init	(Arbeitskopie)
 @@ -78,7 +78,7 @@
  
@@ -11,3 +11,12 @@ Index: ipv6/radvd/files/radvd.init
  		[ -z "$ip6addr" ] && return 1
  	fi
  
+@@ -406,7 +406,7 @@
+ 
+ 	sysctl -w net.ipv6.conf.all.forwarding=1 > /dev/null 2> /dev/null
+ 
+-	radvd -C "$RADVD_CONFIG_FILE" -m stderr_syslog -p /var/run/radvd.pid
++	radvd -C "$RADVD_CONFIG_FILE" -m none -p /var/run/radvd.pid
+ }
+ 
+ stop() {

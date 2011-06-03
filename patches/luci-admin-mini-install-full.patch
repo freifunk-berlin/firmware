@@ -1,8 +1,8 @@
 diff --git a/modules/admin-mini/luasrc/model/cbi/mini/index.lua b/modules/admin-mini/luasrc/model/cbi/mini/index.lua
-index 71b5daf..2d0e82e 100644
+index 71b5daf..9d75fe2 100644
 --- a/modules/admin-mini/luasrc/model/cbi/mini/index.lua
 +++ b/modules/admin-mini/luasrc/model/cbi/mini/index.lua
-@@ -11,4 +11,36 @@ You may obtain a copy of the License at
+@@ -11,4 +11,31 @@ You may obtain a copy of the License at
  
  $Id$
  ]]--
@@ -13,11 +13,6 @@ index 71b5daf..2d0e82e 100644
 +	ipkg.update()
 +	ipkg.install("luci-mod-admin-full")
 +	nixio.fs.unlink("/tmp/luci-indexcache")
-+end
-+local update_wpa = luci.http.formvalue("update_wpa")
-+if update_wpa then
-+	ipkg.update()
-+	ipkg.install("wpad-mini")
 +end
 +local update_piraten_theme = luci.http.formvalue("update_piraten_theme")
 +if update_piraten_theme then
@@ -40,10 +35,10 @@ index 71b5daf..2d0e82e 100644
 +end
  return Template("mini/index")
 diff --git a/modules/admin-mini/luasrc/view/mini/index.htm b/modules/admin-mini/luasrc/view/mini/index.htm
-index d9d3ff3..17aacce 100644
+index d9d3ff3..f751782 100644
 --- a/modules/admin-mini/luasrc/view/mini/index.htm
 +++ b/modules/admin-mini/luasrc/view/mini/index.htm
-@@ -13,6 +13,22 @@ $Id$
+@@ -13,6 +13,19 @@ $Id$
  
  -%>
  <h2><a id="content" name="content"><%:Hello!%></a></h2>
@@ -51,9 +46,6 @@ index d9d3ff3..17aacce 100644
 +<p><em><strong><a href="<%=REQUEST_URI%>?update=1"><%:Install LUCI-MOD-ADMIN-FULL%></a></strong></em></p>
 +<p>Nur auf geraeten mit mehr als 4MB Flash installieren</p>
 +<p><li><a href="http://wiki.openwrt.org/toh">Table of Hardware</a></li></p>
-+<p></p>
-+<p><em><strong><a href="<%=REQUEST_URI%>?update_wpa=1"><%:Install wpad-mini fuer AP Mode auf TP-Link und Ubiquiti Geräten%></a></strong></em></p>
-+<p>Anschliessend den Freifunkassistent noch einmal aufrufen</p>
 +<p></p>
 +<p><em><strong><a href="<%=REQUEST_URI%>?update_piraten_theme=1"><%:Install Piraten Theme%></a></strong></em></p>
 +<p></p>

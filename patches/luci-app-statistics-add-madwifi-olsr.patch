@@ -1,0 +1,21 @@
+diff --git a/applications/luci-statistics/root/usr/bin/stat-genconfig b/applications/luci-statistics/root/usr/bin/stat-genconfig
+index 4c396ff..f31674a 100755
+--- a/applications/luci-statistics/root/usr/bin/stat-genconfig
++++ b/applications/luci-statistics/root/usr/bin/stat-genconfig
+@@ -364,6 +364,16 @@ plugins = {
+ 		{ },
+ 		{ }
+ 	},
++	madwifi = {
++		{ "WatchSet" },
++		{ },
++		{ "Interfaces", "WatchAdds" }
++	},
++	olsrd = {
++	        { "Host","Port","CollectLinks","CollectRoutes","CollectTopology"},
++	        { },
++		{ }
++	},
+ }
+ 
+ preprocess = {

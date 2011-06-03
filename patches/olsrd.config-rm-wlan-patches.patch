@@ -1,0 +1,11 @@
+Index: net/olsrd/files/olsrd.config
+===================================================================
+--- net/olsrd/files/olsrd.config	(Revision 27085)
++++ net/olsrd/files/olsrd.config	(Arbeitskopie)
+@@ -21,6 +21,3 @@
+ config LoadPlugin
+ 	option library 'olsrd_txtinfo.so.0.1'
+ 	option accept '0.0.0.0'
+-
+-config Interface
+-	list interface 'wlan'

@@ -1,0 +1,34 @@
+diff --git a/modules/admin-mini/luasrc/view/mini/backup.htm b/modules/admin-mini/luasrc/view/mini/backup.htm
+index a28d2b8..1da531a 100644
+--- a/modules/admin-mini/luasrc/view/mini/backup.htm
++++ b/modules/admin-mini/luasrc/view/mini/backup.htm
+@@ -19,10 +19,9 @@ $Id$
+ <br />
+ <div>
+ 	<ul>
+-	<li><a href="<%=REQUEST_URI%>?backup=kthxbye"><%:Create backup%></a></li>
+-	<% if reset_avail then -%>
+-	<li><a href="<%=REQUEST_URI%>?reset=yarly" onclick="return confirm('<%:Proceed reverting all settings and resetting to firmware defaults?%>')"><%:Reset router to defaults%></a></li>
+-	<% end -%>
++	<p></p>
++	<li><strong><a href="<%=REQUEST_URI%>?backup=kthxbye"><%:Create backup%></a></strong></li>
++	<p></p>
+ 	</ul>
+ </div>
+ 
+@@ -37,4 +36,14 @@ $Id$
+ 		<input type="submit" class="cbi-input-apply" value="<%:Restore backup%>" />
+ 	</div>
+ </form>
++<br />
++<div>
++	<ul>
++	<% if reset_avail then -%>
++	<p></p>
++	<li><a href="<%=REQUEST_URI%>?reset=yarly" onclick="return confirm('<%:Proceed reverting all settings and resetting to firmware defaults?%>')"><%:Reset router to defaults%></a></li>
++	<p></p>
++	<% end -%>
++	</ul>
++</div>
+ <%+footer%>
+\ No newline at end of file

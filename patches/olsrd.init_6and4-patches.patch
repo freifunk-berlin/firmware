@@ -1,6 +1,6 @@
 Index: net/olsrd/files/olsrd.init
 ===================================================================
---- net/olsrd/files/olsrd.init	(Revision 25315)
+--- net/olsrd/files/olsrd.init	(Revision 27096)
 +++ net/olsrd/files/olsrd.init	(Arbeitskopie)
 @@ -1,7 +1,13 @@
  #!/bin/sh /etc/rc.common
@@ -66,7 +66,7 @@ Index: net/olsrd/files/olsrd.init
 +			echo "Error: There already is a IPv6 instance of olsrd running ($(cat $PID6)), not starting."
 +		else
 +			for i in $(route -A inet6 | grep 'UG    2' | cut -d ' ' -f 1) ; do 
-+				ip -6 route del $i
++				route -A inet6 del $i
 +			done
 +			start-stop-daemon -q -b -m -p $PID6 -x $BIN -S -- -f /var/etc/olsrd.conf.ipv6 -nofork
 +		fi
@@ -90,7 +90,7 @@ Index: net/olsrd/files/olsrd.init
 +			if [ "$ipversion" = "6" ]; then
 +				sed -i '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' "$OLSRD_CONFIG_FILE"
 +				for i in $(route -A inet6 | grep 'UG    2' | cut -d ' ' -f 1) ; do 
-+					ip -6 route del $i
++					route -A inet6 del $i
 +				done
 +			fi
 +			start-stop-daemon -q -b -m -p $PID -x $BIN -S -- -f "$OLSRD_CONFIG_FILE" -nofork

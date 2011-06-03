@@ -1,10 +1,10 @@
 diff --git a/modules/freifunk/root/etc/config/freifunk b/modules/freifunk/root/etc/config/freifunk
-index 327957c..9283e07 100644
+index 8d5b7c7..84ed632 100644
 --- a/modules/freifunk/root/etc/config/freifunk
 +++ b/modules/freifunk/root/etc/config/freifunk
-@@ -82,6 +82,26 @@ config 'defaults' 'dhcp'
- config 'defaults' 'olsr_interface'
- 	option 'Ip4Broadcast' '255.255.255.255'
+@@ -115,6 +115,26 @@ config 'defaults' 'radvd_dnssl'
+ 	option 'suffix' 'olsr'
+ 	option 'ignore' '0'
  
 +config 'defaults' 'olsr_gvpninterface'
 +	option 'ignore' '0'
@@ -26,12 +26,6 @@ index 327957c..9283e07 100644
 +	option 'up' '/etc/l2gvpn/up_down'
 +	option 'down' '/etc/l2gvpn/up_down'
 +
- config 'defaults' 'time'
- 	option 'rdate_servers' '128.138.140.44 171.64.7.77 171.64.7.99 81.169.154.44 130.133.1.10'
- 
-@@ -349,3 +369,5 @@ config 'community' 'pberg'
- 	option 'external' 'freifunk_berlin'
- 
- 
-+
-+
+ config 'community' 'leipzig'
+ 	option 'name' 'Freifunk Leipzig'
+ 	option 'homepage' 'http://leipzig.freifunk.net'

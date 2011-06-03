@@ -1,21 +1,43 @@
+diff --git a/contrib/package/freifunk-firewall/files/etc/firewall.freifunk b/contrib/package/freifunk-firewall/files/etc/firewall.freifunk
+index 9052992..82c7edf 100644
+--- a/contrib/package/freifunk-firewall/files/etc/firewall.freifunk
++++ b/contrib/package/freifunk-firewall/files/etc/firewall.freifunk
+@@ -43,13 +43,13 @@ config_foreach apply_advanced advanced
+ apply_nat_fix() {
+ 	local up
+ 	local ifname
++	config_get ifname $1 ifname
++	[ -z "$ifname" ] && return 0
+ 	config_get up $1 up
+ 	[ -n "$up" ] || return 0
+ 	(ACTION="ifup" INTERFACE="$1" . /etc/hotplug.d/iface/22-firewall-nat-fix )
+ }
+ 
+-uci_set_state firewall core loaded 1
+-config_foreach fw_addif interface
+ config_foreach apply_nat_fix interface
+ 
+ [ -x /etc/init.d/luci_splash ] && ( sleep 3; /etc/init.d/luci_splash restart )&
 diff --git a/contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix b/contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix
-index 634f432..11fa28e 100644
+index 634f432..c3283bb 100644
 --- a/contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix
 +++ b/contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix
-@@ -1,7 +1,11 @@
+@@ -1,7 +1,13 @@
 -. /lib/firewall/uci_firewall.sh
  unset ZONE
 +unset NETWORKS
 +config_load network
 +config_load firewall
-+[ "$INTERFACE" == "wan" ] && exit 0
++local ifname
  config_get ifname $INTERFACE ifname
++[ -z "$ifname" ] && exit 0
  [ "$ifname" == "lo" ] && exit 0
-+[ "$ifname" == "pppoe-wan" ] && exit 0
++config_get proto $INTERFACE proto
++[ "$proto" == "static" ] || exit 0
  
  load_zones() {
  	local name
-@@ -10,7 +14,10 @@ load_zones() {
+@@ -10,7 +16,10 @@ load_zones() {
  	config_get network $1 network
  	[ -z "$network" ] && network=$name
  	for n in $network; do
@@ -27,7 +49,7 @@ index 634f432..11fa28e 100644
  	done
  }
  
-@@ -21,32 +28,50 @@ config_foreach load_zones zone
+@@ -21,32 +30,50 @@ config_foreach load_zones zone
  natfix_addr_add() {
  	local network=$1
  	local iface=$2
@@ -53,19 +75,19 @@ index 634f432..11fa28e 100644
 +			}
 +			config_load freifunk
 +			config_foreach load_ffnetworks community
++			for n in $NETWORKS; do
++				config_get ipaddr "$n" ipaddr
++				config_get netmask "$n" netmask
++				eval "$(ipcalc.sh $ipaddr $netmask)"
++				case $ipnetworks in
++					*$NETWORK/$PREFIX*) ;;
++					*) ipnetworks="$ipnetworks $NETWORK/$PREFIX";;
++				esac
++			done
 +		fi
-+		for n in $NETWORKS; do
-+			config_get ipaddr "$n" ipaddr
-+			config_get netmask "$n" netmask
-+			eval "$(ipcalc.sh $ipaddr $netmask)"
-+			case $ipnetworks in
-+				*$NETWORK/$PREFIX*) ;;
-+				*) ipnetworks="$ipnetworks $NETWORK/$PREFIX";;
-+			esac
-+		done
 +	done
++	logger -t firewall.freifunk "adding nat-fix rule from $iface"
 +	for ipn in $ipnetworks; do
-+		logger -t firewall.freifunk "adding nat-fix rule from $ipn"
 +		iptables -t nat -A "natfix_$iface" -s "$ipn" -j ACCEPT		
 +	done
  

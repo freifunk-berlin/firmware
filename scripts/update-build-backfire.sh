@@ -49,11 +49,11 @@ else
 	echo "create yaffmap_uci svn co"
 	#svn co http://wurststulle.dyndns.org/yaffmap/svn/trunk/ update_agents
 	if [ -z $update_agents_revision ] ; then
-		svn co http://wurststulle.dyndns.org/yaffmap/svn/trunk/ update_agents
+		svn co http://wurststulle.dyndns.org/yaffmap/svn/trunk/update_agents update_agents
 	else
-		svn co http://wurststulle.dyndns.org/yaffmap/svn/trunk/ update_agents
+		svn co http://wurststulle.dyndns.org/yaffmap/svn/trunk/update_agents update_agents
 		cd update_agents
-		svn sw -r $update_agents_revision http://wurststulle.dyndns.org/yaffmap/svn/trunk
+		svn sw -r $update_agents_revision http://wurststulle.dyndns.org/yaffmap/svn/trunk/update_agents
 		cd ..
 	fi
 fi
@@ -145,6 +145,7 @@ LUCIPATCHES="$LUCIPATCHES freifunk-cottbus.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-bno.patch"
 LUCIPATCHES="$LUCIPATCHES freifunk-pirate-ndb.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_berlin.patch"
+LUCIPATCHES="$LUCIPATCHES luci-app-olsr-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-firewall-natfix.patch"
@@ -175,24 +176,23 @@ for board in $boards ; do
 	cd $verm/$board
 	echo "clean up"
 	rm -f .config
-	rm -rf ./tmp
-#	rm -rf ./feeds/*
-	rm -rf ./feeds/*.tmp
-	rm -rf ./feeds/*.index
-#	rm -rf ./package/feeds/*
-	rm -rf ./bin
-	rm -rf build_dir/*/*luci*
-#	rm -rf build_dir/*/lua*
-#	rm -rf dl/*luci*
-#	rm -rf build_dir/*/compat-wireless*
-#	rm -rf $(find . | grep \.rej$)
-#	rm -rf $(find . | grep \.orig$)
-#	rm -rf ./build_dir
-#	rm -rf ./staging_dir
+#	rm -rf ./tmp
+##	rm -rf ./feeds/*
+#	rm -rf ./feeds/*.tmp
+#	rm -rf ./feeds/*.index
+##	rm -rf ./package/feeds/*
+#	rm -rf ./bin
+##	rm -rf build_dir/*/*luci*
+##	rm -rf build_dir/*/lua*
+##	rm -rf dl/*luci*
+##	rm -rf build_dir/*/compat-wireless*
+##	rm -rf $(find . | grep \.rej$)
+##	rm -rf $(find . | grep \.orig$)
+##	rm -rf ./build_dir
+##	rm -rf ./staging_dir
 	rm -rf ./files
 	mkdir -p ./files
 	rm -rf $(svn status)
-	#openwrt_revision="r23025"
 	svn co svn://svn.openwrt.org/openwrt/branches/$verm ./
 	if [ -z $openwrt_revision ] ; then
 		svn up
@@ -215,7 +215,7 @@ for board in $boards ; do
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
 	echo "src-link luci ../../../luci-master" >> feeds.conf
 #	echo "src-link wgaugsburg ../../../wgaugsburg/packages" >> feeds.conf
-	echo "src-link update_agents ../../../update_agents/update_agents" >> feeds.conf
+	echo "src-link update_agents ../../../update_agents" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"
@@ -226,6 +226,7 @@ for board in $boards ; do
 	PATCHES="$PATCHES routerstation-bridge-wan-lan.patch"
 	PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch"
 	PATCHES="$PATCHES brcm-2.4-reboot-fix.patch"
+	PATCHES="$PATCHES ar5312_flash_4MB_flash.patch"
 	for i in $PATCHES ; do
 		pparm='-p0'
 		echo "Patch: $i"

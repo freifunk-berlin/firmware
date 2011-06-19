@@ -20,7 +20,7 @@
 --- a/modules/freifunk/root/etc/config/freifunk_ndb    1970-01-01 01:00:00.000000000 +0100
 +++ b/modules/freifunk/root/etc/config/freifunk_ndb 2010-08-25 17:58:05.187000066 +0200
 @@ -0,0 +1,10 @@
-+package 'freifunk_muenster'
++package 'freifunk_ndb'
 +
 +config 'defaults' 'wifi_device'
 +        option 'channel' '10'

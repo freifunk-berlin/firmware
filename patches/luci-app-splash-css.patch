@@ -1,0 +1,19 @@
+diff --git a/applications/luci-splash/luasrc/view/splash_splash/splash.htm b/applications/luci-splash/luasrc/view/splash_splash/splash.htm
+index 01dfd05..c36e612 100644
+--- a/applications/luci-splash/luasrc/view/splash_splash/splash.htm
++++ b/applications/luci-splash/luasrc/view/splash_splash/splash.htm
+@@ -14,8 +14,10 @@ $Id$
+ -%>
+ <%+header%>
+ <%+splash/splash%>
+-<form method="get" action="<%=controller%>/splash/activate">
+-	<input type="submit" value="<%:Decline%>" />
+-	<input type="submit" name="accept" value="<%:Accept%>" />
+-</form>
++<div id="splash_form">
++	<form method="get" action="<%=controller%>/splash/activate">
++		<input type="submit" value="<%:Decline%>" />
++		<input type="submit" name="accept" value="<%:Accept%>" />
++	</form>
++</div>
+ <%+footer%>

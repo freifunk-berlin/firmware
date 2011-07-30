@@ -17,9 +17,21 @@ if [ -d yaffmap-agent ] ; then
 	cd ../
 else
 	echo "create yaffmap-agent git clone"
-	#git clone git://github.com/wurststulle/yaffmap-agent.git || exit 0
-	git clone git://github.com/stargieg/yaffmap-agent.git || exit 0
+	git clone git://github.com/wurststulle/yaffmap-agent.git || exit 0
+	#git clone git://github.com/stargieg/yaffmap-agent.git || exit 0
 fi
+
+if [ -d luci-app-bulletin-node ] ; then
+	echo "update luci-app-bulletin-node git pull"
+	cd luci-app-bulletin-node
+	git pull || exit 0
+	cd ../
+else
+	echo "create luci-app-bulletin-node git clone"
+	#git clone git://github.com/rhotep/luci-app-bulletin-node.git || exit 0
+	git clone git://github.com/stargieg/luci-app-bulletin-node.git || exit 0
+fi
+
 
 if [ -d packages ] ; then
 	echo "update packages svn up"
@@ -28,18 +40,23 @@ if [ -d packages ] ; then
 	if [ -z $packages_revision ] ; then
 		svn up  || exit 0
 	else
-		svn sw -r $packages_revision svn://svn.openwrt.org/openwrt/packages || exit 0
+		#svn sw -r $packages_revision 'svn://svn.openwrt.org/openwrt/packages' || exit 0
+		svn sw -r $packages_revision 'svn://svn.openwrt.org/openwrt/branches/packages_10.03.1'  || exit 0
 	fi
 	cd ../
 else
 	echo "create packages svn co"
-	svn co svn://svn.openwrt.org/openwrt/packages packages
+	#svn co 'svn://svn.openwrt.org/openwrt/packages packages'
+	svn co 'svn://svn.openwrt.org/openwrt/branches/packages_10.03.1'
 	if [ -z $packages_revision ] ; then
-		svn co svn://svn.openwrt.org/openwrt/packages packages || exit 0
+		#svn co 'svn://svn.openwrt.org/openwrt/packages packages' || exit 0
+		svn co 'svn://svn.openwrt.org/openwrt/branches/packages_10.03.1'
 	else
-		svn co svn://svn.openwrt.org/openwrt/packages packages || exit 0
+		#svn co 'svn://svn.openwrt.org/openwrt/packages packages' || exit 0
+		svn co 'svn://svn.openwrt.org/openwrt/branches/packages_10.03.1'
 		cd packages
-		svn sw -r $packages_revision svn://svn.openwrt.org/openwrt/packages || exit 0
+		#svn sw -r $packages_revision 'svn://svn.openwrt.org/openwrt/packages' || exit 0
+		svn sw -r $packages_revision 'svn://svn.openwrt.org/openwrt/branches/packages_10.03.1'
 		cd ..
 	fi
 fi
@@ -63,7 +80,7 @@ for i in $PACKAGESRPATCHES ; do
 	#echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i || exit 0
 done
-rm -rf libs/mysql
+#rm -rf libs/mysql
 cd ..
 
 #update and patch repos
@@ -111,12 +128,13 @@ echo "LUCI Branch: luci-master" >> VERSION.txt
 cd luci-master
 luci_revision=$(git rev-parse HEAD)
 echo "LUCI Revision: $luci_revision" >> ../VERSION.txt
-LUCIPATCHES="$LUCIPATCHES freifunk-muenster.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-cottbus.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-bno.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-pirate-ndb.patch"
-LUCIPATCHES="$LUCIPATCHES freifunk-pirate-ffwtal.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk_berlin.patch"
+LUCIPATCHES="$LUCIPATCHES luci-profile_muenster.patch"
+LUCIPATCHES="$LUCIPATCHES luci-profile_cottbus.patch"
+LUCIPATCHES="$LUCIPATCHES luci-profile_ndb.patch"
+LUCIPATCHES="$LUCIPATCHES luci-profile_ffwtal.patch"
+LUCIPATCHES="$LUCIPATCHES luci-profile_berlin.patch"
+LUCIPATCHES="$LUCIPATCHES luci-profile_bno.patch"
+LUCIPATCHES="$LUCIPATCHES luci-profile_pberg.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-olsr-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
@@ -127,12 +145,12 @@ LUCIPATCHES="$LUCIPATCHES luci-admin-mini-backup-style.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sshkeys.patch"
 LUCIPATCHES="$LUCIPATCHES luci-sys-routes6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-statistics-add-madwifi-olsr.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk_l2gvpn.patch"
+LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd_gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-splash-css.patch"
+LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-migrate.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
-	#echo "Patch: $i"
+	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i || exit 0
 done
 
@@ -161,14 +179,14 @@ for board in $boards ; do
 #	rm -rf ./feeds/*.index
 ##	rm -rf ./package/feeds/*
 	rm -rf ./bin
-##	rm -rf build_dir/*/*luci*
+	rm -rf build_dir/*/*luci*
 ##	rm -rf build_dir/*/lua*
 ##	rm -rf dl/*luci*
-#	rm -rf build_dir/*/compat-wireless*
+	rm -rf build_dir/*/compat-wireless*
 ##	rm -rf $(find . | grep \.rej$)
 ##	rm -rf $(find . | grep \.orig$)
-##	rm -rf ./build_dir
-##	rm -rf ./staging_dir
+	rm -rf ./build_dir
+	rm -rf ./staging_dir
 	rm -rf ./files
 	mkdir -p ./files
 	rm -rf $(svn status)
@@ -207,8 +225,9 @@ for board in $boards ; do
 	echo "src-link packagespberg ../../../packages-pberg" >> feeds.conf
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
 	echo "src-link luci ../../../luci-master" >> feeds.conf
-#	echo "src-link wgaugsburg ../../../wgaugsburg/packages" >> feeds.conf
+	#echo "src-link wgaugsburg ../../../wgaugsburg/packages" >> feeds.conf
 	echo "src-link yaffmapagent ../../../yaffmap-agent" >> feeds.conf
+	echo "src-link bulletin ../../../luci-app-bulletin-node" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"
@@ -219,33 +238,68 @@ for board in $boards ; do
 	PATCHES="$PATCHES routerstation-bridge-wan-lan.patch"
 	PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch"
 	PATCHES="$PATCHES brcm-2.4-reboot-fix.patch"
-#	PATCHES="$PATCHES ar5312_flash_4MB_flash.patch"
+	#PATCHES="$PATCHES ar5312_flash_4MB_flash.patch"
 	PATCHES="$PATCHES base-disable-ipv6-autoconf.patch"
 	PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
 	#PATCHES="$PATCHES make-art-writeable.patch"
+	#RPATCHES="$RPATCHES packages-r27821.patch"
+	#RPATCHES="$RPATCHES packages-r27815.patch"
 	cp ../../ff-control/patches/regulatory.bin.pberg dl/regulatory.bin.pberg
 	for i in $PATCHES ; do
 		pparm='-p0'
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i || exit 0
 	done
+	for i in $RPATCHES ; do
+		pparm='-p2 -R'
+		# get patch with:
+		# wget --no-check-certificate -O 'ff-control/patches/packages-r27821.patch' 'http://dev.openwrt.org/changeset/27821/branches/backfire/package?format=diff&new=27821'
+		# wget --no-check-certificate -O 'ff-control/patches/packages-r27815.patch' 'http://dev.openwrt.org/changeset/27815/branches/backfire/package?format=diff&new=27815'
+		echo "Patch: $i"
+		patch $pparm < ../../ff-control/patches/$i || exit 0
+	done
 	cp "../../ff-control/patches/200-fix_ipv6_receiving_with_ipv4_socket.patch" "target/linux/brcm-2.4/patches"
 	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 	cp  ../../ff-control/configs/$verm-$board.config .config
-	cd package/firewall
-	svn co svn://svn.openwrt.org/openwrt/trunk/package/firewall
-	cd ../../
+#	cd package/firewall
+#	svn co svn://svn.openwrt.org/openwrt/trunk/package/firewall
+#	cd ../../
 #	cd package
 #	rm -rf mac80211
 #	svn co svn://svn.openwrt.org/openwrt/trunk/package/mac80211
+#	rm -rf iw
+#	svn co svn://svn.openwrt.org/openwrt/trunk/package/iw
 #	cd ../
-	cd package/mac80211
-#	svn sw -r 26762 svn://svn.openwrt.org/openwrt/branches/backfire/package/mac80211
-	svn sw -r 26686 svn://svn.openwrt.org/openwrt/branches/backfire/package/mac80211
-	cd ../../
+#	cd package/mac80211
+##	svn sw -r 26762 svn://svn.openwrt.org/openwrt/branches/backfire/package/mac80211
+#	svn sw -r 26686 svn://svn.openwrt.org/openwrt/branches/backfire/package/mac80211
+#	cd ../../
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	time nice -n 10 make V=99 world $make_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+	case $board in
+		x86)
+			nice -n 10 make V=99 world $make_options $make_big_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+		;;
+		x86_kvm_guest)
+			nice -n 10 make V=99 world $make_options $make_big_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+		;;
+		ixp4xx)
+			nice -n 10 make V=99 world $make_options $make_big_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+		;;
+		rb532)
+			nice -n 10 make V=99 world $make_options $make_big_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+		;;
+		au1000)
+			nice -n 10 make V=99 world $make_options $make_big_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+		;;
+		ar71xx)
+			nice -n 10 make V=99 world $make_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+			nice -n 10 make V=99 world $make_options $make_big_options CONFIG_PACKAGE_kmod-madwifi=y  || ( rm update-build-$verm-$board.lock ; exit 1 )
+		;;
+		*)
+			nice -n 10 make V=99 world $make_options || ( rm update-build-$verm-$board.lock ; exit 1 )
+		;;
+	esac
 #	cp bin/$board/OpenWrt-ImageBuilder-$board-for-*.tar.bz2 ../
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status ../opkg-$board.status
 	mkdir -p 			$wwwdir/$verm/$ver-timestamp/$timestamp/$board
@@ -256,12 +310,6 @@ for board in $boards ; do
 	rsync -a --delete bin/*/ 	$wwwdir/$verm/$ver/$board
 	cp VERSION.txt			$wwwdir/$verm/$ver/$board
 	cp .config 			$wwwdir/$verm/$ver/$board/dot-config
-	case $board in
-		ar71xx)
-			make V=99 world $make_options CONFIG_PACKAGE_kmod-madwifi=y
-			cp bin/$board/openwrt-ar71xx-ubnt-rs* $wwwdir/$verm/$ver/$board
-		;;
-	esac
 	cd ../../
 	rm update-build-$verm-$board.lock
 	if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then

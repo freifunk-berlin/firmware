@@ -1,0 +1,61 @@
+Index: branches/backfire/package/swconfig/src/uci.c
+===================================================================
+--- branches/backfire/package/swconfig/src/uci.c	(revision 27627)
++++ branches/backfire/package/swconfig/src/uci.c	(revision 27821)
+@@ -54,4 +54,10 @@
+ static struct swlib_setting **head;
+ 
++static bool swlib_match_name(struct switch_dev *dev, const char *name)
++{
++	return (strcmp(name, dev->dev_name) == 0 ||
++		strcmp(name, dev->alias) == 0);
++}
++
+ static int
+ swlib_map_settings(struct switch_dev *dev, int type, int port_vlan, struct uci_section *s)
+@@ -132,5 +138,5 @@
+ 				continue;
+ 
+-			if (!strcmp(o->v.string, dev->dev_name))
++			if (swlib_match_name(dev, o->v.string))
+ 				goto found;
+ 
+@@ -138,5 +144,5 @@
+ 		}
+ 
+-		if (strcmp(e->name, dev->dev_name) != 0)
++		if (!swlib_match_name(dev, e->name))
+ 			continue;
+ 
+@@ -172,5 +178,5 @@
+ 				if (!strcmp(os->name, "device")) {
+ 					devn = o->v.string;
+-					if (strcmp(devn, dev->dev_name) != 0)
++					if (!swlib_match_name(dev, devn))
+ 						devn = NULL;
+ 				} else if (!strcmp(os->name, "port")) {
+@@ -197,5 +203,5 @@
+ 				if (!strcmp(os->name, "device")) {
+ 					devn = o->v.string;
+-					if (strcmp(devn, dev->dev_name) != 0)
++					if (!swlib_match_name(dev, devn))
+ 						devn = NULL;
+ 				} else if (!strcmp(os->name, "vlan")) {
+Index: branches/backfire/package/swconfig/Makefile
+===================================================================
+--- branches/backfire/package/swconfig/Makefile	(revision 27815)
++++ branches/backfire/package/swconfig/Makefile	(revision 27821)
+@@ -9,5 +9,5 @@
+ 
+ PKG_NAME:=swconfig
+-PKG_RELEASE:=8
++PKG_RELEASE:=9
+ 
+ include $(INCLUDE_DIR)/package.mk
+@@ -17,5 +17,5 @@
+   SECTION:=base
+   CATEGORY:=Base system
+-  DEPENDS:=@LINUX_2_6 @!TARGET_brcm47xx +libuci +libnl-tiny
++  DEPENDS:=@!TARGET_brcm47xx +libuci +libnl-tiny
+   TITLE:=Switch configuration utility
+ endef

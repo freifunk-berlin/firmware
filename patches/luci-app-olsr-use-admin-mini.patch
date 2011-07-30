@@ -1,35 +1,33 @@
 diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
-index f4d52c4..5d2bd24 100644
+index c7c7f01..fd637b7 100644
 --- a/applications/luci-olsr/luasrc/controller/olsr.lua
 +++ b/applications/luci-olsr/luasrc/controller/olsr.lua
-@@ -14,6 +14,8 @@ function index()
+@@ -13,6 +13,7 @@ function index()
+ 	page.title  = i18n("OLSR")
  	page.i18n   = "olsr"
  	page.subindex = true
- 
 +	assign({"mini", "status", "olsr"}, {"admin", "status", "olsr"}, "OLSR", 30)
-+
+ 
  	local page  = node("admin", "status", "olsr", "neighbors")
  	page.target = call("action_neigh")
- 	page.title  = i18n("Neighbors")
-@@ -57,6 +59,8 @@ function index()
+@@ -56,6 +57,7 @@ function index()
+ 	)
  	ol.i18n = "olsr"
  	ol.subindex = true
- 
 +	assign({"mini", "services", "olsrd"}, {"admin", "services", "olsrd"}, "OLSR", 30)
-+
+ 
  	entry(
  		{"admin", "services", "olsrd", "iface"},
- 		cbi("olsr/olsrdiface")
-@@ -65,7 +69,7 @@ function index()
+@@ -65,7 +67,7 @@ function index()
  	entry(
  		{"admin", "services", "olsrd", "hna"},
- 		cbi("olsr/olsrdhna"), "HNA Announcements"
+ 		cbi("olsr/olsrdhna"), i18n("HNA Announcements")
 -	)
 +	).leaf = true
  
  	oplg = entry(
  		{"admin", "services", "olsrd", "plugins"},
-@@ -234,6 +238,7 @@ function fetch_txtinfo(otable)
+@@ -241,6 +243,7 @@ function fetch_txtinfo(otable)
  	local dataindex = 0
  	local name = ""
  	local defaultgw
@@ -37,7 +35,7 @@ index f4d52c4..5d2bd24 100644
  
  	if #rawdata ~= 0 then
  		local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
-@@ -304,6 +309,18 @@ function fetch_txtinfo(otable)
+@@ -313,6 +316,18 @@ function fetch_txtinfo(otable)
  
  	if #rawdatav6 ~= 0 then
  		local tables = luci.util.split(luci.util.trim(rawdatav6), "\r?\n\r?\n", nil, true)
@@ -56,24 +54,21 @@ index f4d52c4..5d2bd24 100644
  		for i, tbl in ipairs(tables) do
  			local lines = luci.util.split(tbl, "\r?\n", nil, true)
  			name  = table.remove(lines, 1):sub(8)
-@@ -324,6 +341,12 @@ function fetch_txtinfo(otable)
- 						if hostname then
- 							data[name][di]["Hostname"] = hostname
+@@ -334,6 +349,9 @@ function fetch_txtinfo(otable)
+ 							if hostname then
+ 								data[name][di]["Hostname"] = hostname
+ 							end
++							if defaultgw6 == fields[k] then
++								data[name][di]["defaultgw"] = 1
++							end
  						end
-+						if defaultgw6 == fields[k] then
-+							data[name][di]["defaultgw"] = 1
-+						end
-+--						if defaultgw6 then
-+--							data[name][di]["Hostname"] = defaultgw6
-+--						end
  					elseif key == "Local IP" then
  						data[name][di][key] = fields[k]
- 						data[name][di]['Local Device'] = fields[k]
 diff --git a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
-index f7b173c..17f949b 100644
+index 82b7728..e5baf39 100644
 --- a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
 +++ b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
-@@ -286,7 +286,7 @@ av.write = write_float
+@@ -342,7 +342,7 @@ av.write = write_float
  ifs = m:section(TypedSection, "Interface", translate("Interfaces"))
  ifs.addremove = true
  ifs.anonymous = true

@@ -1,27 +1,19 @@
-Index: modules/admin-mini/luasrc/controller/mini/system.lua
-===================================================================
---- a/modules/admin-mini/luasrc/controller/mini/system.lua	(Revision 6686)
-+++ b/modules/admin-mini/luasrc/controller/mini/system.lua	(Arbeitskopie)
-@@ -28,11 +28,14 @@
- end
+diff --git a/modules/admin-mini/luasrc/controller/mini/system.lua b/modules/admin-mini/luasrc/controller/mini/system.lua
+index 2559ac1..9995ac0 100644
+--- a/modules/admin-mini/luasrc/controller/mini/system.lua
++++ b/modules/admin-mini/luasrc/controller/mini/system.lua
+@@ -29,8 +30,8 @@ end
  
  function action_backup()
-+	local sys = require "luci.sys"
-+	local fs  = require "luci.fs"
-+
  	local reset_avail = os.execute([[grep '"rootfs_data"' /proc/mtd >/dev/null 2>&1]]) == 0
 -	local restore_cmd = "gunzip | tar -xC/ >/dev/null 2>&1"
 -	local backup_cmd  = "tar -c %s | gzip 2>/dev/null"
--	
--	local restore_fpi 
 +	local restore_cmd = "tar -xzC/ >/dev/null 2>&1"
 +	local backup_cmd  = "tar -czT %s 2>/dev/null"
-+
-+	local restore_fpi
+ 	
+ 	local restore_fpi 
  	luci.http.setfilehandler(
- 		function(meta, chunk, eof)
- 			if not restore_fpi then
-@@ -55,11 +58,22 @@
+@@ -55,11 +56,22 @@ function action_backup()
  		luci.template.render("mini/applyreboot")
  		luci.sys.reboot()
  	elseif backup then
@@ -49,7 +41,7 @@ Index: modules/admin-mini/luasrc/controller/mini/system.lua
  	elseif reset then
  		luci.template.render("mini/applyreboot")
  		luci.util.exec("mtd -r erase rootfs_data")
-@@ -68,6 +82,22 @@
+@@ -68,6 +80,22 @@ function action_backup()
  	end
  end
  
@@ -72,15 +64,15 @@ Index: modules/admin-mini/luasrc/controller/mini/system.lua
  function action_reboot()
  	local reboot = luci.http.formvalue("reboot")
  	luci.template.render("mini/reboot", {reboot=reboot})
-@@ -150,18 +180,17 @@
+@@ -150,18 +178,17 @@ function action_upgrade()
  		if has_platform and has_image and has_support then
  			-- Mimetype text/plain
  			luci.http.prepare_content("text/plain")
 -			luci.http.write("Starting luci-flash...\n")
 +			luci.http.write("Starting sysupgrade...\n")
- 
-+			io.flush()
 +
++			io.flush()
+ 
  			-- Now invoke sysupgrade
  			local keepcfg = keep_avail and luci.http.formvalue("keepcfg") == "1"
 -			local flash = ltn12_popen("/sbin/luci-flash %s %q" %{
@@ -96,30 +88,10 @@ Index: modules/admin-mini/luasrc/controller/mini/system.lua
  		end
  
  
-@@ -177,7 +206,7 @@
- 		if has_image then
- 			nixio.fs.unlink(tmpfile)
- 		end
--			
-+				
- 		luci.template.render("mini/upgrade", {
- 			step=1,
- 			bad_image=(has_image and not has_support or false),
-@@ -194,28 +223,14 @@
- 			flashsize=storage_size(),
- 			keepconfig=(keep_avail and luci.http.formvalue("keepcfg") == "1")
- 		} )
--	
-+		
- 	-- Step 3: load iframe which calls the actual flash procedure
- 	elseif step == 3 then
- 		luci.template.render("mini/upgrade", {
- 			step=3,
- 			keepconfig=(keep_avail and luci.http.formvalue("keepcfg") == "1")
- 		} )
--	end	
--end
--
+@@ -204,20 +231,6 @@ function action_upgrade()
+ 	end	
+ end
+ 
 -function _keep_pattern()
 -	local kpattern = ""
 -	local files = luci.model.uci.cursor():get_all("luci", "flash_keep")
@@ -130,8 +102,10 @@ Index: modules/admin-mini/luasrc/controller/mini/system.lua
 -				kpattern = kpattern .. " " ..  v
 -			end
 -		end
- 	end
+-	end
 -	return kpattern
- end
- 
+-end
+-
  function ltn12_popen(command)
+ 
+ 	local fdi, fdo = nixio.pipe()

@@ -1,8 +1,8 @@
 diff --git a/modules/freifunk/root/etc/config/freifunk b/modules/freifunk/root/etc/config/freifunk
-index 356f4d1..914cdd8 100644
+index 356f4d1..ecb03b0 100644
 --- a/modules/freifunk/root/etc/config/freifunk
 +++ b/modules/freifunk/root/etc/config/freifunk
-@@ -123,3 +123,29 @@ config 'defaults' 'upgrade'
+@@ -123,3 +123,49 @@ config 'defaults' 'upgrade'
  	option 'repository' 'http://dev.luci.freifunk-halle.net/freifunk-snapshots'
  	option 'rssfeed' 'http://firmware.leipzig.freifunk.net/kamikaze/.rss.xml'
  
@@ -31,4 +31,24 @@ index 356f4d1..914cdd8 100644
 +	option 'AdvDNSSLLifetime' '60'
 +	option 'suffix' 'olsr'
 +	option 'ignore' '0'
++
++config 'defaults' 'olsr_gvpninterface'
++	option 'ignore' '0'
++	option 'interface' 'gvpn'
++	option 'HelloInterval' '10.0'
++	option 'HelloValidityTime' '900.0'
++	option 'MidInterval' '150.0'
++	option 'HnaInterval' '150.0'
++	option 'HnaValidityTime' '900.0'
++	option 'Ip4Broadcast' '255.255.255.255'
++	option 'MidValidityTime' '900.0'
++
++config 'defaults' 'gvpn_node'
++	option 'supernode' 'ns1.pberg.freifunk.net:8719'
++	option 'tundev' 'gvpn'
++	option 'community' 'bbb'
++	option 'localport' '8719'
++	option 'subnet' '255.255.255.192'
++	option 'up' '/etc/l2gvpn/up_down'
++	option 'down' '/etc/l2gvpn/up_down'
 +

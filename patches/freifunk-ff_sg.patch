@@ -1,0 +1,32 @@
+--- a/modules/freifunk/root/etc/config/freifunk	2010-08-25 19:46:41.135000064 +0200
++++ b/modules/freifunk/root/etc/config/freifunk.copy	2010-08-25 19:47:48.746000068 +0200
+@@ -235,3 +235,14 @@
+ 
+ 
+ 
++config 'community' 'ff_sg'
++	option 'name' 'Freifunk Solingen'
++	option 'homepage' 'http://solingen.freifunk.net'
++	option 'ssid' 'solingen.freifunk.net'
++	option 'mesh_network' '10.7.0.0/16'
++	option 'splash_network' '192.168.98.0/24'
++	option 'splash_prefix' '27'
++	option 'external' 'freifunk_ff_sg'
++	option 'latitude' '51.16965'
++	option 'longitude' '7.08274'
++
++
++
+--- a/modules/freifunk/root/etc/config/freifunk_ff_sg    1970-01-01 01:00:00.000000000 +0100
++++ b/modules/freifunk/root/etc/config/freifunk_ff_sg 2010-08-25 17:58:05.187000066 +0200
+@@ -0,0 +1,10 @@
++package 'freifunk_ff_sg'
++
++config 'defaults' 'wifi_device'
++        option 'channel' '11'
++
++config 'defaults' 'interface'
++        option 'netmask' '255.255.0.0'
++
++config 'defaults' 'wifi_iface'
++        option 'bssid' '02:40:00:43:43:43'

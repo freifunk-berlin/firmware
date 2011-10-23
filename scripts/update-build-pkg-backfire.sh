@@ -22,10 +22,11 @@ for board in $boards ; do
 	make $option2/install V=99 && \
 	make package/index && \
 	mkdir -p $wwwdir/$verm/$ver/$board && \
-	rsync -av --delete bin/$board/ $wwwdir/$verm/$ver/$board
+	rsync -av --delete bin/$board/packages/ $wwwdir/$verm/$ver/$board/packages
 	cd ../../
 	rm update-build-$verm-$board.lock
-	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1 &
+	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1 
+	#&
 done
 
 # for i in $BOARD ; do

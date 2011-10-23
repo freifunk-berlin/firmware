@@ -1,6 +1,6 @@
---- /dev/null	2011-07-21 00:06:42.963766673 +0200
-+++ b/modules/freifunk/root/etc/config/profile_bno	2011-07-28 17:11:02.840420605 +0200
-@@ -0,0 +1,104 @@
+--- /dev/null	2011-08-21 11:27:54.993499633 +0200
++++ a/contrib/package/community-profiles/files/etc/config/profile_bno	2011-09-04 13:55:02.419556196 +0200
+@@ -0,0 +1,107 @@
 +config 'community' 'profile'
 +	option 'name' 'Berlin NordOst'
 +	option 'homepage' 'http://www.freifunk-bno.de/'
@@ -14,6 +14,9 @@
 +
 +config 'defaults' 'wifi_device'
 +	option 'channel' '10'
++
++config 'defaults' 'interface'
++	option 'netmask' '255.0.0.0'
 +
 +config 'defaults' 'olsr_interface'
 +	option 'Ip4Broadcast' '255.255.255.255'

@@ -1,7 +1,7 @@
-diff --git a/modules/freifunk/root/etc/uci-defaults/freifunk b/modules/freifunk/root/etc/uci-defaults/freifunk
+diff --git a/contrib/package/freifunk-common/files/etc/uci-defaults/freifunk b/modules/freifunk/root/etc/uci-defaults/freifunk
 index fe6586c..80f73ac 100644
---- a/modules/freifunk/root/etc/uci-defaults/freifunk
-+++ b/modules/freifunk/root/etc/uci-defaults/freifunk
+--- a/contrib/package/freifunk-common/files/etc/uci-defaults/freifunk
++++ b/contrib/package/freifunk-common/files/etc/uci-defaults/freifunk
 @@ -1,2 +1,31 @@
  uci set uhttpd.main.rfc1918_filter=0
  uci commit uhttpd
@@ -31,6 +31,6 @@ index fe6586c..80f73ac 100644
 +fi
 +
 +config_foreach remove_old_community community
-+rm -f /etc/config/freifunk_*
++#rm -f /etc/config/freifunk_*
 +uci_commit 'freifunk'
 +

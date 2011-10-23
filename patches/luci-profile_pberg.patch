@@ -1,11 +1,14 @@
-diff --git a/modules/freifunk/root/etc/config/profile_pberg b/modules/freifunk/root/etc/config/profile_pberg
-index ea2f7b0..80d90c8 100644
---- a/modules/freifunk/root/etc/config/profile_pberg
-+++ b/modules/freifunk/root/etc/config/profile_pberg
-@@ -10,3 +10,94 @@ config 'community' 'profile'
+diff --git a/contrib/package/community-profiles/files/etc/config/profile_pberg b/modules/freifunk/root/etc/config/profile_pberg
+index ea2f7b0..23218f2 100644
+--- a/contrib/package/community-profiles/files/etc/config/profile_pberg
++++ b/contrib/package/community-profiles/files/etc/config/profile_pberg
+@@ -10,3 +10,97 @@ config 'community' 'profile'
  
  config 'defaults' 'wifi_device'
  	option 'channel' '10'
++
++config 'defaults' 'interface'
++	option 'netmask' '255.0.0.0'
 +
 +config 'defaults' 'olsr_interface'
 +	option 'Ip4Broadcast' '255.255.255.255'

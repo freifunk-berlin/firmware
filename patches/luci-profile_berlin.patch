@@ -1,7 +1,7 @@
-diff --git a/modules/freifunk/root/etc/config/profile_berlin b/modules/freifunk/root/etc/config/profile_berlin
+diff --git a/contrib/package/community-profiles/files/etc/config/profile_berlin b/modules/freifunk/root/etc/config/profile_berlin
 index c41144e..1eb857c 100644
---- a/modules/freifunk/root/etc/config/profile_berlin
-+++ b/modules/freifunk/root/etc/config/profile_berlin
+--- a/contrib/package/community-profiles/files/etc/config/profile_berlin
++++ b/contrib/package/community-profiles/files/etc/config/profile_berlin
 @@ -12,5 +12,95 @@ config 'defaults' 'wifi_device'
  	option 'channel' '10'
  

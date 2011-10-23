@@ -1,0 +1,15 @@
+diff --git a/modules/admin-mini/luasrc/controller/mini/index.lua b/modules/admin-mini/luasrc/controller/mini/index.lua
+index 9d6a38e..00df453 100644
+--- a/modules/admin-mini/luasrc/controller/mini/index.lua
++++ b/modules/admin-mini/luasrc/controller/mini/index.lua
+@@ -33,6 +33,10 @@ function index()
+ 	entry({"mini", "index", "index"}, form("mini/index"), _("General"), 1).ignoreindex = true
+ 	entry({"mini", "index", "luci"}, cbi("mini/luci", {autoapply=true}), _("Settings"), 10)
+ 	entry({"mini", "index", "logout"}, call("action_logout"), _("Logout"))
++	entry({"mini", "status"}, alias("mini", "status", "index"), _("Status"), 20).index = true
++	entry({"mini", "status", "index"}, form("mini/index"), _("General"), 1).ignoreindex = true
++	entry({"mini", "services"}, alias("mini", "services", "index"), _("Services"), 40).index = true
++	entry({"mini", "services", "index"}, form("mini/index"), _("General"), 1).ignoreindex = true
+ end
+ 
+ function action_logout()

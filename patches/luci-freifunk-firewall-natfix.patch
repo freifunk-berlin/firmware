@@ -1,115 +1,26 @@
 diff --git a/contrib/package/freifunk-firewall/files/etc/firewall.freifunk b/contrib/package/freifunk-firewall/files/etc/firewall.freifunk
-index 9052992..82c7edf 100644
+index 9052992..3b06716 100644
 --- a/contrib/package/freifunk-firewall/files/etc/firewall.freifunk
 +++ b/contrib/package/freifunk-firewall/files/etc/firewall.freifunk
-@@ -43,13 +43,13 @@ config_foreach apply_advanced advanced
- apply_nat_fix() {
- 	local up
- 	local ifname
-+	config_get ifname $1 ifname
-+	[ -z "$ifname" ] && return 0
- 	config_get up $1 up
- 	[ -n "$up" ] || return 0
- 	(ACTION="ifup" INTERFACE="$1" . /etc/hotplug.d/iface/22-firewall-nat-fix )
- }
+@@ -37,21 +37,6 @@ apply_advanced() {
+ config_foreach apply_advanced advanced
  
+ 
+-#
+-# Apply fixes for masquerading rules
+-#
+-apply_nat_fix() {
+-	local up
+-	local ifname
+-	config_get up $1 up
+-	[ -n "$up" ] || return 0
+-	(ACTION="ifup" INTERFACE="$1" . /etc/hotplug.d/iface/22-firewall-nat-fix )
+-}
+-
 -uci_set_state firewall core loaded 1
 -config_foreach fw_addif interface
- config_foreach apply_nat_fix interface
- 
+-config_foreach apply_nat_fix interface
+-
  [ -x /etc/init.d/luci_splash ] && ( sleep 3; /etc/init.d/luci_splash restart )&
-diff --git a/contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix b/contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix
-index 634f432..c3283bb 100644
---- a/contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix
-+++ b/contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix
-@@ -1,7 +1,13 @@
--. /lib/firewall/uci_firewall.sh
- unset ZONE
-+unset NETWORKS
-+config_load network
-+config_load firewall
-+local ifname
- config_get ifname $INTERFACE ifname
-+[ -z "$ifname" ] && exit 0
- [ "$ifname" == "lo" ] && exit 0
-+config_get proto $INTERFACE proto
-+[ "$proto" == "static" ] || exit 0
  
- load_zones() {
- 	local name
-@@ -10,7 +16,10 @@ load_zones() {
- 	config_get network $1 network
- 	[ -z "$network" ] && network=$name
- 	for n in $network; do
--		[ "$n" = "$INTERFACE" ] && ZONE="$ZONE $name"
-+		if [ "$n" = "$INTERFACE" ] ; then
-+			ZONE="$ZONE $name"
-+			NETWORKS="$NETWORKS $network"
-+		fi
- 	done
- }
- 
-@@ -21,32 +30,50 @@ config_foreach load_zones zone
- natfix_addr_add() {
- 	local network=$1
- 	local iface=$2
-+	local ipnetworks=''
- 
- 	config_get parent "$1" interface
- 	[ "$network" != "$INTERFACE" -a "$parent" != "$INTERFACE" ] && return 0
- 
--	config_get ipaddr "$network" ipaddr
--	[ -n "$ipaddr" ] || return 0
--	config_get netmask "$network" netmask
--	[ -n "$netmask" ] || return 0
--	eval "$(ipcalc.sh $ipaddr $netmask)"
-+	for z in $ZONE; do
-+		if [ "$z" == "freifunk" ] ; then
-+			load_ffnetworks() {
-+				local ffnetwork
-+				config_get ffnetwork $1 mesh_network
-+				case $ipnetworks in
-+					*$ffnetwork*) ;;
-+					*) ipnetworks="$ipnetworks $ffnetwork";;
-+				esac
-+			}
-+			config_load freifunk
-+			config_foreach load_ffnetworks community
-+			for n in $NETWORKS; do
-+				config_get ipaddr "$n" ipaddr
-+				config_get netmask "$n" netmask
-+				eval "$(ipcalc.sh $ipaddr $netmask)"
-+				case $ipnetworks in
-+					*$NETWORK/$PREFIX*) ;;
-+					*) ipnetworks="$ipnetworks $NETWORK/$PREFIX";;
-+				esac
-+			done
-+		fi
-+	done
-+	logger -t firewall.freifunk "adding nat-fix rule from $iface"
-+	for ipn in $ipnetworks; do
-+		iptables -t nat -A "natfix_$iface" -s "$ipn" -j ACCEPT		
-+	done
- 
--	logger -t firewall.freifunk "adding nat rule for $iface($NETWORK/$PREFIX)"
--	iptables -t nat -A "natfix_$iface" -s "$NETWORK/$PREFIX" -d "$NETWORK/$PREFIX" -j ACCEPT
- }
- 
- [ ifup = "$ACTION" ] && {
-+	iptables -t nat -F "natfix_$ifname" 2>/dev/null
- 	iptables -t nat -N "natfix_$ifname"
- 	natfix_addr_add "$INTERFACE" "$ifname"
- 	config_foreach natfix_addr_add alias "$ifname"
- 
- 	for z in $ZONE; do
--		local loaded
--		config_get loaded core loaded
--		[ -n "$loaded" ] && {
--			logger -t firewall.freifunk "applying nat rules on zone $z"
--			iptables -t nat -I "zone_${z}_nat" 1 -o "$ifname" -j "natfix_$ifname"
--		}
-+		logger -t firewall.freifunk "applying nat rules on zone $z"
-+		iptables -t nat -I "zone_${z}_nat" 1 -o "$ifname" -j "natfix_$ifname"
- 	done
- }
- 
+ [ -x /etc/init.d/freifunk-p2pblock ] && /etc/init.d/freifunk-p2pblock enabled && \

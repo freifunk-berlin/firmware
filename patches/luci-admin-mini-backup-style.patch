@@ -1,5 +1,5 @@
 diff --git a/modules/admin-mini/luasrc/view/mini/backup.htm b/modules/admin-mini/luasrc/view/mini/backup.htm
-index a28d2b8..1da531a 100644
+index 47b513b..835041f 100644
 --- a/modules/admin-mini/luasrc/view/mini/backup.htm
 +++ b/modules/admin-mini/luasrc/view/mini/backup.htm
 @@ -19,10 +19,9 @@ $Id$
@@ -17,7 +17,7 @@ index a28d2b8..1da531a 100644
  </div>
  
 @@ -37,4 +36,14 @@ $Id$
- 		<input type="submit" class="cbi-input-apply" value="<%:Restore backup%>" />
+ 		<input type="submit" class="cbi-button cbi-input-apply" value="<%:Restore backup%>" />
  	</div>
  </form>
 +<br />
@@ -31,4 +31,3 @@ index a28d2b8..1da531a 100644
 +	</ul>
 +</div>
  <%+footer%>
-\ No newline at end of file

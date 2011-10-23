@@ -1,114 +1,72 @@
-diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
-index 86de7e0..fa538ed 100644
---- a/contrib/package/luci/Makefile
-+++ b/contrib/package/luci/Makefile
-@@ -249,11 +249,11 @@ define Package/luci-mod-freifunk/conffiles
- /etc/config/freifunk
- endef
- 
--$(eval $(call module,admin-core,Web UI Core module,+luci-lib-web +luci-i18n-english))
--$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-mod-admin-core @BROKEN))
-+$(eval $(call module,admin-core,Web UI Core module,+luci-lib-web))
-+$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-mod-admin-core))
- $(eval $(call module,admin-full,LuCI Administration - full-featured for full control,+luci-mod-admin-core +luci-lib-ipkg))
- $(eval $(call module,rpc,LuCI RPC - JSON-RPC API,+luci-lib-json))
--$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall))
-+$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-mini +PACKAGE_luci-mod-freifunk:freifunk-firewall))
- $(eval $(call module,niu,NIU - Next Generation Interface,+luci-mod-admin-core @BROKEN))
- 
- 
-@@ -311,7 +311,7 @@ $(eval $(call application,meshwizard, Shellscript based wizard to setup mesh net
-         +meshwizard +luci-mod-freifunk))
- 
- $(eval $(call application,olsr,OLSR configuration and status module,\
--	+luci-mod-admin-full +PACKAGE_luci-app-olsr:olsrd +PACKAGE_luci-app-olsr:olsrd-mod-txtinfo))
-+	+luci-mod-admin-mini +PACKAGE_luci-app-olsr:olsrd +PACKAGE_luci-app-olsr:olsrd-mod-txtinfo))
- 
- $(eval $(call application,olsr-viz,OLSR Visualisation,\
- 	+PACKAGE_luci-app-olsr-viz:luci-app-olsr +PACKAGE_luci-app-olsr-viz:olsrd-mod-txtinfo))
-diff --git a/modules/admin-mini/luasrc/controller/mini/index.lua b/modules/admin-mini/luasrc/controller/mini/index.lua
-index 81c0846..563dcaa 100644
---- a/modules/admin-mini/luasrc/controller/mini/index.lua
-+++ b/modules/admin-mini/luasrc/controller/mini/index.lua
-@@ -36,6 +36,8 @@ function index()
- 	entry({"mini", "index", "index"}, form("mini/index"), i18n("General"), 1).ignoreindex = true
- 	entry({"mini", "index", "luci"}, cbi("mini/luci", {autoapply=true}), i18n("Settings"), 10)
- 	entry({"mini", "index", "logout"}, call("action_logout"), i18n("Logout"))
-+	entry({"mini", "services"}, alias("mini", "services", "index"), i18n("Services"), 30).index = true
-+	entry({"mini", "services", "index"}, form("mini/index"), i18n("Services"), 1).ignoreindex = true
- end
- 
- function action_logout()
 diff --git a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
-index a536fea..0f430e2 100644
+index 1d0175f..a557e1b 100644
 --- a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 +++ b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
-@@ -52,9 +52,7 @@ function index()
+@@ -53,9 +53,7 @@ function index()
  	page.setuser  = false
-         page.setgroup = false
+ 	page.setgroup = false
  
 -	entry({"freifunk", "status.json"}, call("jsonstatus"))
  	entry({"freifunk", "status", "zeroes"}, call("zeroes"), "Testdownload")
 -	entry({"freifunk", "status", "public_status_json"}, call("public_status_json")).leaf = true
  
- 	assign({"freifunk", "olsr"}, {"admin", "status", "olsr"}, i18n("OLSR"), 30)
+ 	assign({"freifunk", "olsr"}, {"admin", "status", "olsr"}, _("OLSR"), 30)
  
-@@ -63,42 +61,51 @@ function index()
+@@ -64,42 +62,49 @@ function index()
  	end
  
  	-- backend
--	assign({"mini", "freifunk"}, {"admin", "freifunk"}, i18n("Freifunk"), 5)
--	entry({"admin", "freifunk"}, alias("admin", "freifunk", "index"), i18n("Freifunk"), 5)
-+	--assign({"mini", "freifunk"}, {"admin", "freifunk"}, i18n("Freifunk"), 5)
-+	--entry({"admin", "freifunk"}, alias("admin", "freifunk", "index"), i18n("Freifunk"), 5)
-+	entry({"admin", "freifunk"}, alias("admin", "freifunk", "ffwizard"), i18n("Freifunk"), 5)
-+	entry({"mini", "freifunk"}, alias("mini", "freifunk", "ffwizard"), i18n("Freifunk"), 5)
+-	assign({"mini", "freifunk"}, {"admin", "freifunk"}, _("Freifunk"), 5)
+-	entry({"admin", "freifunk"}, alias("admin", "freifunk", "index"), _("Freifunk"), 5)
++	entry({"admin", "freifunk"}, alias("admin", "freifunk", "ffwizard"), _("Freifunk"), 5)
++	entry({"mini", "freifunk"}, alias("mini", "freifunk", "ffwizard"), _("Freifunk"), 5)
  
--	local page  = node("admin", "freifunk")
-+	local page  = node("admin", "freifunk", "index")
+-	page        = node("admin", "freifunk")
++	page        = node("admin", "freifunk", "index")
  	page.target = template("freifunk/adminindex")
- 	page.title  = i18n("Freifunk")
+ 	page.title  = _("Freifunk")
  	page.order  = 5
-+	assign({"mini", "freifunk", "index"}, {"admin", "freifunk", "index"}, i18n("Freifunk"), 5)
++	assign({"mini", "freifunk", "index"}, {"admin", "freifunk", "index"}, _("Freifunk"), 5)
  
- 	local page  = node("admin", "freifunk", "basics")
+ 	page        = node("admin", "freifunk", "basics")
  	page.target = cbi("freifunk/basics")
- 	page.title  = i18n("Basic Settings")
+ 	page.title  = _("Basic Settings")
  	page.order  = 5
-+	assign({"mini", "freifunk", "basics"}, {"admin", "freifunk", "basics"}, i18n("Basic Settings"), 5)
- 	
- 	local page  = node("admin", "freifunk", "basics", "profile")
+-	
++	assign({"mini", "freifunk", "basics"}, {"admin", "freifunk", "basics"}, _("Basic Settings"), 5)
++
+ 	page        = node("admin", "freifunk", "basics", "profile")
  	page.target = cbi("freifunk/profile")
- 	page.title  = i18n("Profile")
+ 	page.title  = _("Profile")
  	page.order  = 10
-+	assign({"mini", "freifunk", "basics", "profile"}, {"admin", "freifunk", "basics", "profile"}, i18n("Profile"), 10)
++	assign({"mini", "freifunk", "basics", "profile"}, {"admin", "freifunk", "basics", "profile"}, _("Profile"), 10)
  
- 	local page  = node("admin", "freifunk", "basics", "profile_expert")
+ 	page        = node("admin", "freifunk", "basics", "profile_expert")
  	page.target = cbi("freifunk/profile_expert")
- 	page.title  = i18n("Profile (Expert)")
+ 	page.title  = _("Profile (Expert)")
  	page.order  = 20
-+	assign({"mini", "freifunk", "basics", "profile_expert"}, {"admin", "freifunk", "basics", "profile_expert"}, i18n("Profile (Expert)"), 20)
++	assign({"mini", "freifunk", "basics", "profile_expert"}, {"admin", "freifunk", "basics", "profile_expert"}, _("Profile (Expert)"), 20)
  
- 	local page  = node("admin", "freifunk", "Index-Page")
+ 	page        = node("admin", "freifunk", "Index-Page")
  	page.target = cbi("freifunk/user_index")
- 	page.title  = i18n("Index Page")
+ 	page.title  = _("Index Page")
  	page.order  = 50
-+	assign({"mini", "freifunk", "Index-Page"}, {"admin", "freifunk", "Index-Page"}, i18n("Index Page"), 50)
++	assign({"mini", "freifunk", "Index-Page"}, {"admin", "freifunk", "Index-Page"}, _("Index Page"), 50)
  
- 	local page  = node("admin", "freifunk", "contact")
+ 	page        = node("admin", "freifunk", "contact")
  	page.target = cbi("freifunk/contact")
- 	page.title  = i18n("Contact")
+ 	page.title  = _("Contact")
  	page.order  = 15
-+	assign({"mini", "freifunk", "contact"}, {"admin", "freifunk", "contact"}, i18n("Contact"), 15)
++	assign({"mini", "freifunk", "contact"}, {"admin", "freifunk", "contact"}, _("Contact"), 15)
  
- 	entry({"freifunk", "map"}, template("freifunk-map/frame"), i18n("Map"), 50)
+ 	entry({"freifunk", "map"}, template("freifunk-map/frame"), _("Map"), 50)
  	entry({"freifunk", "map", "content"}, template("freifunk-map/map"), nil, 51)
  	entry({"admin", "freifunk", "profile_error"}, template("freifunk/profile_error"))
 +	assign({"mini", "freifunk", "profile_error"}, {"admin", "freifunk", "profile_error"})
  end
  
  local function fetch_olsrd()
-@@ -165,144 +172,3 @@ function zeroes()
+@@ -166,155 +171,4 @@ function zeroes()
  	end
  end
  
@@ -205,7 +163,7 @@ index a536fea..0f430e2 100644
 -		end
 -		rv[#rv+1] = j
 -	end
--
+ 
 -	local load1, load5, load15 = sys.loadavg()
 -
 -	local  _, _, memtotal, memcached, membuffers, memfree = sys.sysinfo()
@@ -238,7 +196,18 @@ index a536fea..0f430e2 100644
 -		dest = dr4.dest:string(),
 -		dev = dr4.device,
 -		metr = dr4.metric }
--	end
+-	else
+-		local dr = sys.exec("ip r s t olsr-default")
+-		if dr then
+-			local dest, gateway, dev, metr = dr:match("^(%w+) via (%d+.%d+.%d+.%d+) dev (%w+) +metric (%d+)")
+-			def4 = {
+-				dest = dest,
+-				gateway = gateway,
+-				dev = dev,
+-				metr = metr
+-			}
+-		end
+-        end
 -	
 -	rv[#rv+1] = {
 -		time = os.date("%a, %d %b %Y, %H:%M:%S"),
@@ -253,3 +222,19 @@ index a536fea..0f430e2 100644
 -	luci.http.write_json(rv)
 -	return
 -end
+diff --git a/modules/freifunk/luasrc/view/freifunk/adminindex.htm b/modules/freifunk/luasrc/view/freifunk/adminindex.htm
+index 4eed2aa..e837468 100644
+--- a/modules/freifunk/luasrc/view/freifunk/adminindex.htm
++++ b/modules/freifunk/luasrc/view/freifunk/adminindex.htm
+@@ -31,9 +31,9 @@ luci.i18n.loadc("freifunk")
+ <%end%>
+ 
+ <% uci:foreach("wireless", "wifi-device", function(section)
+-	local device = section[".name"]
+-	local url = luci.dispatcher.build_url(luci.dispatcher.context.path[1], "network", "wireless")
+ 	if section.diversity ~= "0" and section.disabled ~= "1" then
++		local device = section[".name"]
++		local url = luci.dispatcher.build_url(luci.dispatcher.context.path[1], "network", "wireless")
+ 		print('<div class="error">' .. translate("Diversity is enabled for device") .. ' <b>' .. device .. '</b>. '
+ 		.. translate("Go to") .. ' <a href="' .. url .. '">' .. translate("wireless settings") .. '</a> ' ..
+ 		translate("to disable it.") .. '</div><p />')

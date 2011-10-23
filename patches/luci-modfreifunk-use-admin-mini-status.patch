@@ -1,0 +1,133 @@
+diff --git a/modules/freifunk/luasrc/view/freifunk/public_status.htm b/modules/freifunk/luasrc/view/freifunk/public_status.htm
+index 9cb1856..ea644d2 100644
+--- a/modules/freifunk/luasrc/view/freifunk/public_status.htm
++++ b/modules/freifunk/luasrc/view/freifunk/public_status.htm
+@@ -23,13 +23,6 @@ local mem = string.format(
+ 	tostring(i18n.translate("buffered"))
+ )
+ 
+--- update interval
+-local bogomips = bogomips or 100
+-local interval = 10
+-if bogomips > 350 then
+-	interval = 5
+-end
+-
+ -- wireless
+ local ntm = require "luci.model.network".init()
+ local devices  = ntm:get_wifidevs()
+@@ -56,114 +49,6 @@ local defroutev6 = sys.net.defaultroute6()
+ 
+ <script type="text/javascript" src="<%=resource%>/cbi.js"></script>
+ 
+-<script type="text/javascript">//<![CDATA[
+-	XHR.poll(<%=interval%>, '<%=luci.dispatcher.build_url("freifunk", "status", "public_status_json", table.concat(netlist, ","))%>', null,
+-		function(x, st)
+-		{
+-			if (st)
+-			{
+-				for( var i = 0; i < st.length; i++ )
+-				{
+-					var iw = st[i];
+-					var is_assoc = (iw.bssid && iw.channel);
+-					var p = (100 / iw.quality_max * iw.quality);
+-					var q = is_assoc ? p : -1;
+-
+-					var icon;
+-					if (q < 0)
+-						icon = "<%=resource%>/icons/signal-none.png";
+-					else if (q == 0)
+-						icon = "<%=resource%>/icons/signal-0.png";
+-					else if (q < 25)
+-						icon = "<%=resource%>/icons/signal-0-25.png";
+-					else if (q < 50)
+-						icon = "<%=resource%>/icons/signal-25-50.png";
+-					else if (q < 75)
+-						icon = "<%=resource%>/icons/signal-50-75.png";
+-					else
+-						icon = "<%=resource%>/icons/signal-75-100.png";
+-
+-					var power = document.getElementById(iw.id + '-txpower');
+-					if (power)
+-						power.innerHTML = String.format('%s dbm', iw.txpower);
+-
+-					var signal = document.getElementById(iw.id + '-signal');
+-					if (signal)
+-						signal.innerHTML = String.format(
+-							'<img src="%s" title="Signal: %s db / Noise: %s db" alt="Signal Quality" />',
+-							icon, iw.signal, iw.noise
+-						);
+-
+-					var bitrate = document.getElementById(iw.id + '-bitrate');
+-					if (bitrate)
+-						bitrate.innerHTML = String.format('%s Mb/s', iw.bitrate ? iw.bitrate / 1000 : '?');
+-
+-					var ssid = document.getElementById(iw.id + '-ssid');
+-					if (ssid)
+-						ssid.innerHTML = iw.ssid;
+-
+-					var bssid = document.getElementById(iw.id + '-bssid');
+-					if (bssid)
+-						bssid.innerHTML = iw.bssid;
+-
+-					var channel = document.getElementById(iw.id + '-channel');
+-					if (channel)
+-						channel.innerHTML = iw.channel;
+-
+-					var mode = document.getElementById(iw.id + '-mode');
+-					if (mode)
+-					mode.innerHTML = iw.mode;
+-				}
+-
+-				i = st.length - 1
+-				var u
+-
+-				if (u = document.getElementById('dynuptime'))
+-					u.innerHTML = st[i].uptime;
+-
+-				if (u = document.getElementById('dynload'))
+-					u.innerHTML = st[i].load;
+-
+-				if (u = document.getElementById('dynmem'))
+-					u.innerHTML = st[i].mem;
+-
+-				if (u = document.getElementById('dyntime'))
+-					u.innerHTML = st[i].time;
+-
+-				if (st[i].defroutev4)
+-				{
+-					if (u = document.getElementById('v4dst'))
+-						u.innerHTML = st[i].defroutev4.dest;
+-
+-					if (u = document.getElementById('v4gw'))
+-						u.innerHTML = st[i].defroutev4.gateway;
+-
+-					if (u = document.getElementById('v4dev'))
+-						u.innerHTML = st[i].defroutev4.dev;
+-
+-					if (u = document.getElementById('v4metr'))
+-						u.innerHTML = st[i].defroutev4.metr;
+-				}
+-
+-				if (st[i].defroutev6)
+-				{
+-					if (u = document.getElementById('v6dst'))
+-						u.innerHTML = st[i].defroutev6.dest;
+-
+-					if (u = document.getElementById('v6gw'))
+-						u.innerHTML = st[i].defroutev6.gateway;
+-
+-					if (u = document.getElementById('v6dev'))
+-						u.innerHTML = st[i].defroutev6.dev;
+-
+-					if (u = document.getElementById('v6metr'))
+-						u.innerHTML = st[i].defroutev6.metr;
+-				}
+-			}
+-		}
+-	);
+-//]]></script>
+-
+ <div class="cbi-map">
+ 	<h2><%:System%></h2>
+ 	<div class="cbi-section-node">

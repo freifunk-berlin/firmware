@@ -1,6 +1,6 @@
 Index: net/olsrd/files/olsrd.init
 ===================================================================
---- net/olsrd/files/olsrd.init	(Revision 27096)
+--- net/olsrd/files/olsrd.init	(Revision 28514)
 +++ net/olsrd/files/olsrd.init	(Arbeitskopie)
 @@ -1,7 +1,13 @@
  #!/bin/sh /etc/rc.common
@@ -41,7 +41,7 @@ Index: net/olsrd/files/olsrd.init
  	esac
  
  	echo -n "${N}LoadPlugin \"$library\"${N}{"
-@@ -593,20 +604,54 @@
+@@ -593,20 +604,53 @@
  	local bindv6only='0'
  	if [ "$OLSRD_IPVERSION_6AND4" -ne 0 ]; then
  		bindv6only="$(sysctl -n net.ipv6.bindv6only)"
@@ -71,15 +71,14 @@ Index: net/olsrd/files/olsrd.init
 +			start-stop-daemon -q -b -m -p $PID6 -x $BIN -S -- -f /var/etc/olsrd.conf.ipv6 -nofork
 +		fi
 +
+ 		sleep 3
+-		sysctl -w net.ipv6.bindv6only="$bindv6only"
++		sysctl -w net.ipv6.bindv6only="$bindv6only" > /dev/null
 +                if ([ -s $PID ] && kill -0 $(cat $PID) 2>&-); then
 +				echo "Error: There already is a IPv4 instance of olsrd running ($(cat $PID)), not starting."
 +		else
 +			start-stop-daemon -q -b -m -p $PID -x $BIN -S -- -f /var/etc/olsrd.conf.ipv4 -nofork
 +		fi
-+
- 		sleep 3
--		sysctl -w net.ipv6.bindv6only="$bindv6only"
-+		sysctl -w net.ipv6.bindv6only="$bindv6only" > /dev/null
  	else
 -		olsrd -f "$OLSRD_CONFIG_FILE" -nofork < /dev/null > /dev/null &
 +		### check for running instance

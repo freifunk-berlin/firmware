@@ -1,0 +1,19 @@
+diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
+index efff767..c737ddc 100644
+--- a/contrib/package/luci/Makefile
++++ b/contrib/package/luci/Makefile
+@@ -278,11 +278,11 @@ define Package/luci-mod-admin-core/extra-install
+ 	touch $(1)/etc/init.d/luci_fixtime || true
+ endef
+ 
+-$(eval $(call module,admin-core,Web UI Core module,+luci-lib-web +luci-proto-core +luci-proto-ppp +luci-i18n-english))
+-$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-mod-admin-core @BROKEN))
++$(eval $(call module,admin-core,Web UI Core module,+luci-lib-web +luci-proto-core +luci-proto-ppp))
++$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-mod-admin-core))
+ $(eval $(call module,admin-full,LuCI Administration - full-featured for full control,+luci-mod-admin-core +luci-lib-ipkg))
+ $(eval $(call module,rpc,LuCI RPC - JSON-RPC API,+luci-lib-json))
+-$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall +freifunk-common +community-profiles))
++$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-mini +PACKAGE_luci-mod-freifunk:freifunk-firewall +freifunk-common +community-profiles))
+ $(eval $(call module,niu,NIU - Next Generation Interface,+luci-mod-admin-core @BROKEN))
+ 
+ 

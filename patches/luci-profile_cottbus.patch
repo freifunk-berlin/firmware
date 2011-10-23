@@ -1,5 +1,5 @@
 --- /dev/null	2011-07-21 00:06:42.963766673 +0200
-+++ b/modules/freifunk/root/etc/config/profile_cottbus	2011-07-28 17:11:02.840420605 +0200
++++ b/contrib/package/community-profiles/files/etc/config/profile_cottbus	2011-07-28 17:11:02.840420605 +0200
 @@ -0,0 +1,38 @@
 +config 'community' 'profile'
 +	option 'name' 'Freifunk Cottbus'

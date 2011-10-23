@@ -1,0 +1,9 @@
+diff --git a/contrib/package/freifunk-common/files/usr/bin/neigh.sh b/contrib/package/freifunk-common/files/usr/bin/neigh.sh
+index 723b813..eee9cd3 100755
+--- a/contrib/package/freifunk-common/files/usr/bin/neigh.sh
++++ b/contrib/package/freifunk-common/files/usr/bin/neigh.sh
+@@ -1,3 +1,4 @@
+ #!/bin/sh
+ 
+ wget -q -O - http://localhost:2006/neighbours|sed -e's/LinkQuality/LQ/;s/Hysteresis/Hyst./;s/Willingness/Will./'
++wget -q -O - http://[::1]:2006/neighbours|sed -e's/LinkQuality/LQ/;s/Hysteresis/Hyst./;s/Willingness/Will./'

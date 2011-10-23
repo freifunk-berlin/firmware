@@ -1,10 +1,14 @@
 diff --git a/modules/admin-mini/luasrc/controller/mini/system.lua b/modules/admin-mini/luasrc/controller/mini/system.lua
-index 2559ac1..9995ac0 100644
+index 2559ac1..980227f 100644
 --- a/modules/admin-mini/luasrc/controller/mini/system.lua
 +++ b/modules/admin-mini/luasrc/controller/mini/system.lua
-@@ -29,8 +30,8 @@ end
+@@ -28,9 +29,12 @@ function index()
+ end
  
  function action_backup()
++	local sys = require "luci.sys"
++	local fs  = require "luci.fs"
++
  	local reset_avail = os.execute([[grep '"rootfs_data"' /proc/mtd >/dev/null 2>&1]]) == 0
 -	local restore_cmd = "gunzip | tar -xC/ >/dev/null 2>&1"
 -	local backup_cmd  = "tar -c %s | gzip 2>/dev/null"
@@ -13,7 +17,7 @@ index 2559ac1..9995ac0 100644
  	
  	local restore_fpi 
  	luci.http.setfilehandler(
-@@ -55,11 +56,22 @@ function action_backup()
+@@ -55,11 +59,22 @@ function action_backup()
  		luci.template.render("mini/applyreboot")
  		luci.sys.reboot()
  	elseif backup then
@@ -41,7 +45,7 @@ index 2559ac1..9995ac0 100644
  	elseif reset then
  		luci.template.render("mini/applyreboot")
  		luci.util.exec("mtd -r erase rootfs_data")
-@@ -68,6 +80,22 @@ function action_backup()
+@@ -68,6 +83,22 @@ function action_backup()
  	end
  end
  
@@ -64,7 +68,7 @@ index 2559ac1..9995ac0 100644
  function action_reboot()
  	local reboot = luci.http.formvalue("reboot")
  	luci.template.render("mini/reboot", {reboot=reboot})
-@@ -150,18 +178,17 @@ function action_upgrade()
+@@ -150,18 +181,17 @@ function action_upgrade()
  		if has_platform and has_image and has_support then
  			-- Mimetype text/plain
  			luci.http.prepare_content("text/plain")
@@ -88,7 +92,7 @@ index 2559ac1..9995ac0 100644
  		end
  
  
-@@ -204,20 +231,6 @@ function action_upgrade()
+@@ -204,20 +234,6 @@ function action_upgrade()
  	end	
  end
  

@@ -74,6 +74,7 @@ echo "OpenWrt $packages_dir Revision: $packages_revision" >> VERSION.txt
 PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch"
 PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch"
 PACKAGESPATCHES="$PACKAGESPATCHES package-collectd.patch"
+PACKAGESPATCHES="$PACKAGESPATCHES package-collectd-gcrypt.patch"
 PACKAGESPATCHES="$PACKAGESPATCHES olsrd.config-rm-wlan-patches.patch"
 
 cd $packages_dir
@@ -94,7 +95,7 @@ cd ..
 if [ -d packages-pberg ] ; then
 	echo "update packages-pberg git pull"
 	cd packages-pberg
-	git pull || exit 0
+#	git pull || exit 0
 	packages_pberg_revision=$(git rev-parse HEAD)
 	cd ../
 else
@@ -160,7 +161,6 @@ LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini-status.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk-firewall-natfix.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-common-neighb6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-index.patch"
@@ -239,17 +239,18 @@ for board in $boards ; do
 	cd $verm/$board
 	echo "clean up"
 	rm -f .config
-	rm -rf ./tmp
-	rm -rf ./feeds/*
-	rm -rf ./package/feeds/*
-	rm -rf ./bin
+##	rm -rf tmp
+##	rm -rf feeds/*
+##	rm -rf package/feeds/*
+##	rm -rf bin
 	rm -rf build_dir/*/luci*
-	rm -rf build_dir/*/root*
+##	rm -rf build_dir/*/root*
 	rm -rf build_dir/*/compat-wireless*
-##	rm -rf ./build_dir
-##	rm -rf ./staging_dir
-	rm -rf ./files
-	mkdir -p ./files
+	rm -rf build_dir/*/uhttp*
+##	rm -rf build_dir
+##	rm -rf staging_dir
+	rm -rf files
+	mkdir -p files
 	rm -rf $(svn status)
 	case $verm in
 		trunk) 
@@ -290,11 +291,13 @@ for board in $boards ; do
 	#echo "src-link wgaugsburg ../../../wgaugsburg/packages" >> feeds.conf
 	echo "src-link yaffmapagent ../../../yaffmap-agent" >> feeds.conf
 	echo "src-link bulletin ../../../luci-app-bulletin-node" >> feeds.conf
+	echo "src-link forkeddaapd ../../../forked-daapd" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"
 	scripts/feeds install -a
 	sed -i -e "s,downloads\.openwrt\.org.*,$servername/$verm/$ver-timestamp/$timestamp/$board/packages," package/opkg/files/opkg.conf
+	PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-passwd-admin.patch"
 	PATCHES="$PATCHES base-system.patch"
 	PATCHES="$PATCHES routerstation-bridge-wan-lan.patch"
@@ -330,7 +333,24 @@ for board in $boards ; do
 	cp  ../../ff-control/configs/$verm-$board.config .config
 	build_fail=0
 	case $board in
-		x86)
+		ar71xx)
+			make -j2 V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
+			rsync_web "full"
+			rm -f ./bin/*
+			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
+			rsync_web
+			rm -f ./bin/*
+			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
+			rsync_web "minimal"
+		;;
+		atheros)
+			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
+			rsync_web "minimal"
+			rm -f ./bin/*
+			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
+			rsync_web
+		;;
+		au1000)
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
 			rm -f ./bin/*
@@ -340,15 +360,20 @@ for board in $boards ; do
 			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
 		;;
-		x86_kvm_guest)
+		brcm-2.4)
+			nice -n 10 make V=99 world $make_min_options || build_fail=1
+			rsync_web "minimal"
+			echo "##############################################minimal###########################################"
+			rm -f ./bin/*
+			nice -n 10 make V=99 world $make_options $make_options_2_4 || build_fail=1
+			rsync_web
+		;;
+		brcm47xx)
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
 			rm -f ./bin/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
-			rm -f ./bin/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 $make_big_options || build_fail=1
-			rsync_web "full"
 		;;
 		ixp4xx)
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
@@ -371,7 +396,7 @@ for board in $boards ; do
 			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
 		;;
-		au1000)
+		x86)
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
 			rm -f ./bin/*
@@ -381,29 +406,15 @@ for board in $boards ; do
 			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
 		;;
-		ar71xx)
-			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
+		x86_kvm_guest)
+			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
+			rsync_web "minimal"
+			rm -f ./bin/*
+			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
+			rsync_web
+			rm -f ./bin/*
+			nice -n 10 make V=99 world $make_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
-			rm -f ./bin/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
-			rm -f ./bin/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-		;;
-		brcm-2.4)
-			nice -n 10 make V=99 world $make_min_options || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*
-			nice -n 10 make V=99 world $make_options $make_options_2_4 || build_fail=1
-			rsync_web
-		;;
-		brcm47xx)
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
 		;;
 		*)
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1

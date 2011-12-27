@@ -1,0 +1,12 @@
+Index: package/busybox/Makefile
+===================================================================
+--- package/busybox/Makefile	(Revision 28700)
++++ package/busybox/Makefile	(Arbeitskopie)
+@@ -81,6 +81,7 @@
+ endef
+ 
+ define Package/busybox/install
++	$(INSTALL_DIR) $(1)/etc/iproute2
+ 	$(INSTALL_DIR) $(1)/etc/init.d
+ 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
+ 	for tmp in $(init-y); do \

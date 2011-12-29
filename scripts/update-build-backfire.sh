@@ -243,9 +243,9 @@ for board in $boards ; do
 ##	rm -rf feeds/*
 ##	rm -rf package/feeds/*
 ##	rm -rf bin
-	rm -rf build_dir/*/luci*
+#	rm -rf build_dir/*/luci*
 ##	rm -rf build_dir/*/root*
-	rm -rf build_dir/*/compat-wireless*
+#	rm -rf build_dir/*/compat-wireless*
 #	rm -rf build_dir/*/uhttp*
 ##	rm -rf build_dir
 ##	rm -rf staging_dir
@@ -333,94 +333,103 @@ for board in $boards ; do
 	build_fail=0
 	case $board in
 		ar71xx)
-			make -j2 V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
-			rsync_web "full"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
+			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
+			rsync_web "minimal"
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
-			rm -f ./bin/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
+			rm -f ./bin/*/*
+			make -j2 V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
+			rsync_web "full"
 		;;
 		atheros)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
 		;;
 		au1000)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
 		;;
 		brcm-2.4)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_4 || build_fail=1
 			rsync_web
 		;;
 		brcm47xx)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
 		;;
 		ixp4xx)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
-			rm -f ./bin/*
 		;;
 		rb532)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
 		;;
 		x86)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
 		;;
 		x86_kvm_guest)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
 		;;
 		*)
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
 			rsync_web "minimal"
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
 			rsync_web
-			rm -f ./bin/*
+			rm -f ./bin/*/*
 			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
 			rsync_web "full"
 		;;

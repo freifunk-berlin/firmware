@@ -95,7 +95,7 @@ cd ..
 if [ -d packages-pberg ] ; then
 	echo "update packages-pberg git pull"
 	cd packages-pberg
-#	git pull || exit 0
+	git pull || exit 0
 	packages_pberg_revision=$(git rev-parse HEAD)
 	cd ../
 else
@@ -246,7 +246,7 @@ for board in $boards ; do
 	rm -rf build_dir/*/luci*
 ##	rm -rf build_dir/*/root*
 	rm -rf build_dir/*/compat-wireless*
-	rm -rf build_dir/*/uhttp*
+#	rm -rf build_dir/*/uhttp*
 ##	rm -rf build_dir
 ##	rm -rf staging_dir
 	rm -rf files
@@ -291,7 +291,7 @@ for board in $boards ; do
 	#echo "src-link wgaugsburg ../../../wgaugsburg/packages" >> feeds.conf
 	echo "src-link yaffmapagent ../../../yaffmap-agent" >> feeds.conf
 	echo "src-link bulletin ../../../luci-app-bulletin-node" >> feeds.conf
-	echo "src-link forkeddaapd ../../../forked-daapd" >> feeds.conf
+	#echo "src-link forkeddaapd ../../../forked-daapd" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"
@@ -327,7 +327,6 @@ for board in $boards ; do
 	
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	cp "../../ff-control/patches/200-fix_ipv6_receiving_with_ipv4_socket.patch" "target/linux/brcm-2.4/patches"
 	cp ../../ff-control/patches/regulatory.bin.pberg dl/regulatory.bin.pberg
 	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 	cp  ../../ff-control/configs/$verm-$board.config .config
@@ -363,7 +362,6 @@ for board in $boards ; do
 		brcm-2.4)
 			nice -n 10 make V=99 world $make_min_options || build_fail=1
 			rsync_web "minimal"
-			echo "##############################################minimal###########################################"
 			rm -f ./bin/*
 			nice -n 10 make V=99 world $make_options $make_options_2_4 || build_fail=1
 			rsync_web

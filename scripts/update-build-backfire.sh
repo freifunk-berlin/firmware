@@ -11,6 +11,12 @@ echo $timestamp >timestamp
 date +"%Y/%m/%d %H:%M">VERSION.txt
 echo "Build on $(hostname)" >>VERSION.txt
 
+[ -d feeds ] || mkdir feeds
+cd feeds
+cd ..
+[ -d $verm/patches ] || mkdir $verm/patches
+rm -f $verm/patches/*.patch
+
 if [ -d yaffmap-agent ] ; then
 	echo "update yaffmap-agent git pull"
 	cd yaffmap-agent
@@ -42,50 +48,98 @@ fi
 echo "luci-app-bulletin-node Revision: $luci_app_bulletin_node_revision" >> VERSION.txt
 
 
-packages_dir='packages_10.03.1'
-if [ -d $packages_dir ] ; then
-	echo "update $packages_dir svn up"
-	cd $packages_dir
-	rm -rf $(svn status)
-	if [ -z $packages_revision ] ; then
-		svn up  || exit 0
-	else
-		svn sw -r $packages_revision "svn://svn.openwrt.org/openwrt/branches/$packages_dir"  || exit 0
-	fi
-	packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-	cd ../
-else
-	echo "create $packages_dir svn co"
-	svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
-	if [ -z $packages_revision ] ; then
-		svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
-	else
-		svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
-		cd $packages_dir
-		svn sw -r $packages_revision "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
-		cd ..
-	fi
-	cd $packages_dir
-	packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-	cd ../
-fi
-echo "OpenWrt $packages_dir Revision: $packages_revision" >> VERSION.txt
+case $verm in
+	trunk)
+		packages_dir='packages'
+		if [ -d $packages_dir ] ; then
+			echo "update $packages_dir svn up"
+			cd $packages_dir
+			rm -rf $(svn status)
+			if [ -z $packages_revision ] ; then
+				svn up  || exit 0
+			else
+				svn sw -r $packages_revision "svn://svn.openwrt.org/openwrt/$packages_dir"  || exit 0
+			fi
+			packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+			cd ../
+		else
+			echo "create $packages_dir svn co"
+			svn co "svn://svn.openwrt.org/openwrt/$packages_dir"
+			if [ -z $packages_revision ] ; then
+				svn co "svn://svn.openwrt.org/openwrt/$packages_dir"
+			else
+				svn co "svn://svn.openwrt.org/openwrt/$packages_dir"
+				cd $packages_dir
+				svn sw -r $packages_revision "svn://svn.openwrt.org/branches/$packages_dir"
+				cd ..
+			fi
+			cd $packages_dir
+			packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+			cd ../
+		fi
+	;;
+	*)
+		packages_dir='packages_10.03.2'
+		if [ -d $packages_dir ] ; then
+			echo "update $packages_dir svn up"
+			cd $packages_dir
+			rm -rf $(svn status)
+			if [ -z $packages_revision ] ; then
+				svn up  || exit 0
+			else
+				svn sw -r $packages_revision "svn://svn.openwrt.org/openwrt/branches/$packages_dir"  || exit 0
+			fi
+			packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+			cd ../
+		else
+			echo "create $packages_dir svn co"
+			svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
+			if [ -z $packages_revision ] ; then
+				svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
+			else
+				svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
+				cd $packages_dir
+				svn sw -r $packages_revision "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
+				cd ..
+			fi
+			cd $packages_dir
+			packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+			cd ../
+		fi
+	;;
+esac
 
-PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch"
-PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch"
-PACKAGESPATCHES="$PACKAGESPATCHES package-collectd.patch"
-PACKAGESPATCHES="$PACKAGESPATCHES package-collectd-gcrypt.patch"
+echo "OpenWrt $packages_dir Revision: $packages_revision" >> VERSION.txt
+case $verm in
+	trunk) 
+		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
+		PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
+		;;
+	*)
+		#PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch" #no trunk
+		PACKAGESPATCHES="$PACKAGESPATCHES package-radvd.patch" #no trunk
+		#PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch" #no trunk
+		PACKAGESPATCHES="$PACKAGESPATCHES package-olsrd.patch" #no trunk
+		PACKAGESPATCHES="$PACKAGESPATCHES package-collectd.patch" #no trunk
+		PACKAGESPATCHES="$PACKAGESPATCHES package-libmodbus-3.0.2.patch"
+		;;
+esac
 PACKAGESPATCHES="$PACKAGESPATCHES olsrd.config-rm-wlan-patches.patch"
 
 cd $packages_dir
 for i in $PACKAGESPATCHES ; do
 	pparm='-p0'
 	patch $pparm < ../ff-control/patches/$i || exit 0
+	mkdir -p ../$verm/patches
+	cp ../ff-control/patches/$i ../$verm/patches || exit 0
 done
 for i in $PACKAGESRPATCHES ; do
-	pparm='-p0 -R'
+	pparm='-p1 -R'
 	#echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i || exit 0
+	mkdir -p ../$verm/patches
+	cp ../ff-control/patches/$i ../$verm/patches || exit 0
 done
 rm -rf $(find . | grep \.orig$)
 
@@ -95,7 +149,7 @@ cd ..
 if [ -d packages-pberg ] ; then
 	echo "update packages-pberg git pull"
 	cd packages-pberg
-	git pull || exit 0
+	#git pull || exit 0
 	packages_pberg_revision=$(git rev-parse HEAD)
 	cd ../
 else
@@ -130,14 +184,16 @@ if [ -d luci-master ] ; then
 	[ -z "$rm" ] || rm "$rmf"
 	git reset --hard
 	git checkout master .
-	git pull || exit 0
+	git remote rm origin
+	git remote add origin git@github.com:freifunk/luci.git
+	git pull -u origin master || exit 0
 	[ -z $luci_version ]  || git checkout $luci_version || exit 0
 	[ -z $luci_revision ] || git checkout $luci_revision || exit 0
 	luci_revision=$(git rev-parse HEAD)
 	cd ../
 else
 	echo "create HEAD master"
-	git clone git://nbd.name/luci.git luci-master || exit 0
+	git clone git@github.com:freifunk/luci.git luci-master || exit 0
 	cd luci-master
 	[ -z $luci_version ] || git checkout "$luci_version" || exit 0
 	[ -z $luci_revision ] || git checkout $luci_revision || exit 0
@@ -167,15 +223,21 @@ LUCIPATCHES="$LUCIPATCHES luci-admin-mini-index.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-backup-style.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sshkeys.patch"
 LUCIPATCHES="$LUCIPATCHES luci-sys-routes6.patch"
-LUCIPATCHES="$LUCIPATCHES luci-app-statistics-add-madwifi-olsr.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd_gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-common.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-splash-css.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-migrate.patch"
+LUCIPATCHES="$LUCIPATCHES luci-gwcheck-makefile.patch"
+LUCIPATCHES="$LUCIPATCHES luci-theme-bootstrap.patch"
+LUCIPATCHES="$LUCIPATCHES luci-olsr-view.patch"
+LUCIPATCHES="$LUCIPATCHES luci-olsr-service-view.patch"
+LUCIPATCHES="$LUCIPATCHES luci-splash-mark.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i || exit 0
+	mkdir -p ../$verm/patches
+	cp ../ff-control/patches/$i ../$verm/patches  || exit 0
 done
 
 rm -rf modules/freifunk/luasrc/controller/freifunk/remote_update.lua
@@ -184,47 +246,62 @@ rm -rf contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-n
 rm -rf $(find . | grep \.orig$)
 cd ..
 
+case $verm in
+	trunk) 
+		sed -i -e "s,177,178," packages-pberg/net/l2gvpn/Makefile
+		;;
+	*)
+		sed -i -e "s,178,177," packages-pberg/net/l2gvpn/Makefile
+		;;
+esac
+
+
+genconfig() {
+key_val_list="$1"
+if ! [ -z "$key_val_list" ] ; then
+	for i in $key_val_list ; do
+		i1=$(echo $i|cut -d '=' -f1)
+		i2=$(echo $i|cut -d '=' -f2)
+		if grep ^$i1= .config ; then
+			echo "mod $i1=$i2"
+			sed -i -e "s,^$i1=.*,$i1=$i2," .config
+		elif grep "^# $i1 " .config ; then
+			echo "akt $i1=$i2"
+			sed -i -e "s,^# $i1 .*,$i1=$i2," .config
+		else
+			echo "add $i1=$i2"
+			echo "$i1=$i2" >> .config
+		fi
+	done
+fi
+}
+
 rsync_web() {
 	build_profile=""
 	if [ $1 ] ; then
 		build_profile="/$1"
-		echo p1$build_profile
-	else
-		echo n1$build_profile
 	fi
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status ../opkg-$board.status
 
 	#timestamp
-	mkdir -p 			                      $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
-	if [ $build_profile ] ; then
-		echo p2$build_profile
-		rsync -lptgoD bin/*/* 	                      $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
-	else
-		echo n2$build_profile
-		rsync -lptgoD bin/*/* 	                      $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
-		mkdir -p 			              $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
-		rsync -lptgoD bin/*/packages/* 	              $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
-	fi
+	mkdir -p	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
+	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
+	mkdir -p	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
+	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/opkg-status.txt
-	cp VERSION.txt		 	                      $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
-	cp .config 			                      $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/config.txt
+	cp VERSION.txt	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
+	cp .config	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/config.txt
 
 	#relativ
-	rm -f 						      $wwwdir/$verm/$ver/$board$build_profile/*
-	mkdir -p 			                      $wwwdir/$verm/$ver/$board$build_profile
-	if [ $build_profile ] ; then
-		echo p3$build_profile
-		rsync -lptgoD bin/*/* 	                      $wwwdir/$verm/$ver/$board$build_profile
-	else
-		echo n3$build_profile
-		rsync -lptgoD bin/*/* 	                      $wwwdir/$verm/$ver/$board$build_profile
-		rm -f 					      $wwwdir/$verm/$ver/$board$build_profile/packages/*
-		mkdir -p 			              $wwwdir/$verm/$ver/$board$build_profile/packages
-		rsync -lptgoD bin/*/packages/* 	              $wwwdir/$verm/$ver/$board$build_profile/packages
-	fi
+	rm -f	$wwwdir/$verm/$ver/$board$build_profile/*
+	mkdir -p	$wwwdir/$verm/$ver/$board$build_profile
+	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver/$board$build_profile
+	rm -f	$wwwdir/$verm/$ver/$board$build_profile/packages/*
+	mkdir -p	$wwwdir/$verm/$ver/$board$build_profile/packages
+	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver/$board$build_profile/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver/$board$build_profile/opkg-status.txt
-	cp VERSION.txt			                      $wwwdir/$verm/$ver/$board$build_profile
-	cp .config 			                      $wwwdir/$verm/$ver/$board$build_profile/config.txt
+	cp VERSION.txt	$wwwdir/$verm/$ver/$board$build_profile
+	cp .config	$wwwdir/$verm/$ver/$board$build_profile/config.txt
 }
 
 for board in $boards ; do
@@ -239,19 +316,22 @@ for board in $boards ; do
 	cd $verm/$board
 	echo "clean up"
 	rm -f .config
-##	rm -rf tmp
-##	rm -rf feeds/*
-##	rm -rf package/feeds/*
-##	rm -rf bin
+#	make distclean
+#	rm -rf tmp
+#	rm -rf feeds/*
+#	rm -rf package/feeds/*
+#	rm -rf bin
 #	rm -rf build_dir/*/luci*
-##	rm -rf build_dir/*/root*
+#	rm -rf build_dir/*/libiwinfo*
+#	rm -rf build_dir/*/collectd*
+#	rm -rf build_dir/*/root*
 #	rm -rf build_dir/*/compat-wireless*
 #	rm -rf build_dir/*/uhttp*
-##	rm -rf build_dir
-##	rm -rf staging_dir
+#	rm -rf build_dir
+#	rm -rf staging_dir
 	rm -rf files
 	mkdir -p files
-	rm -rf $(svn status)
+	rm -f $(svn status)
 	case $verm in
 		trunk) 
 			svn co svn://svn.openwrt.org/openwrt/trunk ./  || exit 0
@@ -278,9 +358,8 @@ for board in $boards ; do
 	echo "OpenWrt Revision: $openwrt_revision" >> VERSION.txt
 	echo "OpenWrt Board: $board" >> VERSION.txt
 	cat ../../ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
-	cat VERSION.txt >> package/base-files/files/etc/banner
+	cp VERSION.txt package/base-files/files/etc
 	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on $(hostname)">> package/base-files/files/etc/banner
-	sed -i -e 's/\(DISTRIB_DESCRIPTION=".*\)"/\1 (r'$openwrt_revision') build date: '$timestamp'"/' package/base-files/files/etc/openwrt_release
 
 	echo "Generate feeds.conf"
 	>feeds.conf
@@ -292,28 +371,72 @@ for board in $boards ; do
 	echo "src-link yaffmapagent ../../../yaffmap-agent" >> feeds.conf
 	echo "src-link bulletin ../../../luci-app-bulletin-node" >> feeds.conf
 	#echo "src-link forkeddaapd ../../../forked-daapd" >> feeds.conf
+	echo "src-link fffeeds ../../../feeds" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"
 	scripts/feeds install -a
-	sed -i -e "s,downloads\.openwrt\.org.*,$servername/$verm/$ver-timestamp/$timestamp/$board/packages," package/opkg/files/opkg.conf
+	case $verm in
+		trunk)
+			PATCHES="$PATCHES trunk-base-passwd-admin.patch"
+			PATCHES="$PATCHES trunk-atheros-config.patch"
+			case $board in
+				x86_kvm_guest)
+					PATCHES="$PATCHES kvm-default-config.patch"
+				;;
+			esac
+			make_options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
+			;;
+		*)
+			sed -i -e 's/\(DISTRIB_DESCRIPTION=".*\)"/\1 (r'$openwrt_revision') build date: '$timestamp'"/' package/base-files/files/etc/openwrt_release
+			#sed -i -e "s,downloads\.openwrt\.org.*,$servername/$verm/$ver-timestamp/$timestamp/$board/packages," package/opkg/files/opkg.conf
+			make_options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
+			PATCHES="$PATCHES base-disable-ipv6-autoconf.patch" #no trunk
+			PATCHES="$PATCHES base-passwd-admin.patch"
+			PATCHES="$PATCHES package-lua.patch"
+			case $board in
+				ar71xx)
+					PATCHES="$PATCHES routerstation-bridge-wan-lan.patch" #no trunk
+					PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch" #no trunk
+				;;
+				atheros)
+					PATCHES="$PATCHES ar5312_flash_4MB_flash.patch" #no trunk
+					#PATCHES="$PATCHES fixdmaoffset.patch"
+				;;
+				brcm-2.4)
+					PATCHES="$PATCHES brcm-2.4-reboot-fix.patch" #no trunk
+				;;
+				x86_kvm_guest)
+#					PATCHES="$PATCHES x86-virtio-usb-boot.patch"
+					PATCHES="$PATCHES add-qcow-images.patch"
+				;;
+#				x86)
+#					PATCHES="$PATCHES x86-usb-boot.patch"
+#				;;
+			esac
+			;;
+	esac
 	PATCHES="$PATCHES busybox-iproute2.patch"
-	PATCHES="$PATCHES base-passwd-admin.patch"
 	PATCHES="$PATCHES base-system.patch"
-	PATCHES="$PATCHES routerstation-bridge-wan-lan.patch"
-	PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch"
-	PATCHES="$PATCHES brcm-2.4-reboot-fix.patch"
-	PATCHES="$PATCHES ar5312_flash_4MB_flash.patch"
-	PATCHES="$PATCHES base-disable-ipv6-autoconf.patch"
 	PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
+	PATCHES="$PATCHES package-dnsmasq-trunk.patch"
+	PATCHES="$PATCHES package-dnsmasq-ff-timing.patch"
+	PATCHES="$PATCHES package-libubox.patch"
+	#PATCHES="$PATCHES package-mac80211-dir300.patch"
+	#PATCHES="$PATCHES package-iwinfo-1.patch" #no trunk
+	#PATCHES="$PATCHES package-iwinfo-2.patch" #no trunk
+	#PATCHES="$PATCHES package-iwinfo-3.patch" #no trunk
+	#PATCHES="$PATCHES package-mac80211.patch"
 	#PATCHES="$PATCHES make-art-writeable.patch"
-	#RPATCHES="$RPATCHES packages-r27821.patch"
-	#RPATCHES="$RPATCHES packages-r27815.patch"
 	for i in $PATCHES ; do
 		pparm='-p0'
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i || exit 0
+		mkdir -p ../$verm/patches
+		cp ../../ff-control/patches/$i ../patches || exit 0
 	done
+	#RPATCHES="$RPATCHES packages-r27821.patch"
+	#RPATCHES="$RPATCHES packages-r27815.patch"
 	for i in $RPATCHES ; do
 		pparm='-p2 -R'
 		# get patch with:
@@ -321,6 +444,8 @@ for board in $boards ; do
 		# wget --no-check-certificate -O 'ff-control/patches/packages-r27815.patch' 'http://dev.openwrt.org/changeset/27815/branches/backfire/package?format=diff&new=27815'
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i || exit 0
+		mkdir -p ../$verm/patches
+		cp ../../ff-control/patches/$i ../patches || exit 0
 	done
 	rm -rf $(find package | grep \.orig$)
 	rm -rf $(find target | grep \.orig$)
@@ -328,110 +453,100 @@ for board in $boards ; do
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
 	cp ../../ff-control/patches/regulatory.bin.pberg dl/regulatory.bin.pberg
-	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-	cp  ../../ff-control/configs/$verm-$board.config .config
 	build_fail=0
 	case $board in
-		ar71xx)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
-			rm -f ./bin/*/*
-			make -j2 V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
-			rsync_web "full"
-		;;
-		atheros)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
-		;;
-		au1000)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
-			rsync_web "full"
-		;;
 		brcm-2.4)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_4 || build_fail=1
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_min_options"
+			nice -n 10 make V=99 world || build_fail=1
+			rsync_web minimal
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_options_2_4"
+			nice -n 10 make V=99 world || build_fail=1
 			rsync_web
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_options_2_6"
+			genconfig "$make_pi_options"
+			nice -n 10 make V=99 world || build_fail=1
+			rsync_web "piraten"
 		;;
-		brcm47xx)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
+		atheros|brcm47xx|brcm63xx)
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_min_options"
+			genconfig "$make_min_options_2_6"
+			nice -n 10 make V=99 world || build_fail=1
+			rsync_web minimal
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_options_2_6"
+			nice -n 10 make V=99 world || build_fail=1
 			rsync_web
-		;;
-		ixp4xx)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
-			rsync_web "full"
-		;;
-		rb532)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
-			rsync_web "full"
-		;;
-		x86)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
-			rsync_web "full"
-		;;
-		x86_kvm_guest)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
-			rsync_web
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 $make_big_options || build_fail=1
-			rsync_web "full"
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_options_2_6"
+			genconfig "$make_pi_options"
+			nice -n 10 make V=99 world || build_fail=1
+			rsync_web "piraten"
 		;;
 		*)
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_min_options $make_min_options_2_6 || build_fail=1
-			rsync_web "minimal"
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_options_2_6 || build_fail=1
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_min_options"
+			genconfig "$make_min_options_2_6"
+			nice -n 10 make V=99 world || build_fail=1
+			rsync_web minimal
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_options_2_6"
+			nice -n 10 make V=99 world || build_fail=1
 			rsync_web
-			rm -f ./bin/*/*
-			nice -n 10 make V=99 world $make_options $make_usb_options $make_options_2_6 $make_big_options || build_fail=1
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_usb_options"
+			genconfig "$make_options_2_6"
+			genconfig "$make_big_options"
+			nice -n 10 make V=99 world || build_fail=1
 			rsync_web "full"
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_options_2_6"
+			genconfig "$make_pi_options"
+			nice -n 10 make V=99 world || build_fail=1
+			rsync_web "piraten"
 		;;
 	esac
 	if [ $build_fail -eq 1 ] ; then
@@ -440,14 +555,23 @@ for board in $boards ; do
 	fi
 	cd ../../
 	rm update-build-$verm-$board.lock
-	if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
-		curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm #$ver for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
-	fi
 	) >update-build-$verm-$board.log 2>&1
+	rm -rf $wwwdir/$verm/$ver/patches
+	cp -a $verm/patches $wwwdir/$verm/$ver/
+	cp -a $verm/patches $wwwdir/$verm/$ver-timestamp/$timestamp/
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/update-build-$verm-$board.log.txt
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/update-build-$verm-$board.log.txt
+#	(
+#		rsync -av --delete "$wwwdir/$verm/$ver-timestamp/$timestamp" "openwrt@pberg.freifunk.net:$wwwdir/$verm/$ver-timestamp/"
+#		ssh openwrt@pberg.freifunk.net "rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
+		#if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
+		#	curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm #$ver for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
+		#fi
+#	)&
 	#&
 	#pid=$!
 	#echo $pid > update-build-$verm-$board.pid
 done
+echo "rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp openwrt@pberg.freifunk.net:$wwwdir/$verm/$ver-timestamp/"
+echo "ssh openwrt@pberg.freifunk.net 'rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
 

@@ -1,0 +1,12 @@
+Index: package/iwinfo/src/iwinfo_nl80211.c
+===================================================================
+--- package/iwinfo/src/iwinfo_nl80211.c
++++ package/iwinfo/src/iwinfo_nl80211.c
+@@ -560,4 +560,7 @@
+         if (nls)
+         {
++                if (nls->nl80211)
++                        genl_family_put(nls->nl80211);
++
+                 if (nls->nl_sock)
+                         nl_socket_free(nls->nl_sock);

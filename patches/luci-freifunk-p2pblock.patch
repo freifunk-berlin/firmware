@@ -1,0 +1,27 @@
+diff --git a/contrib/package/freifunk-p2pblock/files/freifunk-p2pblock.config b/contrib/package/freifunk-p2pblock/files/freifunk-p2pblock.config
+index 291260e..7324976 100644
+--- a/contrib/package/freifunk-p2pblock/files/freifunk-p2pblock.config
++++ b/contrib/package/freifunk-p2pblock/files/freifunk-p2pblock.config
+@@ -1,4 +1,5 @@
+ config 'settings' 'p2pblock'
++	option 'interface' 'wan'
+ 	option 'portrange' '1024:65535'
+ 	option 'layer7' 'edonkey bittorrent fasttrack'
+ 	option 'ipp2p' 'edk dc kazaa gnu bit ares soul winmx apple'
+diff --git a/contrib/package/freifunk-p2pblock/files/freifunk-p2pblock.init b/contrib/package/freifunk-p2pblock/files/freifunk-p2pblock.init
+index b615962..ca10321 100644
+--- a/contrib/package/freifunk-p2pblock/files/freifunk-p2pblock.init
++++ b/contrib/package/freifunk-p2pblock/files/freifunk-p2pblock.init
+@@ -17,8 +17,11 @@ start() {
+ 	if [ ! -s "$LOCK" ]; then
+ 		logger -s -t "$ME" 'starting p2pblock...'
+ 		
++		config_load freifunk_p2pblock
++		config_get interface interface interface wan
++
+ 		config_load network
+-		config_get wan wan ifname
++		config_get wan interface ifname
+ 
+ 		if [ -n "$wan" ]; then
+ 			config_load freifunk_p2pblock

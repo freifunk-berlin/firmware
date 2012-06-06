@@ -1,0 +1,33 @@
+Index: target/linux/atheros/config-2.6.32
+===================================================================
+--- target/linux/atheros/config-2.6.32	(Revision 29731)
++++ target/linux/atheros/config-2.6.32	(Arbeitskopie)
+@@ -13,7 +13,7 @@
+ CONFIG_ARCH_SUPPORTS_OPROFILE=y
+ CONFIG_ARCH_SUSPEND_POSSIBLE=y
+ CONFIG_ATHEROS_AR2315=y
+-CONFIG_ATHEROS_AR2315_PCI=y
++# CONFIG_ATHEROS_AR2315_PCI is not set
+ CONFIG_ATHEROS_AR231X=y
+ CONFIG_ATHEROS_AR5312=y
+ CONFIG_ATHEROS_WDT=y
+@@ -81,7 +81,7 @@
+ CONFIG_HAVE_GENERIC_DMA_COHERENT=y
+ CONFIG_HAVE_IDE=y
+ CONFIG_HAVE_OPROFILE=y
+-CONFIG_HW_HAS_PCI=y
++# CONFIG_HW_HAS_PCI is not set
+ CONFIG_HW_RANDOM=y
+ CONFIG_INITRAMFS_SOURCE=""
+ CONFIG_IP17XX_PHY=y
+@@ -118,8 +118,8 @@
+ # CONFIG_NXP_STB220 is not set
+ # CONFIG_NXP_STB225 is not set
+ CONFIG_PAGEFLAGS_EXTENDED=y
+-CONFIG_PCI=y
+-CONFIG_PCI_DOMAINS=y
++# CONFIG_PCI is not set
++# CONFIG_PCI_DOMAINS is not set
+ CONFIG_PHYLIB=y
+ # CONFIG_PMC_MSP is not set
+ # CONFIG_PMC_YOSEMITE is not set

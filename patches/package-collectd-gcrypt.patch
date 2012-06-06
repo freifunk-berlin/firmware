@@ -1,25 +1,12 @@
 Index: utils/collectd/Makefile
 ===================================================================
---- utils/collectd/Makefile	(Revision 29506)
+--- utils/collectd/Makefile	(Revision 29876)
 +++ utils/collectd/Makefile	(Arbeitskopie)
-@@ -132,7 +132,7 @@
+@@ -153,6 +151,7 @@
+ 	--enable-daemon \
+ 	--enable-getifaddrs \
+ 	--with-nan-emulation \
++	--without-libgcrypt
  
- define Package/collectd
- $(call Package/collectd/Default)
--  DEPENDS:= +libpthread +zlib +libltdl
-+  DEPENDS:= +libpthread +zlib +libltdl +libgcrypt
-   MENU:=1
- endef
- 
-@@ -208,6 +208,11 @@
-   CONFIGURE_ARGS+= --with-librrd="$(STAGING_DIR)/usr/lib/rrdtool-1.0"
- endif
- 
-+# exception: mod-network needs libgcrypt
-+ifneq ($(CONFIG_PACKAGE_collectd-mod-network),)
-+  CONFIGURE_ARGS+= --with-libgcrypt="$(STAGING_DIR)/usr"
-+endif
-+
- define Package/collectd/conffiles
- /etc/collectd.conf
- endef
+ CONFIGURE_VARS+= \
+ 	CFLAGS="$$$$CFLAGS $(FPIC)" \

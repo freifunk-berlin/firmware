@@ -1,0 +1,252 @@
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/hna.htm b/applications/luci-olsr/luasrc/view/status-olsr/hna.htm
+index bde1f00..889ac15 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/hna.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/hna.htm
+@@ -32,8 +32,8 @@ local i = 1
+ 		<% for k, route in ipairs(routes) do %>
+ 
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
+-			<td class="cbi-section-table-cell"><%=route.Destination%></td>
+-			<td class="cbi-section-table-cell">
++			<td class="cbi-section-table-titles"><%=route.Destination%></td>
++			<td class="cbi-section-table-titles">
+ 				<a href="http://<%=route.Gateway%>/cgi-bin-status.html"><%=route.Gateway%></a>
+ 				<% if route.Hostname then %>
+ 				        / <a href="http://<%=route.Hostname%>/cgi-bin-status.html"><%=route.Hostname%></a>
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/interfaces.htm b/applications/luci-olsr/luasrc/view/status-olsr/interfaces.htm
+index 17090ff..c9156f6 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/interfaces.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/interfaces.htm
+@@ -39,13 +39,13 @@ local i = 1
+ 		<% for k, iface in ipairs(iface) do %>
+ 
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
+-			<td class="cbi-section-table-cell"><%=iface.Name%></td>
+-			<td class="cbi-section-table-cell"><%=iface.State%></td>
+-			<td class="cbi-section-table-cell"><%=iface.MTU%></td>
+-			<td class="cbi-section-table-cell"><%=iface.WLAN%></td>
+-			<td class="cbi-section-table-cell"><%=iface["Src-Adress"]%></td>
+-			<td class="cbi-section-table-cell"><%=iface.Mask%></td>
+-			<td class="cbi-section-table-cell"><%=iface["Dst-Adress"]%></td>
++			<td class="cbi-section-table-titles"><%=iface.Name%></td>
++			<td class="cbi-section-table-titles"><%=iface.State%></td>
++			<td class="cbi-section-table-titles"><%=iface.MTU%></td>
++			<td class="cbi-section-table-titles"><%=iface.WLAN%></td>
++			<td class="cbi-section-table-titles"><%=iface["Src-Adress"]%></td>
++			<td class="cbi-section-table-titles"><%=iface.Mask%></td>
++			<td class="cbi-section-table-titles"><%=iface["Dst-Adress"]%></td>
+ 		</tr>
+ 		<% i = ((i % 2) + 1)
+ 		end %>
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/mid.htm b/applications/luci-olsr/luasrc/view/status-olsr/mid.htm
+index 48823b5..61d7189 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/mid.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/mid.htm
+@@ -31,8 +31,8 @@ local i = 1
+ 		<% for k, mid in ipairs(mids) do %>
+ 
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
+-			<td class="cbi-section-table-cell"><a href="http://<%=mid["IP address"]%>/cgi-bin-status.html"><%=mid["IP address"]%></a></td>
+-			<td class="cbi-section-table-cell"><%=mid.Aliases%></td>
++			<td class="cbi-section-table-titles"><a href="http://<%=mid["IP address"]%>/cgi-bin-status.html"><%=mid["IP address"]%></a></td>
++			<td class="cbi-section-table-titles"><%=mid.Aliases%></td>
+ 		</tr>
+ 
+ 		<% i = ((i % 2) + 1)
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm b/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
+index 029f585..7170418 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
+@@ -62,27 +62,27 @@ end
+ 
+ 					s += String.format(
+ 						'<tr class="cbi-section-table-row cbi-rowstyle-'+(1 + (idx % 2))+'">' +
+-							'<td class="cbi-section-table-cell" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
++							'<td class="cbi-section-table-titles" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
+ 						neigh.dfgcolor, neigh.rip, neigh.rip
+ 						);
+ 					if (neigh.hn) {
+ 						s += String.format(					
+-							'<td class="cbi-section-table-cell" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
++							'<td class="cbi-section-table-titles" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
+ 							neigh.dfgcolor, neigh.hn, neigh.hn
+ 							);
+ 						}
+ 					else	{
+ 						s += String.format(
+-							'<td class="cbi-section-table-cell" style="background-color:%s">?</td>',
++							'<td class="cbi-section-table-titles" style="background-color:%s">?</td>',
+ 							neigh.dfgcolor
+ 							);
+ 						}
+ 					s += String.format(
+-							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
+-							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
+-							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
+-							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
+-							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
++							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
++							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
++							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
++							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
++							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
+ 						'</tr>',
+ 							
+ 							neigh.dfgcolor, neigh.lip, neigh.dfgcolor, neigh.dev, neigh.dfgcolor, neigh.lq, neigh.dfgcolor, neigh.nlq, neigh.color, neigh.cost || '?'
+@@ -127,13 +127,13 @@ end
+ 		%>
+ 
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Remote IP"]%>/cgi-bin-status.html"><%=link["Remote IP"]%></a></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Hostname"]%>/cgi-bin-status.html"><%=link["Hostname"]%></a></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link["Local IP"]%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link["Local Device"]%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link.LQ%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link.NLQ%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=color%>"><%=string.format("%.3f", link.Cost)%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Remote IP"]%>/cgi-bin-status.html"><%=link["Remote IP"]%></a></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Hostname"]%>/cgi-bin-status.html"><%=link["Hostname"]%></a></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link["Local IP"]%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link["Local Device"]%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link.LQ%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link.NLQ%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=color%>"><%=string.format("%.3f", link.Cost)%></td>
+ 		</tr>
+ 		<% 
+ 			i = ((i % 2) + 1)
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/overview.htm b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
+index d57da7c..b6bfa48 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
+@@ -218,6 +218,7 @@ XHR.poll(30, '<%=REQUEST_URI%>', { status: 1 },
+ 				</div>
+ 			</div>
+ 			<br/>
++			<br/>
+ 		</div>
+ 
+ 		<div class="cbi-value">
+@@ -234,6 +235,7 @@ XHR.poll(30, '<%=REQUEST_URI%>', { status: 1 },
+ 				</div>
+ 			</div>
+ 			<br/>
++			<br/>
+ 		</div>
+ 
+ 		<div class="cbi-value">
+@@ -250,6 +252,7 @@ XHR.poll(30, '<%=REQUEST_URI%>', { status: 1 },
+ 				</div>
+ 			</div>
+ 			<br/>
++			<br/>
+ 		</div>
+ 
+ 		<div class="cbi-value">
+@@ -264,6 +267,7 @@ XHR.poll(30, '<%=REQUEST_URI%>', { status: 1 },
+ 				</div>
+ 			</div>
+ 			<br/>
++			<br/>
+ 		</div>
+ 	</div>
+ </div>
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/routes.htm b/applications/luci-olsr/luasrc/view/status-olsr/routes.htm
+index e32b696..094ce2b 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/routes.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/routes.htm
+@@ -55,8 +55,8 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
+ 
+ 					s += String.format(
+ 						'<tr class="cbi-section-table-row cbi-rowstyle-'+(1 + (idx % 2))+'">' +
+-							'<td class="cbi-section-table-cell">%s</td>' +
+-							'<td class="cbi-section-table-cell">' +
++							'<td class="cbi-section-table-titles">%s</td>' +
++							'<td class="cbi-section-table-titles">' +
+ 			                	                '<a href="http://%s/cgi-bin-status.html">%s</a>',
+ 								route.dest, route.gw, route.gw
+ 						)
+@@ -70,9 +70,9 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
+ 						}
+ 					s += String.format(
+ 				                        '</td>' +
+-							'<td class="cbi-section-table-cell">%s</td>' +
+-							'<td class="cbi-section-table-cell">%s</td>' +
+-							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
++							'<td class="cbi-section-table-titles">%s</td>' +
++							'<td class="cbi-section-table-titles">%s</td>' +
++							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
+ 						'</tr>',
+ 						route.interface, route.metric, route.color, route.etx || '?'
+ 					);
+@@ -109,16 +109,16 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
+ 	%>
+ 
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
+-			<td class="cbi-section-table-cell"><%=route.Destination%></td>
+-			<td class="cbi-section-table-cell">
++			<td class="cbi-section-table-titles"><%=route.Destination%></td>
++			<td class="cbi-section-table-titles">
+ 				<a href="http://<%=route["Gateway IP"]%>/cgi-bin-status.html"><%=route["Gateway IP"]%></a>
+ 				<% if route.Hostname then %>
+ 					/ <a href="http://<%=route.Hostname%>/cgi-bin-status.html"><%=route.Hostname%></a>  
+ 				<% end %>
+ 			</td>
+-			<td class="cbi-section-table-cell"><%=route.Interface%></td>
+-			<td class="cbi-section-table-cell"><%=route.Metric%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=color%>"><%=string.format("%.3f", tonumber(route.ETX) or 0)%></td>
++			<td class="cbi-section-table-titles"><%=route.Interface%></td>
++			<td class="cbi-section-table-titles"><%=route.Metric%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=color%>"><%=string.format("%.3f", tonumber(route.ETX) or 0)%></td>
+ 		</tr>
+ 	<% 
+ 		i = ((i % 2) + 1)
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/smartgw.htm b/applications/luci-olsr/luasrc/view/status-olsr/smartgw.htm
+index 7fa8730..effe4f6 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/smartgw.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/smartgw.htm
+@@ -46,15 +46,15 @@ end)
+ 			<% for k, gw in ipairs(gws) do %>
+ 
+ 			<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
+-				<td class="cbi-section-table-cell"><a href="http://<%=gw["Gateway IP"]%>/cgi-bin-status.html"><%=gw["Gateway IP"]%></a></td>
+-				<td class="cbi-section-table-cell"><%=gw.Status%></td>
+-				<td class="cbi-section-table-cell"><%=gw.ETX%></td>
+-				<td class="cbi-section-table-cell"><%=gw.Hopcnt%></td>
+-				<td class="cbi-section-table-cell"><%=gw.Uplink%></td>
+-				<td class="cbi-section-table-cell"><%=gw.Downlnk%></td>
+-				<td class="cbi-section-table-cell"><%=gw.IPv4%></td>
+-				<td class="cbi-section-table-cell"><%=gw.IPv6%></td>
+-				<td class="cbi-section-table-cell"><%=gw.Prefix%></td>
++				<td class="cbi-section-table-titles"><a href="http://<%=gw["Gateway IP"]%>/cgi-bin-status.html"><%=gw["Gateway IP"]%></a></td>
++				<td class="cbi-section-table-titles"><%=gw.Status%></td>
++				<td class="cbi-section-table-titles"><%=gw.ETX%></td>
++				<td class="cbi-section-table-titles"><%=gw.Hopcnt%></td>
++				<td class="cbi-section-table-titles"><%=gw.Uplink%></td>
++				<td class="cbi-section-table-titles"><%=gw.Downlnk%></td>
++				<td class="cbi-section-table-titles"><%=gw.IPv4%></td>
++				<td class="cbi-section-table-titles"><%=gw.IPv6%></td>
++				<td class="cbi-section-table-titles"><%=gw.Prefix%></td>
+ 			</tr>
+ 
+ 			<% i = ((i % 2) + 1)
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/topology.htm b/applications/luci-olsr/luasrc/view/status-olsr/topology.htm
+index d0e8528..61f3b0a 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/topology.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/topology.htm
+@@ -38,11 +38,11 @@ local olsrtools = require "luci.tools.olsr"
+ 		%>
+ 
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
+-			<td class="cbi-section-table-cell"><a href="http://<%=route["Dest. IP"]%>/cgi-bin-status.html"><%=route["Dest. IP"]%></a></td>
+-			<td class="cbi-section-table-cell"><a href="http://<%=route["Last hop IP"]%>/cgi-bin-status.html"><%=route["Last hop IP"]%></a></td>
+-			<td class="cbi-section-table-cell"><%=route.LQ%></td>
+-			<td class="cbi-section-table-cell"><%=route.NLQ%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=color%>"><%=cost%></td>
++			<td class="cbi-section-table-titles"><a href="http://<%=route["Dest. IP"]%>/cgi-bin-status.html"><%=route["Dest. IP"]%></a></td>
++			<td class="cbi-section-table-titles"><a href="http://<%=route["Last hop IP"]%>/cgi-bin-status.html"><%=route["Last hop IP"]%></a></td>
++			<td class="cbi-section-table-titles"><%=route.LQ%></td>
++			<td class="cbi-section-table-titles"><%=route.NLQ%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=color%>"><%=cost%></td>
+ 		</tr>
+ 
+ 		<%	i = ((i % 2) + 1)

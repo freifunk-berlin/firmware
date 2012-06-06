@@ -1,8 +1,16 @@
 diff --git a/modules/freifunk/luasrc/view/freifunk/public_status.htm b/modules/freifunk/luasrc/view/freifunk/public_status.htm
-index 9cb1856..ea644d2 100644
+index 46bff69..d0e320a 100644
 --- a/modules/freifunk/luasrc/view/freifunk/public_status.htm
 +++ b/modules/freifunk/luasrc/view/freifunk/public_status.htm
-@@ -23,13 +23,6 @@ local mem = string.format(
+@@ -9,6 +9,7 @@ local uptime = twa.date_format(tonumber(sys.uptime()))
+ local_time = os.date("%a, %d %b %Y, %H:%M:%S")
+ local load1, load5, load15 = sys.loadavg()
+ local load = string.format("%.2f, %.2f, %.2f", load1, load5, load15)
++local hostname = luci.sys.hostname() or "?"
+ 
+ local mem = string.format(
+ 	"%.2f MB (%.2f %s, %.2f %s, %.2f %s, %.2f %s)",
+@@ -23,13 +24,6 @@ local mem = string.format(
  	tostring(i18n.translate("buffered"))
  )
  
@@ -16,7 +24,7 @@ index 9cb1856..ea644d2 100644
  -- wireless
  local ntm = require "luci.model.network".init()
  local devices  = ntm:get_wifidevs()
-@@ -56,114 +49,6 @@ local defroutev6 = sys.net.defaultroute6()
+@@ -68,125 +62,22 @@ end
  
  <script type="text/javascript" src="<%=resource%>/cbi.js"></script>
  
@@ -128,6 +136,33 @@ index 9cb1856..ea644d2 100644
 -	);
 -//]]></script>
 -
- <div class="cbi-map">
- 	<h2><%:System%></h2>
- 	<div class="cbi-section-node">
+-<div class="cbi-map">
+-	<h2><%:System%></h2>
+-	<div class="cbi-section-node">
+-		<div class="cbi-value"><label class="cbi-value-title"><%:System%></label><div class="cbi-value-field"><%=system%></div></div>
+-		<div class="cbi-value"><label class="cbi-value-title"><%:Processor%></label><div class="cbi-value-field"><%=model%></div></div>
+-		<div class="cbi-value"><label class="cbi-value-title"><%:Load%></label><div class="cbi-value-field" id="dynload"><%=load%></div></div>
+-		<div class="cbi-value"><label class="cbi-value-title"><%:Memory%></label><div class="cbi-value-field" id="dynmem"><%=mem%></div></div>
+-		<div class="cbi-value"><label class="cbi-value-title"><%:Local Time%></label><div class="cbi-value-field" id="dyntime"><%=local_time%></div></div>
+-		<div class="cbi-value"><label class="cbi-value-title"><%:Uptime%></label><div class="cbi-value-field" id="dynuptime"><%=uptime%></div></div>
+-	</div>
+-</div>
++<fieldset class="cbi-section">
++	<legend><h2><%:System%></h2></legend>
++	<table class="cbi-section-table" width="100%" cellspacing="10">
++		<tr><td width="33%"><%:Router Name%></td><td><%=hostname%></td></tr>
++		<tr><td width="33%"><%:Router Model%></td><td><%=model%></td></tr>
++		<tr><td width="33%"><%:Firmware Version%></td><td>
++			<%=pcdata(luci.version.distname)%> <%=pcdata(luci.version.distversion)%> /
++			<%=pcdata(luci.version.luciname)%> (<%=pcdata(luci.version.luciversion)%>)
++		</td></tr>
++		<tr><td width="33%"><%:System%></td><td><%=system%></td></tr>
++		<tr><td width="33%"><%:Kernel Version%></td><td><%=luci.sys.exec("uname -r")%></td></tr>
++		<tr><td width="33%"><%:Local Time%></td><td id="localtime"><%=local_time%></td></tr>
++		<tr><td width="33%"><%:Uptime%></td><td id="uptime"><%=uptime%></td></tr>
++		<tr><td width="33%"><%:Load Average%></td><td id="loadavg"><%=load%></td></tr>
++	</table>
++</fieldset>
+ 
+ <% if devices[1] then %>
+ 

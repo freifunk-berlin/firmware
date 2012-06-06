@@ -1,0 +1,20 @@
+Index: target/linux/x86/generic/config-2.6.32
+===================================================================
+--- target/linux/x86/generic/config-2.6.32	(revision 31469)
++++ target/linux/x86/generic/config-2.6.32	(working copy)
+@@ -1,6 +1,15 @@
+ CONFIG_ILLEGAL_POINTER_VALUE=0
+ CONFIG_K8_NB=y
++CONFIG_NLS=y
+ CONFIG_PATA_LEGACY=y
+ CONFIG_PATA_PLATFORM=y
+ CONFIG_PCIEAER=y
+ CONFIG_PCIEPORTBUS=y
++CONFIG_USB=y
++CONFIG_USB_DEVICEFS=y
++CONFIG_USB_EHCI_HCD=y
++# CONFIG_USB_OHCI_BIG_ENDIAN_DESC is not set
++# CONFIG_USB_OHCI_BIG_ENDIAN_MMIO is not set
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_STORAGE=y
++CONFIG_USB_UHCI_HCD=y

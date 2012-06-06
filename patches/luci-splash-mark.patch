@@ -1,0 +1,38 @@
+diff --git a/applications/luci-splash/root/etc/init.d/luci_splash b/applications/luci-splash/root/etc/init.d/luci_splash
+index e4980d9..921e708 100755
+--- a/applications/luci-splash/root/etc/init.d/luci_splash
++++ b/applications/luci-splash/root/etc/init.d/luci_splash
+@@ -212,12 +212,10 @@ start() {
+ 	iptables -t filter -A luci_splash_filter -j REJECT --reject-with icmp-net-prohibited
+ 
+ 	### Add QoS chain
+-	[ "$LIMIT_UP" -gt 0 -a "$LIMIT_DOWN" -gt 0 ] && {
+-		iptables -t mangle -N luci_splash_mark_out
+-		iptables -t mangle -N luci_splash_mark_in
+-		iptables -t mangle -I PREROUTING  -j luci_splash_mark_out
+-		iptables -t mangle -I POSTROUTING -j luci_splash_mark_in
+-	}
++	iptables -t mangle -N luci_splash_mark_out
++	iptables -t mangle -N luci_splash_mark_in
++	iptables -t mangle -I PREROUTING  -j luci_splash_mark_out
++	iptables -t mangle -I POSTROUTING -j luci_splash_mark_in
+ 
+ 	### Find active mac addresses
+ 	MACS=""
+diff --git a/applications/luci-splash/root/usr/sbin/luci-splash b/applications/luci-splash/root/usr/sbin/luci-splash
+index ae459ad..d16042d 100755
+--- a/applications/luci-splash/root/usr/sbin/luci-splash
++++ b/applications/luci-splash/root/usr/sbin/luci-splash
+@@ -281,10 +281,8 @@ end
+ 
+ -- Add an iptables rule
+ function add_lease_rule(mac, ipaddr)
+-	if limit_up > 0 and limit_down > 0 then
+-		os.execute("iptables -t mangle -I luci_splash_mark_out -m mac --mac-source %q -j MARK --set-mark 79" % mac)
+-		os.execute("iptables -t mangle -I luci_splash_mark_in -d %q -j MARK --set-mark 80" % ipaddr)
+-	end
++	os.execute("iptables -t mangle -I luci_splash_mark_out -m mac --mac-source %q -j MARK --set-mark 79" % mac)
++	os.execute("iptables -t mangle -I luci_splash_mark_in -d %q -j MARK --set-mark 80" % ipaddr)
+ 
+ 	os.execute("iptables -t filter -I luci_splash_filter -m mac --mac-source %q -j RETURN" % mac)
+ 	os.execute("iptables -t nat    -I luci_splash_leases -m mac --mac-source %q -j RETURN" % mac)

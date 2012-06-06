@@ -12,3 +12,36 @@
 +   fflush (fh);
 + 
 +   while (fgets (buffer, sizeof (buffer), fh) != NULL)
+Index: utils/collectd/files/collectd.init
+===================================================================
+--- utils/collectd/files/collectd.init	(Revision 30710)
++++ utils/collectd/files/collectd.init	(Arbeitskopie)
+@@ -8,10 +8,12 @@
+ 
+ start() {
+ 	[ -x "$BINARY" ] || exit 1
+-	[ -d "$DATADIR" ] || mkdir -p "$DATADIR";
+-
+-	rm -f $PIDFILE
+-	start-stop-daemon -S -q -b -x $BINARY -m -p $PIDFILE -- -f
++	[ -d "$DATADIR" ] || mkdir -p "$DATADIR"
++	(
++		sleep 30
++		rm -f $PIDFILE
++		start-stop-daemon -S -q -b -x $BINARY -m -p $PIDFILE -- -f
++	) &
+ }
+ 
+ stop() {
+Index: utils/collectd/Makefile
+===================================================================
+--- utils/collectd/Makefile	(Revision 30710)
++++ utils/collectd/Makefile	(Arbeitskopie)
+@@ -153,6 +153,7 @@
+ 	--enable-daemon \
+ 	--enable-getifaddrs \
+ 	--with-nan-emulation \
++	--without-libgcrypt
+ 
+ CONFIGURE_VARS+= \
+ 	CFLAGS="$$$$CFLAGS $(FPIC)" \

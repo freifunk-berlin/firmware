@@ -1,0 +1,43 @@
+Index: package/iwinfo/src/iwinfo_nl80211.c
+===================================================================
+--- package/iwinfo/src/iwinfo_nl80211.c	(Revision 29921)
++++ package/iwinfo/src/iwinfo_nl80211.c	(Arbeitskopie)
+@@ -387,10 +387,13 @@
+ 		goto out;
+ 
+ 
+-	send(sock, "ATTACH", 6, 0);
++	if (event)
++	{
++		send(sock, "ATTACH", 6, 0);
+ 
+-	if (nl80211_wpactl_recv(sock, buffer, sizeof(buffer)) <= 0)
+-		goto out;
++		if (nl80211_wpactl_recv(sock, buffer, sizeof(buffer)) <= 0)
++			goto out;
++	}
+ 
+ 
+ 	send(sock, cmd, strlen(cmd), 0);
+@@ -405,7 +408,7 @@
+ 			break;
+ 		}
+ 
+-		if ((!event && buffer[0] != '<') || strstr(buffer, event))
++		if ((!event && buffer[0] != '<') || (event && strstr(buffer, event)))
+ 			break;
+ 	}
+ 
+Index: package/iwinfo/Makefile
+===================================================================
+--- package/iwinfo/Makefile	(Revision 29921)
++++ package/iwinfo/Makefile	(Arbeitskopie)
+@@ -7,7 +7,7 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=libiwinfo
+-PKG_RELEASE:=18.1
++PKG_RELEASE:=18.2
+ 
+ PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
+ 

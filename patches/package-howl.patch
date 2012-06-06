@@ -1,0 +1,36 @@
+Index: libs/howl/files/mDNSResponder.init
+===================================================================
+--- libs/howl/files/mDNSResponder.init	(Revision 30710)
++++ libs/howl/files/mDNSResponder.init	(Arbeitskopie)
+@@ -13,5 +13,6 @@
+ }
+ stop() {
+ 	[ -f $PID_F ] && kill $(cat $PID_F)
++	pidof mDNSResponder > /dev/null && killall -9 mDNSResponder
+ }
+ 
+Index: libs/howl/Makefile
+===================================================================
+--- libs/howl/Makefile	(Revision 30710)
++++ libs/howl/Makefile	(Arbeitskopie)
+@@ -127,6 +127,8 @@
+ 	$(INSTALL_DATA) ./files/mDNSResponder.conf $(1)/etc/mDNSResponder.conf
+ 	$(INSTALL_DIR) $(1)/etc/init.d
+ 	$(INSTALL_BIN) ./files/mDNSResponder.init $(1)/etc/init.d/mDNSResponder
++	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
++	$(INSTALL_BIN) ./files/mDNSResponder.hotplug $(1)/etc/hotplug.d/iface
+ endef
+ 
+ define Package/howl-nifd/install
+--- /dev/null	2008-08-04 23:48:31.480009847 +0200
++++ libs/howl/files/mDNSResponder.hotplug	2012-02-24 19:36:59.444130110 +0100
+@@ -0,0 +1,9 @@
++#!/bin/sh
++
++if [ "$ACTION" = ifup ]; then
++        if [ -f /etc/rc.d/S*mDNSResponder ] ; then
++                /etc/init.d/mDNSResponder stop 2>/dev/null
++                /etc/init.d/mDNSResponder start 2>/dev/null
++        fi
++fi
++

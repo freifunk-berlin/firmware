@@ -1,0 +1,42 @@
+Index: libs/libmodbus/Makefile
+===================================================================
+--- libs/libmodbus/Makefile	(Revision 30710)
++++ libs/libmodbus/Makefile	(Arbeitskopie)
+@@ -8,13 +8,18 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=libmodbus
+-PKG_VERSION:=2.0.3
++PKG_VERSION:=3.0.2
+ PKG_RELEASE:=1
++PKG_REV:=bee4bb30c80499818c11e7392f6d663de60bd109
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+-PKG_SOURCE_URL:=http://github.com/downloads/stephane/libmodbus/
+-PKG_MD5SUM:=0646f3edca6d7783d0356dc2fc4f9f4c
+ 
++PKG_SOURCE_URL:=git://github.com/stargieg/libmodbus.git
++PKG_SOURCE_SUBDIR:=libmodbus-$(PKG_VERSION)
++PKG_SOURCE_VERSION:=$(PKG_REV)
++PKG_SOURCE_PROTO:=git
++
++
+ PKG_FIXUP:=libtool
+ PKG_INSTALL:=1
+ 
+@@ -39,12 +44,14 @@
+ 	$(INSTALL_DIR) $(1)/usr/lib
+ 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libmodbus.{so*,la} $(1)/usr/lib/
+ 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/modbus.pc $(1)/usr/lib/pkgconfig/
++	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/libmodbus.pc $(1)/usr/lib/pkgconfig/
+ endef
+ 
+ define Package/libmodbus/install
+ 	$(INSTALL_DIR) $(1)/usr/lib
+ 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libmodbus.so.* $(1)/usr/lib/
++	$(INSTALL_DIR) $(1)/usr/bin
++	$(CP) $(PKG_INSTALL_DIR)/../tests/.libs/modbus-client $(1)/usr/bin/
+ endef
+ 
+ $(eval $(call BuildPackage,libmodbus))

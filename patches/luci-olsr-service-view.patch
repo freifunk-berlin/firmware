@@ -1,0 +1,30 @@
+diff --git a/applications/luci-olsr-services/luasrc/view/freifunk-services/services.htm b/applications/luci-olsr-services/luasrc/view/freifunk-services/services.htm
+index 2928b85..208fb9e 100644
+--- a/applications/luci-olsr-services/luasrc/view/freifunk-services/services.htm
++++ b/applications/luci-olsr-services/luasrc/view/freifunk-services/services.htm
+@@ -100,9 +100,9 @@ end
+ 				var service = info[idx];
+ 				s += String.format(
+ 					'<tr class="cbi-section-table-row cbi-rowstyle-'+(1 + (idx % 2))+'">' +
+-						'<td class="cbi-section-table-cell"><a href="%s">%s</a></td>' +
+-						'<td class="cbi-section-table-cell">%s</td>' +
+-						'<td class="cbi-section-table-cell"><a href="http://%s/cgi-bin-status.html">%s</a></td>' +
++						'<td class="cbi-section-table-titles"><a href="%s">%s</a></td>' +
++						'<td class="cbi-section-table-titles">%s</td>' +
++						'<td class="cbi-section-table-titles"><a href="http://%s/cgi-bin-status.html">%s</a></td>' +
+ 					'</tr>',
+ 					service.url, service.descr, service.proto, service.origin, service.origin || '?'
+ 					);
+@@ -139,9 +139,9 @@ end
+ 			%>
+ 
+ 			<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
+-				<td class="cbi-section-table-cell"><a href="<%=url%>"><%=descr%></a></td>
+-				<td class="cbi-section-table-cell"><%=proto%></td>
+-				<td class="cbi-section-table-cell"><a href="http://<%=origin%>/cgi-bin-status.html"><%=origin%></a></td>
++				<td class="cbi-section-table-titles"><a href="<%=url%>"><%=descr%></a></td>
++				<td class="cbi-section-table-titles"><%=proto%></td>
++				<td class="cbi-section-table-titles"><a href="http://<%=origin%>/cgi-bin-status.html"><%=origin%></a></td>
+ 		</tr>
+ 			<% i = ((i % 2) + 1)
+ 		end %>

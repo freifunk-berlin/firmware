@@ -1,8 +1,8 @@
 diff --git a/applications/luci-splash/luasrc/controller/splash/splash.lua b/applications/luci-splash/luasrc/controller/splash/splash.lua
-index 71a61bd..aff35b2 100644
+index aceeb4a..8e1a263 100644
 --- a/applications/luci-splash/luasrc/controller/splash/splash.lua
 +++ b/applications/luci-splash/luasrc/controller/splash/splash.lua
-@@ -3,6 +3,8 @@ module("luci.controller.splash.splash", package.seeall)
+@@ -7,6 +7,8 @@ local util = require "luci.util"
  function index()
  	entry({"admin", "services", "splash"}, cbi("splash/splash"), _("Client-Splash"), 90).i18n = "freifunk"
  	entry({"admin", "services", "splash", "splashtext" }, form("splash/splashtext"), _("Splashtext"), 10)
@@ -11,11 +11,11 @@ index 71a61bd..aff35b2 100644
  
  	local e
  	
-@@ -14,6 +16,7 @@ function index()
- 	node("splash", "splash").target   = template("splash_splash/splash")
+@@ -19,6 +21,7 @@ function index()
+ 	node("splash", "blocked").target  = template("splash/blocked")
  
  	entry({"admin", "status", "splash"}, call("action_status_admin"), _("Client-Splash")).i18n = "freifunk"
 +	entry({"mini", "status", "splash"}, call("action_status_admin"), _("Client-Splash-Status")).i18n = "freifunk"
- end
  
- function action_dispatch()
+ 	local page  = node("splash", "publicstatus")
+ 	page.target = call("action_status_public")

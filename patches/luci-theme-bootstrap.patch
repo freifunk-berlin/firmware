@@ -1,0 +1,18 @@
+diff --git a/themes/bootstrap/htdocs/luci-static/bootstrap/cascade.css b/themes/bootstrap/htdocs/luci-static/bootstrap/cascade.css
+index 765bb89..1153b13 100644
+--- a/themes/bootstrap/htdocs/luci-static/bootstrap/cascade.css
++++ b/themes/bootstrap/htdocs/luci-static/bootstrap/cascade.css
+@@ -160,10 +160,9 @@ body {
+ }
+ 
+ .container {
+-	width: 100%;
+-	max-width: 940px;
+-	margin-left: auto;
+-	margin-right: auto;
++	width: 90%;
++	margin-left: 1em;
++	margin-right: 1em;
+ 	zoom: 1;
+ }
+ 

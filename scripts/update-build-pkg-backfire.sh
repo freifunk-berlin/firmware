@@ -16,10 +16,14 @@ for board in $boards ; do
 	[ -f update-build-$verm-$board.lock ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
 	touch update-build-$verm-$board.lock
 	cd $verm/$board/
-	option2=$(find package | grep /$pkgname$)
-	make $option2/clean V=99 && \
-	make $option2/compile V=99 && \
-	make $option2/install V=99 && \
+	pkgpath=""
+	pkgpath=$(find package -maxdepth 1 | grep /$pkgname$)
+	echo "$pkgpath"
+	[ "$pkgpath" == "" ] && pkgpath=$(find package/feeds -maxdepth 2 | grep /$pkgname$)
+	echo "$pkgpath"
+	make $pkgpath/clean V=99 && \
+	make $pkgpath/compile V=99 && \
+	make $pkgpath/install V=99 && \
 	make package/index && \
 	mkdir -p $wwwdir/$verm/$ver/$board && \
 	rsync -av --delete bin/$board/packages/ $wwwdir/$verm/$ver/$board/packages

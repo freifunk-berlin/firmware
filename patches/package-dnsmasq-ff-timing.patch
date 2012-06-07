@@ -1,6 +1,6 @@
 --- /dev/null	2012-05-09 23:49:27.013265045 +0200
-+++ package/dnsmasq/patches/200-ff-timing.patch	2012-06-06 01:24:44.142713381 +0200
-@@ -0,0 +1,82 @@
++++ package/dnsmasq/patches/200-ff-timing.patch	2012-06-07 01:08:40.937749688 +0200
+@@ -0,0 +1,106 @@
 +--- a/src/radv.c	2012-06-05 21:11:07.099187430 +0200
 ++++ b/src/radv.c	2012-06-05 21:11:13.755828137 +0200
 +@@ -201,7 +201,7 @@
@@ -8,7 +8,7 @@
 +   ra->hop_limit = hop_limit;
 +   ra->flags = 0x00;
 +-  ra->lifetime = htons(1800); /* AdvDefaultLifetime*/
-++  ra->lifetime = htons(150); /* AdvDefaultLifetime*/
+++  ra->lifetime = htons(60); /* AdvDefaultLifetime*/
 +   ra->reachable_time = 0;
 +   ra->retrans_time = 0;
 + 
@@ -17,7 +17,7 @@
 + 	  put_opt6_char((opt_cfg->len/8) + 1);
 + 	  put_opt6_short(0);
 +-	  put_opt6_long(1800); /* lifetime - twice RA retransmit */
-++	  put_opt6_long(150); /* lifetime - twice RA retransmit */
+++	  put_opt6_long(60); /* lifetime - twice RA retransmit */
 + 	  /* zero means "self" */
 + 	  for (i = 0; i < opt_cfg->len; i += IN6ADDRSZ, a++)
 + 	    if (IN6_IS_ADDR_UNSPECIFIED(a))
@@ -26,7 +26,7 @@
 + 	  put_opt6_char(len + 1);
 + 	  put_opt6_short(0);
 +-	  put_opt6_long(1800); /* lifetime - twice RA retransmit */
-++	  put_opt6_long(150); /* lifetime - twice RA retransmit */
+++	  put_opt6_long(60); /* lifetime - twice RA retransmit */
 + 	  put_opt6(opt_cfg->val, opt_cfg->len);
 + 	  
 + 	  /* pad */
@@ -35,7 +35,7 @@
 +       put_opt6_char(3);
 +       put_opt6_short(0);
 +-      put_opt6_long(1800); /* lifetime - twice RA retransmit */
-++      put_opt6_long(150); /* lifetime - twice RA retransmit */
+++      put_opt6_long(60); /* lifetime - twice RA retransmit */
 +       put_opt6(&parm.link_local, IN6ADDRSZ);
 +     }
 + 
@@ -45,8 +45,8 @@
 + 		  /* lifetimes must be min 2 hrs, by RFC 2462 */
 +-		  if (time < 7200)
 +-		    time = 7200;
-++		  if (time < 600)
-++		    time = 600;
+++		  if (time < 60)
+++		    time = 60;
 + 		  
 + 		  opt->type = ICMP6_OPT_PREFIX;
 + 		  opt->len = 4;
@@ -79,7 +79,31 @@
 + #define ETHERSFILE "/etc/ethers"
 + #define RUNFILE "/var/run/dnsmasq.pid"
 +-#define DEFLEASE 3600 /* default lease time, 1 hour */
-++#define DEFLEASE 150 /* default lease time, 1 hour */
+++#define DEFLEASE 60 /* default lease time, 1 hour */
 + #define CHUSER "nobody"
 + #define CHGRP "dip"
 + #define TFTP_MAX_CONNECTIONS 50 /* max simultaneous connections */
++--- a/src/radv.c	2012-06-07 00:34:11.330685297 +0200
+++++ b/src/radv.c	2012-06-07 00:34:24.367301120 +0200
++@@ -516,8 +516,8 @@
++ 	    /* range 5 - 20 */
++ 	    context->ra_time = param->now + 5 + (rand16()/4400);
++ 	  else
++-	    /* range 450 - 600 */
++-	    context->ra_time = param->now + 450 + (rand16()/440);
+++	    /* range 45 - 60 */
+++	    context->ra_time = param->now + 45 + (rand16()/4400);
++ 	  
++ 	  return 0; /* found, abort */
++ 	}
++--- a/src/dnsmasq.c	2012-06-07 01:05:34.641809581 +0200
+++++ b/src/dnsmasq.c	2012-06-07 01:07:07.028115939 +0200
++@@ -603,7 +603,7 @@
++ 		{
++ 		  char *p = daemon->namebuff;
++ 		  p += sprintf(p, _("prefix valid "));
++-		  prettyprint_time(p, dhcp_tmp->lease_time > 600 ? dhcp_tmp->lease_time : 600);
+++		  prettyprint_time(p, dhcp_tmp->lease_time > 60 ? dhcp_tmp->lease_time : 60);
++ 		}
++ 	      my_syslog(MS_DHCP | LOG_INFO, _("SLAAC on %s %s"), 
++ 			daemon->addrbuff, daemon->namebuff);

@@ -286,6 +286,7 @@ rsync_web() {
 	#timestamp
 	mkdir -p	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
 	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
+	[ -z $build_profile ] || rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
 	mkdir -p	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
 	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/opkg-status.txt
@@ -296,9 +297,9 @@ rsync_web() {
 	rm -f	$wwwdir/$verm/$ver/$board$build_profile/*
 	mkdir -p	$wwwdir/$verm/$ver/$board$build_profile
 	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver/$board$build_profile
-	rm -f	$wwwdir/$verm/$ver/$board$build_profile/packages/*
-	mkdir -p	$wwwdir/$verm/$ver/$board$build_profile/packages
-	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver/$board$build_profile/packages
+	[ -z $build_profile ] || rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
+	mkdir -p	$wwwdir/$verm/$ver/$board/packages
+	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver/$board/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver/$board$build_profile/opkg-status.txt
 	cp VERSION.txt	$wwwdir/$verm/$ver/$board$build_profile
 	cp .config	$wwwdir/$verm/$ver/$board$build_profile/config.txt

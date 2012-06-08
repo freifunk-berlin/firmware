@@ -1,6 +1,6 @@
---- /dev/null	2012-05-09 23:49:27.013265045 +0200
-+++ package/dnsmasq/patches/200-ff-timing.patch	2012-06-07 01:08:40.937749688 +0200
-@@ -0,0 +1,106 @@
+--- /dev/null	2012-06-07 20:34:02.149931178 +0200
++++ package/dnsmasq/patches/200-ff-timing.patch	2012-06-08 00:57:55.632848968 +0200
+@@ -0,0 +1,117 @@
 +--- a/src/radv.c	2012-06-05 21:11:07.099187430 +0200
 ++++ b/src/radv.c	2012-06-05 21:11:13.755828137 +0200
 +@@ -201,7 +201,7 @@
@@ -8,7 +8,7 @@
 +   ra->hop_limit = hop_limit;
 +   ra->flags = 0x00;
 +-  ra->lifetime = htons(1800); /* AdvDefaultLifetime*/
-++  ra->lifetime = htons(60); /* AdvDefaultLifetime*/
+++  ra->lifetime = htons(120); /* AdvDefaultLifetime*/
 +   ra->reachable_time = 0;
 +   ra->retrans_time = 0;
 + 
@@ -17,7 +17,7 @@
 + 	  put_opt6_char((opt_cfg->len/8) + 1);
 + 	  put_opt6_short(0);
 +-	  put_opt6_long(1800); /* lifetime - twice RA retransmit */
-++	  put_opt6_long(60); /* lifetime - twice RA retransmit */
+++	  put_opt6_long(120); /* lifetime - twice RA retransmit */
 + 	  /* zero means "self" */
 + 	  for (i = 0; i < opt_cfg->len; i += IN6ADDRSZ, a++)
 + 	    if (IN6_IS_ADDR_UNSPECIFIED(a))
@@ -26,7 +26,7 @@
 + 	  put_opt6_char(len + 1);
 + 	  put_opt6_short(0);
 +-	  put_opt6_long(1800); /* lifetime - twice RA retransmit */
-++	  put_opt6_long(60); /* lifetime - twice RA retransmit */
+++	  put_opt6_long(120); /* lifetime - twice RA retransmit */
 + 	  put_opt6(opt_cfg->val, opt_cfg->len);
 + 	  
 + 	  /* pad */
@@ -35,7 +35,7 @@
 +       put_opt6_char(3);
 +       put_opt6_short(0);
 +-      put_opt6_long(1800); /* lifetime - twice RA retransmit */
-++      put_opt6_long(60); /* lifetime - twice RA retransmit */
+++      put_opt6_long(120); /* lifetime - twice RA retransmit */
 +       put_opt6(&parm.link_local, IN6ADDRSZ);
 +     }
 + 
@@ -68,7 +68,7 @@
 + 		  
 + 		  inet_ntop(AF_INET6, local, daemon->addrbuff, ADDRSTRLEN);
 +-		  my_syslog(MS_DHCP | LOG_INFO, "RTR-ADVERT(%s) %s", param->if_name, daemon->addrbuff); 		    
-++		  my_syslog(MS_DHCP | LOG_INFO, "RTR-ADVERT(%s) %s valid_lft(%i)", param->if_name, daemon->addrbuff, time); 		    
+++		  my_syslog(MS_DHCP | LOG_INFO, "RTR-ADVERT(%s) %s valid_lft(%i) preferred_lft(%i)", param->if_name, daemon->addrbuff, opt->valid_lifetime, opt->preferred_lifetime); 		    
 + 		}
 + 	    }
 + 	}
@@ -79,7 +79,7 @@
 + #define ETHERSFILE "/etc/ethers"
 + #define RUNFILE "/var/run/dnsmasq.pid"
 +-#define DEFLEASE 3600 /* default lease time, 1 hour */
-++#define DEFLEASE 60 /* default lease time, 1 hour */
+++#define DEFLEASE 60 /* default lease time, 1 min */
 + #define CHUSER "nobody"
 + #define CHGRP "dip"
 + #define TFTP_MAX_CONNECTIONS 50 /* max simultaneous connections */
@@ -107,3 +107,14 @@
 + 		}
 + 	      my_syslog(MS_DHCP | LOG_INFO, _("SLAAC on %s %s"), 
 + 			daemon->addrbuff, daemon->namebuff);
++--- a/src/radv.c	2012-06-07 22:33:42.787754364 +0200
+++++ b/src/radv.c	2012-06-07 22:33:49.994392925 +0200
++@@ -418,7 +418,7 @@
++ 		  /* autonomous only if we're not doing dhcp */
++ 		  opt->flags = do_slaac ? 0x40 : 0x00;
++ 		  opt->valid_lifetime = htonl(time);
++-		  opt->preferred_lifetime = htonl(deprecate ? 0 : time);
+++		  opt->preferred_lifetime = htonl(deprecate ? 0 : time/2);
++ 		  opt->reserved = 0; 
++ 		  opt->prefix = *local;
++ 		  

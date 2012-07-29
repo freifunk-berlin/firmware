@@ -122,7 +122,7 @@ case $verm in
 		#PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch" #no trunk
 		PACKAGESPATCHES="$PACKAGESPATCHES package-olsrd.patch" #no trunk
 		PACKAGESPATCHES="$PACKAGESPATCHES package-collectd.patch" #no trunk
-		PACKAGESPATCHES="$PACKAGESPATCHES package-libmodbus-3.0.2.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-libmodbus-3.1.0.patch"
 		;;
 esac
 PACKAGESPATCHES="$PACKAGESPATCHES olsrd.config-rm-wlan-patches.patch"
@@ -142,6 +142,7 @@ for i in $PACKAGESRPATCHES ; do
 	cp ../ff-control/patches/$i ../$verm/patches || exit 0
 done
 rm -rf $(find . | grep \.orig$)
+rm libs/argp-standalone/patches/001-throw-in-funcdef.patch
 
 cd ..
 
@@ -149,7 +150,7 @@ cd ..
 if [ -d packages-pberg ] ; then
 	echo "update packages-pberg git pull"
 	cd packages-pberg
-	#git pull || exit 0
+	git pull || exit 0
 	packages_pberg_revision=$(git rev-parse HEAD)
 	cd ../
 else
@@ -187,16 +188,16 @@ if [ -d luci-master ] ; then
 	git remote rm origin
 	git remote add origin git@github.com:freifunk/luci.git
 	git pull -u origin master || exit 0
-	[ -z $luci_version ]  || git checkout $luci_version || exit 0
-	[ -z $luci_revision ] || git checkout $luci_revision || exit 0
+	[ -z $luci_version ]  || git checkout "$luci_version"  || exit 0
+	[ -z $luci_revision ] || git checkout "$luci_revision" || exit 0
 	luci_revision=$(git rev-parse HEAD)
 	cd ../
 else
 	echo "create HEAD master"
 	git clone git@github.com:freifunk/luci.git luci-master || exit 0
 	cd luci-master
-	[ -z $luci_version ] || git checkout "$luci_version" || exit 0
-	[ -z $luci_revision ] || git checkout $luci_revision || exit 0
+	[ -z $luci_version ]  || git checkout "$luci_version"  || exit 0
+	[ -z $luci_revision ] || git checkout "$luci_revision" || exit 0
 	luci_revision=$(git rev-parse HEAD)
 	cd ../
 fi
@@ -222,7 +223,7 @@ LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-index.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-backup-style.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sshkeys.patch"
-LUCIPATCHES="$LUCIPATCHES luci-sys-routes6.patch"
+#LUCIPATCHES="$LUCIPATCHES luci-sys-routes6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd_gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-common.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-splash-css.patch"
@@ -232,6 +233,7 @@ LUCIPATCHES="$LUCIPATCHES luci-theme-bootstrap.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsr-view.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsr-service-view.patch"
 LUCIPATCHES="$LUCIPATCHES luci-splash-mark.patch"
+LUCIPATCHES="$LUCIPATCHES luci-admin-mini-dhcp.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -379,8 +381,8 @@ for board in $boards ; do
 	scripts/feeds install -a
 	case $verm in
 		trunk)
-			PATCHES="$PATCHES trunk-base-passwd-admin.patch"
-			PATCHES="$PATCHES trunk-atheros-config.patch"
+			#PATCHES="$PATCHES trunk-base-passwd-admin.patch"
+			#PATCHES="$PATCHES trunk-atheros-config.patch"
 			case $board in
 				x86_kvm_guest)
 					PATCHES="$PATCHES kvm-default-config.patch"
@@ -395,6 +397,9 @@ for board in $boards ; do
 			PATCHES="$PATCHES base-disable-ipv6-autoconf.patch" #no trunk
 			PATCHES="$PATCHES base-passwd-admin.patch"
 			PATCHES="$PATCHES package-lua.patch"
+			PATCHES="$PATCHES package-dnsmasq-trunk.patch"
+			PATCHES="$PATCHES package-dnsmasq-ff-timing.patch"
+			PATCHES="$PATCHES package-libubox.patch"
 			case $board in
 				ar71xx)
 					PATCHES="$PATCHES routerstation-bridge-wan-lan.patch" #no trunk
@@ -420,9 +425,6 @@ for board in $boards ; do
 	PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-system.patch"
 	PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
-	PATCHES="$PATCHES package-dnsmasq-trunk.patch"
-	PATCHES="$PATCHES package-dnsmasq-ff-timing.patch"
-	PATCHES="$PATCHES package-libubox.patch"
 	#PATCHES="$PATCHES package-mac80211-dir300.patch"
 	#PATCHES="$PATCHES package-iwinfo-1.patch" #no trunk
 	#PATCHES="$PATCHES package-iwinfo-2.patch" #no trunk

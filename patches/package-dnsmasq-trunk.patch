@@ -499,13 +499,13 @@ Index: package/dnsmasq/Makefile
  PKG_NAME:=dnsmasq
 -PKG_VERSION:=2.55
 -PKG_RELEASE:=6.1
-+PKG_VERSION:=2.61
++PKG_VERSION:=2.62
 +PKG_RELEASE:=1
  
  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
  PKG_SOURCE_URL:=http://thekelleys.org.uk/dnsmasq
 -PKG_MD5SUM:=b093d7c6bc7f97ae6fd35d048529232a
-+PKG_MD5SUM:=6ed0a5c2524dfc3a74ef494ee2469f09
++PKG_MD5SUM:=f47e5cb8f5bac6343f24b2dbe317ab40
  
 +PKG_INSTALL:=1
 +

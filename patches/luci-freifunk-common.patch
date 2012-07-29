@@ -5,7 +5,7 @@ index 5ffec43..6c0586c 100755
 @@ -26,4 +26,7 @@ boot() {
  	}
  
- 	( sleep 40; /usr/sbin/ff_rdate; /etc/init.d/cron restart ) &
+ 	/etc/init.d/cron restart &
 +	( sleep 10; /etc/init.d/firewall restart ) &
 +	( sleep 12; /etc/init.d/dnsmasq restart ) &
 +	( sleep 14; /etc/init.d/olsrd restart ) &

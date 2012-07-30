@@ -1,5 +1,27 @@
 #!/bin/sh
 
+
+genconfig() {
+	key_val_list="$1"
+	if ! [ -z "$key_val_list" ] ; then
+		for i in $key_val_list ; do
+			i1=$(echo $i|cut -d '=' -f1)
+			i2=$(echo $i|cut -d '=' -f2)
+			if grep ^$i1= .config ; then
+				echo "mod $i1=$i2"
+				sed -i -e "s,^$i1=.*,$i1=$i2," .config
+			elif grep "^# $i1 " .config ; then
+				echo "akt $i1=$i2"
+				sed -i -e "s,^# $i1 .*,$i1=$i2," .config
+			else
+				echo "add $i1=$i2"
+				echo "$i1=$i2" >> .config
+			fi
+		done
+	fi
+}
+
+
 . ./config
 
 pkgname="$1"
@@ -21,6 +43,7 @@ for board in $boards ; do
 	echo "$pkgpath"
 	[ "$pkgpath" == "" ] && pkgpath=$(find package/feeds -maxdepth 2 | grep /$pkgname$)
 	echo "$pkgpath"
+	genconfig "$make_options"
 	make $pkgpath/clean V=99 && \
 	make $pkgpath/compile V=99 && \
 	make $pkgpath/install V=99 && \

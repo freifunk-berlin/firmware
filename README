@@ -18,26 +18,4 @@ usage:
 	#ff-control/scripts/update-build-pkg-backfire.sh packetname
 	e.g.
 	#ff-control/scripts/update-build-pkg-backfire.sh luci-app-ffwizard-piraten
-	...
-
-	Piratenpakete aktivieren
-	#ff-control/scripts/make_config pirate
-	siehe default.config
-
-	Piratenpakete deaktivieren
-	#ff-control/scripts/make_config
-	siehe default.config
-
-testing:
-	wget http://cloud.pberg.freifunk.net/backfire/10.03/x86/openwrt-x86-generic-combined-squashfs.img
-	chmod -rw openwrt-x86-generic-combined-squashfs.img
-	dd bs=512 count=1000 if=/dev/zero >> openwrt-x86-generic-combined-squashfs.img
-	sudo apt-get install qemu qemu-kvm qemu-kvm-extras kvm-pxe
-	sudo mv /etc/qemu-ifup /etc/qemu-ifup.orig
-	sudo ln -s /bin/true /etc/qemu-ifup
-	sudo qemu -k de -net nic,model=ne2k_pci -net tap,ifname=tap1 openwrt-x86-generic-combined-squashfs.img
-        # in einer neuen konsole auf dem host
-	sudo ip addr add 192.168.1.2/24 dev tap1
-	sudo ip link set tap1 up
-
 

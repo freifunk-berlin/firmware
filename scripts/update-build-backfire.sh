@@ -576,5 +576,5 @@ for board in $boards ; do
 	#echo $pid > update-build-$verm-$board.pid
 done
 echo "rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp openwrt@pberg.freifunk.net:$wwwdir/$verm/$ver-timestamp/"
-echo "ssh openwrt@pberg.freifunk.net 'rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
+echo "ssh openwrt@pberg.freifunk.net 'rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/'"
 

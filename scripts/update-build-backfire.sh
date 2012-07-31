@@ -447,7 +447,7 @@ for board in $boards ; do
 		# wget --no-check-certificate -O 'ff-control/patches/packages-r27815.patch' 'http://dev.openwrt.org/changeset/27815/branches/backfire/package?format=diff&new=27815'
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i || exit 0
-		mkdir -p ../$verm/patches
+		mkdir -p ../patches
 		cp ../../ff-control/patches/$i ../patches || exit 0
 	done
 	rm -rf $(find package | grep \.orig$)
@@ -560,8 +560,8 @@ for board in $boards ; do
 	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1
 	rm -rf $wwwdir/$verm/$ver/patches
-	cp -a $verm/patches $wwwdir/$verm/$ver/
-	cp -a $verm/patches $wwwdir/$verm/$ver-timestamp/$timestamp/
+	cp -a ../patches $wwwdir/$verm/$ver/
+	cp -a ../patches $wwwdir/$verm/$ver-timestamp/$timestamp/
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/update-build-$verm-$board.log.txt
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/update-build-$verm-$board.log.txt
 #	(

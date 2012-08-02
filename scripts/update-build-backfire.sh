@@ -2,6 +2,8 @@
 
 . ./config
 
+MAKE=${MAKE:-nice -n 10 make}
+
 for board in $boards ; do
 	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
 done
@@ -20,13 +22,15 @@ rm -f $verm/patches/*.patch
 if [ -d yaffmap-agent ] ; then
 	echo "update yaffmap-agent git pull"
 	cd yaffmap-agent
-	git pull || exit 0
+	git pull origin master || exit 0
+	[ -z $yaffmap_agent_revision ] || git checkout $yaffmap_agent_revision || exit 0
 	yaffmap_agent_revision=$(git rev-parse HEAD)
 	cd ../
 else
 	echo "create yaffmap-agent git clone"
 	git clone git://github.com/wurststulle/yaffmap-agent.git || exit 0
 	cd yaffmap-agent
+	[ -z $yaffmap_agent_revision ] || git checkout $yaffmap_agent_revision || exit 0
 	yaffmap_agent_revision=$(git rev-parse HEAD)
 	cd ../
 fi
@@ -35,13 +39,16 @@ echo "yaffmap-agent Revision: $yaffmap_agent_revision" >> VERSION.txt
 if [ -d luci-app-bulletin-node ] ; then
 	echo "update luci-app-bulletin-node git pull"
 	cd luci-app-bulletin-node
-	git pull || exit 0
+	git reset --hard
+	git pull origin master || exit 0
+	[ -z $luci_app_bulletin_node_revision ] || git checkout $luci_app_bulletin_node_revision || exit 0
 	luci_app_bulletin_node_revision=$(git rev-parse HEAD)
 	cd ../
 else
 	echo "create luci-app-bulletin-node git clone"
 	git clone git://github.com/rhotep/luci-app-bulletin-node.git || exit 0
 	cd luci-app-bulletin-node
+	[ -z $luci_app_bulletin_node_revision ] || git checkout $luci_app_bulletin_node_revision || exit 0
 	luci_app_bulletin_node_revision=$(git rev-parse HEAD)
 	cd ../
 fi
@@ -150,13 +157,16 @@ cd ..
 if [ -d packages-pberg ] ; then
 	echo "update packages-pberg git pull"
 	cd packages-pberg
-	git pull || exit 0
+	git reset --hard
+	git pull origin master || exit 0
+	[ -z $packages_pberg_revision ] || git checkout $packages_pberg_revision || exit 0
 	packages_pberg_revision=$(git rev-parse HEAD)
 	cd ../
 else
 	echo "create packages-pberg git clone"
 	git clone git://github.com/stargieg/packages-pberg.git || exit 0
 	cd packages-pberg
+	[ -z $packages_pberg_revision ] || git checkout $packages_pberg_revision || exit 0
 	packages_pberg_revision=$(git rev-parse HEAD)
 	cd ../
 fi
@@ -165,13 +175,16 @@ echo "packages-pberg Revision: $packages_pberg_revision" >> VERSION.txt
 if [ -d piratenfreifunk-packages ] ; then
 	echo "update piratenfreifunk-packages manual git pull"
 	cd piratenfreifunk-packages
-	git pull || exit 0
+	git reset --hard
+	git pull origin master || exit 0
+	[ -z $piratenfreifunk_packages_revision ] || git checkout $piratenfreifunk_packages_revision || exit 0
 	piratenfreifunk_packages_revision=$(git rev-parse HEAD)
 	cd ../
 else
 	echo "create piratenfreifunk-packages git clone"
 	git clone git://github.com/basicinside/piratenfreifunk-packages.git || exit 0
 	cd piratenfreifunk-packages
+	[ -z $piratenfreifunk_packages_revision ] || git checkout $piratenfreifunk_packages_revision || exit 0
 	piratenfreifunk_packages_revision=$(git rev-parse HEAD)
 	cd ../
 fi
@@ -465,7 +478,7 @@ for board in $boards ; do
 			genconfig "$make_options_ver"
 			genconfig "$make_options"
 			genconfig "$make_min_options"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web minimal
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
@@ -473,7 +486,7 @@ for board in $boards ; do
 			genconfig "$make_options_ver"
 			genconfig "$make_options"
 			genconfig "$make_options_2_4"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
@@ -482,7 +495,7 @@ for board in $boards ; do
 			genconfig "$make_options"
 			genconfig "$make_options_2_6"
 			genconfig "$make_pi_options"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web "piraten"
 		;;
 		atheros|brcm47xx|brcm63xx)
@@ -493,7 +506,7 @@ for board in $boards ; do
 			genconfig "$make_options"
 			genconfig "$make_min_options"
 			genconfig "$make_min_options_2_6"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web minimal
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
@@ -501,7 +514,7 @@ for board in $boards ; do
 			genconfig "$make_options_ver"
 			genconfig "$make_options"
 			genconfig "$make_options_2_6"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
@@ -510,7 +523,7 @@ for board in $boards ; do
 			genconfig "$make_options"
 			genconfig "$make_options_2_6"
 			genconfig "$make_pi_options"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web "piraten"
 		;;
 		*)
@@ -521,7 +534,7 @@ for board in $boards ; do
 			genconfig "$make_options"
 			genconfig "$make_min_options"
 			genconfig "$make_min_options_2_6"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web minimal
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
@@ -529,7 +542,7 @@ for board in $boards ; do
 			genconfig "$make_options_ver"
 			genconfig "$make_options"
 			genconfig "$make_options_2_6"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
@@ -539,7 +552,7 @@ for board in $boards ; do
 			genconfig "$make_usb_options"
 			genconfig "$make_options_2_6"
 			genconfig "$make_big_options"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web "full"
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
@@ -548,7 +561,7 @@ for board in $boards ; do
 			genconfig "$make_options"
 			genconfig "$make_options_2_6"
 			genconfig "$make_pi_options"
-			nice -n 10 make V=99 world || build_fail=1
+			${MAKE} V=99 world || build_fail=1
 			rsync_web "piraten"
 		;;
 	esac

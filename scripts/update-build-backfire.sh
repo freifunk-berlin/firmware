@@ -413,6 +413,7 @@ for board in $boards ; do
 			PATCHES="$PATCHES package-dnsmasq-trunk.patch"
 			PATCHES="$PATCHES package-dnsmasq-ff-timing.patch"
 			PATCHES="$PATCHES package-libubox.patch"
+			PATCHES="$PATCHES sven-ola-luks.patch"
 			case $board in
 				ar71xx)
 					PATCHES="$PATCHES routerstation-bridge-wan-lan.patch" #no trunk

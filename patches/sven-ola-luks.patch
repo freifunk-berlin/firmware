@@ -1,0 +1,44 @@
+diff -Nur package.orig/kernel/modules/block.mk package/kernel/modules/block.mk
+--- package.orig/kernel/modules/block.mk	2012-07-26 17:40:14.000000000 +0200
++++ package/kernel/modules/block.mk	2012-07-27 11:21:04.000000000 +0200
+@@ -384,7 +384,7 @@
+   KCONFIG:= \
+        CONFIG_BLK_DEV_MD=n \
+        CONFIG_DM_DEBUG=n \
+-       CONFIG_DM_CRYPT=n \
++       CONFIG_DM_CRYPT \
+        CONFIG_DM_UEVENT=n \
+        CONFIG_DM_DELAY=n \
+        CONFIG_DM_MULTIPATH=n \
+@@ -395,7 +395,7 @@
+        CONFIG_BLK_DEV_DM \
+        CONFIG_DM_MIRROR
+   FILES:=$(LINUX_DIR)/drivers/md/dm-*.$(LINUX_KMOD_SUFFIX)
+-  AUTOLOAD:=$(call AutoLoad,30,dm-mod dm-log dm-region-hash dm-mirror)
++  AUTOLOAD:=$(call AutoLoad,30,dm-mod dm-log dm-region-hash dm-mirror dm-crypt)
+ endef
+ 
+ define KernelPackage/dm/description
+diff -Nur package.orig/kernel/modules/crypto.mk package/kernel/modules/crypto.mk
+--- package.orig/kernel/modules/crypto.mk	2012-07-26 17:40:14.000000000 +0200
++++ package/kernel/modules/crypto.mk	2012-07-27 11:21:04.000000000 +0200
+@@ -329,3 +329,19 @@
+ 
+ $(eval $(call KernelPackage,crypto-test))
+ 
++define KernelPackage/crypto-xts
++$(call KernelPackage/crypto/Depends,)
++  TITLE:=XTS cipher CryptoAPI module
++  KCONFIG:= \
++        CONFIG_CRYPTO_GF128MUL \
++        CONFIG_CRYPTO_XTS
++  FILES:= \
++        $(LINUX_DIR)/crypto/xts.$(LINUX_KMOD_SUFFIX) \
++        $(LINUX_DIR)/crypto/gf128mul.$(LINUX_KMOD_SUFFIX)
++  AUTOLOAD:=$(call AutoLoad,09, \
++        gf128mul \
++        xts \
++  )
++endef
++
++$(eval $(call KernelPackage,crypto-xts))

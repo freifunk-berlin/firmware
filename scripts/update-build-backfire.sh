@@ -301,7 +301,7 @@ rsync_web() {
 	#timestamp
 	mkdir -p	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
 	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
-	[ -z $build_profile ] || rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
+	rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
 	mkdir -p	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
 	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/opkg-status.txt
@@ -312,7 +312,7 @@ rsync_web() {
 	rm -f	$wwwdir/$verm/$ver/$board$build_profile/*
 	mkdir -p	$wwwdir/$verm/$ver/$board$build_profile
 	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver/$board$build_profile
-	[ -z $build_profile ] || rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
+	rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
 	mkdir -p	$wwwdir/$verm/$ver/$board/packages
 	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver/$board/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver/$board$build_profile/opkg-status.txt
@@ -449,7 +449,7 @@ for board in $boards ; do
 		pparm='-p0'
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i || exit 0
-		mkdir -p ../$verm/patches
+		mkdir -p ../patches
 		cp ../../ff-control/patches/$i ../patches || exit 0
 	done
 	#RPATCHES="$RPATCHES packages-r27821.patch"
@@ -478,6 +478,7 @@ for board in $boards ; do
 			cp  ../../ff-control/configs/$verm-$board.config .config
 			genconfig "$make_options_ver"
 			genconfig "$make_options"
+			genconfig "$make_options_2_4"
 			genconfig "$make_min_options"
 			${MAKE} V=99 world || build_fail=1
 			rsync_web minimal
@@ -494,7 +495,7 @@ for board in $boards ; do
 			cp  ../../ff-control/configs/$verm-$board.config .config
 			genconfig "$make_options_ver"
 			genconfig "$make_options"
-			genconfig "$make_options_2_6"
+			genconfig "$make_options_2_4"
 			genconfig "$make_pi_options"
 			${MAKE} V=99 world || build_fail=1
 			rsync_web "piraten"
@@ -574,8 +575,8 @@ for board in $boards ; do
 	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1
 	rm -rf $wwwdir/$verm/$ver/patches
-	cp -a ../patches $wwwdir/$verm/$ver/
-	cp -a ../patches $wwwdir/$verm/$ver-timestamp/$timestamp/
+	cp -a $verm/patches $wwwdir/$verm/$ver/
+	cp -a $verm/patches $wwwdir/$verm/$ver-timestamp/$timestamp/
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/update-build-$verm-$board.log.txt
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/update-build-$verm-$board.log.txt
 #	(

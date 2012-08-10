@@ -28,7 +28,7 @@ if [ -d yaffmap-agent ] ; then
 	cd ../
 else
 	echo "create yaffmap-agent git clone"
-	git clone git://github.com/wurststulle/yaffmap-agent.git || exit 0
+	git clone git://github.com/freifunk/yaffmap-agent.git || exit 0
 	cd yaffmap-agent
 	[ -z $yaffmap_agent_revision ] || git checkout $yaffmap_agent_revision || exit 0
 	yaffmap_agent_revision=$(git rev-parse HEAD)
@@ -46,7 +46,7 @@ if [ -d luci-app-bulletin-node ] ; then
 	cd ../
 else
 	echo "create luci-app-bulletin-node git clone"
-	git clone git://github.com/rhotep/luci-app-bulletin-node.git || exit 0
+	git clone git://github.com/freifunk/luci-app-bulletin-node.git || exit 0
 	cd luci-app-bulletin-node
 	[ -z $luci_app_bulletin_node_revision ] || git checkout $luci_app_bulletin_node_revision || exit 0
 	luci_app_bulletin_node_revision=$(git rev-parse HEAD)
@@ -164,7 +164,7 @@ if [ -d packages-pberg ] ; then
 	cd ../
 else
 	echo "create packages-pberg git clone"
-	git clone git://github.com/stargieg/packages-pberg.git || exit 0
+	git clone git://github.com/freifunk/packages-pberg.git || exit 0
 	cd packages-pberg
 	[ -z $packages_pberg_revision ] || git checkout $packages_pberg_revision || exit 0
 	packages_pberg_revision=$(git rev-parse HEAD)
@@ -182,7 +182,7 @@ if [ -d piratenfreifunk-packages ] ; then
 	cd ../
 else
 	echo "create piratenfreifunk-packages git clone"
-	git clone git://github.com/basicinside/piratenfreifunk-packages.git || exit 0
+	git clone git://github.com/freifunk/piratenfreifunk-packages.git || exit 0
 	cd piratenfreifunk-packages
 	[ -z $piratenfreifunk_packages_revision ] || git checkout $piratenfreifunk_packages_revision || exit 0
 	piratenfreifunk_packages_revision=$(git rev-parse HEAD)

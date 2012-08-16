@@ -1,5 +1,5 @@
 diff --git a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
-index 1d0175f..a557e1b 100644
+index 666f086..68a0d1a 100644
 --- a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 +++ b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 @@ -53,9 +53,7 @@ function index()
@@ -10,9 +10,9 @@ index 1d0175f..a557e1b 100644
  	entry({"freifunk", "status", "zeroes"}, call("zeroes"), "Testdownload")
 -	entry({"freifunk", "status", "public_status_json"}, call("public_status_json")).leaf = true
  
- 	assign({"freifunk", "olsr"}, {"admin", "status", "olsr"}, _("OLSR"), 30)
- 
-@@ -64,42 +62,49 @@ function index()
+ 	if nixio.fs.access("/usr/sbin/luci-splash") then
+ 		assign({"freifunk", "status", "splash"}, {"splash", "publicstatus"}, _("Splash"), 40)
+@@ -68,42 +66,49 @@ function index()
  	end
  
  	-- backend
@@ -66,7 +66,7 @@ index 1d0175f..a557e1b 100644
  end
  
  local function fetch_olsrd()
-@@ -166,155 +171,4 @@ function zeroes()
+@@ -170,165 +175,3 @@ function zeroes()
  	end
  end
  
@@ -119,7 +119,6 @@ index 1d0175f..a557e1b 100644
 -	root.network = {}
 -	root.wireless = {devices = {}, interfaces = {}, status = {}}
 -	local wifs = root.wireless.interfaces
--	local wifidata = luci.sys.wifi.getiwconfig() or {}
 -	local netdata = luci.sys.net.deviceinfo() or {}
 -
 -	for _, vif in ipairs(ffwifs) do
@@ -129,7 +128,18 @@ index 1d0175f..a557e1b 100644
 -			if s.device == vif and s.network == vif then
 -				wifs[#wifs+1] = s
 -				if s.ifname then
--					root.wireless.status[s.ifname] = wifidata[s.ifname]
+-					local iwinfo = luci.sys.wifi.getiwinfo(s.ifname)
+-					if iwinfo then
+-						root.wireless.status[s.ifname] = { }
+-
+-						local _, f
+-						for _, f in ipairs({
+-							"channel", "txpower", "bitrate", "signal", "noise",
+-							"quality", "quality_max", "mode", "ssid", "bssid", "encryption", "ifname"
+-						}) do
+-							root.wireless.status[s.ifname][f] = iwinfo[f]
+-						end
+-					end
 -				end
 -			end
 -		end)
@@ -163,7 +173,7 @@ index 1d0175f..a557e1b 100644
 -		end
 -		rv[#rv+1] = j
 -	end
- 
+-
 -	local load1, load5, load15 = sys.loadavg()
 -
 -	local  _, _, memtotal, memcached, membuffers, memfree = sys.sysinfo()
@@ -222,4 +232,3 @@ index 1d0175f..a557e1b 100644
 -	luci.http.write_json(rv)
 -	return
 -end
-

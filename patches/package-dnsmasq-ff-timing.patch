@@ -1,9 +1,34 @@
---- /dev/null	2012-06-07 20:34:02.149931178 +0200
-+++ package/dnsmasq/patches/200-ff-timing.patch	2012-06-08 00:57:55.632848968 +0200
-@@ -0,0 +1,117 @@
-+--- a/src/radv.c	2012-06-05 21:11:07.099187430 +0200
-++++ b/src/radv.c	2012-06-05 21:11:13.755828137 +0200
-+@@ -201,7 +201,7 @@
+--- /dev/null	2012-08-17 07:36:30.570000003 +0200
++++ package/dnsmasq/patches/200-ff-timing.patch	2012-08-18 18:02:29.188249001 +0200
+@@ -0,0 +1,111 @@
++diff -Nru a/src/config.h b/src/config.h
++--- a/src/config.h	2012-08-16 15:04:05.000000000 +0200
+++++ b/src/config.h	2012-08-18 17:30:14.688034002 +0200
++@@ -33,7 +33,7 @@
++ #define SMALLDNAME 40 /* most domain names are smaller than this */
++ #define HOSTSFILE "/etc/hosts"
++ #define ETHERSFILE "/etc/ethers"
++-#define DEFLEASE 3600 /* default lease time, 1 hour */
+++#define DEFLEASE 120 /* default lease time, 2 min */
++ #define CHUSER "nobody"
++ #define CHGRP "dip"
++ #define TFTP_MAX_CONNECTIONS 50 /* max simultaneous connections */
++diff -Nru a/src/dnsmasq.c b/src/dnsmasq.c
++--- a/src/dnsmasq.c	2012-08-16 15:04:05.000000000 +0200
+++++ b/src/dnsmasq.c	2012-08-18 17:30:14.688034002 +0200
++@@ -644,7 +644,7 @@
++ 		{
++ 		  char *p = daemon->namebuff;
++ 		  p += sprintf(p, _("prefix valid "));
++-		  prettyprint_time(p, dhcp_tmp->lease_time > 7200 ? dhcp_tmp->lease_time : 7200);
+++		  prettyprint_time(p, dhcp_tmp->lease_time > 60 ? dhcp_tmp->lease_time : 60);
++ 		}
++ 	      my_syslog(MS_DHCP | LOG_INFO, _("SLAAC on %s %s"), 
++ 			daemon->addrbuff, daemon->namebuff);
++diff -Nru a/src/radv.c b/src/radv.c
++--- a/src/radv.c	2012-08-16 15:04:05.000000000 +0200
+++++ b/src/radv.c	2012-08-18 18:02:23.818249001 +0200
++@@ -196,7 +196,7 @@
 +   ra->code = 0;
 +   ra->hop_limit = hop_limit;
 +   ra->flags = 0x00;
@@ -12,7 +37,7 @@
 +   ra->reachable_time = 0;
 +   ra->retrans_time = 0;
 + 
-+@@ -261,7 +261,7 @@
++@@ -256,7 +256,7 @@
 + 	  put_opt6_char(ICMP6_OPT_RDNSS);
 + 	  put_opt6_char((opt_cfg->len/8) + 1);
 + 	  put_opt6_short(0);
@@ -21,7 +46,7 @@
 + 	  /* zero means "self" */
 + 	  for (i = 0; i < opt_cfg->len; i += IN6ADDRSZ, a++)
 + 	    if (IN6_IS_ADDR_UNSPECIFIED(a))
-+@@ -277,7 +277,7 @@
++@@ -272,7 +272,7 @@
 + 	  put_opt6_char(ICMP6_OPT_DNSSL);
 + 	  put_opt6_char(len + 1);
 + 	  put_opt6_short(0);
@@ -30,7 +55,7 @@
 + 	  put_opt6(opt_cfg->val, opt_cfg->len);
 + 	  
 + 	  /* pad */
-+@@ -292,7 +292,7 @@
++@@ -287,7 +287,7 @@
 +       put_opt6_char(ICMP6_OPT_RDNSS);
 +       put_opt6_char(3);
 +       put_opt6_short(0);
@@ -39,53 +64,44 @@
 +       put_opt6(&parm.link_local, IN6ADDRSZ);
 +     }
 + 
-+@@ -409,8 +409,8 @@
++@@ -339,6 +339,7 @@
++ 	  int do_slaac = 0;
++ 	  int deprecate  = 0;
++ 	  unsigned int time = 0xffffffff;
+++	  unsigned int ptime = 0xffffffff;
++ 	  struct dhcp_context *context;
++ 	  
++ 	  for (context = daemon->ra_contexts; context; context = context->next)
++@@ -406,8 +407,10 @@
 + 		  setaddr6part(local, addr6part(local) & ~((prefix == 64) ? (u64)-1LL : (1LLU << (128 - prefix)) - 1LLU));
 + 		  
 + 		  /* lifetimes must be min 2 hrs, by RFC 2462 */
 +-		  if (time < 7200)
 +-		    time = 7200;
+++		  /* RFC 4862 make RFC 2462 Obsolete */
 ++		  if (time < 60)
 ++		    time = 60;
+++		  ptime = deprecate ? 0 : time/3;
 + 		  
 + 		  opt->type = ICMP6_OPT_PREFIX;
 + 		  opt->len = 4;
-+--- a/src/dnsmasq.c	2012-06-05 21:53:47.432749234 +0200
-++++ b/src/dnsmasq.c	2012-06-05 21:53:50.286071441 +0200
-+@@ -603,7 +603,7 @@
-+ 		{
-+ 		  char *p = daemon->namebuff;
-+ 		  p += sprintf(p, _("prefix valid "));
-+-		  prettyprint_time(p, dhcp_tmp->lease_time > 7200 ? dhcp_tmp->lease_time : 7200);
-++		  prettyprint_time(p, dhcp_tmp->lease_time > 600 ? dhcp_tmp->lease_time : 600);
-+ 		}
-+ 	      my_syslog(MS_DHCP | LOG_INFO, _("SLAAC on %s %s"), 
-+ 			daemon->addrbuff, daemon->namebuff);
-+--- a/src/radv.c	2012-06-05 23:25:07.232541260 +0200
-++++ b/src/radv.c	2012-06-05 23:25:10.519195108 +0200
-+@@ -423,7 +423,7 @@
++@@ -415,12 +418,13 @@
++ 		  /* autonomous only if we're not doing dhcp, always set "on-link" */
++ 		  opt->flags = do_slaac ? 0xC0 : 0x80;
++ 		  opt->valid_lifetime = htonl(time);
++-		  opt->preferred_lifetime = htonl(deprecate ? 0 : time);
+++		  opt->preferred_lifetime = htonl(ptime);
++ 		  opt->reserved = 0; 
 + 		  opt->prefix = *local;
 + 		  
 + 		  inet_ntop(AF_INET6, local, daemon->addrbuff, ADDRSTRLEN);
 +-		  my_syslog(MS_DHCP | LOG_INFO, "RTR-ADVERT(%s) %s", param->if_name, daemon->addrbuff); 		    
-++		  my_syslog(MS_DHCP | LOG_INFO, "RTR-ADVERT(%s) %s valid_lft(%i) preferred_lft(%i)", param->if_name, daemon->addrbuff, opt->valid_lifetime, opt->preferred_lifetime); 		    
+++		  my_syslog(MS_DHCP | LOG_INFO, "RTR-ADVERT(%s) %s valid_lft(%i) preferred_lft(%i)", 
+++		  	  param->if_name, daemon->addrbuff, time, ptime); 		    
 + 		}
 + 	    }
 + 	}
-+--- a/src/config.h	2012-06-05 23:42:35.542902629 +0200
-++++ b/src/config.h	2012-06-05 23:44:00.919236325 +0200
-+@@ -34,7 +34,7 @@
-+ #define HOSTSFILE "/etc/hosts"
-+ #define ETHERSFILE "/etc/ethers"
-+ #define RUNFILE "/var/run/dnsmasq.pid"
-+-#define DEFLEASE 3600 /* default lease time, 1 hour */
-++#define DEFLEASE 60 /* default lease time, 1 min */
-+ #define CHUSER "nobody"
-+ #define CHGRP "dip"
-+ #define TFTP_MAX_CONNECTIONS 50 /* max simultaneous connections */
-+--- a/src/radv.c	2012-06-07 00:34:11.330685297 +0200
-++++ b/src/radv.c	2012-06-07 00:34:24.367301120 +0200
-+@@ -516,8 +516,8 @@
++@@ -513,8 +517,8 @@
 + 	    /* range 5 - 20 */
 + 	    context->ra_time = param->now + 5 + (rand16()/4400);
 + 	  else
@@ -96,25 +112,3 @@
 + 	  
 + 	  return 0; /* found, abort */
 + 	}
-+--- a/src/dnsmasq.c	2012-06-07 01:05:34.641809581 +0200
-++++ b/src/dnsmasq.c	2012-06-07 01:07:07.028115939 +0200
-+@@ -603,7 +603,7 @@
-+ 		{
-+ 		  char *p = daemon->namebuff;
-+ 		  p += sprintf(p, _("prefix valid "));
-+-		  prettyprint_time(p, dhcp_tmp->lease_time > 600 ? dhcp_tmp->lease_time : 600);
-++		  prettyprint_time(p, dhcp_tmp->lease_time > 60 ? dhcp_tmp->lease_time : 60);
-+ 		}
-+ 	      my_syslog(MS_DHCP | LOG_INFO, _("SLAAC on %s %s"), 
-+ 			daemon->addrbuff, daemon->namebuff);
-+--- a/src/radv.c	2012-06-07 22:33:42.787754364 +0200
-++++ b/src/radv.c	2012-06-07 22:33:49.994392925 +0200
-+@@ -418,7 +418,7 @@
-+ 		  /* autonomous only if we're not doing dhcp */
-+ 		  opt->flags = do_slaac ? 0x40 : 0x00;
-+ 		  opt->valid_lifetime = htonl(time);
-+-		  opt->preferred_lifetime = htonl(deprecate ? 0 : time);
-++		  opt->preferred_lifetime = htonl(deprecate ? 0 : time/2);
-+ 		  opt->reserved = 0; 
-+ 		  opt->prefix = *local;
-+ 		  

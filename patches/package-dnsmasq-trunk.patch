@@ -1,9 +1,11 @@
 Index: package/dnsmasq/files/dnsmasq.init
 ===================================================================
---- package/dnsmasq/files/dnsmasq.init	(revision 32055)
-+++ package/dnsmasq/files/dnsmasq.init	(working copy)
-@@ -2,9 +2,20 @@
- # Copyright (C) 2007 OpenWrt.org
+--- package/dnsmasq/files/dnsmasq.init	(Revision 33203)
++++ package/dnsmasq/files/dnsmasq.init	(Arbeitskopie)
+@@ -1,10 +1,24 @@
+ #!/bin/sh /etc/rc.common
+-# Copyright (C) 2007 OpenWrt.org
++# Copyright (C) 2007-2012 OpenWrt.org
  
  START=60
 +
@@ -12,6 +14,9 @@ Index: package/dnsmasq/files/dnsmasq.init
  DNS_SERVERS=""
  DOMAIN=""
  
++ADD_LOCAL_DOMAIN=1
++ADD_LOCAL_HOSTNAME=1
++
 +CONFIGFILE="/var/etc/dnsmasq.conf"
 +
 +xappend() {
@@ -23,7 +28,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  dhcp_calc() {
  	local ip="$1"
  	local res=0
-@@ -24,7 +35,7 @@
+@@ -24,7 +38,7 @@
  	local value="$3"
  	local _loctmp
  	config_get_bool _loctmp "$section" "$option" 0
@@ -32,7 +37,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  }
  
  append_parm() {
-@@ -34,79 +45,80 @@
+@@ -34,79 +48,90 @@
  	local _loctmp
  	config_get _loctmp "$section" "$option"
  	[ -z "$_loctmp" ] && return 0
@@ -45,6 +50,10 @@ Index: package/dnsmasq/files/dnsmasq.init
 +	xappend "--server=$1"
  }
  
++append_address() {
++	xappend "--address=$1"
++}
++
  append_interface() {
  	local ifname=$(uci_get_state network "$1" ifname "$1")
 -	append args "-i $ifname"
@@ -100,6 +109,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  	append_bool "$cfg" enable_tftp "--enable-tftp"
 -	append_bool "$cfg" nonwildcard "-z"
 +	append_bool "$cfg" nonwildcard "--bind-interfaces"
++	append_bool "$cfg" fqdn "--dhcp-fqdn"
  
 -	append_parm "$cfg" cachesize "-c"
 -	append_parm "$cfg" dnsforwardmax "-0"
@@ -119,6 +129,7 @@ Index: package/dnsmasq/files/dnsmasq.init
 +	append_parm "$cfg" "domain" "--domain"
 +	append_parm "$cfg" "local" "--server"
  	config_list_foreach "$cfg" "server" append_server
++	config_list_foreach "$cfg" "address" append_address
  	config_list_foreach "$cfg" "interface" append_interface
  	config_list_foreach "$cfg" "notinterface" append_notinterface
  	config_list_foreach "$cfg" "addnhosts" append_addnhosts
@@ -129,9 +140,13 @@ Index: package/dnsmasq/files/dnsmasq.init
 +	append_parm "$cfg" "resolvfile" "--resolv-file"
  	append_parm "$cfg" "tftp_root" "--tftp-root"
  	append_parm "$cfg" "dhcp_boot" "--dhcp-boot"
++	append_parm "$cfg" "local_ttl" "--local-ttl"
  
  	config_get DOMAIN "$cfg" domain
  
++	config_get_bool ADD_LOCAL_DOMAIN "$cfg" add_local_domain 1
++	config_get_bool ADD_LOCAL_HOSTNAME "$cfg" add_local_hostname 1
++
  	config_get_bool readethers "$cfg" readethers
 -	[ "$readethers" = "1" ] && [ -e "/etc/ethers" ] || touch /etc/ethers
 +	[ "$readethers" = "1" -a \! -e "/etc/ethers" ] && touch /etc/ethers
@@ -147,7 +162,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  
  	local rebind
  	config_get_bool rebind "$cfg" rebind_protection 1
-@@ -114,22 +126,24 @@
+@@ -114,22 +139,26 @@
  		logger -t dnsmasq \
  			"DNS rebinding protection is active," \
  			"will discard upstream RFC1918 responses!"
@@ -171,11 +186,13 @@ Index: package/dnsmasq/files/dnsmasq.init
  		config_list_foreach "$cfg" rebind_domain append_rebind_domain
  	}
 +
++	dhcp_option_add "$cfg" "" 0
++
 +	echo >> $CONFIGFILE
  }
  
  dhcp_subscrid_add() {
-@@ -141,9 +155,11 @@
+@@ -141,9 +170,11 @@
  	config_get subscriberid "$cfg" subscriberid
  	[ -n "$subscriberid" ] || return 0
  
@@ -189,7 +206,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  }
  
  dhcp_remoteid_add() {
-@@ -155,9 +171,11 @@
+@@ -155,9 +186,11 @@
  	config_get remoteid "$cfg" remoteid
  	[ -n "$remoteid" ] || return 0
  
@@ -203,7 +220,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  }
  
  dhcp_circuitid_add() {
-@@ -169,9 +187,11 @@
+@@ -169,9 +202,11 @@
  	config_get circuitid "$cfg" circuitid
  	[ -n "$circuitid" ] || return 0
  
@@ -217,7 +234,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  }
  
  dhcp_userclass_add() {
-@@ -183,9 +203,11 @@
+@@ -183,9 +218,11 @@
  	config_get userclass "$cfg" userclass
  	[ -n "$userclass" ] || return 0
  
@@ -231,7 +248,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  }
  
  dhcp_vendorclass_add() {
-@@ -197,30 +219,51 @@
+@@ -197,30 +234,51 @@
  	config_get vendorclass "$cfg" vendorclass
  	[ -n "$vendorclass" ] || return 0
  
@@ -289,7 +306,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  dhcp_mac_add() {
  	local cfg="$1"
  
-@@ -230,7 +273,7 @@
+@@ -230,7 +288,7 @@
  	config_get mac "$cfg" mac
  	[ -n "$mac" ] || return 0
  
@@ -298,7 +315,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  
  	dhcp_option_add "$cfg" "$networkid"
  }
-@@ -249,9 +292,11 @@
+@@ -249,9 +307,11 @@
  	config_get serveraddress "$cfg" serveraddress
  	[ -n "$serveraddress" ] || return 0
  
@@ -312,7 +329,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  }
  
  
-@@ -271,7 +316,7 @@
+@@ -271,7 +331,7 @@
  		DNS_SERVERS="$DNS_SERVERS $dnsserver"
  	}
  
@@ -321,7 +338,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  
  	config_get proto "$net" proto
  	[ static = "$proto" ] || return 0
-@@ -300,9 +345,10 @@
+@@ -300,9 +360,10 @@
  	leasetime="${leasetime:-12h}"
  	start="$(dhcp_calc "${start:-100}")"
  	limit="${limit:-150}"
@@ -333,7 +350,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  
  	dhcp_option_add "$cfg" "$networkid"
  }
-@@ -310,10 +356,13 @@
+@@ -310,10 +371,13 @@
  dhcp_option_add() {
  	local cfg="$1"
  	local networkid="$2"
@@ -344,11 +361,11 @@ Index: package/dnsmasq/files/dnsmasq.init
  	config_get dhcp_option "$cfg" dhcp_option
  	for o in $dhcp_option; do
 -		append args "-O $networkid","$o"
-+		xappend "--dhcp-option${force:+-force}=$networkid","$o"
++		xappend "--dhcp-option${force:+-force}=${networkid:+$networkid,}$o"
  	done
  
  }
-@@ -337,15 +386,65 @@
+@@ -337,15 +401,65 @@
  		[ "${fqdn%.*}" == "$fqdn" ] && \
  			fqdn="$fqdn${DOMAIN:+.$DOMAIN}"
  
@@ -417,7 +434,7 @@ Index: package/dnsmasq/files/dnsmasq.init
  start() {
  	include /lib/network
  	scan_interfaces
-@@ -355,18 +454,37 @@
+@@ -355,28 +469,49 @@
  
  	config_load dhcp
  
@@ -454,17 +471,23 @@ Index: package/dnsmasq/files/dnsmasq.init
 +	echo >> $CONFIGFILE
  
  	# add own hostname
- 	[ -z "$lanaddr" ] || {
-@@ -374,7 +492,7 @@
+-	[ -z "$lanaddr" ] || {
++	[ $ADD_LOCAL_HOSTNAME -eq 1 ] && [ -n "$lanaddr" ] && {
+ 		local hostname="$(uci_get system.@system[0].hostname)"
  		dhcp_domain_add "" "${hostname:-OpenWrt}" "$lanaddr"
  	}
  
 -	/usr/sbin/dnsmasq $args && {
 +	service_start /usr/sbin/dnsmasq -C $CONFIGFILE && {
  		rm -f /tmp/resolv.conf
- 		[ -n "$DOMAIN" ] && echo "search $DOMAIN" >> /tmp/resolv.conf
+-		[ -n "$DOMAIN" ] && echo "search $DOMAIN" >> /tmp/resolv.conf
++		[ $ADD_LOCAL_DOMAIN -eq 1 ] && [ -n "$DOMAIN" ] && {
++			echo "search $DOMAIN" >> /tmp/resolv.conf
++		}
  		DNS_SERVERS="$DNS_SERVERS 127.0.0.1"
-@@ -385,10 +503,10 @@
+ 		for DNS_SERVER in $DNS_SERVERS ; do
+ 			echo "nameserver $DNS_SERVER" >> /tmp/resolv.conf
+@@ -385,10 +520,10 @@
  }
  
  stop() {
@@ -482,8 +505,8 @@ Index: package/dnsmasq/files/dnsmasq.init
  }
 Index: package/dnsmasq/Makefile
 ===================================================================
---- package/dnsmasq/Makefile	(revision 32055)
-+++ package/dnsmasq/Makefile	(working copy)
+--- package/dnsmasq/Makefile	(Revision 33203)
++++ package/dnsmasq/Makefile	(Arbeitskopie)
 @@ -1,6 +1,6 @@
 -# 
 -# Copyright (C) 2006-2011 OpenWrt.org
@@ -499,28 +522,19 @@ Index: package/dnsmasq/Makefile
  PKG_NAME:=dnsmasq
 -PKG_VERSION:=2.55
 -PKG_RELEASE:=6.1
-+PKG_VERSION:=2.62
++PKG_VERSION:=2.63
 +PKG_RELEASE:=1
  
  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
  PKG_SOURCE_URL:=http://thekelleys.org.uk/dnsmasq
 -PKG_MD5SUM:=b093d7c6bc7f97ae6fd35d048529232a
-+PKG_MD5SUM:=f47e5cb8f5bac6343f24b2dbe317ab40
++PKG_MD5SUM:=43e771997615ebcd8f6c6ffa60c3e40b
  
 +PKG_INSTALL:=1
 +
  include $(INCLUDE_DIR)/package.mk
  
  define Package/dnsmasq
-@@ -25,7 +27,7 @@
- endef
- 
- define Package/dnsmasq/description
-- It is intended to provide coupled DNS and DHCP service to a LAN.
-+  It is intended to provide coupled DNS and DHCP service to a LAN.
- endef
- 
- define Package/dnsmasq/conffiles
 @@ -33,18 +35,19 @@
  /etc/dnsmasq.conf
  endef
@@ -550,27 +564,19 @@ Index: package/dnsmasq/Makefile
  	$(INSTALL_DIR) $(1)/etc/config
  	$(INSTALL_DATA) ./files/dhcp.conf $(1)/etc/config/dhcp
  	$(INSTALL_DATA) ./files/dnsmasq.conf $(1)/etc/dnsmasq.conf
-Index: package/dnsmasq/patches/101-ipv6.patch
-===================================================================
---- package/dnsmasq/patches/101-ipv6.patch	(revision 32055)
-+++ package/dnsmasq/patches/101-ipv6.patch	(working copy)
-@@ -1,13 +1,13 @@
+--- package/dnsmasq/patches/101-ipv6.patch	2012-08-17 15:40:44.581971001 +0200
++++ /dev/null	2012-08-17 07:36:30.570000003 +0200
+@@ -1,13 +0,0 @@
 ---- a/src/config.h
 -+++ b/src/config.h
 -@@ -269,8 +269,9 @@ NOTES:
-+--- a/src/config.h	2012-04-29 17:01:28.000000000 +0200
-++++ b/src/config.h	2012-06-05 10:45:27.408641607 +0200
-+@@ -255,8 +255,9 @@
-  /* We assume that systems which don't have IPv6
-     headers don't have ntop and pton either */
-  
+- /* We assume that systems which don't have IPv6
+-    headers don't have ntop and pton either */
+- 
 --#if defined(INET6_ADDRSTRLEN) && defined(IPV6_V6ONLY) && !defined(NO_IPV6)
-+-#if defined(INET6_ADDRSTRLEN) && defined(IPV6_V6ONLY)
- +#if defined(INET6_ADDRSTRLEN) && !defined(NO_IPV6)
-  #  define HAVE_IPV6
- +#  define IPV6_V6ONLY 26
-  #  define ADDRSTRLEN INET6_ADDRSTRLEN
+-+#if defined(INET6_ADDRSTRLEN) && !defined(NO_IPV6)
+- #  define HAVE_IPV6
+-+#  define IPV6_V6ONLY 26
+- #  define ADDRSTRLEN INET6_ADDRSTRLEN
 - #  if defined(SOL_IPV6)
 - #    define IPV6_LEVEL SOL_IPV6
-+ #elif defined(INET_ADDRSTRLEN)
-+ #  undef HAVE_IPV6

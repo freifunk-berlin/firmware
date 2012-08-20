@@ -8,6 +8,31 @@ for board in $boards ; do
 	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
 done
 
+case $verm in
+	trunk) 
+		svn co svn://svn.openwrt.org/openwrt/trunk ./openwrt-trunk  || exit 0
+	;;
+	*)
+		svn co svn://svn.openwrt.org/openwrt/branches/$verm ./openwrt-$verm || exit 0
+	;;
+esac
+if [ $openwrt_revision ] ; then
+	case $verm in
+		trunk) 
+			cd openwrt-trunk
+			svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/trunk || exit 0
+			cd ..
+			;;
+		*)
+			cd openwrt-$verm
+			svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/branches/$verm || exit 0
+			cd ..
+			;;
+	esac
+fi
+
+
+
 timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
 date +"%Y/%m/%d %H:%M">VERSION.txt
@@ -350,24 +375,14 @@ for board in $boards ; do
 	rm -f $(svn status)
 	case $verm in
 		trunk) 
-			svn co svn://svn.openwrt.org/openwrt/trunk ./  || exit 0
+			#svn co svn://svn.openwrt.org/openwrt/trunk ./  || exit 0
+			rsync -a ../../openwrt-trunk/* ./
 			;;
 		*)
-			svn co svn://svn.openwrt.org/openwrt/branches/$verm ./ || exit 0
+			#svn co svn://svn.openwrt.org/openwrt/branches/$verm ./ || exit 0
+			rsync -a ../../openwrt-$verm/* ./
 			;;
 	esac
-	if [ -z $openwrt_revision ] ; then
-		svn up || exit 0
-	else
-		case $verm in
-			trunk) 
-				svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/trunk || exit 0
-				;;
-			*)
-				svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/branches/$verm || exit 0
-				;;
-		esac
-	fi
 	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 	cp ../../VERSION.txt VERSION.txt
 	echo "OpenWrt Branch: $verm" >> VERSION.txt

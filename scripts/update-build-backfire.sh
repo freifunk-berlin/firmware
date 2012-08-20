@@ -484,7 +484,7 @@ for board in $boards ; do
 	
 	mkdir -p ../../dl
 	[ -h dl ] || ln -s ../../dl dl
-	cp ../../ff-control/patches/regulatory.bin.pberg dl/regulatory.bin.pberg
+	cp -a ../../ff-control/patches/regulatory.bin dl/regulatory.bin
 	build_fail=0
 	case $board in
 		brcm-2.4)

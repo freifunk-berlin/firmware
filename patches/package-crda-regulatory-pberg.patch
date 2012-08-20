@@ -1,13 +1,37 @@
 Index: package/crda/Makefile
 ===================================================================
---- package/crda/Makefile	(Revision 26794)
+--- package/crda/Makefile	(Revision 33210)
 +++ package/crda/Makefile	(Arbeitskopie)
+@@ -58,7 +58,7 @@
+ 	NL1FOUND="" NL2FOUND=Y \
+ 	NLLIBNAME="libnl-tiny" \
+ 	NLLIBS="-lnl-tiny -lm" \
+-	REG_BIN="$(DL_DIR)/$(PKG_REGULATORY_SOURCE)" \
++	REG_BIN="$(DL_DIR)/regulatory.bin" \
+ 	crda
+ 
+ define Package/crda/install
 @@ -68,7 +68,7 @@
  	$(INSTALL_DIR) $(1)/usr/lib/crda
  	$(INSTALL_BIN) $(PKG_BUILD_DIR)/crda $(1)/sbin/
  	$(INSTALL_DATA) ./files/hotplug.rule $(1)/etc/hotplug.d/platform/10-regulatory
 -	$(INSTALL_DATA) $(DL_DIR)/$(PKG_REGULATORY_SOURCE) $(1)/usr/lib/crda/regulatory.bin
-+	$(INSTALL_DATA) $(DL_DIR)/regulatory.bin.pberg $(1)/usr/lib/crda/regulatory.bin
++	$(INSTALL_DATA) $(DL_DIR)/regulatory.bin $(1)/usr/lib/crda/regulatory.bin
  endef
  
  $(eval $(call BuildPackage,crda))
+--- /dev/null	2012-08-17 07:36:30.570000003 +0200
++++ package/crda/patches/200-openwrt_key.patch	2012-08-19 01:10:01.989152002 +0200
+@@ -0,0 +1,12 @@
++--- /dev/null	2012-08-17 07:36:30.570000003 +0200
+++++ a/pubkeys/openwrt.key.pub.pem	2012-08-19 01:03:20.019152001 +0200
++@@ -0,0 +1,9 @@
+++-----BEGIN PUBLIC KEY-----
+++MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwvulB1faygsmW8MA4VQX
+++jq4D+prA4Mhw+b9L2hFO3BpgO4D8P+a5xjfavosMOa2nK02geNNyj3dc0daFyIJD
+++K2r6PH/JmgKhBfPR9SLoCibYLrwi6HK89CR92SxTD2O8Hg2kiXNUEcgdow2RJr+S
++++A4CZPkAxvasUdDvGD9QlHWPwp+Dxve9Ad828Yf/DwhPtseuwP0aHqXXRKxgWryD
+++ksUbstnBGHiaFkeT14d0AJt+H/fIqMA1jnQILPxZgqxLpPpEgPRgDMgL98pqjoll
+++4xAk4d0Fsf2krqKo8VdBJpN/UVnTss5CSEQJmZtLov2HQ04dchv0rmTExnfi0yv0
+++nQIDAQAB
+++-----END PUBLIC KEY-----

@@ -420,8 +420,8 @@ for board in $boards ; do
 					PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch" #no trunk
 				;;
 				atheros)
-					PATCHES="$PATCHES ar5312_flash_4MB_flash.patch" #no trunk
-					#PATCHES="$PATCHES fixdmaoffset.patch"
+					PATCHES="$PATCHES atheros-disable-pci-usb.patch" #no trunk
+					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 				;;
 				brcm-2.4)
 					PATCHES="$PATCHES brcm-2.4-reboot-fix.patch" #no trunk

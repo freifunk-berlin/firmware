@@ -438,6 +438,9 @@ for board in $boards ; do
 					PATCHES="$PATCHES atheros-disable-pci-usb.patch" #no trunk
 					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 				;;
+				ixp4xx)
+					PATCHES="$PATCHES  target-ixp4xx-avila-sysupgrade.patch" #no trunk
+				;;
 				brcm-2.4)
 					PATCHES="$PATCHES brcm-2.4-reboot-fix.patch" #no trunk
 				;;

@@ -1,0 +1,24 @@
+--- /dev/null	2012-08-17 07:36:30.570000003 +0200
++++ package/mac80211/patches/995-disable-cpufreq_cpu_set.patch	2012-08-25 00:20:33.635376000 +0200
+@@ -0,0 +1,21 @@
++--- compat-wireless-2012-07-16/compat/compat-3.1.c.orig	2012-08-25 00:17:36.185376003 +0200
+++++ compat-wireless-2012-07-16/compat/compat-3.1.c	2012-08-25 00:18:05.935376001 +0200
++@@ -21,13 +21,13 @@
++ 
++ unsigned int cpufreq_quick_get_max(unsigned int cpu)
++ {
++-	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+++	//struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++ 	unsigned int ret_freq = 0;
++ 
++-	if (policy) {
++-		ret_freq = policy->max;
++-		cpufreq_cpu_put(policy);
++-	}
+++	//if (policy) {
+++	//	ret_freq = policy->max;
+++	//	cpufreq_cpu_put(policy);
+++	//}
++ 
++ 	return ret_freq;
++ }

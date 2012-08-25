@@ -457,6 +457,13 @@ for board in $boards ; do
 	PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-system.patch"
 	PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
+	PATCHES="$PATCHES package-crda-1.1.2.patch"
+	PATCHES="$PATCHES package-iw-3.3.patch"
+	PATCHES="$PATCHES package-libnl-tiny-0.1.3.patch"
+	PATCHES="$PATCHES package-mac80211-trunk.patch"
+	PATCHES="$PATCHES package-mac80211-regdb.patch"
+	PATCHES="$PATCHES package-mac80211-platform-compat.patch"
+	PATCHES="$PATCHES package-mac80211-disable-cpufreq_cpu_set.patch"
 	#PATCHES="$PATCHES package-mac80211-dir300.patch"
 	#PATCHES="$PATCHES package-iwinfo-1.patch" #no trunk
 	#PATCHES="$PATCHES package-iwinfo-2.patch" #no trunk

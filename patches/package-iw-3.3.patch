@@ -1,0 +1,678 @@
+--- package/iw/Makefile	2012-08-17 15:40:40.041971000 +0200
++++ package/iw/Makefile	2012-08-18 14:47:24.265458001 +0200
+@@ -8,13 +8,12 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=iw
+-PKG_VERSION:=0.9.22
+-PKG_RELEASE:=2
++PKG_VERSION:=3.3
++PKG_RELEASE:=1
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+ PKG_SOURCE_URL:=http://wireless.kernel.org/download/iw/
+-PKG_MD5SUM:=561c2602c5ce7c65a590118286c0892a
+-PKG_BUILD_DEPENDS:=mac80211
++PKG_MD5SUM:=146ad14cdeb39fb88b21efdbb28787d1
+ 
+ include $(INCLUDE_DIR)/package.mk
+ 
+@@ -23,7 +22,7 @@
+   CATEGORY:=Network
+   TITLE:=cfg80211 interface configuration utility
+   URL:=http://wireless.kernel.org/en/users/Documentation/iw
+-  DEPENDS:= +libnl-tiny @(!(TARGET_avr32)||BROKEN)
++  DEPENDS:= +libnl-tiny @(!(TARGET_avr32||TARGET_etrax)||BROKEN)
+ endef
+ 
+ define Build/Configure
+@@ -35,7 +34,6 @@
+ 
+ TARGET_CPPFLAGS:= \
+ 	-I$(STAGING_DIR)/usr/include/libnl-tiny \
+-	-I$(STAGING_DIR)/usr/include/mac80211 \
+ 	$(TARGET_CPPFLAGS) \
+ 	-DCONFIG_LIBNL20 \
+ 	-D_GNU_SOURCE
+diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/001-nl80211_h_sync.patch openwrt-trunk/package/iw/patches/001-nl80211_h_sync.patch
+--- package/iw/patches/001-nl80211_h_sync.patch	1970-01-01 01:00:00.000000000 +0100
++++ package/iw/patches/001-nl80211_h_sync.patch	2012-08-18 14:47:24.265458001 +0200
+@@ -0,0 +1,284 @@
++--- a/nl80211.h
+++++ b/nl80211.h
++@@ -156,21 +156,23 @@
++  * @NL80211_CMD_DEL_KEY: delete a key identified by %NL80211_ATTR_KEY_IDX
++  *	or %NL80211_ATTR_MAC.
++  *
++- * @NL80211_CMD_GET_BEACON: retrieve beacon information (returned in a
++- *	%NL80222_CMD_NEW_BEACON message)
++- * @NL80211_CMD_SET_BEACON: set the beacon on an access point interface
++- *	using the %NL80211_ATTR_BEACON_INTERVAL, %NL80211_ATTR_DTIM_PERIOD,
++- *	%NL80211_ATTR_BEACON_HEAD and %NL80211_ATTR_BEACON_TAIL attributes.
++- *	Following attributes are provided for drivers that generate full Beacon
++- *	and Probe Response frames internally: %NL80211_ATTR_SSID,
+++ * @NL80211_CMD_GET_BEACON: (not used)
+++ * @NL80211_CMD_SET_BEACON: change the beacon on an access point interface
+++ *	using the %NL80211_ATTR_BEACON_HEAD and %NL80211_ATTR_BEACON_TAIL
+++ *	attributes. For drivers that generate the beacon and probe responses
+++ *	internally, the following attributes must be provided: %NL80211_ATTR_IE,
+++ *	%NL80211_ATTR_IE_PROBE_RESP and %NL80211_ATTR_IE_ASSOC_RESP.
+++ * @NL80211_CMD_START_AP: Start AP operation on an AP interface, parameters
+++ *	are like for %NL80211_CMD_SET_BEACON, and additionally parameters that
+++ *	do not change are used, these include %NL80211_ATTR_BEACON_INTERVAL,
+++ *	%NL80211_ATTR_DTIM_PERIOD, %NL80211_ATTR_SSID,
++  *	%NL80211_ATTR_HIDDEN_SSID, %NL80211_ATTR_CIPHERS_PAIRWISE,
++  *	%NL80211_ATTR_CIPHER_GROUP, %NL80211_ATTR_WPA_VERSIONS,
++  *	%NL80211_ATTR_AKM_SUITES, %NL80211_ATTR_PRIVACY,
++- *	%NL80211_ATTR_AUTH_TYPE, %NL80211_ATTR_IE, %NL80211_ATTR_IE_PROBE_RESP,
++- *	%NL80211_ATTR_IE_ASSOC_RESP.
++- * @NL80211_CMD_NEW_BEACON: add a new beacon to an access point interface,
++- *	parameters are like for %NL80211_CMD_SET_BEACON.
++- * @NL80211_CMD_DEL_BEACON: remove the beacon, stop sending it
+++ *	%NL80211_ATTR_AUTH_TYPE and %NL80211_ATTR_INACTIVITY_TIMEOUT.
+++ * @NL80211_CMD_NEW_BEACON: old alias for %NL80211_CMD_START_AP
+++ * @NL80211_CMD_STOP_AP: Stop AP operation on the given interface
+++ * @NL80211_CMD_DEL_BEACON: old alias for %NL80211_CMD_STOP_AP
++  *
++  * @NL80211_CMD_GET_STATION: Get station attributes for station identified by
++  *	%NL80211_ATTR_MAC on the interface identified by %NL80211_ATTR_IFINDEX.
++@@ -367,6 +369,11 @@
++  *	%NL80211_ATTR_WIPHY_FREQ, %NL80211_ATTR_CONTROL_PORT,
++  *	%NL80211_ATTR_CONTROL_PORT_ETHERTYPE and
++  *	%NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT.
+++ *	Background scan period can optionally be
+++ *	specified in %NL80211_ATTR_BG_SCAN_PERIOD,
+++ *	if not specified default background scan configuration
+++ *	in driver is used and if period value is 0, bg scan will be disabled.
+++ *	This attribute is ignored if driver does not support roam scan.
++  *	It is also sent as an event, with the BSSID and response IEs when the
++  *	connection is established or failed to be established. This can be
++  *	determined by the STATUS_CODE attribute.
++@@ -541,6 +548,11 @@
++  * @NL80211_CMD_SET_NOACK_MAP: sets a bitmap for the individual TIDs whether
++  *      No Acknowledgement Policy should be applied.
++  *
+++ * @NL80211_CMD_CH_SWITCH_NOTIFY: An AP or GO may decide to switch channels
+++ *	independently of the userspace SME, send this event indicating
+++ *	%NL80211_ATTR_IFINDEX is now on %NL80211_ATTR_WIPHY_FREQ with
+++ *	%NL80211_ATTR_WIPHY_CHANNEL_TYPE.
+++ *
++  * @NL80211_CMD_MAX: highest used command number
++  * @__NL80211_CMD_AFTER_LAST: internal use
++  */
++@@ -565,8 +577,10 @@ enum nl80211_commands {
++ 
++ 	NL80211_CMD_GET_BEACON,
++ 	NL80211_CMD_SET_BEACON,
++-	NL80211_CMD_NEW_BEACON,
++-	NL80211_CMD_DEL_BEACON,
+++	NL80211_CMD_START_AP,
+++	NL80211_CMD_NEW_BEACON = NL80211_CMD_START_AP,
+++	NL80211_CMD_STOP_AP,
+++	NL80211_CMD_DEL_BEACON = NL80211_CMD_STOP_AP,
++ 
++ 	NL80211_CMD_GET_STATION,
++ 	NL80211_CMD_SET_STATION,
++@@ -680,6 +694,8 @@ enum nl80211_commands {
++ 
++ 	NL80211_CMD_SET_NOACK_MAP,
++ 
+++	NL80211_CMD_CH_SWITCH_NOTIFY,
+++
++ 	/* add new commands above here */
++ 
++ 	/* used to define NL80211_CMD_MAX below */
++@@ -1193,6 +1209,19 @@ enum nl80211_commands {
++  * @NL80211_ATTR_NOACK_MAP: This u16 bitmap contains the No Ack Policy of
++  *      up to 16 TIDs.
++  *
+++ * @NL80211_ATTR_INACTIVITY_TIMEOUT: timeout value in seconds, this can be
+++ *	used by the drivers which has MLME in firmware and does not have support
+++ *	to report per station tx/rx activity to free up the staion entry from
+++ *	the list. This needs to be used when the driver advertises the
+++ *	capability to timeout the stations.
+++ *
+++ * @NL80211_ATTR_RX_SIGNAL_DBM: signal strength in dBm (as a 32-bit int);
+++ *	this attribute is (depending on the driver capabilities) added to
+++ *	received frames indicated with %NL80211_CMD_FRAME.
+++ *
+++ * @NL80211_ATTR_BG_SCAN_PERIOD: Background scan period in seconds
+++ *      or 0 to disable background scan.
+++ *
++  * @NL80211_ATTR_MAX: highest attribute number currently defined
++  * @__NL80211_ATTR_AFTER_LAST: internal use
++  */
++@@ -1438,6 +1467,12 @@ enum nl80211_attrs {
++ 
++ 	NL80211_ATTR_NOACK_MAP,
++ 
+++	NL80211_ATTR_INACTIVITY_TIMEOUT,
+++
+++	NL80211_ATTR_RX_SIGNAL_DBM,
+++
+++	NL80211_ATTR_BG_SCAN_PERIOD,
+++
++ 	/* add attributes here, update the policy in nl80211.c */
++ 
++ 	__NL80211_ATTR_AFTER_LAST,
++@@ -1475,6 +1510,7 @@ enum nl80211_attrs {
++ #define NL80211_ATTR_FEATURE_FLAGS NL80211_ATTR_FEATURE_FLAGS
++ 
++ #define NL80211_MAX_SUPP_RATES			32
+++#define NL80211_MAX_SUPP_HT_RATES		77
++ #define NL80211_MAX_SUPP_REG_RULES		32
++ #define NL80211_TKIP_DATA_OFFSET_ENCR_KEY	0
++ #define NL80211_TKIP_DATA_OFFSET_TX_MIC_KEY	16
++@@ -1536,7 +1572,11 @@ enum nl80211_iftype {
++  * @NL80211_STA_FLAG_WME: station is WME/QoS capable
++  * @NL80211_STA_FLAG_MFP: station uses management frame protection
++  * @NL80211_STA_FLAG_AUTHENTICATED: station is authenticated
++- * @NL80211_STA_FLAG_TDLS_PEER: station is a TDLS peer
+++ * @NL80211_STA_FLAG_TDLS_PEER: station is a TDLS peer -- this flag should
+++ *	only be used in managed mode (even in the flags mask). Note that the
+++ *	flag can't be changed, it is only valid while adding a station, and
+++ *	attempts to change it will silently be ignored (rather than rejected
+++ *	as errors.)
++  * @NL80211_STA_FLAG_MAX: highest station flag number currently defined
++  * @__NL80211_STA_FLAG_AFTER_LAST: internal use
++  */
++@@ -1651,6 +1691,10 @@ enum nl80211_sta_bss_param {
++  *     containing info as possible, see &enum nl80211_sta_bss_param
++  * @NL80211_STA_INFO_CONNECTED_TIME: time since the station is last connected
++  * @NL80211_STA_INFO_STA_FLAGS: Contains a struct nl80211_sta_flag_update.
+++ * @NL80211_STA_INFO_BEACON_LOSS: count of times beacon loss was detected (u32)
+++ * @NL80211_STA_INFO_T_OFFSET: timing offset with respect to this STA (s64)
+++ * @NL80211_STA_INFO_CHAIN_SIGNAL: per-chain signal strength of last PPDU
+++ * @NL80211_STA_INFO_CHAIN_SIGNAL_AVG: per-chain signal strength average
++  * @__NL80211_STA_INFO_AFTER_LAST: internal
++  * @NL80211_STA_INFO_MAX: highest possible station info attribute
++  */
++@@ -1673,6 +1717,10 @@ enum nl80211_sta_info {
++ 	NL80211_STA_INFO_BSS_PARAM,
++ 	NL80211_STA_INFO_CONNECTED_TIME,
++ 	NL80211_STA_INFO_STA_FLAGS,
+++	NL80211_STA_INFO_BEACON_LOSS,
+++	NL80211_STA_INFO_T_OFFSET,
+++	NL80211_STA_INFO_CHAIN_SIGNAL,
+++	NL80211_STA_INFO_CHAIN_SIGNAL_AVG,
++ 
++ 	/* keep last */
++ 	__NL80211_STA_INFO_AFTER_LAST,
++@@ -2098,8 +2146,18 @@ enum nl80211_mntr_flags {
++  * TUs) during which a mesh STA can send only one Action frame containing a
++  * PERR element.
++  *
+++ * @NL80211_MESHCONF_FORWARDING: set Mesh STA as forwarding or non-forwarding
+++ * or forwarding entity (default is TRUE - forwarding entity)
+++ *
+++ * @NL80211_MESHCONF_RSSI_THRESHOLD: RSSI threshold in dBm. This specifies the
+++ * threshold for average signal strength of candidate station to establish
+++ * a peer link.
+++ *
++  * @NL80211_MESHCONF_ATTR_MAX: highest possible mesh configuration attribute
++  *
+++ * @NL80211_MESHCONF_SYNC_OFFSET_MAX_NEIGHBOR: maximum number of neighbors
+++ * to synchronize to for 11s default synchronization method (see 11C.12.2.2)
+++ *
++  * @__NL80211_MESHCONF_ATTR_AFTER_LAST: internal use
++  */
++ enum nl80211_meshconf_params {
++@@ -2122,6 +2180,9 @@ enum nl80211_meshconf_params {
++ 	NL80211_MESHCONF_HWMP_RANN_INTERVAL,
++ 	NL80211_MESHCONF_GATE_ANNOUNCEMENTS,
++ 	NL80211_MESHCONF_HWMP_PERR_MIN_INTERVAL,
+++	NL80211_MESHCONF_FORWARDING,
+++	NL80211_MESHCONF_RSSI_THRESHOLD,
+++	NL80211_MESHCONF_SYNC_OFFSET_MAX_NEIGHBOR,
++ 
++ 	/* keep last */
++ 	__NL80211_MESHCONF_ATTR_AFTER_LAST,
++@@ -2161,6 +2222,11 @@ enum nl80211_meshconf_params {
++  * complete (unsecured) mesh peering without the need of a userspace daemon.
++  *
++  * @NL80211_MESH_SETUP_ATTR_MAX: highest possible mesh setup attribute number
+++ *
+++ * @NL80211_MESH_SETUP_ENABLE_VENDOR_SYNC: Enable this option to use a
+++ * vendor specific synchronization method or disable it to use the default
+++ * neighbor offset synchronization
+++ *
++  * @__NL80211_MESH_SETUP_ATTR_AFTER_LAST: Internal use
++  */
++ enum nl80211_mesh_setup_params {
++@@ -2170,6 +2236,7 @@ enum nl80211_mesh_setup_params {
++ 	NL80211_MESH_SETUP_IE,
++ 	NL80211_MESH_SETUP_USERSPACE_AUTH,
++ 	NL80211_MESH_SETUP_USERSPACE_AMPE,
+++	NL80211_MESH_SETUP_ENABLE_VENDOR_SYNC,
++ 
++ 	/* keep last */
++ 	__NL80211_MESH_SETUP_ATTR_AFTER_LAST,
++@@ -2179,7 +2246,7 @@ enum nl80211_mesh_setup_params {
++ /**
++  * enum nl80211_txq_attr - TX queue parameter attributes
++  * @__NL80211_TXQ_ATTR_INVALID: Attribute number 0 is reserved
++- * @NL80211_TXQ_ATTR_QUEUE: TX queue identifier (NL80211_TXQ_Q_*)
+++ * @NL80211_TXQ_ATTR_AC: AC identifier (NL80211_AC_*)
++  * @NL80211_TXQ_ATTR_TXOP: Maximum burst time in units of 32 usecs, 0 meaning
++  *	disabled
++  * @NL80211_TXQ_ATTR_CWMIN: Minimum contention window [a value of the form
++@@ -2192,7 +2259,7 @@ enum nl80211_mesh_setup_params {
++  */
++ enum nl80211_txq_attr {
++ 	__NL80211_TXQ_ATTR_INVALID,
++-	NL80211_TXQ_ATTR_QUEUE,
+++	NL80211_TXQ_ATTR_AC,
++ 	NL80211_TXQ_ATTR_TXOP,
++ 	NL80211_TXQ_ATTR_CWMIN,
++ 	NL80211_TXQ_ATTR_CWMAX,
++@@ -2203,13 +2270,21 @@ enum nl80211_txq_attr {
++ 	NL80211_TXQ_ATTR_MAX = __NL80211_TXQ_ATTR_AFTER_LAST - 1
++ };
++ 
++-enum nl80211_txq_q {
++-	NL80211_TXQ_Q_VO,
++-	NL80211_TXQ_Q_VI,
++-	NL80211_TXQ_Q_BE,
++-	NL80211_TXQ_Q_BK
+++enum nl80211_ac {
+++	NL80211_AC_VO,
+++	NL80211_AC_VI,
+++	NL80211_AC_BE,
+++	NL80211_AC_BK,
+++	NL80211_NUM_ACS
++ };
++ 
+++/* backward compat */
+++#define NL80211_TXQ_ATTR_QUEUE	NL80211_TXQ_ATTR_AC
+++#define NL80211_TXQ_Q_VO	NL80211_AC_VO
+++#define NL80211_TXQ_Q_VI	NL80211_AC_VI
+++#define NL80211_TXQ_Q_BE	NL80211_AC_BE
+++#define NL80211_TXQ_Q_BK	NL80211_AC_BK
+++
++ enum nl80211_channel_type {
++ 	NL80211_CHAN_NO_HT,
++ 	NL80211_CHAN_HT20,
++@@ -2395,12 +2470,15 @@ enum nl80211_key_attributes {
++  *	in an array of rates as defined in IEEE 802.11 7.3.2.2 (u8 values with
++  *	1 = 500 kbps) but without the IE length restriction (at most
++  *	%NL80211_MAX_SUPP_RATES in a single array).
+++ * @NL80211_TXRATE_MCS: HT (MCS) rates allowed for TX rate selection
+++ *	in an array of MCS numbers.
++  * @__NL80211_TXRATE_AFTER_LAST: internal
++  * @NL80211_TXRATE_MAX: highest TX rate attribute
++  */
++ enum nl80211_tx_rate_attributes {
++ 	__NL80211_TXRATE_INVALID,
++ 	NL80211_TXRATE_LEGACY,
+++	NL80211_TXRATE_MCS,
++ 
++ 	/* keep last */
++ 	__NL80211_TXRATE_AFTER_LAST,
++@@ -2786,10 +2864,13 @@ enum nl80211_ap_sme_features {
++  *	TX status to the socket error queue when requested with the
++  *	socket option.
++  * @NL80211_FEATURE_HT_IBSS: This driver supports IBSS with HT datarates.
+++ * @NL80211_FEATURE_INACTIVITY_TIMER: This driver takes care of freeing up
+++ *	the connected inactive stations in AP mode.
++  */
++ enum nl80211_feature_flags {
++ 	NL80211_FEATURE_SK_TX_STATUS	= 1 << 0,
++ 	NL80211_FEATURE_HT_IBSS		= 1 << 1,
+++	NL80211_FEATURE_INACTIVITY_TIMER = 1 << 2,
++ };
++ 
++ /**
+diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/001-nl80211_sync.patch openwrt-trunk/package/iw/patches/001-nl80211_sync.patch
+--- package/iw/patches/001-nl80211_sync.patch	2012-08-17 15:40:40.041971000 +0200
++++ package/iw/patches/001-nl80211_sync.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,81 +0,0 @@
+---- a/nl80211.h
+-+++ b/nl80211.h
+-@@ -148,6 +148,10 @@
+-  * @NL80211_CMD_SET_MPATH:  Set mesh path attributes for mesh path to
+-  * 	destination %NL80211_ATTR_MAC on the interface identified by
+-  * 	%NL80211_ATTR_IFINDEX.
+-+ * @NL80211_CMD_NEW_MPATH: Create a new mesh path for the destination given by
+-+ *	%NL80211_ATTR_MAC via %NL80211_ATTR_MPATH_NEXT_HOP.
+-+ * @NL80211_CMD_DEL_MPATH: Delete a mesh path to the destination given by
+-+ *	%NL80211_ATTR_MAC.
+-  * @NL80211_CMD_NEW_PATH: Add a mesh path with given attributes to the
+-  *	the interface identified by %NL80211_ATTR_IFINDEX.
+-  * @NL80211_CMD_DEL_PATH: Remove a mesh path identified by %NL80211_ATTR_MAC
+-@@ -612,7 +616,7 @@ enum nl80211_commands {
+-  *	consisting of a nested array.
+-  *
+-  * @NL80211_ATTR_MESH_ID: mesh id (1-32 bytes).
+-- * @NL80211_ATTR_PLINK_ACTION: action to perform on the mesh peer link.
+-+ * @NL80211_ATTR_STA_PLINK_ACTION: action to perform on the mesh peer link.
+-  * @NL80211_ATTR_MPATH_NEXT_HOP: MAC address of the next hop for a mesh path.
+-  * @NL80211_ATTR_MPATH_INFO: information about a mesh_path, part of mesh path
+-  * 	info given for %NL80211_CMD_GET_MPATH, nested attribute described at
+-@@ -879,7 +883,9 @@ enum nl80211_commands {
+-  *	See &enum nl80211_key_default_types.
+-  *
+-  * @NL80211_ATTR_MESH_SETUP: Optional mesh setup parameters.  These cannot be
+-- * changed once the mesh is active.
+-+ *	changed once the mesh is active.
+-+ * @NL80211_ATTR_MESH_CONFIG: Mesh configuration parameters, a nested attribute
+-+ *	containing attributes from &enum nl80211_meshconf_params.
+-  *
+-  * @NL80211_ATTR_MAX: highest attribute number currently defined
+-  * @__NL80211_ATTR_AFTER_LAST: internal use
+-@@ -1225,8 +1231,6 @@ enum nl80211_rate_info {
+-  * @NL80211_STA_INFO_INACTIVE_TIME: time since last activity (u32, msecs)
+-  * @NL80211_STA_INFO_RX_BYTES: total received bytes (u32, from this station)
+-  * @NL80211_STA_INFO_TX_BYTES: total transmitted bytes (u32, to this station)
+-- * @__NL80211_STA_INFO_AFTER_LAST: internal
+-- * @NL80211_STA_INFO_MAX: highest possible station info attribute
+-  * @NL80211_STA_INFO_SIGNAL: signal strength of last received PPDU (u8, dBm)
+-  * @NL80211_STA_INFO_TX_BITRATE: current unicast tx rate, nested attribute
+-  * 	containing info as possible, see &enum nl80211_sta_info_txrate.
+-@@ -1236,6 +1240,13 @@ enum nl80211_rate_info {
+-  * @NL80211_STA_INFO_TX_RETRIES: total retries (u32, to this station)
+-  * @NL80211_STA_INFO_TX_FAILED: total failed packets (u32, to this station)
+-  * @NL80211_STA_INFO_SIGNAL_AVG: signal strength average (u8, dBm)
+-+ * @NL80211_STA_INFO_LLID: the station's mesh LLID
+-+ * @NL80211_STA_INFO_PLID: the station's mesh PLID
+-+ * @NL80211_STA_INFO_PLINK_STATE: peer link state for the station
+-+ * @NL80211_STA_INFO_RX_BITRATE: last unicast rx rate, nested attribute
+-+ * 	containing info as possible, see &enum nl80211_sta_info_txrate.
+-+ * @__NL80211_STA_INFO_AFTER_LAST: internal
+-+ * @NL80211_STA_INFO_MAX: highest possible station info attribute
+-  */
+- enum nl80211_sta_info {
+- 	__NL80211_STA_INFO_INVALID,
+-@@ -1252,6 +1263,7 @@ enum nl80211_sta_info {
+- 	NL80211_STA_INFO_TX_RETRIES,
+- 	NL80211_STA_INFO_TX_FAILED,
+- 	NL80211_STA_INFO_SIGNAL_AVG,
+-+	NL80211_STA_INFO_RX_BITRATE,
+- 
+- 	/* keep last */
+- 	__NL80211_STA_INFO_AFTER_LAST,
+-@@ -1626,7 +1638,7 @@ enum nl80211_mntr_flags {
+-  * @NL80211_MESHCONF_HWMP_NET_DIAM_TRVS_TIME: The interval of time (in TUs)
+-  * that it takes for an HWMP information element to propagate across the mesh
+-  *
+-- * @NL80211_MESHCONF_ROOTMODE: whether root mode is enabled or not
+-+ * @NL80211_MESHCONF_HWMP_ROOTMODE: whether root mode is enabled or not
+-  *
+-  * @NL80211_MESHCONF_ELEMENT_TTL: specifies the value of TTL field set at a
+-  * source mesh point for path selection elements.
+-@@ -1678,6 +1690,7 @@ enum nl80211_meshconf_params {
+-  * element that vendors will use to identify the path selection methods and
+-  * metrics in use.
+-  *
+-+ * @NL80211_MESH_SETUP_ATTR_MAX: highest possible mesh setup attribute number
+-  * @__NL80211_MESH_SETUP_ATTR_AFTER_LAST: Internal use
+-  */
+- enum nl80211_mesh_setup_params {
+diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/100-rx_rate.patch openwrt-trunk/package/iw/patches/100-rx_rate.patch
+--- package/iw/patches/100-rx_rate.patch	2012-08-17 15:40:40.041971000 +0200
++++ package/iw/patches/100-rx_rate.patch	2012-08-18 14:47:24.265458001 +0200
+@@ -43,9 +43,9 @@
+  	struct nlattr *sinfo[NL80211_STA_INFO_MAX + 1];
+ -	struct nlattr *rinfo[NL80211_RATE_INFO_MAX + 1];
+  	char mac_addr[20], state_name[10], dev[20];
++ 	struct nl80211_sta_flag_update *sta_flags;
+  	static struct nla_policy stats_policy[NL80211_STA_INFO_MAX + 1] = {
+- 		[NL80211_STA_INFO_INACTIVE_TIME] = { .type = NLA_U32 },
+-@@ -45,6 +75,7 @@ static int print_sta_handler(struct nl_m
++@@ -46,6 +76,7 @@ static int print_sta_handler(struct nl_m
+  		[NL80211_STA_INFO_TX_PACKETS] = { .type = NLA_U32 },
+  		[NL80211_STA_INFO_SIGNAL] = { .type = NLA_U8 },
+  		[NL80211_STA_INFO_TX_BITRATE] = { .type = NLA_NESTED },
+@@ -53,8 +53,8 @@
+  		[NL80211_STA_INFO_LLID] = { .type = NLA_U16 },
+  		[NL80211_STA_INFO_PLID] = { .type = NLA_U16 },
+  		[NL80211_STA_INFO_PLINK_STATE] = { .type = NLA_U8 },
+-@@ -52,13 +83,6 @@ static int print_sta_handler(struct nl_m
+- 		[NL80211_STA_INFO_TX_FAILED] = { .type = NLA_U32 },
++@@ -55,13 +86,6 @@ static int print_sta_handler(struct nl_m
++ 			{ .minlen = sizeof(struct nl80211_sta_flag_update) },
+  	};
+  
+ -	static struct nla_policy rate_policy[NL80211_RATE_INFO_MAX + 1] = {
+@@ -67,7 +67,7 @@
+  	nla_parse(tb, NL80211_ATTR_MAX, genlmsg_attrdata(gnlh, 0),
+  		  genlmsg_attrlen(gnlh, 0), NULL);
+  
+-@@ -111,25 +135,8 @@ static int print_sta_handler(struct nl_m
++@@ -114,25 +138,8 @@ static int print_sta_handler(struct nl_m
+  		printf("\n\tsignal avg:\t%d dBm",
+  			(int8_t)nla_get_u8(sinfo[NL80211_STA_INFO_SIGNAL_AVG]));
+  
+diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/110-fix_rate_calculation.patch openwrt-trunk/package/iw/patches/110-fix_rate_calculation.patch
+--- package/iw/patches/110-fix_rate_calculation.patch	2012-08-17 15:40:40.041971000 +0200
++++ package/iw/patches/110-fix_rate_calculation.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,11 +0,0 @@
+---- a/ibss.c
+-+++ b/ibss.c
+-@@ -104,7 +104,7 @@ static int join_ibss(struct nl80211_stat
+- 		if (*end != '\0')
+- 			return 1;
+- 
+--		NLA_PUT_U32(msg, NL80211_ATTR_MCAST_RATE, (int) rate * 10);
+-+		NLA_PUT_U32(msg, NL80211_ATTR_MCAST_RATE, (int)(rate * 10));
+- 		argv++;
+- 		argc--;
+- 	}
+diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/110-per_chain_signal_strength.patch openwrt-trunk/package/iw/patches/110-per_chain_signal_strength.patch
+--- package/iw/patches/110-per_chain_signal_strength.patch	1970-01-01 01:00:00.000000000 +0100
++++ package/iw/patches/110-per_chain_signal_strength.patch	2012-08-18 14:47:24.265458001 +0200
+@@ -0,0 +1,70 @@
++--- a/station.c
+++++ b/station.c
++@@ -61,6 +61,33 @@ static void print_sta_bitrate(struct nla
++ 	}
++ }
++ 
+++static char *get_chain_signal(struct nlattr *attr_list)
+++{
+++	struct nlattr *attr;
+++	static char buf[64];
+++	char *cur = buf;
+++	int i = 0, rem;
+++	const char *prefix;
+++
+++	if (!attr_list)
+++		return "";
+++
+++	nla_for_each_nested(attr, attr_list, rem) {
+++		if (i++ > 0)
+++			prefix = ", ";
+++		else
+++			prefix = "[";
+++
+++		cur += snprintf(cur, sizeof(buf) - (cur - buf), "%s%d", prefix,
+++				(int8_t) nla_get_u8(attr));
+++	}
+++
+++	if (i)
+++		snprintf(cur, sizeof(buf) - (cur - buf), "] ");
+++
+++	return buf;
+++}
+++
++ static int print_sta_handler(struct nl_msg *msg, void *arg)
++ {
++ 	struct nlattr *tb[NL80211_ATTR_MAX + 1];
++@@ -84,7 +111,10 @@ static int print_sta_handler(struct nl_m
++ 		[NL80211_STA_INFO_TX_FAILED] = { .type = NLA_U32 },
++ 		[NL80211_STA_INFO_STA_FLAGS] =
++ 			{ .minlen = sizeof(struct nl80211_sta_flag_update) },
+++		[NL80211_STA_INFO_CHAIN_SIGNAL] = { .type = NLA_NESTED },
+++		[NL80211_STA_INFO_CHAIN_SIGNAL_AVG] = { .type = NLA_NESTED },
++ 	};
+++	char *chain;
++ 
++ 	nla_parse(tb, NL80211_ATTR_MAX, genlmsg_attrdata(gnlh, 0),
++ 		  genlmsg_attrlen(gnlh, 0), NULL);
++@@ -131,12 +161,18 @@ static int print_sta_handler(struct nl_m
++ 	if (sinfo[NL80211_STA_INFO_TX_FAILED])
++ 		printf("\n\ttx failed:\t%u",
++ 			nla_get_u32(sinfo[NL80211_STA_INFO_TX_FAILED]));
+++
+++	chain = get_chain_signal(sinfo[NL80211_STA_INFO_CHAIN_SIGNAL]);
++ 	if (sinfo[NL80211_STA_INFO_SIGNAL])
++-		printf("\n\tsignal:  \t%d dBm",
++-			(int8_t)nla_get_u8(sinfo[NL80211_STA_INFO_SIGNAL]));
+++		printf("\n\tsignal:  \t%d %sdBm",
+++			(int8_t)nla_get_u8(sinfo[NL80211_STA_INFO_SIGNAL]),
+++			chain);
+++
+++	chain = get_chain_signal(sinfo[NL80211_STA_INFO_CHAIN_SIGNAL_AVG]);
++ 	if (sinfo[NL80211_STA_INFO_SIGNAL_AVG])
++-		printf("\n\tsignal avg:\t%d dBm",
++-			(int8_t)nla_get_u8(sinfo[NL80211_STA_INFO_SIGNAL_AVG]));
+++		printf("\n\tsignal avg:\t%d %sdBm",
+++			(int8_t)nla_get_u8(sinfo[NL80211_STA_INFO_SIGNAL_AVG]),
+++			chain);
++ 
++ 	print_sta_bitrate(sinfo[NL80211_STA_INFO_TX_BITRATE], "tx bitrate");
++ 	print_sta_bitrate(sinfo[NL80211_STA_INFO_RX_BITRATE], "rx bitrate");
+diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/120-ibss_ht.patch openwrt-trunk/package/iw/patches/120-ibss_ht.patch
+--- package/iw/patches/120-ibss_ht.patch	2012-08-17 15:40:40.041971000 +0200
++++ package/iw/patches/120-ibss_ht.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,113 +0,0 @@
+---- a/ibss.c
+-+++ b/ibss.c
+-@@ -27,6 +27,7 @@ static int join_ibss(struct nl80211_stat
+- 	char *value = NULL, *sptr = NULL;
+- 	float rate;
+- 	int bintval;
+-+	unsigned int htval;
+- 
+- 	if (argc < 2)
+- 		return 1;
+-@@ -44,6 +45,12 @@ static int join_ibss(struct nl80211_stat
+- 	argv++;
+- 	argc--;
+- 
+-+	if (argc && parse_channel_type(argv[0], &htval)) {
+-+		NLA_PUT_U32(msg, NL80211_ATTR_WIPHY_CHANNEL_TYPE, htval);
+-+		argv++;
+-+		argc--;
+-+	}
+-+
+- 	if (argc && strcmp(argv[0], "fixed-freq") == 0) {
+- 		NLA_PUT_FLAG(msg, NL80211_ATTR_FREQ_FIXED);
+- 		argv++;
+-@@ -134,7 +141,7 @@ COMMAND(ibss, leave, NULL,
+- 	NL80211_CMD_LEAVE_IBSS, 0, CIB_NETDEV, leave_ibss,
+- 	"Leave the current IBSS cell.");
+- COMMAND(ibss, join,
+--	"<SSID> <freq in MHz> [fixed-freq] [<fixed bssid>] [beacon-interval <TU>]"
+-+	"<SSID> <freq in MHz> [HT20|HT40+|HT40-] [fixed-freq] [<fixed bssid>] [beacon-interval <TU>]"
+- 	" [basic-rates <rate in Mbps,rate2,...>] [mcast-rate <rate in Mbps>] "
+- 	"[key d:0:abcde]",
+- 	NL80211_CMD_JOIN_IBSS, 0, CIB_NETDEV, join_ibss,
+---- a/iw.h
+-+++ b/iw.h
+-@@ -130,6 +130,7 @@ void mac_addr_n2a(char *mac_addr, unsign
+- unsigned char *parse_hex(char *hex, size_t *outlen);
+- 
+- int parse_keys(struct nl_msg *msg, char **argv, int argc);
+-+int parse_channel_type(const char *str, unsigned int *htval);
+- 
+- void print_ht_mcs(const __u8 *mcs);
+- void print_ampdu_length(__u8 exponent);
+---- a/phy.c
+-+++ b/phy.c
+-@@ -33,30 +33,14 @@ static int handle_freqchan(struct nl_msg
+- 			   int argc, char **argv)
+- {
+- 	char *end;
+--	static const struct {
+--		const char *name;
+--		unsigned int val;
+--	} htmap[] = {
+--		{ .name = "HT20", .val = NL80211_CHAN_HT20, },
+--		{ .name = "HT40+", .val = NL80211_CHAN_HT40PLUS, },
+--		{ .name = "HT40-", .val = NL80211_CHAN_HT40MINUS, },
+--	};
+- 	unsigned int htval = NL80211_CHAN_NO_HT;
+- 	unsigned int freq;
+--	int i;
+- 
+- 	if (!argc || argc > 2)
+- 		return 1;
+- 
+--	if (argc == 2) {
+--		for (i = 0; i < ARRAY_SIZE(htmap); i++) {
+--			if (strcasecmp(htmap[i].name, argv[1]) == 0) {
+--				htval = htmap[i].val;
+--				break;
+--			}
+--		}
+--		if (htval == NL80211_CHAN_NO_HT)
+--			return 1;
+-+	if (argc == 2 && !parse_channel_type(argv[1], &htval)) {
+-+		return 1;
+- 	}
+- 
+- 	if (!*argv[0])
+---- a/util.c
+-+++ b/util.c
+-@@ -345,6 +345,33 @@ int parse_keys(struct nl_msg *msg, char 
+- 	return 2;
+- }
+- 
+-+/*
+-+ * Convert a string "HT20", "HT40+" or "HT40-" into nl80211
+-+ * value. Conversion is case insensitive. Returns 1 on success, 0 on error.
+-+ */
+-+
+-+int parse_channel_type(const char *str, unsigned int *htval)
+-+{
+-+	static const struct {
+-+		const char *name;
+-+		unsigned int val;
+-+	} htmap[] = {
+-+		{ .name = "HT20", .val = NL80211_CHAN_HT20, },
+-+		{ .name = "HT40+", .val = NL80211_CHAN_HT40PLUS, },
+-+		{ .name = "HT40-", .val = NL80211_CHAN_HT40MINUS, },
+-+	};
+-+	int i;
+-+
+-+	for (i = 0; i < ARRAY_SIZE(htmap); i++) {
+-+		if (strcasecmp(htmap[i].name, str) == 0) {
+-+			*htval = htmap[i].val;
+-+			return 1;
+-+		}
+-+	}
+-+
+-+	return 0;
+-+}
+-+
+- static void print_mcs_index(const __u8 *mcs)
+- {
+- 	unsigned int mcs_bit, prev_bit = -2, prev_cont = 0;
+diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/120-tdls_peer_indentation.patch openwrt-trunk/package/iw/patches/120-tdls_peer_indentation.patch
+--- package/iw/patches/120-tdls_peer_indentation.patch	1970-01-01 01:00:00.000000000 +0100
++++ package/iw/patches/120-tdls_peer_indentation.patch	2012-08-18 14:47:24.265458001 +0200
+@@ -0,0 +1,11 @@
++--- a/station.c
+++++ b/station.c
++@@ -258,7 +258,7 @@ static int print_sta_handler(struct nl_m
++ 		}
++ 
++ 		if (sta_flags->mask & BIT(NL80211_STA_FLAG_TDLS_PEER)) {
++-			printf("\n\tTDLS peer:\t\t");
+++			printf("\n\tTDLS peer:\t");
++ 			if (sta_flags->set & BIT(NL80211_STA_FLAG_TDLS_PEER))
++ 				printf("yes");
++ 			else
+--- /dev/null	2012-08-17 07:36:30.570000003 +0200
++++ package/iw/patches/200-dummy-htole16.patch	2012-08-24 02:12:41.763407004 +0200
+@@ -0,0 +1,10 @@
++--- a/info.c	2012-08-24 02:10:36.313407000 +0200
+++++ b/info.c	2012-08-24 02:10:46.003407000 +0200
++@@ -10,6 +10,7 @@
++ 
++ #include "nl80211.h"
++ #include "iw.h"
+++#define htole16(x) (x)
++ 
++ static void print_flag(const char *name, int *open)
++ {

@@ -1,0 +1,711 @@
+diff '--exclude=.svn' -Nur package/libnl-tiny/Makefile package/libnl-tiny/Makefile
+--- package/libnl-tiny/Makefile	2012-08-17 15:40:45.881971001 +0200
++++ package/libnl-tiny/Makefile	2012-08-18 14:47:25.085458001 +0200
+@@ -9,7 +9,7 @@
+ 
+ PKG_NAME:=libnl-tiny
+ PKG_VERSION:=0.1
+-PKG_RELEASE:=2.1
++PKG_RELEASE:=3
+ 
+ include $(INCLUDE_DIR)/package.mk
+ 
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/cache.c package/libnl-tiny/src/cache.c
+--- package/libnl-tiny/src/cache.c	2012-08-17 15:40:45.841971001 +0200
++++ package/libnl-tiny/src/cache.c	2012-08-18 14:47:25.065458001 +0200
+@@ -730,7 +730,6 @@
+  * @name Dumping
+  * @{
+  */
+-#ifdef disabled
+ /**
+  * Dump all elements of a cache.
+  * @arg cache		cache to dump
+@@ -781,7 +780,6 @@
+ 		dump_from_ops(obj, params);
+ 	}
+ }
+-#endif
+ 
+ /** @} */
+ 
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/cache_mngt.c package/libnl-tiny/src/cache_mngt.c
+--- package/libnl-tiny/src/cache_mngt.c	2012-08-17 15:40:45.841971001 +0200
++++ package/libnl-tiny/src/cache_mngt.c	2012-08-18 14:47:25.085458001 +0200
+@@ -73,6 +73,8 @@
+ 	return NULL;
+ }
+ 
++#ifdef disabled
++
+ /**
+  * Lookup message type cache association
+  * @arg ops			cache operations
+@@ -118,6 +120,7 @@
+ 	for (ops = cache_ops; ops; ops = ops->co_next)
+ 		cb(ops, arg);
+ }
++#endif
+ 
+ /**
+  * Register a set of cache operations
+@@ -178,7 +181,7 @@
+  * @name Global Cache Provisioning/Requiring
+  * @{
+  */
+-
++#ifdef disabled
+ /**
+  * Provide a cache for global use
+  * @arg cache		cache to provide
+@@ -244,6 +247,7 @@
+ 	return ops->co_major_cache;
+ }
+ 
++#endif
+ /** @} */
+ 
+ /** @} */
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/genl_mngt.c package/libnl-tiny/src/genl_mngt.c
+--- package/libnl-tiny/src/genl_mngt.c	2012-08-17 15:40:45.871971001 +0200
++++ package/libnl-tiny/src/genl_mngt.c	2012-08-18 14:47:25.065458001 +0200
+@@ -136,6 +136,7 @@
+ 
+ }
+ 
++#ifdef disabled
+ char *genl_op2name(int family, int op, char *buf, size_t len)
+ {
+ 	struct genl_ops *ops;
+@@ -158,7 +159,7 @@
+ 	strncpy(buf, "unknown", len - 1);
+ 	return NULL;
+ }
+-
++#endif
+ 
+ /**
+  * @name Register/Unregister
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/attr.h package/libnl-tiny/src/include/netlink/attr.h
+--- package/libnl-tiny/src/include/netlink/attr.h	2012-08-17 15:40:45.791971001 +0200
++++ package/libnl-tiny/src/include/netlink/attr.h	2012-08-18 14:47:25.045458001 +0200
+@@ -508,7 +508,7 @@
+ static inline int nla_parse_nested(struct nlattr *tb[], int maxtype, struct nlattr *nla,
+ 		     struct nla_policy *policy)
+ {
+-	return nla_parse(tb, maxtype, nla_data(nla), nla_len(nla), policy);
++	return nla_parse(tb, maxtype, (struct nlattr *)nla_data(nla), nla_len(nla), policy);
+ }
+ 
+ /**
+@@ -563,8 +563,8 @@
+  */
+ static inline size_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t dstsize)
+ {
+-	size_t srclen = nla_len(nla);
+-	char *src = nla_data(nla);
++	size_t srclen = (size_t)nla_len(nla);
++	char *src = (char*)nla_data(nla);
+ 
+ 	if (srclen > 0 && src[srclen - 1] == '\0')
+ 		srclen--;
+@@ -713,7 +713,7 @@
+  * @arg rem	initialized to len, holds bytes currently remaining in stream
+  */
+ #define nla_for_each_nested(pos, nla, rem) \
+-	for (pos = nla_data(nla), rem = nla_len(nla); \
++	for (pos = (struct nlattr *)nla_data(nla), rem = nla_len(nla); \
+ 	     nla_ok(pos, rem); \
+ 	     pos = nla_next(pos, &(rem)))
+ 
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/cache.h package/libnl-tiny/src/include/netlink/cache.h
+--- package/libnl-tiny/src/include/netlink/cache.h	2012-08-17 15:40:45.751971001 +0200
++++ package/libnl-tiny/src/include/netlink/cache.h	2012-08-18 14:47:25.025458001 +0200
+@@ -76,6 +76,7 @@
+ 						     struct nl_object *);
+ 
+ /* Iterators */
++#ifdef disabled
+ extern void			nl_cache_foreach(struct nl_cache *,
+ 						 void (*cb)(struct nl_object *,
+ 							    void *),
+@@ -86,6 +87,7 @@
+ 								   nl_object *,
+ 								   void *),
+ 							void *arg);
++#endif
+ 
+ /* --- cache management --- */
+ 
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/handlers.h package/libnl-tiny/src/include/netlink/handlers.h
+--- package/libnl-tiny/src/include/netlink/handlers.h	2012-08-17 15:40:45.751971001 +0200
++++ package/libnl-tiny/src/include/netlink/handlers.h	2012-08-18 14:47:25.025458001 +0200
+@@ -172,7 +172,7 @@
+ 	int i, err;
+ 
+ 	for (i = 0; i <= NL_CB_TYPE_MAX; i++) {
+-		err = nl_cb_set(cb, i, kind, func, arg);
++		err = nl_cb_set(cb,(enum nl_cb_type)i, kind, func, arg);
+ 		if (err < 0)
+ 			return err;
+ 	}
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/msg.h package/libnl-tiny/src/include/netlink/msg.h
+--- package/libnl-tiny/src/include/netlink/msg.h	2012-08-17 15:40:45.811971001 +0200
++++ package/libnl-tiny/src/include/netlink/msg.h	2012-08-18 14:47:25.045458001 +0200
+@@ -144,7 +144,7 @@
+  */
+ static inline struct nlattr *nlmsg_attrdata(const struct nlmsghdr *nlh, int hdrlen)
+ {
+-	unsigned char *data = nlmsg_data(nlh);
++	unsigned char *data = (unsigned char*)nlmsg_data(nlh);
+ 	return (struct nlattr *) (data + NLMSG_ALIGN(hdrlen));
+ }
+ 
+@@ -160,7 +160,7 @@
+ 
+ static inline int nlmsg_valid_hdr(const struct nlmsghdr *nlh, int hdrlen)
+ {
+-	if (nlh->nlmsg_len < nlmsg_msg_size(hdrlen))
++	if (nlh->nlmsg_len < (uint)nlmsg_msg_size(hdrlen))
+ 		return 0;
+ 
+ 	return 1;
+@@ -263,7 +263,7 @@
+ 	if (tmp == NULL)
+ 		return -NLE_NOMEM;
+ 
+-	n->nm_nlh = tmp;
++	n->nm_nlh = (struct nlmsghdr*)tmp;
+ 	n->nm_size = newlen;
+ 
+ 	return 0;
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/object.h package/libnl-tiny/src/include/netlink/object.h
+--- package/libnl-tiny/src/include/netlink/object.h	2012-08-17 15:40:45.751971001 +0200
++++ package/libnl-tiny/src/include/netlink/object.h	2012-08-18 14:47:25.025458001 +0200
+@@ -35,23 +35,26 @@
+ 
+ /* General */
+ extern struct nl_object *	nl_object_alloc(struct nl_object_ops *);
+-extern int			nl_object_alloc_name(const char *,
+-						     struct nl_object **);
+ extern void			nl_object_free(struct nl_object *);
+ extern struct nl_object *	nl_object_clone(struct nl_object *obj);
+-extern void			nl_object_get(struct nl_object *);
+-extern void			nl_object_put(struct nl_object *);
++
++#ifdef disabled
++
++extern int			nl_object_alloc_name(const char *,
++						     struct nl_object **);
+ extern void			nl_object_dump(struct nl_object *,
+ 					       struct nl_dump_params *);
+-extern int			nl_object_identical(struct nl_object *,
+-						    struct nl_object *);
++
+ extern uint32_t			nl_object_diff(struct nl_object *,
+ 					       struct nl_object *);
+ extern int			nl_object_match_filter(struct nl_object *,
+ 						       struct nl_object *);
++extern int			nl_object_identical(struct nl_object *,
++						    struct nl_object *);
+ extern char *			nl_object_attrs2str(struct nl_object *,
+ 						    uint32_t attrs, char *buf,
+ 						    size_t);
++#endif
+ /**
+  * Check whether this object is used by multiple users
+  * @arg obj		object to check
+@@ -63,6 +66,22 @@
+ }
+ 
+ 
++static inline void nl_object_get(struct nl_object *obj)
++{
++	obj->ce_refcnt++;
++}
++
++static inline void nl_object_put(struct nl_object *obj)
++{
++	if (!obj)
++		return;
++
++	obj->ce_refcnt--;
++
++	if (obj->ce_refcnt <= 0)
++		nl_object_free(obj);
++}
++
+ 
+ /**
+  * @name Marks
+@@ -99,6 +118,7 @@
+ 
+ /** @} */
+ 
++#ifdef disabled
+ /**
+  * Return list of attributes present in an object
+  * @arg obj		an object
+@@ -111,7 +131,7 @@
+ {
+ 	return nl_object_attrs2str(obj, obj->ce_mask, buf, len);
+ }
+-
++#endif
+ 
+ /**
+  * @name Attributes
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/types.h package/libnl-tiny/src/include/netlink/types.h
+--- package/libnl-tiny/src/include/netlink/types.h	2012-08-17 15:40:45.751971001 +0200
++++ package/libnl-tiny/src/include/netlink/types.h	2012-08-18 14:47:25.025458001 +0200
+@@ -108,10 +108,14 @@
+ 	unsigned int		dp_line;
+ };
+ 
++#ifndef __GNUC__
++#define __extension__
++#endif
++
+ #define min_t(type,x,y) \
+-	({ type __x = (x); type __y = (y); __x < __y ? __x: __y; })
++	__extension__({ type __x = (x); type __y = (y); __x < __y ? __x: __y; })
+ #define max_t(type,x,y) \
+-	({ type __x = (x); type __y = (y); __x > __y ? __x: __y; })
++	__extension__({ type __x = (x); type __y = (y); __x > __y ? __x: __y; })
+ 
+ 
+ #endif
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink-local.h package/libnl-tiny/src/include/netlink-local.h
+--- package/libnl-tiny/src/include/netlink-local.h	2012-08-17 15:40:45.811971001 +0200
++++ package/libnl-tiny/src/include/netlink-local.h	2012-08-18 14:47:25.055458001 +0200
+@@ -95,6 +95,7 @@
+ 
+ extern void dump_from_ops(struct nl_object *, struct nl_dump_params *);
+ 
++#ifdef disabled
+ static inline struct nl_cache *dp_cache(struct nl_object *obj)
+ {
+ 	if (obj->ce_cache == NULL)
+@@ -102,6 +103,7 @@
+ 
+ 	return obj->ce_cache;
+ }
++#endif
+ 
+ static inline int nl_cb_call(struct nl_cb *cb, int type, struct nl_msg *msg)
+ {
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/unl.h package/libnl-tiny/src/include/unl.h
+--- package/libnl-tiny/src/include/unl.h	1970-01-01 01:00:00.000000000 +0100
++++ package/libnl-tiny/src/include/unl.h	2012-08-18 14:47:25.055458001 +0200
+@@ -0,0 +1,47 @@
++#ifndef __UNL_H
++#define __UNL_H
++
++#include <netlink/netlink.h>
++#include <netlink/genl/genl.h>
++#include <netlink/genl/family.h>
++#include <stdbool.h>
++
++struct unl {
++	struct nl_sock *sock;
++	struct nl_cache *cache;
++	struct genl_family *family;
++	char *family_name;
++	int hdrlen;
++	bool loop_done;
++};
++
++int unl_genl_init(struct unl *unl, const char *family);
++void unl_free(struct unl *unl);
++
++typedef int (*unl_cb)(struct nl_msg *, void *);
++
++struct nl_msg *unl_genl_msg(struct unl *unl, int cmd, bool dump);
++int unl_genl_request(struct unl *unl, struct nl_msg *msg, unl_cb handler, void *arg);
++int unl_genl_request_single(struct unl *unl, struct nl_msg *msg, struct nl_msg **dest);
++void unl_genl_loop(struct unl *unl, unl_cb handler, void *arg);
++
++int unl_genl_multicast_id(struct unl *unl, const char *name);
++int unl_genl_subscribe(struct unl *unl, const char *name);
++int unl_genl_unsubscribe(struct unl *unl, const char *name);
++
++int unl_nl80211_phy_lookup(const char *name);
++int unl_nl80211_wdev_to_phy(struct unl *unl, int wdev);
++struct nl_msg *unl_nl80211_phy_msg(struct unl *unl, int phy, int cmd, bool dump);
++struct nl_msg *unl_nl80211_vif_msg(struct unl *unl, int dev, int cmd, bool dump);
++
++static inline void unl_loop_done(struct unl *unl)
++{
++	unl->loop_done = true;
++}
++
++static inline struct nlattr *unl_find_attr(struct unl *unl, struct nl_msg *msg, int attr)
++{
++	return nlmsg_find_attr(nlmsg_hdr(msg), unl->hdrlen, attr);
++}
++
++#endif
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/Makefile package/libnl-tiny/src/Makefile
+--- package/libnl-tiny/src/Makefile	2012-08-17 15:40:45.871971001 +0200
++++ package/libnl-tiny/src/Makefile	2012-08-18 14:47:25.085458001 +0200
+@@ -11,7 +11,7 @@
+ 	$(CC) $(WFLAGS) -c -o $@ $(INCLUDES) $(CFLAGS) $<
+ 
+ LIBNL_OBJ=nl.o handlers.o msg.o attr.o cache.o cache_mngt.o object.o socket.o error.o
+-GENL_OBJ=genl.o genl_family.o genl_ctrl.o genl_mngt.o
++GENL_OBJ=genl.o genl_family.o genl_ctrl.o genl_mngt.o unl.o
+ 
+ $(LIBNAME): $(LIBNL_OBJ) $(GENL_OBJ)
+ 	$(CC) -shared -o $@ $^
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/object.c package/libnl-tiny/src/object.c
+--- package/libnl-tiny/src/object.c	2012-08-17 15:40:45.841971001 +0200
++++ package/libnl-tiny/src/object.c	2012-08-18 14:47:25.065458001 +0200
+@@ -156,37 +156,6 @@
+  * @{
+  */
+ 
+-/**
+- * Acquire a reference on a object
+- * @arg obj		object to acquire reference from
+- */
+-void nl_object_get(struct nl_object *obj)
+-{
+-	obj->ce_refcnt++;
+-	NL_DBG(4, "New reference to object %p, total %d\n",
+-	       obj, obj->ce_refcnt);
+-}
+-
+-/**
+- * Release a reference from an object
+- * @arg obj		object to release reference from
+- */
+-void nl_object_put(struct nl_object *obj)
+-{
+-	if (!obj)
+-		return;
+-
+-	obj->ce_refcnt--;
+-	NL_DBG(4, "Returned object reference %p, %d remaining\n",
+-	       obj, obj->ce_refcnt);
+-
+-	if (obj->ce_refcnt < 0)
+-		BUG();
+-
+-	if (obj->ce_refcnt <= 0)
+-		nl_object_free(obj);
+-}
+-
+ /** @} */
+ 
+ /**
+@@ -235,7 +204,6 @@
+ 
+ 	return !(ops->oo_compare(a, b, req_attrs, 0));
+ }
+-#endif
+ 
+ /**
+  * Compute bitmask representing difference in attribute values
+@@ -304,6 +272,8 @@
+ 	}
+ }
+ 
++#endif
++
+ /** @} */
+ 
+ /** @} */
+diff '--exclude=.svn' -Nur package/libnl-tiny/src/unl.c package/libnl-tiny/src/unl.c
+--- package/libnl-tiny/src/unl.c	1970-01-01 01:00:00.000000000 +0100
++++ package/libnl-tiny/src/unl.c	2012-08-18 14:47:25.065458001 +0200
+@@ -0,0 +1,290 @@
++#define _GNU_SOURCE
++#include <netlink/netlink.h>
++#include <netlink/genl/genl.h>
++#include <netlink/genl/ctrl.h>
++#include <netlink/genl/family.h>
++#include <sys/types.h>
++#include <net/if.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <linux/nl80211.h>
++
++#include "unl.h"
++
++static int unl_init(struct unl *unl)
++{
++	unl->sock = nl_socket_alloc();
++	if (!unl->sock)
++		return -1;
++
++	return 0;
++}
++
++int unl_genl_init(struct unl *unl, const char *family)
++{
++	memset(unl, 0, sizeof(*unl));
++
++	if (unl_init(unl))
++		goto error_out;
++
++	unl->hdrlen = NLMSG_ALIGN(sizeof(struct genlmsghdr));
++	unl->family_name = strdup(family);
++	if (!unl->family_name)
++		goto error;
++
++	if (genl_connect(unl->sock))
++		goto error;
++
++	if (genl_ctrl_alloc_cache(unl->sock, &unl->cache))
++		goto error;
++
++	unl->family = genl_ctrl_search_by_name(unl->cache, family);
++	if (!unl->family)
++		goto error;
++
++	return 0;
++
++error:
++	unl_free(unl);
++error_out:
++	return -1;
++}
++
++void unl_free(struct unl *unl)
++{
++	if (unl->family_name)
++		free(unl->family_name);
++
++	if (unl->sock)
++		nl_socket_free(unl->sock);
++
++	if (unl->cache)
++		nl_cache_free(unl->cache);
++
++	memset(unl, 0, sizeof(*unl));
++}
++
++static int
++ack_handler(struct nl_msg *msg, void *arg)
++{
++	int *err = arg;
++	*err = 0;
++	return NL_STOP;
++}
++
++static int
++finish_handler(struct nl_msg *msg, void *arg)
++{
++	int *err = arg;
++	*err = 0;
++	return NL_SKIP;
++}
++
++static int
++error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err, void *arg)
++{
++	int *ret = arg;
++	*ret = err->error;
++	return NL_SKIP;
++}
++
++struct nl_msg *unl_genl_msg(struct unl *unl, int cmd, bool dump)
++{
++	struct nl_msg *msg;
++	int flags = 0;
++
++	msg = nlmsg_alloc();
++	if (!msg)
++		goto out;
++
++	if (dump)
++		flags |= NLM_F_DUMP;
++
++	genlmsg_put(msg, NL_AUTO_PID, NL_AUTO_SEQ,
++		    genl_family_get_id(unl->family), 0, flags, cmd, 0);
++
++out:
++	return msg;
++}
++
++int unl_genl_request(struct unl *unl, struct nl_msg *msg, unl_cb handler, void *arg)
++{
++	struct nlmsghdr *nlh;
++	struct nl_cb *cb;
++	int err;
++
++	cb = nl_cb_alloc(NL_CB_CUSTOM);
++	nlh = nlmsg_hdr(msg);
++
++	err = nl_send_auto_complete(unl->sock, msg);
++	if (err < 0)
++		goto out;
++
++	err = 1;
++	nl_cb_err(cb, NL_CB_CUSTOM, error_handler, &err);
++	nl_cb_set(cb, NL_CB_FINISH, NL_CB_CUSTOM, finish_handler, &err);
++	nl_cb_set(cb, NL_CB_ACK, NL_CB_CUSTOM, ack_handler, &err);
++	if (handler)
++		nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, handler, arg);
++
++	while (err > 0)
++		nl_recvmsgs(unl->sock, cb);
++
++out:
++	nlmsg_free(msg);
++	nl_cb_put(cb);
++	return err;
++}
++
++static int request_single_cb(struct nl_msg *msg, void *arg)
++{
++	struct nl_msg **dest = arg;
++
++	if (!*dest) {
++		nlmsg_get(msg);
++		*dest = msg;
++	}
++	return NL_SKIP;
++}
++
++int unl_genl_request_single(struct unl *unl, struct nl_msg *msg, struct nl_msg **dest)
++{
++	*dest = NULL;
++	return unl_genl_request(unl, msg, request_single_cb, dest);
++}
++
++static int no_seq_check(struct nl_msg *msg, void *arg)
++{
++	return NL_OK;
++}
++
++void unl_genl_loop(struct unl *unl, unl_cb handler, void *arg)
++{
++	struct nl_cb *cb;
++
++	cb = nl_cb_alloc(NL_CB_CUSTOM);
++	unl->loop_done = false;
++	nl_cb_set(cb, NL_CB_SEQ_CHECK, NL_CB_CUSTOM, no_seq_check, NULL);
++	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, handler, arg);
++
++	while (!unl->loop_done)
++		nl_recvmsgs(unl->sock, cb);
++
++	nl_cb_put(cb);
++}
++
++int unl_genl_multicast_id(struct unl *unl, const char *name)
++{
++	struct nlattr *tb[CTRL_ATTR_MCAST_GRP_MAX + 1];
++	struct nlattr *groups, *group;
++	struct nl_msg *msg;
++	int ctrlid;
++	int ret = -1;
++	int rem;
++
++	msg = nlmsg_alloc();
++	if (!msg)
++		return -1;
++
++	ctrlid = genl_ctrl_resolve(unl->sock, "nlctrl");
++	genlmsg_put(msg, 0, 0, ctrlid, 0, 0, CTRL_CMD_GETFAMILY, 0);
++	NLA_PUT_STRING(msg, CTRL_ATTR_FAMILY_NAME, unl->family_name);
++	unl_genl_request_single(unl, msg, &msg);
++	if (!msg)
++		return -1;
++
++	groups = unl_find_attr(unl, msg, CTRL_ATTR_MCAST_GROUPS);
++	if (!groups)
++		goto nla_put_failure;
++
++	nla_for_each_nested(group, groups, rem) {
++		const char *gn;
++
++		nla_parse(tb, CTRL_ATTR_MCAST_GRP_MAX, nla_data(group),
++			  nla_len(group), NULL);
++
++		if (!tb[CTRL_ATTR_MCAST_GRP_NAME] ||
++		    !tb[CTRL_ATTR_MCAST_GRP_ID])
++			continue;
++
++		gn = nla_data(tb[CTRL_ATTR_MCAST_GRP_NAME]);
++		if (strcmp(gn, name) != 0)
++			continue;
++
++		ret = nla_get_u32(tb[CTRL_ATTR_MCAST_GRP_ID]);
++		break;
++	}
++
++nla_put_failure:
++	nlmsg_free(msg);
++	return ret;
++}
++
++int unl_genl_subscribe(struct unl *unl, const char *name)
++{
++	int mcid;
++
++	mcid = unl_genl_multicast_id(unl, name);
++	if (mcid < 0)
++		return mcid;
++
++	return nl_socket_add_membership(unl->sock, mcid);
++}
++
++int unl_genl_unsubscribe(struct unl *unl, const char *name)
++{
++	int mcid;
++
++	mcid = unl_genl_multicast_id(unl, name);
++	if (mcid < 0)
++		return mcid;
++
++	return nl_socket_drop_membership(unl->sock, mcid);
++}
++
++int unl_nl80211_phy_lookup(const char *name)
++{
++	char buf[32];
++	int fd, pos;
++
++	snprintf(buf, sizeof(buf), "/sys/class/ieee80211/%s/index", name);
++
++	fd = open(buf, O_RDONLY);
++	if (fd < 0)
++		return -1;
++	pos = read(fd, buf, sizeof(buf) - 1);
++	if (pos < 0) {
++		close(fd);
++		return -1;
++	}
++	buf[pos] = '\0';
++	close(fd);
++	return atoi(buf);
++}
++
++int unl_nl80211_wdev_to_phy(struct unl *unl, int wdev)
++{
++	struct nl_msg *msg;
++	struct nlattr *attr;
++	int ret = -1;
++
++	msg = unl_genl_msg(unl, NL80211_CMD_GET_INTERFACE, false);
++	if (!msg)
++		return -1;
++
++	NLA_PUT_U32(msg, NL80211_ATTR_IFINDEX, wdev);
++	if (unl_genl_request_single(unl, msg, &msg) < 0)
++		return -1;
++
++	attr = unl_find_attr(unl, msg, NL80211_ATTR_WIPHY);
++	if (!attr)
++		goto out;
++
++	ret = nla_get_u32(attr);
++out:
++nla_put_failure:
++	nlmsg_free(msg);
++	return ret;
++}
++
++

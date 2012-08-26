@@ -433,13 +433,16 @@ for board in $boards ; do
 				ar71xx)
 					PATCHES="$PATCHES routerstation-bridge-wan-lan.patch" #no trunk
 					PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch" #no trunk
+					PATCHES="$PATCHES ar71xx-package-mac80211-platform-compat.patch"
 				;;
 				atheros)
 					PATCHES="$PATCHES atheros-disable-pci-usb.patch" #no trunk
 					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
+					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
 				;;
 				ixp4xx)
 					PATCHES="$PATCHES  target-ixp4xx-avila-sysupgrade.patch" #no trunk
+					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
 				;;
 				brcm-2.4)
 					PATCHES="$PATCHES brcm-2.4-reboot-fix.patch" #no trunk
@@ -447,10 +450,15 @@ for board in $boards ; do
 				x86_kvm_guest)
 #					PATCHES="$PATCHES x86-virtio-usb-boot.patch"
 					PATCHES="$PATCHES add-qcow-images.patch"
+					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
 				;;
 #				x86)
 #					PATCHES="$PATCHES x86-usb-boot.patch"
+#					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
 #				;;
+				*)
+					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
+				;;
 			esac
 			;;
 	esac
@@ -461,9 +469,7 @@ for board in $boards ; do
 	PATCHES="$PATCHES package-iw-3.3.patch"
 	PATCHES="$PATCHES package-libnl-tiny-0.1.3.patch"
 	PATCHES="$PATCHES package-mac80211-trunk.patch"
-	PATCHES="$PATCHES package-mac80211-regdb.patch"
-	PATCHES="$PATCHES package-mac80211-platform-compat.patch"
-	PATCHES="$PATCHES package-mac80211-disable-cpufreq_cpu_set.patch"
+	PATCHES="$PATCHES package-mac80211-backport.patch"
 	#PATCHES="$PATCHES package-mac80211-dir300.patch"
 	#PATCHES="$PATCHES package-iwinfo-1.patch" #no trunk
 	#PATCHES="$PATCHES package-iwinfo-2.patch" #no trunk

@@ -1,0 +1,13 @@
+Index: target/linux/ar71xx/files/include/linux/ath9k_platform.h
+===================================================================
+--- target/linux/ar71xx/files/include/linux/ath9k_platform.h	(Revision 33265)
++++ target/linux/ar71xx/files/include/linux/ath9k_platform.h	(Arbeitskopie)
+@@ -29,6 +29,7 @@
+ 	u32 gpio_mask;
+ 	u32 gpio_val;
+ 
++	bool endian_check;
+ 	bool is_clk_25mhz;
+ 	int (*get_mac_revision)(void);
+ 	int (*external_reset)(void);
+

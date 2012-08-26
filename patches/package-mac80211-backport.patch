@@ -1,8 +1,7 @@
-Index: package/mac80211/files/regdb.txt
-===================================================================
---- package/mac80211/files/regdb.txt	(Revision 33271)
-+++ package/mac80211/files/regdb.txt	(Arbeitskopie)
-@@ -1,697 +1,39 @@
+diff --exclude .svn -Nru package/mac80211/files/regdb.txt package/mac80211/files/regdb.txt
+--- package/mac80211/files/regdb.txt	2012-08-26 21:34:53.013408001 +0200
++++ package/mac80211/files/regdb.txt	2012-08-26 15:03:08.058220002 +0200
+@@ -1,697 +1,37 @@
  # This is the world regulatory domain
  country 00:
 -	(2402 - 2472 @ 40), (3, 20)
@@ -15,21 +14,18 @@ Index: package/mac80211/files/regdb.txt
 -        # NB: 5260 MHz - 5700 MHz requies DFS
 -        # Channel 149 - 165
 -        (5735 - 5835 @ 40), (3, 20), PASSIVE-SCAN, NO-IBSS
-+	(2400 - 2494 @ 40), (N/A, 200 mW)
-+	(5150 - 5250 @ 40), (N/A, 1000 mW)
-+	(5250 - 5350 @ 40), (N/A, 1000 mW)
-+	(5470 - 5725 @ 40), (N/A, 1000 mW)
++	(2400 - 2494 @ 40), (N/A, 20)
++	(5150 - 5250 @ 40), (N/A, 30)
++	(5250 - 5350 @ 40), (N/A, 30)
++	(5470 - 5725 @ 40), (N/A, 30)
  
 -
 -country AE:
-+country AT:
- 	(2402 - 2482 @ 40), (N/A, 20)
- 	(5170 - 5250 @ 40), (N/A, 20)
+-	(2402 - 2482 @ 40), (N/A, 20)
+-	(5170 - 5250 @ 40), (N/A, 20)
 -	(5250 - 5330 @ 40), (N/A, 20), DFS
 -	(5490 - 5710 @ 40), (N/A, 27), DFS
-+	(5250 - 5330 @ 40), (N/A, 20)
-+	(5490 - 5710 @ 40), (N/A, 27)
- 
+-
 -country AL:
 -	(2402 - 2482 @ 20), (N/A, 20)
 -
@@ -64,8 +60,9 @@ Index: package/mac80211/files/regdb.txt
 -	(5735 - 5835 @ 40), (3, 30)
 -
 -country AW:
--	(2402 - 2482 @ 40), (N/A, 20)
--	(5170 - 5250 @ 40), (N/A, 20)
++country AT:
+ 	(2402 - 2482 @ 40), (N/A, 20)
+ 	(5170 - 5250 @ 40), (N/A, 20)
 -	(5250 - 5330 @ 40), (N/A, 20), DFS
 -	(5490 - 5710 @ 40), (N/A, 27), DFS
 -
@@ -138,52 +135,38 @@ Index: package/mac80211/files/regdb.txt
 -country BZ:
 -	(2402 - 2482 @ 40), (N/A, 30)
 -	(5735 - 5835 @ 40), (N/A, 30)
--
++	(5250 - 5330 @ 40), (N/A, 20)
++	(5490 - 5710 @ 40), (N/A, 27)
+ 
  country CA:
 -	(2402 - 2472 @ 40), (3, 27)
 -	(5170 - 5250 @ 40), (3, 17)
 -	(5250 - 5330 @ 40), (3, 20), DFS
 -	(5490 - 5710 @ 40), (3, 20), DFS
 -	(5735 - 5835 @ 40), (3, 30)
-+	(2400 - 2494 @ 40), (N/A, 200 mW)
-+	(5150 - 5250 @ 40), (N/A, 1000 mW)
-+	(5250 - 5350 @ 40), (N/A, 1000 mW)
-+	(5470 - 5725 @ 40), (N/A, 1000 mW)
- 
+-
 -country CH: DFS-ETSI
-+country CH:
- 	(2402 - 2482 @ 40), (N/A, 20)
- 	(5170 - 5250 @ 40), (N/A, 20)
+-	(2402 - 2482 @ 40), (N/A, 20)
+-	(5170 - 5250 @ 40), (N/A, 20)
 -	(5250 - 5330 @ 40), (N/A, 20), DFS
 -	(5490 - 5710 @ 40), (N/A, 27), DFS
-+	(5250 - 5330 @ 40), (N/A, 20)
-+	(5490 - 5710 @ 40), (N/A, 27)
- 
+-
 -country CL:
 -	(2402 - 2482 @ 40), (N/A, 20)
 -	(5170 - 5250 @ 40), (N/A, 20)
 -	(5250 - 5330 @ 40), (N/A, 20), DFS
 -	(5735 - 5835 @ 40), (N/A, 20)
-+country DE:
-+	(2400 - 2494 @ 40), (N/A, 200 mW)
-+	(5150 - 5250 @ 40), (N/A, 1000 mW)
-+	(5250 - 5350 @ 40), (N/A, 1000 mW)
-+	(5470 - 5725 @ 40), (N/A, 1000 mW)
- 
+-
 -country CN:
 -	(2402 - 2482 @ 40), (N/A, 20)
 -	(5735 - 5835 @ 40), (N/A, 30)
 -
 -country CO:
-+country US:
- 	(2402 - 2472 @ 40), (3, 27)
- 	(5170 - 5250 @ 40), (3, 17)
+-	(2402 - 2472 @ 40), (3, 27)
+-	(5170 - 5250 @ 40), (3, 17)
 -	(5250 - 5330 @ 40), (3, 23), DFS
-+	(5250 - 5330 @ 40), (3, 20)
-+	(5490 - 5600 @ 40), (3, 20)
-+	(5650 - 5710 @ 40), (3, 20)
- 	(5735 - 5835 @ 40), (3, 30)
- 
+-	(5735 - 5835 @ 40), (3, 30)
+-
 -country CR:
 -	(2402 - 2482 @ 40), (N/A, 20)
 -	(5170 - 5250 @ 20), (3, 17)
@@ -722,4 +705,130 @@ Index: package/mac80211/files/regdb.txt
 -
 -country ZW:
 -	(2402 - 2482 @ 40), (N/A, 20)
--
++	(2400 - 2494 @ 40), (N/A, 20)
++	(5150 - 5250 @ 40), (N/A, 30)
++	(5250 - 5350 @ 40), (N/A, 30)
++	(5470 - 5725 @ 40), (N/A, 30)
++
++country CH:
++	(2402 - 2482 @ 40), (N/A, 20)
++	(5170 - 5250 @ 40), (N/A, 30)
++	(5250 - 5330 @ 40), (N/A, 30)
++	(5490 - 5710 @ 40), (N/A, 30)
++
++country DE:
++	(2400 - 2494 @ 40), (N/A, 20)
++	(5150 - 5250 @ 40), (N/A, 30)
++	(5250 - 5350 @ 40), (N/A, 30)
++	(5470 - 5725 @ 40), (N/A, 30)
++
++country US:
++	(2400 - 2494 @ 40), (N/A, 20)
++	(5150 - 5250 @ 40), (N/A, 30)
++	(5250 - 5350 @ 40), (N/A, 30)
++	(5470 - 5725 @ 40), (N/A, 30)
+ 
+diff --exclude .svn -Nru package/mac80211/Makefile package/mac80211/Makefile
+--- package/mac80211/Makefile	2012-08-18 14:47:33.135458002 +0200
++++ package/mac80211/Makefile	2012-08-26 20:17:18.240121002 +0200
+@@ -164,7 +164,7 @@
+ 
+ define KernelPackage/p54-common
+   $(call KernelPackage/p54/Default)
+-  DEPENDS+= @PCI_SUPPORT||@USB_SUPPORT||@TARGET_omap24xx +kmod-mac80211 +kmod-lib-crc-ccitt
++  DEPENDS+= @PCI_SUPPORT||@USB_SUPPORT||@TARGET_omap24xx +kmod-mac80211 +kmod-crc-ccitt
+   TITLE+= (COMMON)
+   FILES:=$(PKG_BUILD_DIR)/drivers/net/wireless/p54/p54common.ko
+   AUTOLOAD:=$(call AutoLoad,30,p54common)
+@@ -207,7 +207,7 @@
+ 
+ define KernelPackage/rt2x00-lib
+ $(call KernelPackage/rt2x00/Default)
+-  DEPENDS+= @(PCI_SUPPORT||USB_SUPPORT||TARGET_ramips) +kmod-mac80211 +kmod-lib-crc-itu-t
++  DEPENDS+= @(PCI_SUPPORT||USB_SUPPORT||TARGET_ramips) +kmod-mac80211 +kmod-crc-itu-t
+   TITLE+= (LIB)
+   FILES:=$(PKG_BUILD_DIR)/drivers/net/wireless/rt2x00/rt2x00lib.ko
+   AUTOLOAD:=$(call AutoLoad,25,rt2x00lib)
+@@ -308,7 +308,7 @@
+ 
+ define KernelPackage/rt2800-pci
+ $(call KernelPackage/rt2x00/Default)
+-  DEPENDS+= @(PCI_SUPPORT||TARGET_ramips) +kmod-rt2x00-pci +kmod-rt2800-lib +kmod-lib-crc-ccitt +TARGET_ramips:kmod-rt2x00-soc
++  DEPENDS+= @(PCI_SUPPORT||TARGET_ramips) +kmod-rt2x00-pci +kmod-rt2800-lib +kmod-crc-ccitt +TARGET_ramips:kmod-rt2x00-soc
+   TITLE+= (RT2860 PCI)
+   FILES:=$(PKG_BUILD_DIR)/drivers/net/wireless/rt2x00/rt2800pci.ko
+   AUTOLOAD:=$(call AutoLoad,28,rt2800pci)
+@@ -316,7 +316,7 @@
+ 
+ define KernelPackage/rt2800-usb
+ $(call KernelPackage/rt2x00/Default)
+-  DEPENDS+= @USB_SUPPORT +kmod-rt2x00-usb +kmod-rt2800-lib +kmod-lib-crc-ccitt
++  DEPENDS+= @USB_SUPPORT +kmod-rt2x00-usb +kmod-rt2800-lib +kmod-crc-ccitt
+   TITLE+= (RT2870 USB)
+   FILES:=$(PKG_BUILD_DIR)/drivers/net/wireless/rt2x00/rt2800usb.ko
+   AUTOLOAD:=$(call AutoLoad,28,rt2800usb)
+@@ -1152,7 +1152,6 @@
+ 	$(if $(CONFIG_PACKAGE_B43_PHY_N),-DCONFIG_B43_PHY_N) \
+ 	$(if $(CONFIG_PACKAGE_B43_PHY_HT),-DCONFIG_B43_PHY_HT) \
+ 	$(if $(CONFIG_PACKAGE_B43_PHY_LCN),-DCONFIG_B43_PHY_LCN) \
+-	-DCONFIG_B43_BCMA -DCONFIG_B43_BCMA_EXTRA \
+ 	-DCONFIG_B43_SSB \
+ 	$(if $(CONFIG_PACKAGE_RT2X00_LIB_DEBUGFS),-DCONFIG_RT2X00_LIB_DEBUGFS) \
+ 	$(if $(CONFIG_PACKAGE_RT2X00_DEBUG),-DCONFIG_RT2X00_DEBUG) \
+@@ -1196,11 +1195,9 @@
+ 	CONFIG_B43LEGACY=$(if $(CONFIG_PACKAGE_kmod-b43legacy),m) \
+ 	CONFIG_B43_DEBUG=$(if $(CONFIG_PACKAGE_B43_DEBUG),y) \
+ 	CONFIG_B43_PIO=$(if $(CONFIG_PACKAGE_B43_PIO),y) \
+-	CONFIG_B43_BCMA_PIO=$(if $(CONFIG_PACKAGE_B43_PIO),y) \
+ 	CONFIG_B43_PHY_N=$(if $(CONFIG_PACKAGE_B43_PHY_N),y) \
+ 	CONFIG_B43_PHY_HT=$(if $(CONFIG_PACKAGE_B43_PHY_HT),y) \
+ 	CONFIG_B43_PHY_LCN=$(if $(CONFIG_PACKAGE_B43_PHY_LCN),y) \
+-	CONFIG_B43_BCMA=y \
+ 	CONFIG_B43_SSB=y \
+ 	CONFIG_ATH_COMMON=$(if $(CONFIG_PACKAGE_kmod-ath),m) \
+ 	CONFIG_ATH_DEBUG=$(if $(CONFIG_PACKAGE_ATH_DEBUG),y) \
+@@ -1328,7 +1325,7 @@
+ 	$(TAR) -C $(PKG_BUILD_DIR) -xjf $(DL_DIR)/$(ZD1211FW_NAME)-$(ZD1211FW_VERSION).tar.bz2
+ 	$(TAR) -C $(PKG_BUILD_DIR) -xjf $(DL_DIR)/$(PKG_LINUX_FIRMWARE_SOURCE)
+ 	rm -rf $(PKG_BUILD_DIR)/include/linux/ssb
+-	rm -rf $(PKG_BUILD_DIR)/include/linux/bcma
++	#rm -rf $(PKG_BUILD_DIR)/include/linux/bcma
+ 	rm -rf $(PKG_BUILD_DIR)/include/net/bluetooth/
+ 	rm -f $(PKG_BUILD_DIR)/include/linux/eeprom_93cx6.h
+ 	rm -f $(PKG_BUILD_DIR)/include/linux/wl12xx.h
+@@ -1347,8 +1344,8 @@
+ 
+ define Build/Configure
+ 	cmp $(PKG_BUILD_DIR)/include/linux/ath9k_platform.h $(LINUX_DIR)/include/linux/ath9k_platform.h
+-	cmp $(PKG_BUILD_DIR)/include/linux/ath5k_platform.h $(LINUX_DIR)/include/linux/ath5k_platform.h
+-	cmp $(PKG_BUILD_DIR)/include/linux/rt2x00_platform.h $(LINUX_DIR)/include/linux/rt2x00_platform.h
++	#cmp $(PKG_BUILD_DIR)/include/linux/ath5k_platform.h $(LINUX_DIR)/include/linux/ath5k_platform.h
++	#cmp $(PKG_BUILD_DIR)/include/linux/rt2x00_platform.h $(LINUX_DIR)/include/linux/rt2x00_platform.h
+ endef
+ 
+ define Build/Compile
+diff --exclude .svn -Nru package/mac80211/patches/995-disable-cpufreq_cpu_set.patch package/mac80211/patches/995-disable-cpufreq_cpu_set.patch
+--- package/mac80211/patches/995-disable-cpufreq_cpu_set.patch	1970-01-01 01:00:00.000000000 +0100
++++ package/mac80211/patches/995-disable-cpufreq_cpu_set.patch	2012-08-26 15:03:08.058220002 +0200
+@@ -0,0 +1,21 @@
++--- compat-wireless-2012-07-16/compat/compat-3.1.c.orig	2012-08-25 00:17:36.185376003 +0200
+++++ compat-wireless-2012-07-16/compat/compat-3.1.c	2012-08-25 00:18:05.935376001 +0200
++@@ -21,13 +21,13 @@
++ 
++ unsigned int cpufreq_quick_get_max(unsigned int cpu)
++ {
++-	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+++	//struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++ 	unsigned int ret_freq = 0;
++ 
++-	if (policy) {
++-		ret_freq = policy->max;
++-		cpufreq_cpu_put(policy);
++-	}
+++	//if (policy) {
+++	//	ret_freq = policy->max;
+++	//	cpufreq_cpu_put(policy);
+++	//}
++ 
++ 	return ret_freq;
++ }

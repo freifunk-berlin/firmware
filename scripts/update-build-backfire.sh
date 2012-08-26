@@ -372,7 +372,7 @@ for board in $boards ; do
 #	rm -rf staging_dir
 	rm -rf files
 	mkdir -p files
-	rm -f $(svn status)
+	rm -rf $(svn status)
 	case $verm in
 		trunk) 
 			#svn co svn://svn.openwrt.org/openwrt/trunk ./  || exit 0

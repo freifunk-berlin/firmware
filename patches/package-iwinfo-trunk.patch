@@ -1,12 +1,12 @@
-diff -Nru -x .svn package/iwinfo/Makefile package/iwinfo/Makefile
---- package/iwinfo/Makefile	2012-02-25 18:41:41.316147398 +0100
-+++ package/iwinfo/Makefile	2012-02-25 18:58:52.394896667 +0100
+diff --exclude .svn -Nru package/iwinfo/Makefile ../openwrt-trunk/package/iwinfo/Makefile
+--- package/iwinfo/Makefile	2012-08-17 15:40:46.301971001 +0200
++++ ../openwrt-trunk/package/iwinfo/Makefile	2012-08-18 14:47:25.165458001 +0200
 @@ -7,9 +7,15 @@
  include $(TOPDIR)/rules.mk
  
  PKG_NAME:=libiwinfo
 -PKG_RELEASE:=18.2
-+PKG_RELEASE:=31
++PKG_RELEASE:=35
  
  PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 +PKG_CONFIG_DEPENDS := \
@@ -18,9 +18,9 @@ diff -Nru -x .svn package/iwinfo/Makefile package/iwinfo/Makefile
  
  include $(INCLUDE_DIR)/package.mk
  
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/api/broadcom.h package/iwinfo/src/include/iwinfo/api/broadcom.h
---- package/iwinfo/src/include/iwinfo/api/broadcom.h	2011-12-12 14:23:17.799312590 +0100
-+++ package/iwinfo/src/include/iwinfo/api/broadcom.h	2012-02-25 18:58:52.251145626 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/broadcom.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/broadcom.h
+--- package/iwinfo/src/include/iwinfo/api/broadcom.h	2012-08-17 15:40:46.121971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/broadcom.h	2012-08-18 14:47:25.135458001 +0200
 @@ -64,6 +64,30 @@
  	uint16_t				foo;
  } wl_sta_rssi_t;
@@ -52,9 +52,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/api/broadcom.h package/iwinf
  typedef struct wlc_ssid {
  	uint32_t				ssid_len;
  	unsigned char			ssid[32];
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/api/madwifi.h package/iwinfo/src/include/iwinfo/api/madwifi.h
---- package/iwinfo/src/include/iwinfo/api/madwifi.h	2011-12-12 14:23:17.798312070 +0100
-+++ package/iwinfo/src/include/iwinfo/api/madwifi.h	2012-02-25 18:58:52.250145746 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/madwifi.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/madwifi.h
+--- package/iwinfo/src/include/iwinfo/api/madwifi.h	2012-08-17 15:40:46.121971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/madwifi.h	2012-08-18 14:47:25.135458001 +0200
 @@ -22,8 +22,10 @@
  #define _MADWIFI_H
  
@@ -68,9 +68,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/api/madwifi.h package/iwinfo
  
  
  /* ieee80211_crypto.h */
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/api/nl80211.h package/iwinfo/src/include/iwinfo/api/nl80211.h
---- package/iwinfo/src/include/iwinfo/api/nl80211.h	2011-12-12 14:23:17.799312590 +0100
-+++ package/iwinfo/src/include/iwinfo/api/nl80211.h	2012-02-25 18:58:52.251145626 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/nl80211.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/nl80211.h
+--- package/iwinfo/src/include/iwinfo/api/nl80211.h	2012-08-17 15:40:46.121971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/nl80211.h	2012-08-18 14:47:25.135458001 +0200
 @@ -6,7 +6,7 @@
   * Copyright 2006-2010 Johannes Berg <johannes@sipsolutions.net>
   * Copyright 2008 Michael Wu <flamingice@sourmilk.net>
@@ -1458,9 +1458,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/api/nl80211.h package/iwinfo
 +};
 +
  #endif /* __LINUX_NL80211_H */
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/lua.h package/iwinfo/src/include/iwinfo/lua.h
---- package/iwinfo/src/include/iwinfo/lua.h	2012-01-13 22:34:25.062365948 +0100
-+++ package/iwinfo/src/include/iwinfo/lua.h	2012-01-03 22:37:23.045993613 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/lua.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/lua.h
+--- package/iwinfo/src/include/iwinfo/lua.h	2012-08-17 15:40:46.131971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/lua.h	2012-08-18 14:47:25.135458001 +0200
 @@ -71,11 +71,10 @@
  		return 1;										\
  	}
@@ -1474,9 +1474,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/lua.h package/iwinfo/src/inc
  
  #endif
 -
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/madwifi.h package/iwinfo/src/include/iwinfo/madwifi.h
---- package/iwinfo/src/include/iwinfo/madwifi.h	2012-01-13 22:34:25.053005870 +0100
-+++ package/iwinfo/src/include/iwinfo/madwifi.h	2012-02-25 18:58:52.276145724 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/madwifi.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/madwifi.h
+--- package/iwinfo/src/include/iwinfo/madwifi.h	2012-08-17 15:40:46.131971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/madwifi.h	2012-08-18 14:47:25.135458001 +0200
 @@ -26,13 +26,15 @@
  #include "iwinfo/api/madwifi.h"
  
@@ -1552,9 +1552,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/madwifi.h package/iwinfo/src
  };
  
  #endif
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/nl80211.h package/iwinfo/src/include/iwinfo/nl80211.h
---- package/iwinfo/src/include/iwinfo/nl80211.h	2012-01-13 22:34:25.099005771 +0100
-+++ package/iwinfo/src/include/iwinfo/nl80211.h	2012-02-25 18:58:52.277146565 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/nl80211.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/nl80211.h
+--- package/iwinfo/src/include/iwinfo/nl80211.h	2012-08-17 15:40:46.131971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/nl80211.h	2012-08-18 14:47:25.135458001 +0200
 @@ -39,6 +39,7 @@
  	struct nl_sock *nl_sock;
  	struct nl_cache *nl_cache;
@@ -1655,9 +1655,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/nl80211.h package/iwinfo/src
  };
  
  #endif
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/utils.h package/iwinfo/src/include/iwinfo/utils.h
---- package/iwinfo/src/include/iwinfo/utils.h	2012-01-13 22:34:25.062365948 +0100
-+++ package/iwinfo/src/include/iwinfo/utils.h	2012-02-25 18:58:52.277146565 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/utils.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/utils.h
+--- package/iwinfo/src/include/iwinfo/utils.h	2012-08-17 15:40:46.131971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/utils.h	2012-08-18 14:47:25.135458001 +0200
 @@ -37,4 +37,11 @@
  
  void iwinfo_close(void);
@@ -1670,9 +1670,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/utils.h package/iwinfo/src/i
 +					  uint8_t defcipher, uint8_t defauth);
 +
  #endif
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/wext.h package/iwinfo/src/include/iwinfo/wext.h
---- package/iwinfo/src/include/iwinfo/wext.h	2012-01-13 22:34:25.100005651 +0100
-+++ package/iwinfo/src/include/iwinfo/wext.h	2012-02-25 18:58:52.278145966 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/wext.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/wext.h
+--- package/iwinfo/src/include/iwinfo/wext.h	2012-08-17 15:40:46.131971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/wext.h	2012-08-18 14:47:25.135458001 +0200
 @@ -27,13 +27,15 @@
  
  
@@ -1748,9 +1748,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/wext.h package/iwinfo/src/in
  };
  
  #endif
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo/wl.h package/iwinfo/src/include/iwinfo/wl.h
---- package/iwinfo/src/include/iwinfo/wl.h	2012-01-13 22:34:25.093387493 +0100
-+++ package/iwinfo/src/include/iwinfo/wl.h	2012-02-25 18:58:52.277146565 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/wl.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/wl.h
+--- package/iwinfo/src/include/iwinfo/wl.h	2012-08-17 15:40:46.131971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/wl.h	2012-08-18 14:47:25.135458001 +0200
 @@ -26,13 +26,15 @@
  #include "iwinfo/api/broadcom.h"
  
@@ -1826,9 +1826,9 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo/wl.h package/iwinfo/src/incl
  };
  
  #endif
-diff -Nru -x .svn package/iwinfo/src/include/iwinfo.h package/iwinfo/src/include/iwinfo.h
---- package/iwinfo/src/include/iwinfo.h	2012-01-13 22:34:25.032605994 +0100
-+++ package/iwinfo/src/include/iwinfo.h	2012-02-25 18:58:52.279147486 +0100
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo.h
+--- package/iwinfo/src/include/iwinfo.h	2012-08-17 15:40:46.131971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo.h	2012-08-18 14:47:25.135458001 +0200
 @@ -15,6 +15,7 @@
  #include <stdint.h>
  
@@ -1853,7 +1853,7 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo.h package/iwinfo/src/include
 +
 +
 +struct iwinfo_rate_entry {
-+	uint16_t rate;
++	uint32_t rate;
 +	int8_t mcs;
 +	uint8_t is_40mhz:1;
 +	uint8_t is_short_gi:1;
@@ -1929,10 +1929,20 @@ diff -Nru -x .svn package/iwinfo/src/include/iwinfo.h package/iwinfo/src/include
  	int (*encryption)(const char *, char *);
  	int (*assoclist)(const char *, char *, int *);
  	int (*txpwrlist)(const char *, char *, int *);
-diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.c
---- package/iwinfo/src/iwinfo_cli.c	2012-01-13 22:34:25.113156043 +0100
-+++ package/iwinfo/src/iwinfo_cli.c	2012-02-25 18:58:52.333897236 +0100
-@@ -230,19 +230,19 @@
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_cli.c ../openwrt-trunk/package/iwinfo/src/iwinfo_cli.c
+--- package/iwinfo/src/iwinfo_cli.c	2012-08-17 15:40:46.161971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_cli.c	2012-08-18 14:47:25.145458001 +0200
+@@ -134,7 +134,8 @@
+ 	if (rate <= 0)
+ 		snprintf(buf, sizeof(buf), "unknown");
+ 	else
+-		snprintf(buf, sizeof(buf), "%.1f MBit/s", ((float)rate / 1000.0));
++		snprintf(buf, sizeof(buf), "%d.%d MBit/s",
++			rate / 1000, (rate % 1000) / 100);
+ 
+ 	return buf;
+ }
+@@ -230,19 +231,19 @@
  				case 3:
  					snprintf(buf, sizeof(buf), "mixed WPA/WPA2 %s (%s)",
  						format_enc_suites(c->auth_suites),
@@ -1955,7 +1965,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  					break;
  			}
  		}
-@@ -275,6 +275,34 @@
+@@ -275,6 +276,34 @@
  	return buf;
  }
  
@@ -1990,7 +2000,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  
  static const char * print_type(const struct iwinfo_ops *iw, const char *ifname)
  {
-@@ -282,6 +310,65 @@
+@@ -282,6 +311,65 @@
  	return type ? type : "unknown";
  }
  
@@ -2056,7 +2066,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  static char * print_ssid(const struct iwinfo_ops *iw, const char *ifname)
  {
  	char buf[IWINFO_ESSID_MAX_SIZE+1] = { 0 };
-@@ -304,10 +391,13 @@
+@@ -304,10 +392,13 @@
  
  static char * print_mode(const struct iwinfo_ops *iw, const char *ifname)
  {
@@ -2072,7 +2082,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  
  	return buf;
  }
-@@ -332,9 +422,14 @@
+@@ -332,9 +423,14 @@
  
  static char * print_txpower(const struct iwinfo_ops *iw, const char *ifname)
  {
@@ -2088,7 +2098,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  
  	return format_txpower(pwr);
  }
-@@ -423,9 +518,6 @@
+@@ -423,9 +519,6 @@
  		print_ssid(iw, ifname));
  	printf("          Access Point: %s\n",
  		print_bssid(iw, ifname));
@@ -2098,7 +2108,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  	printf("          Mode: %s  Channel: %s (%s)\n",
  		print_mode(iw, ifname),
  		print_channel(iw, ifname),
-@@ -441,6 +533,16 @@
+@@ -441,6 +534,16 @@
  		print_rate(iw, ifname));
  	printf("          Encryption: %s\n",
  		print_encryption(iw, ifname));
@@ -2115,7 +2125,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  	printf("          Supports VAPs: %s\n",
  		print_mbssid_supp(iw, ifname));
  }
-@@ -473,7 +575,7 @@
+@@ -473,7 +576,7 @@
  		printf("          ESSID: %s\n",
  			format_ssid(e->ssid));
  		printf("          Mode: %s  Channel: %s\n",
@@ -2124,7 +2134,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  			format_channel(e->channel));
  		printf("          Signal: %s  Quality: %s/%s\n",
  			format_signal(e->signal - 0x100),
-@@ -487,7 +589,7 @@
+@@ -487,7 +590,7 @@
  
  static void print_txpwrlist(const struct iwinfo_ops *iw, const char *ifname)
  {
@@ -2133,7 +2143,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  	char buf[IWINFO_BUFSIZE];
  	struct iwinfo_txpwrlist_entry *e;
  
-@@ -500,14 +602,17 @@
+@@ -500,14 +603,17 @@
  	if (iw->txpower(ifname, &pwr))
  		pwr = -1;
  
@@ -2153,7 +2163,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  	}
  }
  
-@@ -561,11 +666,22 @@
+@@ -561,11 +667,22 @@
  	{
  		e = (struct iwinfo_assoclist_entry *) &buf[i];
  
@@ -2178,9 +2188,9 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.
  	}
  }
  
-diff -Nru -x .svn package/iwinfo/src/iwinfo_lib.c package/iwinfo/src/iwinfo_lib.c
---- package/iwinfo/src/iwinfo_lib.c	2012-01-13 22:34:25.014235637 +0100
-+++ package/iwinfo/src/iwinfo_lib.c	2012-02-25 18:58:52.333897236 +0100
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_lib.c ../openwrt-trunk/package/iwinfo/src/iwinfo_lib.c
+--- package/iwinfo/src/iwinfo_lib.c	2012-08-17 15:40:46.161971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_lib.c	2012-08-31 21:37:17.667151000 +0200
 @@ -44,6 +44,14 @@
  	"SHARED",
  };
@@ -2196,7 +2206,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lib.c package/iwinfo/src/iwinfo_lib.
  
  /*
   * ISO3166 country labels
-@@ -300,6 +308,68 @@
+@@ -300,6 +308,75 @@
  	{ 0,               "" }
  };
  
@@ -2206,6 +2216,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lib.c package/iwinfo/src/iwinfo_lib.
 +
 +const char VENDOR_UBNT[] = "Ubiquiti";
 +const char VENDOR_ATH[]  = "Atheros";
++const char VENDOR_RALINK[]  = "RaLink";
 +
 +const struct iwinfo_hardware_entry IWINFO_HARDWARE_ENTRIES[] = {
 +/*	{ vendor, model, vendorid, deviceid, subsys vendorid, subsys deviceid, poweroff, freqoff } */
@@ -2238,6 +2249,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lib.c package/iwinfo/src/iwinfo_lib.
 +	{ VENDOR_UBNT, "XR5",                   0x168c, 0x001b, 0x7777, 0x3005, 10,     0 },
 +	{ VENDOR_UBNT, "XR7",                   0x168c, 0x001b, 0x0777, 0x3007, 10,     0 },
 +	{ VENDOR_UBNT, "XR9",                   0x168c, 0x001b, 0x0777, 0x3009, 10, -1520 },
++	{ VENDOR_ATH,  "AR5413",                0x168c, 0x001b, 0x168c, 0x2063,  0,     0 },
 +	{ VENDOR_UBNT, "SRC",                   0x168c, 0x0013, 0x168c, 0x1042,  1,     0 },
 +	{ VENDOR_UBNT, "SR2",                   0x168c, 0x0013, 0x0777, 0x2041, 10,     0 },
 +	{ VENDOR_UBNT, "SR4",                   0x168c, 0x0013, 0x0777, 0x2004,  6,     0 },
@@ -2258,6 +2270,11 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lib.c package/iwinfo/src/iwinfo_lib.
 +
 +	{ VENDOR_ATH,  "AR9220",                0x168c, 0x0029, 0x168c, 0xa094,  0,     0 },
 +	{ VENDOR_ATH,  "AR9223",                0x168c, 0x0029, 0x168c, 0xa095,  0,     0 },
++	{ VENDOR_ATH,  "AR9280",                0x168c, 0x002a, 0x168c, 0xa093,  0,     0 },
++	{ VENDOR_ATH,  "AR9285",                0x168c, 0x002b, 0x168c, 0xa091,  0,     0 },
++	{ VENDOR_RALINK,  "Rt3050",             0x1814, 0x3050, 0x1814, 0x0005,  0,     0 },
++	{ VENDOR_RALINK,  "Rt3052",             0x1814, 0x3052, 0x1814, 0x0008,  0,     0 },
++	{ VENDOR_RALINK,  "Rt3352",             0x1814, 0x3352, 0x1814, 0x000c,  0,     0 },
 +#endif
 +	{ NULL }
 +};
@@ -2265,9 +2282,9 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lib.c package/iwinfo/src/iwinfo_lib.
  
  const char * iwinfo_type(const char *ifname)
  {
-diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.c
---- package/iwinfo/src/iwinfo_lua.c	2012-01-13 22:34:25.164003483 +0100
-+++ package/iwinfo/src/iwinfo_lua.c	2012-02-25 18:58:52.336895278 +0100
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_lua.c ../openwrt-trunk/package/iwinfo/src/iwinfo_lua.c
+--- package/iwinfo/src/iwinfo_lua.c	2012-08-17 15:40:46.201971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_lua.c	2012-08-18 14:47:25.165458001 +0200
 @@ -235,6 +235,19 @@
  }
  
@@ -2334,7 +2351,34 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  			lua_setfield(L, -2, macstr);
  		}
  	}
-@@ -344,7 +396,7 @@
+@@ -280,11 +332,12 @@
+ 	const char *ifname = luaL_checkstring(L, 1);
+ 	struct iwinfo_txpwrlist_entry *e;
+ 
+-	lua_newtable(L);
+ 	memset(rv, 0, sizeof(rv));
+ 
+ 	if (!(*func)(ifname, rv, &len))
+ 	{
++		lua_newtable(L);
++
+ 		for (i = 0, x = 1; i < len; i += sizeof(struct iwinfo_txpwrlist_entry), x++)
+ 		{
+ 			e = (struct iwinfo_txpwrlist_entry *) &rv[i];
+@@ -299,9 +352,11 @@
+ 
+ 			lua_rawseti(L, -2, x);
+ 		}
++
++		return 1;
+ 	}
+ 
+-	return 1;
++	return 0;
+ }
+ 
+ /* Wrapper for scan list */
+@@ -344,7 +399,7 @@
  			lua_setfield(L, -2, "channel");
  
  			/* Mode */
@@ -2343,7 +2387,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  			lua_setfield(L, -2, "mode");
  
  			/* Quality, Signal */
-@@ -451,7 +503,7 @@
+@@ -451,7 +506,7 @@
  	return 1;
  }
  
@@ -2352,7 +2396,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  static int iwinfo_L_mbssid_support(lua_State *L, int (*func)(const char *, int *))
  {
  	const char *ifname = luaL_checkstring(L, 1);
-@@ -467,6 +519,36 @@
+@@ -467,6 +522,36 @@
  	return 1;
  }
  
@@ -2389,7 +2433,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  /* Wrapper for country list */
  static char * iwinfo_L_country_lookup(char *buf, int len, int iso3166)
  {
-@@ -528,102 +610,120 @@
+@@ -528,102 +613,120 @@
  /* Broadcom */
  LUA_WRAP_INT(wl,channel)
  LUA_WRAP_INT(wl,frequency)
@@ -2546,7 +2590,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  	LUA_REG(wl,bitrate),
  	LUA_REG(wl,signal),
  	LUA_REG(wl,noise),
-@@ -641,6 +741,8 @@
+@@ -641,6 +744,8 @@
  	LUA_REG(wl,hwmodelist),
  	LUA_REG(wl,encryption),
  	LUA_REG(wl,mbssid_support),
@@ -2555,7 +2599,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  	{ NULL, NULL }
  };
  #endif
-@@ -650,7 +752,9 @@
+@@ -650,7 +755,9 @@
  static const luaL_reg R_madwifi[] = {
  	LUA_REG(madwifi,channel),
  	LUA_REG(madwifi,frequency),
@@ -2565,7 +2609,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  	LUA_REG(madwifi,bitrate),
  	LUA_REG(madwifi,signal),
  	LUA_REG(madwifi,noise),
-@@ -668,6 +772,8 @@
+@@ -668,6 +775,8 @@
  	LUA_REG(madwifi,hwmodelist),
  	LUA_REG(madwifi,encryption),
  	LUA_REG(madwifi,mbssid_support),
@@ -2574,7 +2618,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  	{ NULL, NULL }
  };
  #endif
-@@ -677,7 +783,9 @@
+@@ -677,7 +786,9 @@
  static const luaL_reg R_nl80211[] = {
  	LUA_REG(nl80211,channel),
  	LUA_REG(nl80211,frequency),
@@ -2584,7 +2628,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  	LUA_REG(nl80211,bitrate),
  	LUA_REG(nl80211,signal),
  	LUA_REG(nl80211,noise),
-@@ -695,6 +803,8 @@
+@@ -695,6 +806,8 @@
  	LUA_REG(nl80211,hwmodelist),
  	LUA_REG(nl80211,encryption),
  	LUA_REG(nl80211,mbssid_support),
@@ -2593,7 +2637,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  	{ NULL, NULL }
  };
  #endif
-@@ -703,7 +813,9 @@
+@@ -703,7 +816,9 @@
  static const luaL_reg R_wext[] = {
  	LUA_REG(wext,channel),
  	LUA_REG(wext,frequency),
@@ -2603,7 +2647,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  	LUA_REG(wext,bitrate),
  	LUA_REG(wext,signal),
  	LUA_REG(wext,noise),
-@@ -721,6 +833,8 @@
+@@ -721,6 +836,8 @@
  	LUA_REG(wext,hwmodelist),
  	LUA_REG(wext,encryption),
  	LUA_REG(wext,mbssid_support),
@@ -2612,10 +2656,62 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.
  	{ NULL, NULL }
  };
  
-diff -Nru -x .svn package/iwinfo/src/iwinfo_madwifi.c package/iwinfo/src/iwinfo_madwifi.c
---- package/iwinfo/src/iwinfo_madwifi.c	2012-01-13 22:34:25.142290582 +0100
-+++ package/iwinfo/src/iwinfo_madwifi.c	2012-02-25 18:58:52.335897238 +0100
-@@ -333,7 +333,7 @@
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_madwifi.c ../openwrt-trunk/package/iwinfo/src/iwinfo_madwifi.c
+--- package/iwinfo/src/iwinfo_madwifi.c	2012-08-17 15:40:46.201971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_madwifi.c	2012-08-18 14:47:25.165458001 +0200
+@@ -196,6 +196,18 @@
+ };
+ 
+ 
++static const char * madwifi_phyname(const char *ifname)
++{
++	static char phyname[IFNAMSIZ];
++
++	if (strlen(ifname) > 5 && !strncmp(ifname, "radio", 5))
++		snprintf(phyname, sizeof(phyname), "wifi%s", ifname + 5);
++	else
++		snprintf(phyname, sizeof(phyname), "%s", ifname);
++
++	return (const char *)phyname;
++}
++
+ static int madwifi_wrq(struct iwreq *wrq, const char *ifname, int cmd, void *data, size_t len)
+ {
+ 	strncpy(wrq->ifr_name, ifname, IFNAMSIZ);
+@@ -263,12 +275,14 @@
+ 	int ret;
+ 	char path[32];
+ 	struct stat s;
++	const char *phy;
+ 
+ 	ret = 0;
++	phy = madwifi_phyname(ifname);
+ 
+-	if( strlen(ifname) <= 7 )
++	if( strlen(phy) <= 7 )
+ 	{
+-		sprintf(path, "/proc/sys/dev/%s/diversity", ifname);
++		sprintf(path, "/proc/sys/dev/%s/diversity", phy);
+ 
+ 		if( ! stat(path, &s) )
+ 			ret = (s.st_mode & S_IFREG);
+@@ -279,13 +293,13 @@
+ 
+ static char * madwifi_ifadd(const char *ifname)
+ {
+-	char *wifidev = NULL;
++	const char *wifidev = NULL;
+ 	struct ifreq ifr = { 0 };
+ 	struct ieee80211_clone_params cp = { 0 };
+ 	static char nif[IFNAMSIZ] = { 0 };
+ 
+ 	if( !(wifidev = madwifi_isvap(ifname, NULL)) && madwifi_iswifi(ifname) )
+-		wifidev = (char *)ifname;
++		wifidev = madwifi_phyname(ifname);
+ 
+ 	if( wifidev )
+ 	{
+@@ -333,7 +347,7 @@
  	/* Nop */
  }
  
@@ -2624,7 +2720,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_madwifi.c package/iwinfo/src/iwinfo_
  {
  	return wext_get_mode(ifname, buf);
  }
-@@ -726,9 +726,29 @@
+@@ -726,9 +740,29 @@
  		do {
  			si = (struct ieee80211req_sta_info *) cp;
  
@@ -2654,7 +2750,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_madwifi.c package/iwinfo/src/iwinfo_
  			memcpy(&buf[bl], &entry, sizeof(struct iwinfo_assoclist_entry));
  
  			bl += sizeof(struct iwinfo_assoclist_entry);
-@@ -987,3 +1007,61 @@
+@@ -987,3 +1021,62 @@
  
  	return -1;
  }
@@ -2665,8 +2761,9 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_madwifi.c package/iwinfo/src/iwinfo_
 +	char device[64];
 +	struct iwinfo_hardware_id *ids;
 +	struct iwinfo_hardware_entry *e;
++	const char *phy = madwifi_phyname(ifname);
 +
-+	if (wext_get_hardware_id(ifname, buf))
++	if (wext_get_hardware_id(phy, buf))
 +		return iwinfo_hardware_id_from_mtd((struct iwinfo_hardware_id *)buf);
 +
 +	return 0;
@@ -2716,9 +2813,9 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_madwifi.c package/iwinfo/src/iwinfo_
 +	*buf = hw->frequency_offset;
 +	return 0;
 +}
-diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_nl80211.c
---- package/iwinfo/src/iwinfo_nl80211.c	2012-02-25 18:41:41.315147317 +0100
-+++ package/iwinfo/src/iwinfo_nl80211.c	2012-02-25 18:58:52.332897477 +0100
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_nl80211.c ../openwrt-trunk/package/iwinfo/src/iwinfo_nl80211.c
+--- package/iwinfo/src/iwinfo_nl80211.c	2012-08-17 15:40:46.161971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_nl80211.c	2012-08-18 14:47:25.145458001 +0200
 @@ -47,26 +47,30 @@
  			goto err;
  		}
@@ -2865,7 +2962,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  static struct nl80211_msg_conveyor * nl80211_send(
  	struct nl80211_msg_conveyor *cv,
  	int (*cb_func)(struct nl_msg *, void *), void *cb_arg
-@@ -215,20 +244,111 @@
+@@ -215,20 +244,125 @@
  	static struct nlattr *attr[NL80211_ATTR_MAX + 1];
  
  	nla_parse(attr, NL80211_ATTR_MAX, genlmsg_attrdata(gnlh, 0),
@@ -2972,18 +3069,32 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
 -        return 14;
 +	if (freq == 2484)
 +		return 14;
++
++	if (freq < 2484)
++		return (freq - 2407) / 5;
++
++	return (freq / 5) - 1000;
++}
++
++static int nl80211_channel2freq(int channel, const char *band)
++{
++	if (channel == 14)
++		return 2484;
++
++	if ((channel < 14) && (!band || band[0] != 'a'))
++		return (channel * 5) + 2407;
  
 -    if (freq < 2484)
 -        return (freq - 2407) / 5;
-+	if (freq < 2484)
-+		return (freq - 2407) / 5;
++	if (channel > 0)
++		return (1000 + channel) * 5;
  
 -    return (freq / 5) - 1000;
-+	return (freq / 5) - 1000;
++	return 0;
  }
  
  static char * nl80211_getval(const char *ifname, const char *buf, const char *key)
-@@ -285,7 +405,8 @@
+@@ -285,7 +419,8 @@
  	struct nlattr **attr = nl80211_parse(msg);
  
  	if (attr[NL80211_ATTR_WIPHY_NAME])
@@ -2993,7 +3104,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  	else
  		buf[0] = 0;
  
-@@ -380,8 +501,8 @@
+@@ -380,8 +515,8 @@
  		goto out;
  
  	local.sun_family = AF_UNIX;
@@ -3004,7 +3115,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  
  	if (bind(sock, (struct sockaddr *) &local, local_length))
  		goto out;
-@@ -462,18 +583,18 @@
+@@ -462,18 +597,18 @@
  	{
  		if ((d = opendir("/sys/class/net")) != NULL)
  		{
@@ -3028,18 +3139,17 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  					{
  						ifidx = cifidx;
  						strncpy(nif, e->d_name, sizeof(nif));
-@@ -562,8 +683,8 @@
+@@ -562,6 +697,9 @@
  {
  	if (nls)
  	{
--                if (nls->nl80211)
--                        genl_family_put(nls->nl80211);
 +		if (nls->nlctrl)
 +			genl_family_put(nls->nlctrl);
- 
++
  		if (nls->nl80211)
  			genl_family_put(nls->nl80211);
-@@ -579,7 +700,7 @@
+ 
+@@ -576,7 +714,7 @@
  	}
  }
  
@@ -3048,7 +3158,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  {
  	return wext_get_mode(ifname, buf);
  }
-@@ -592,8 +713,8 @@
+@@ -589,8 +727,8 @@
  	{
  		return 0;
  	}
@@ -3059,7 +3169,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  	{
  		memcpy(buf, ssid, strlen(ssid));
  		return 0;
-@@ -611,7 +732,7 @@
+@@ -608,7 +746,7 @@
  	{
  		return 0;
  	}
@@ -3068,7 +3178,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  	         (bssid = nl80211_getval(ifname, bssid, "bssid")))
  	{
  		mac[0] = strtol(&bssid[0],  NULL, 16);
-@@ -622,7 +743,7 @@
+@@ -619,7 +757,7 @@
  		mac[5] = strtol(&bssid[15], NULL, 16);
  
  		sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X",
@@ -3077,7 +3187,88 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  
  		return 0;
  	}
-@@ -693,8 +814,8 @@
+@@ -627,32 +765,68 @@
+ 	return -1;
+ }
+ 
+-int nl80211_get_channel(const char *ifname, int *buf)
++
++static int nl80211_get_frequency_cb(struct nl_msg *msg, void *arg)
+ {
+-	char *first;
++	int *freq = arg;
++	struct nlattr **attr = nl80211_parse(msg);
++	struct nlattr *binfo[NL80211_BSS_MAX + 1];
+ 
+-	if (!wext_get_channel(ifname, buf))
+-		return 0;
++	static struct nla_policy bss_policy[NL80211_BSS_MAX + 1] = {
++		[NL80211_BSS_FREQUENCY] = { .type = NLA_U32 },
++	};
+ 
+-	else if ((first = nl80211_phy2ifname(nl80211_ifname2phy(ifname))) != NULL)
+-		return wext_get_channel(first, buf);
++	if (attr[NL80211_ATTR_BSS] &&
++	    !nla_parse_nested(binfo, NL80211_BSS_MAX,
++	                      attr[NL80211_ATTR_BSS], bss_policy))
++	{
++		if (binfo[NL80211_BSS_FREQUENCY])
++			*freq = nla_get_u32(binfo[NL80211_BSS_FREQUENCY]);
++	}
+ 
+-	return -1;
++	return NL_SKIP;
+ }
+ 
+ int nl80211_get_frequency(const char *ifname, int *buf)
+ {
+-	char *first;
++	char *res, *channel;
++	struct nl80211_msg_conveyor *req;
+ 
+-	if (!wext_get_frequency(ifname, buf))
+-		return 0;
++	*buf = 0;
++
++	if ((res = nl80211_hostapd_info(ifname)) &&
++	    (channel = nl80211_getval(NULL, res, "channel")))
++	{
++		*buf = nl80211_channel2freq(atoi(channel),
++		                            nl80211_getval(NULL, res, "hw_mode"));
++	}
++	else
++	{
++		res = nl80211_phy2ifname(ifname);
++		req = nl80211_msg(res ? res : ifname, NL80211_CMD_GET_SCAN, NLM_F_DUMP);
++
++		if (req)
++		{
++			nl80211_send(req, nl80211_get_frequency_cb, buf);
++			nl80211_free(req);
++		}
++	}
+ 
+-	else if ((first = nl80211_phy2ifname(nl80211_ifname2phy(ifname))) != NULL)
+-		return wext_get_frequency(first, buf);
++	return (*buf == 0) ? -1 : 0;
++}
++
++int nl80211_get_channel(const char *ifname, int *buf)
++{
++	if (!nl80211_get_frequency(ifname, buf))
++	{
++		*buf = nl80211_freq2channel(*buf);
++		return 0;
++	}
+ 
+ 	return -1;
+ }
+ 
++
+ int nl80211_get_txpower(const char *ifname, int *buf)
+ {
+ 	return wext_get_txpower(ifname, buf);
+@@ -690,8 +864,8 @@
  
  	if (attr[NL80211_ATTR_STA_INFO])
  	{
@@ -3088,7 +3279,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  		{
  			if (sinfo[NL80211_STA_INFO_SIGNAL])
  			{
-@@ -704,8 +825,9 @@
+@@ -701,8 +875,9 @@
  
  			if (sinfo[NL80211_STA_INFO_TX_BITRATE])
  			{
@@ -3100,7 +3291,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  				{
  					if (rinfo[NL80211_RATE_INFO_BITRATE])
  					{
-@@ -735,11 +857,11 @@
+@@ -732,11 +907,11 @@
  		while ((de = readdir(d)) != NULL)
  		{
  			if (!strncmp(de->d_name, ifname, strlen(ifname)) &&
@@ -3115,7 +3306,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  
  				if (req)
  				{
-@@ -804,7 +926,7 @@
+@@ -801,7 +976,7 @@
  		return NL_SKIP;
  
  	if (nla_parse_nested(si, NL80211_SURVEY_INFO_MAX,
@@ -3124,7 +3315,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  		return NL_SKIP;
  
  	if (!si[NL80211_SURVEY_INFO_NOISE])
-@@ -893,8 +1015,8 @@
+@@ -890,8 +1065,8 @@
  	struct iwinfo_crypto_entry *c = (struct iwinfo_crypto_entry *)buf;
  
  	/* WPA supplicant */
@@ -3135,7 +3326,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  	{
  		/* WEP */
  		if (strstr(val, "WEP"))
-@@ -1024,7 +1146,7 @@
+@@ -1021,7 +1196,7 @@
  					break;
  			}
  
@@ -3144,7 +3335,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  			{
  				snprintf(k, sizeof(k), "wep_key%d", i);
  
-@@ -1055,33 +1177,81 @@
+@@ -1052,33 +1227,81 @@
  	struct iwinfo_assoclist_entry *e = arr->buf;
  	struct nlattr **attr = nl80211_parse(msg);
  	struct nlattr *sinfo[NL80211_STA_INFO_MAX + 1];
@@ -3237,7 +3428,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  		}
  	}
  
-@@ -1105,19 +1275,17 @@
+@@ -1102,19 +1325,17 @@
  		while ((de = readdir(d)) != NULL)
  		{
  			if (!strncmp(de->d_name, ifname, strlen(ifname)) &&
@@ -3260,7 +3451,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  			}
  		}
  
-@@ -1159,19 +1327,18 @@
+@@ -1156,19 +1377,18 @@
  	nla_for_each_nested(band, attr[NL80211_ATTR_WIPHY_BANDS], bands_remain)
  	{
  		nla_parse(bands, NL80211_BAND_ATTR_MAX, nla_data(band),
@@ -3287,7 +3478,16 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  			{
  				*dbm_max = (int)(0.01 * nla_get_u32(
  					freqs[NL80211_FREQUENCY_ATTR_MAX_TX_POWER]));
-@@ -1279,6 +1446,151 @@
+@@ -1201,7 +1421,7 @@
+ 		nl80211_free(req);
+ 	}
+ 
+-	if (dbm_max > -1)
++	if (dbm_max > 0)
+ 	{
+ 		for (dbm_cur = 0, dbm_cnt = 0;
+ 		     dbm_cur < dbm_max;
+@@ -1276,6 +1496,152 @@
  	}
  }
  
@@ -3386,7 +3586,8 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
 +
 +	if (bss[NL80211_BSS_SIGNAL_MBM])
 +	{
-+		sl->e->signal = nla_get_u32(bss[NL80211_BSS_SIGNAL_MBM]) / 100;
++		sl->e->signal =
++			(uint8_t)((int32_t)nla_get_u32(bss[NL80211_BSS_SIGNAL_MBM]) / 100);
 +
 +		rssi = sl->e->signal - 0x100;
 +
@@ -3439,7 +3640,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  int nl80211_get_scanlist(const char *ifname, char *buf, int *len)
  {
  	int freq, rssi, qmax, count;
-@@ -1315,12 +1627,12 @@
+@@ -1312,12 +1678,12 @@
  			nl80211_get_quality_max(ifname, &qmax);
  
  			/* skip header line */
@@ -3455,7 +3656,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  			{
  				/* BSSID */
  				e->mac[0] = strtol(&bssid[0],  NULL, 16);
-@@ -1331,11 +1643,10 @@
+@@ -1328,11 +1694,10 @@
  				e->mac[5] = strtol(&bssid[15], NULL, 16);
  
  				/* SSID */
@@ -3469,7 +3670,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  
  				/* Channel */
  				e->channel = nl80211_freq2channel(freq);
-@@ -1368,7 +1679,7 @@
+@@ -1365,7 +1730,7 @@
  				nl80211_get_scancrypto(cipher, &e->crypto);
  
  				/* advance to next line */
@@ -3478,7 +3679,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  
  				count++;
  				e++;
-@@ -1392,7 +1703,7 @@
+@@ -1389,7 +1754,7 @@
  			if (!iwinfo_ifup(ifname))
  				return -1;
  
@@ -3487,7 +3688,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  			iwinfo_ifdown(ifname);
  			return 0;
  		}
-@@ -1410,7 +1721,7 @@
+@@ -1407,7 +1772,7 @@
  			 * additional interface and there's no need to tear down the ap */
  			if (iwinfo_ifup(res))
  			{
@@ -3496,7 +3697,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  				iwinfo_ifdown(res);
  			}
  
-@@ -1418,7 +1729,7 @@
+@@ -1415,7 +1780,7 @@
  			 * during scan */
  			else if (iwinfo_ifdown(ifname) && iwinfo_ifup(res))
  			{
@@ -3505,7 +3706,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  				iwinfo_ifdown(res);
  				iwinfo_ifup(ifname);
  				nl80211_hostapd_hup(ifname);
-@@ -1456,17 +1767,16 @@
+@@ -1453,17 +1818,16 @@
  
  	nla_for_each_nested(band, attr[NL80211_ATTR_WIPHY_BANDS], bands_remain)
  	{
@@ -3529,7 +3730,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  				continue;
  
  			e->mhz = nla_get_u32(freqs[NL80211_FREQUENCY_ATTR_FREQ]);
-@@ -1544,7 +1854,7 @@
+@@ -1541,7 +1905,7 @@
  	struct iwinfo_country_entry *e = (struct iwinfo_country_entry *)buf;
  	const struct iwinfo_iso3166_label *l;
  
@@ -3538,7 +3739,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  	{
  		e->iso3166 = l->iso3166;
  		e->ccode[0] = (l->iso3166 / 256);
-@@ -1571,8 +1881,8 @@
+@@ -1568,8 +1932,8 @@
  	{
  		nla_for_each_nested(band, attr[NL80211_ATTR_WIPHY_BANDS], bands_remain)
  		{
@@ -3549,7 +3750,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  
  			if (bands[NL80211_BAND_ATTR_HT_CAPA])
  				caps = nla_get_u16(bands[NL80211_BAND_ATTR_HT_CAPA]);
-@@ -1581,11 +1891,11 @@
+@@ -1578,11 +1942,11 @@
  			if (caps > 0)
  				*modes |= IWINFO_80211_N;
  
@@ -3564,7 +3765,7 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
  
  				if (!freqs[NL80211_FREQUENCY_ATTR_FREQ])
  					continue;
-@@ -1637,3 +1947,83 @@
+@@ -1634,3 +1998,83 @@
  
  	return -1;
  }
@@ -3648,10 +3849,10 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_
 +	*buf = hw->frequency_offset;
 +	return 0;
 +}
-diff -Nru -x .svn package/iwinfo/src/iwinfo_utils.c package/iwinfo/src/iwinfo_utils.c
---- package/iwinfo/src/iwinfo_utils.c	2012-01-13 22:34:25.151006895 +0100
-+++ package/iwinfo/src/iwinfo_utils.c	2012-02-25 18:58:52.335897238 +0100
-@@ -124,3 +124,203 @@
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_utils.c ../openwrt-trunk/package/iwinfo/src/iwinfo_utils.c
+--- package/iwinfo/src/iwinfo_utils.c	2012-08-17 15:40:46.201971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_utils.c	2012-08-18 14:47:25.165458001 +0200
+@@ -124,3 +124,224 @@
  	if( ioctl_socket > -1 )
  		close(ioctl_socket);
  }
@@ -3696,7 +3897,8 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_utils.c package/iwinfo/src/iwinfo_ut
 +	while (fgets(buf, sizeof(buf), mtd) > 0)
 +	{
 +		if (fscanf(mtd, "mtd%d: %*x %x %127s", &off, &len, buf) < 3 ||
-+		    (strcmp(buf, "\"boardconfig\"") && strcmp(buf, "\"EEPROM\"")))
++		    (strcmp(buf, "\"boardconfig\"") && strcmp(buf, "\"EEPROM\"") &&
++		     strcmp(buf, "\"factory\"")))
 +		{
 +			off = -1;
 +			continue;
@@ -3742,6 +3944,26 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_utils.c package/iwinfo/src/iwinfo_ut
 +				id->subsystem_vendor_id = bc[off + 0x13];
 +				id->subsystem_device_id = bc[off + 0x14];
 +				break;
++			}
++
++			/* Rt3xxx SoC */
++			else if ((bc[off] == 0x3352) || (bc[off] == 0x5233) ||
++			         (bc[off] == 0x3350) || (bc[off] == 0x5033) ||
++			         (bc[off] == 0x3050) || (bc[off] == 0x5030) ||
++			         (bc[off] == 0x3052) || (bc[off] == 0x5230))
++			{
++				/* vendor: RaLink */
++				id->vendor_id = 0x1814;
++				id->subsystem_vendor_id = 0x1814;
++
++				/* device */
++				if (bc[off] & 0xf0 == 0x30)
++					id->device_id = (bc[off] >> 8) | (bc[off] & 0x00ff) << 8;
++				else
++					id->device_id = bc[off];
++
++				/* subsystem from EEPROM_NIC_CONF0_RF_TYPE */
++				id->subsystem_device_id = (bc[off + 0x1a] & 0x0f00) >> 8;
 +			}
 +		}
 +
@@ -3855,9 +4077,9 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_utils.c package/iwinfo/src/iwinfo_ut
 +	data += 2 + (count * 4);
 +	len -= 2 + (count * 4);
 +}
-diff -Nru -x .svn package/iwinfo/src/iwinfo_wext.c package/iwinfo/src/iwinfo_wext.c
---- package/iwinfo/src/iwinfo_wext.c	2012-01-13 22:34:25.116255322 +0100
-+++ package/iwinfo/src/iwinfo_wext.c	2012-02-25 18:58:52.334897037 +0100
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wext.c ../openwrt-trunk/package/iwinfo/src/iwinfo_wext.c
+--- package/iwinfo/src/iwinfo_wext.c	2012-08-17 15:40:46.161971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_wext.c	2012-08-18 14:47:25.145458001 +0200
 @@ -70,7 +70,7 @@
  	/* Nop */
  }
@@ -3981,9 +4203,9 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_wext.c package/iwinfo/src/iwinfo_wex
 +	*buf = 0;
 +	return -1;
 +}
-diff -Nru -x .svn package/iwinfo/src/iwinfo_wext_scan.c package/iwinfo/src/iwinfo_wext_scan.c
---- package/iwinfo/src/iwinfo_wext_scan.c	2011-12-12 14:23:17.910312993 +0100
-+++ package/iwinfo/src/iwinfo_wext_scan.c	2012-02-25 18:58:52.334897037 +0100
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wext_scan.c ../openwrt-trunk/package/iwinfo/src/iwinfo_wext_scan.c
+--- package/iwinfo/src/iwinfo_wext_scan.c	2012-08-17 15:40:46.161971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_wext_scan.c	2012-08-18 14:47:25.145458001 +0200
 @@ -213,132 +213,28 @@
  	return 1;
  }
@@ -4178,9 +4400,9 @@ diff -Nru -x .svn package/iwinfo/src/iwinfo_wext_scan.c package/iwinfo/src/iwinf
  			break;
  	}
  }
-diff -Nru -x .svn package/iwinfo/src/iwinfo_wl.c package/iwinfo/src/iwinfo_wl.c
---- package/iwinfo/src/iwinfo_wl.c	2012-01-13 22:34:25.176285790 +0100
-+++ package/iwinfo/src/iwinfo_wl.c	2012-02-25 18:58:52.336895278 +0100
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wl.c ../openwrt-trunk/package/iwinfo/src/iwinfo_wl.c
+--- package/iwinfo/src/iwinfo_wl.c	2012-08-17 15:40:46.211971001 +0200
++++ ../openwrt-trunk/package/iwinfo/src/iwinfo_wl.c	2012-08-18 14:47:25.165458001 +0200
 @@ -37,17 +37,30 @@
  	return iwinfo_ioctl(SIOCDEVPRIVATE, &ifr);
  }

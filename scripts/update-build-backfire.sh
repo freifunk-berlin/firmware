@@ -470,6 +470,7 @@ for board in $boards ; do
 	PATCHES="$PATCHES package-libnl-tiny-0.1.3.patch"
 	PATCHES="$PATCHES package-mac80211-trunk.patch"
 	PATCHES="$PATCHES package-mac80211-backport.patch"
+	PATCHES="$PATCHES package-wireless-tools-trunk.patch"
 	#PATCHES="$PATCHES package-mac80211-dir300.patch"
 	#PATCHES="$PATCHES package-iwinfo-1.patch" #no trunk
 	#PATCHES="$PATCHES package-iwinfo-2.patch" #no trunk

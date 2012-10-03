@@ -1,6 +1,6 @@
-diff --exclude .svn -Nru package/iwinfo/Makefile ../openwrt-trunk/package/iwinfo/Makefile
+diff --exclude .svn -Nru package/iwinfo/Makefile package/iwinfo/Makefile
 --- package/iwinfo/Makefile	2012-08-17 15:40:46.301971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/Makefile	2012-08-18 14:47:25.165458001 +0200
++++ package/iwinfo/Makefile	2012-08-18 14:47:25.165458001 +0200
 @@ -7,9 +7,15 @@
  include $(TOPDIR)/rules.mk
  
@@ -18,9 +18,9 @@ diff --exclude .svn -Nru package/iwinfo/Makefile ../openwrt-trunk/package/iwinfo
  
  include $(INCLUDE_DIR)/package.mk
  
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/broadcom.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/broadcom.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/broadcom.h package/iwinfo/src/include/iwinfo/api/broadcom.h
 --- package/iwinfo/src/include/iwinfo/api/broadcom.h	2012-08-17 15:40:46.121971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/broadcom.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/api/broadcom.h	2012-08-18 14:47:25.135458001 +0200
 @@ -64,6 +64,30 @@
  	uint16_t				foo;
  } wl_sta_rssi_t;
@@ -52,9 +52,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/broadcom.h ../ope
  typedef struct wlc_ssid {
  	uint32_t				ssid_len;
  	unsigned char			ssid[32];
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/madwifi.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/madwifi.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/madwifi.h package/iwinfo/src/include/iwinfo/api/madwifi.h
 --- package/iwinfo/src/include/iwinfo/api/madwifi.h	2012-08-17 15:40:46.121971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/madwifi.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/api/madwifi.h	2012-08-18 14:47:25.135458001 +0200
 @@ -22,8 +22,10 @@
  #define _MADWIFI_H
  
@@ -68,9 +68,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/madwifi.h ../open
  
  
  /* ieee80211_crypto.h */
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/nl80211.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/nl80211.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/nl80211.h package/iwinfo/src/include/iwinfo/api/nl80211.h
 --- package/iwinfo/src/include/iwinfo/api/nl80211.h	2012-08-17 15:40:46.121971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/api/nl80211.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/api/nl80211.h	2012-08-18 14:47:25.135458001 +0200
 @@ -6,7 +6,7 @@
   * Copyright 2006-2010 Johannes Berg <johannes@sipsolutions.net>
   * Copyright 2008 Michael Wu <flamingice@sourmilk.net>
@@ -1458,9 +1458,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/api/nl80211.h ../open
 +};
 +
  #endif /* __LINUX_NL80211_H */
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/lua.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/lua.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/lua.h package/iwinfo/src/include/iwinfo/lua.h
 --- package/iwinfo/src/include/iwinfo/lua.h	2012-08-17 15:40:46.131971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/lua.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/lua.h	2012-08-18 14:47:25.135458001 +0200
 @@ -71,11 +71,10 @@
  		return 1;										\
  	}
@@ -1474,9 +1474,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/lua.h ../openwrt-trun
  
  #endif
 -
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/madwifi.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/madwifi.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/madwifi.h package/iwinfo/src/include/iwinfo/madwifi.h
 --- package/iwinfo/src/include/iwinfo/madwifi.h	2012-08-17 15:40:46.131971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/madwifi.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/madwifi.h	2012-08-18 14:47:25.135458001 +0200
 @@ -26,13 +26,15 @@
  #include "iwinfo/api/madwifi.h"
  
@@ -1552,9 +1552,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/madwifi.h ../openwrt-
  };
  
  #endif
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/nl80211.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/nl80211.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/nl80211.h package/iwinfo/src/include/iwinfo/nl80211.h
 --- package/iwinfo/src/include/iwinfo/nl80211.h	2012-08-17 15:40:46.131971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/nl80211.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/nl80211.h	2012-08-18 14:47:25.135458001 +0200
 @@ -39,6 +39,7 @@
  	struct nl_sock *nl_sock;
  	struct nl_cache *nl_cache;
@@ -1655,9 +1655,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/nl80211.h ../openwrt-
  };
  
  #endif
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/utils.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/utils.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/utils.h package/iwinfo/src/include/iwinfo/utils.h
 --- package/iwinfo/src/include/iwinfo/utils.h	2012-08-17 15:40:46.131971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/utils.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/utils.h	2012-08-18 14:47:25.135458001 +0200
 @@ -37,4 +37,11 @@
  
  void iwinfo_close(void);
@@ -1670,9 +1670,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/utils.h ../openwrt-tr
 +					  uint8_t defcipher, uint8_t defauth);
 +
  #endif
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/wext.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/wext.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/wext.h package/iwinfo/src/include/iwinfo/wext.h
 --- package/iwinfo/src/include/iwinfo/wext.h	2012-08-17 15:40:46.131971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/wext.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/wext.h	2012-08-18 14:47:25.135458001 +0200
 @@ -27,13 +27,15 @@
  
  
@@ -1748,9 +1748,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/wext.h ../openwrt-tru
  };
  
  #endif
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/wl.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo/wl.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/wl.h package/iwinfo/src/include/iwinfo/wl.h
 --- package/iwinfo/src/include/iwinfo/wl.h	2012-08-17 15:40:46.131971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo/wl.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo/wl.h	2012-08-18 14:47:25.135458001 +0200
 @@ -26,13 +26,15 @@
  #include "iwinfo/api/broadcom.h"
  
@@ -1826,9 +1826,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo/wl.h ../openwrt-trunk
  };
  
  #endif
-diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo.h ../openwrt-trunk/package/iwinfo/src/include/iwinfo.h
+diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo.h package/iwinfo/src/include/iwinfo.h
 --- package/iwinfo/src/include/iwinfo.h	2012-08-17 15:40:46.131971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/include/iwinfo.h	2012-08-18 14:47:25.135458001 +0200
++++ package/iwinfo/src/include/iwinfo.h	2012-08-18 14:47:25.135458001 +0200
 @@ -15,6 +15,7 @@
  #include <stdint.h>
  
@@ -1929,9 +1929,9 @@ diff --exclude .svn -Nru package/iwinfo/src/include/iwinfo.h ../openwrt-trunk/pa
  	int (*encryption)(const char *, char *);
  	int (*assoclist)(const char *, char *, int *);
  	int (*txpwrlist)(const char *, char *, int *);
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_cli.c ../openwrt-trunk/package/iwinfo/src/iwinfo_cli.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_cli.c package/iwinfo/src/iwinfo_cli.c
 --- package/iwinfo/src/iwinfo_cli.c	2012-08-17 15:40:46.161971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_cli.c	2012-08-18 14:47:25.145458001 +0200
++++ package/iwinfo/src/iwinfo_cli.c	2012-08-18 14:47:25.145458001 +0200
 @@ -134,7 +134,8 @@
  	if (rate <= 0)
  		snprintf(buf, sizeof(buf), "unknown");
@@ -2188,9 +2188,9 @@ diff --exclude .svn -Nru package/iwinfo/src/iwinfo_cli.c ../openwrt-trunk/packag
  	}
  }
  
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_lib.c ../openwrt-trunk/package/iwinfo/src/iwinfo_lib.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_lib.c package/iwinfo/src/iwinfo_lib.c
 --- package/iwinfo/src/iwinfo_lib.c	2012-08-17 15:40:46.161971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_lib.c	2012-08-31 21:37:17.667151000 +0200
++++ package/iwinfo/src/iwinfo_lib.c	2012-08-31 21:37:17.667151000 +0200
 @@ -44,6 +44,14 @@
  	"SHARED",
  };
@@ -2282,9 +2282,9 @@ diff --exclude .svn -Nru package/iwinfo/src/iwinfo_lib.c ../openwrt-trunk/packag
  
  const char * iwinfo_type(const char *ifname)
  {
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_lua.c ../openwrt-trunk/package/iwinfo/src/iwinfo_lua.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_lua.c package/iwinfo/src/iwinfo_lua.c
 --- package/iwinfo/src/iwinfo_lua.c	2012-08-17 15:40:46.201971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_lua.c	2012-08-18 14:47:25.165458001 +0200
++++ package/iwinfo/src/iwinfo_lua.c	2012-08-18 14:47:25.165458001 +0200
 @@ -235,6 +235,19 @@
  }
  
@@ -2656,9 +2656,9 @@ diff --exclude .svn -Nru package/iwinfo/src/iwinfo_lua.c ../openwrt-trunk/packag
  	{ NULL, NULL }
  };
  
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_madwifi.c ../openwrt-trunk/package/iwinfo/src/iwinfo_madwifi.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_madwifi.c package/iwinfo/src/iwinfo_madwifi.c
 --- package/iwinfo/src/iwinfo_madwifi.c	2012-08-17 15:40:46.201971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_madwifi.c	2012-08-18 14:47:25.165458001 +0200
++++ package/iwinfo/src/iwinfo_madwifi.c	2012-08-18 14:47:25.165458001 +0200
 @@ -196,6 +196,18 @@
  };
  
@@ -2813,9 +2813,9 @@ diff --exclude .svn -Nru package/iwinfo/src/iwinfo_madwifi.c ../openwrt-trunk/pa
 +	*buf = hw->frequency_offset;
 +	return 0;
 +}
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_nl80211.c ../openwrt-trunk/package/iwinfo/src/iwinfo_nl80211.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_nl80211.c package/iwinfo/src/iwinfo_nl80211.c
 --- package/iwinfo/src/iwinfo_nl80211.c	2012-08-17 15:40:46.161971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_nl80211.c	2012-08-18 14:47:25.145458001 +0200
++++ package/iwinfo/src/iwinfo_nl80211.c	2012-08-18 14:47:25.145458001 +0200
 @@ -47,26 +47,30 @@
  			goto err;
  		}
@@ -3849,9 +3849,9 @@ diff --exclude .svn -Nru package/iwinfo/src/iwinfo_nl80211.c ../openwrt-trunk/pa
 +	*buf = hw->frequency_offset;
 +	return 0;
 +}
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_utils.c ../openwrt-trunk/package/iwinfo/src/iwinfo_utils.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_utils.c package/iwinfo/src/iwinfo_utils.c
 --- package/iwinfo/src/iwinfo_utils.c	2012-08-17 15:40:46.201971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_utils.c	2012-08-18 14:47:25.165458001 +0200
++++ package/iwinfo/src/iwinfo_utils.c	2012-08-18 14:47:25.165458001 +0200
 @@ -124,3 +124,224 @@
  	if( ioctl_socket > -1 )
  		close(ioctl_socket);
@@ -4077,9 +4077,9 @@ diff --exclude .svn -Nru package/iwinfo/src/iwinfo_utils.c ../openwrt-trunk/pack
 +	data += 2 + (count * 4);
 +	len -= 2 + (count * 4);
 +}
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wext.c ../openwrt-trunk/package/iwinfo/src/iwinfo_wext.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wext.c package/iwinfo/src/iwinfo_wext.c
 --- package/iwinfo/src/iwinfo_wext.c	2012-08-17 15:40:46.161971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_wext.c	2012-08-18 14:47:25.145458001 +0200
++++ package/iwinfo/src/iwinfo_wext.c	2012-08-18 14:47:25.145458001 +0200
 @@ -70,7 +70,7 @@
  	/* Nop */
  }
@@ -4203,9 +4203,9 @@ diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wext.c ../openwrt-trunk/packa
 +	*buf = 0;
 +	return -1;
 +}
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wext_scan.c ../openwrt-trunk/package/iwinfo/src/iwinfo_wext_scan.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wext_scan.c package/iwinfo/src/iwinfo_wext_scan.c
 --- package/iwinfo/src/iwinfo_wext_scan.c	2012-08-17 15:40:46.161971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_wext_scan.c	2012-08-18 14:47:25.145458001 +0200
++++ package/iwinfo/src/iwinfo_wext_scan.c	2012-08-18 14:47:25.145458001 +0200
 @@ -213,132 +213,28 @@
  	return 1;
  }
@@ -4400,9 +4400,9 @@ diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wext_scan.c ../openwrt-trunk/
  			break;
  	}
  }
-diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wl.c ../openwrt-trunk/package/iwinfo/src/iwinfo_wl.c
+diff --exclude .svn -Nru package/iwinfo/src/iwinfo_wl.c package/iwinfo/src/iwinfo_wl.c
 --- package/iwinfo/src/iwinfo_wl.c	2012-08-17 15:40:46.211971001 +0200
-+++ ../openwrt-trunk/package/iwinfo/src/iwinfo_wl.c	2012-08-18 14:47:25.165458001 +0200
++++ package/iwinfo/src/iwinfo_wl.c	2012-08-18 14:47:25.165458001 +0200
 @@ -37,17 +37,30 @@
  	return iwinfo_ioctl(SIOCDEVPRIVATE, &ifr);
  }

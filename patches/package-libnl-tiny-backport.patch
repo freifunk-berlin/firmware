@@ -1,4 +1,4 @@
-diff '--exclude=.svn' -Nur package/libnl-tiny/Makefile package/libnl-tiny/Makefile
+diff --exclude .svn -Nru package/libnl-tiny/Makefile package/libnl-tiny/Makefile
 --- package/libnl-tiny/Makefile	2012-08-17 15:40:45.881971001 +0200
 +++ package/libnl-tiny/Makefile	2012-08-18 14:47:25.085458001 +0200
 @@ -9,7 +9,7 @@
@@ -10,7 +10,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/Makefile package/libnl-tiny/Makefi
  
  include $(INCLUDE_DIR)/package.mk
  
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/cache.c package/libnl-tiny/src/cache.c
+diff --exclude .svn -Nru package/libnl-tiny/src/cache.c package/libnl-tiny/src/cache.c
 --- package/libnl-tiny/src/cache.c	2012-08-17 15:40:45.841971001 +0200
 +++ package/libnl-tiny/src/cache.c	2012-08-18 14:47:25.065458001 +0200
 @@ -730,7 +730,6 @@
@@ -29,7 +29,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/cache.c package/libnl-tiny/src
  
  /** @} */
  
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/cache_mngt.c package/libnl-tiny/src/cache_mngt.c
+diff --exclude .svn -Nru package/libnl-tiny/src/cache_mngt.c package/libnl-tiny/src/cache_mngt.c
 --- package/libnl-tiny/src/cache_mngt.c	2012-08-17 15:40:45.841971001 +0200
 +++ package/libnl-tiny/src/cache_mngt.c	2012-08-18 14:47:25.085458001 +0200
 @@ -73,6 +73,8 @@
@@ -66,7 +66,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/cache_mngt.c package/libnl-tin
  /** @} */
  
  /** @} */
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/genl_mngt.c package/libnl-tiny/src/genl_mngt.c
+diff --exclude .svn -Nru package/libnl-tiny/src/genl_mngt.c package/libnl-tiny/src/genl_mngt.c
 --- package/libnl-tiny/src/genl_mngt.c	2012-08-17 15:40:45.871971001 +0200
 +++ package/libnl-tiny/src/genl_mngt.c	2012-08-18 14:47:25.065458001 +0200
 @@ -136,6 +136,7 @@
@@ -86,7 +86,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/genl_mngt.c package/libnl-tiny
  
  /**
   * @name Register/Unregister
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/attr.h package/libnl-tiny/src/include/netlink/attr.h
+diff --exclude .svn -Nru package/libnl-tiny/src/include/netlink/attr.h package/libnl-tiny/src/include/netlink/attr.h
 --- package/libnl-tiny/src/include/netlink/attr.h	2012-08-17 15:40:45.791971001 +0200
 +++ package/libnl-tiny/src/include/netlink/attr.h	2012-08-18 14:47:25.045458001 +0200
 @@ -508,7 +508,7 @@
@@ -118,7 +118,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/attr.h package
  	     nla_ok(pos, rem); \
  	     pos = nla_next(pos, &(rem)))
  
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/cache.h package/libnl-tiny/src/include/netlink/cache.h
+diff --exclude .svn -Nru package/libnl-tiny/src/include/netlink/cache.h package/libnl-tiny/src/include/netlink/cache.h
 --- package/libnl-tiny/src/include/netlink/cache.h	2012-08-17 15:40:45.751971001 +0200
 +++ package/libnl-tiny/src/include/netlink/cache.h	2012-08-18 14:47:25.025458001 +0200
 @@ -76,6 +76,7 @@
@@ -137,7 +137,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/cache.h packag
  
  /* --- cache management --- */
  
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/handlers.h package/libnl-tiny/src/include/netlink/handlers.h
+diff --exclude .svn -Nru package/libnl-tiny/src/include/netlink/handlers.h package/libnl-tiny/src/include/netlink/handlers.h
 --- package/libnl-tiny/src/include/netlink/handlers.h	2012-08-17 15:40:45.751971001 +0200
 +++ package/libnl-tiny/src/include/netlink/handlers.h	2012-08-18 14:47:25.025458001 +0200
 @@ -172,7 +172,7 @@
@@ -149,7 +149,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/handlers.h pac
  		if (err < 0)
  			return err;
  	}
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/msg.h package/libnl-tiny/src/include/netlink/msg.h
+diff --exclude .svn -Nru package/libnl-tiny/src/include/netlink/msg.h package/libnl-tiny/src/include/netlink/msg.h
 --- package/libnl-tiny/src/include/netlink/msg.h	2012-08-17 15:40:45.811971001 +0200
 +++ package/libnl-tiny/src/include/netlink/msg.h	2012-08-18 14:47:25.045458001 +0200
 @@ -144,7 +144,7 @@
@@ -179,7 +179,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/msg.h package/
  	n->nm_size = newlen;
  
  	return 0;
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/object.h package/libnl-tiny/src/include/netlink/object.h
+diff --exclude .svn -Nru package/libnl-tiny/src/include/netlink/object.h package/libnl-tiny/src/include/netlink/object.h
 --- package/libnl-tiny/src/include/netlink/object.h	2012-08-17 15:40:45.751971001 +0200
 +++ package/libnl-tiny/src/include/netlink/object.h	2012-08-18 14:47:25.025458001 +0200
 @@ -35,23 +35,26 @@
@@ -255,7 +255,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/object.h packa
  
  /**
   * @name Attributes
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/types.h package/libnl-tiny/src/include/netlink/types.h
+diff --exclude .svn -Nru package/libnl-tiny/src/include/netlink/types.h package/libnl-tiny/src/include/netlink/types.h
 --- package/libnl-tiny/src/include/netlink/types.h	2012-08-17 15:40:45.751971001 +0200
 +++ package/libnl-tiny/src/include/netlink/types.h	2012-08-18 14:47:25.025458001 +0200
 @@ -108,10 +108,14 @@
@@ -275,7 +275,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink/types.h packag
  
  
  #endif
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink-local.h package/libnl-tiny/src/include/netlink-local.h
+diff --exclude .svn -Nru package/libnl-tiny/src/include/netlink-local.h package/libnl-tiny/src/include/netlink-local.h
 --- package/libnl-tiny/src/include/netlink-local.h	2012-08-17 15:40:45.811971001 +0200
 +++ package/libnl-tiny/src/include/netlink-local.h	2012-08-18 14:47:25.055458001 +0200
 @@ -95,6 +95,7 @@
@@ -294,7 +294,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/netlink-local.h packag
  
  static inline int nl_cb_call(struct nl_cb *cb, int type, struct nl_msg *msg)
  {
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/unl.h package/libnl-tiny/src/include/unl.h
+diff --exclude .svn -Nru package/libnl-tiny/src/include/unl.h package/libnl-tiny/src/include/unl.h
 --- package/libnl-tiny/src/include/unl.h	1970-01-01 01:00:00.000000000 +0100
 +++ package/libnl-tiny/src/include/unl.h	2012-08-18 14:47:25.055458001 +0200
 @@ -0,0 +1,47 @@
@@ -345,7 +345,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/include/unl.h package/libnl-ti
 +}
 +
 +#endif
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/Makefile package/libnl-tiny/src/Makefile
+diff --exclude .svn -Nru package/libnl-tiny/src/Makefile package/libnl-tiny/src/Makefile
 --- package/libnl-tiny/src/Makefile	2012-08-17 15:40:45.871971001 +0200
 +++ package/libnl-tiny/src/Makefile	2012-08-18 14:47:25.085458001 +0200
 @@ -11,7 +11,7 @@
@@ -357,7 +357,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/Makefile package/libnl-tiny/sr
  
  $(LIBNAME): $(LIBNL_OBJ) $(GENL_OBJ)
  	$(CC) -shared -o $@ $^
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/object.c package/libnl-tiny/src/object.c
+diff --exclude .svn -Nru package/libnl-tiny/src/object.c package/libnl-tiny/src/object.c
 --- package/libnl-tiny/src/object.c	2012-08-17 15:40:45.841971001 +0200
 +++ package/libnl-tiny/src/object.c	2012-08-18 14:47:25.065458001 +0200
 @@ -156,37 +156,6 @@
@@ -415,7 +415,7 @@ diff '--exclude=.svn' -Nur package/libnl-tiny/src/object.c package/libnl-tiny/sr
  /** @} */
  
  /** @} */
-diff '--exclude=.svn' -Nur package/libnl-tiny/src/unl.c package/libnl-tiny/src/unl.c
+diff --exclude .svn -Nru package/libnl-tiny/src/unl.c package/libnl-tiny/src/unl.c
 --- package/libnl-tiny/src/unl.c	1970-01-01 01:00:00.000000000 +0100
 +++ package/libnl-tiny/src/unl.c	2012-08-18 14:47:25.065458001 +0200
 @@ -0,0 +1,290 @@

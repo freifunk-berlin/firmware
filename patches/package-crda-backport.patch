@@ -1,3 +1,4 @@
+diff --exclude .svn -Nru package/crda/Makefile package/crda/Makefile
 --- package/crda/Makefile	2012-08-17 15:40:44.901971001 +0200
 +++ package/crda/Makefile	2012-08-18 14:47:32.615458002 +0200
 @@ -1,5 +1,5 @@
@@ -30,3 +31,14 @@
    URL:=http://wireless.kernel.org/en/developers/Regulatory/CRDA
  endef
  
+diff --exclude .svn -Nru package/crda/patches/101-make_crypto_use_optional.patch package/crda/patches/101-make_crypto_use_optional.patch
+--- package/crda/patches/101-make_crypto_use_optional.patch	2012-08-17 15:40:44.901971001 +0200
++++ package/crda/patches/101-make_crypto_use_optional.patch	2012-08-18 14:47:32.615458002 +0200
+@@ -1,6 +1,6 @@
+ --- a/Makefile
+ +++ b/Makefile
+-@@ -32,7 +32,9 @@ LDLIBS += `pkg-config --libs openssl`
++@@ -35,7 +35,9 @@ LDLIBS += `pkg-config --libs openssl`
+  
+  reglib.o: keys-ssl.c
+  

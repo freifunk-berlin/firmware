@@ -8,29 +8,52 @@ for board in $boards ; do
 	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
 done
 
+
+update_git() {
+	url="$1"
+	repodir="$2"
+	revision="$3"
+	if [ -d $repodir ] ; then
+		if [ -d $repodir/.svn ] ; then
+			echo "please remove the svn repo: $repodir"
+			echo "mv $repodir $repodir.bak"
+			exit 0
+		fi
+		echo "update $repodir git pull"
+		cd $repodir
+		git add .
+		rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
+		[ -z "$rm" ] || rm "$rmf"
+		git reset --hard
+		git checkout master .
+		git remote rm origin
+		git remote add origin $url
+		git pull -u origin master || exit 0
+		[ -z $revision ] || git checkout $revision || exit 0
+		revision=$(git rev-parse HEAD)
+		cd ../
+	else
+		echo "create $repodir git clone"
+		git clone $url $repodir || exit 0
+		cd $repodir
+		[ -z $revision ] || git checkout $revision || exit 0
+		revision=$(git rev-parse HEAD)
+		cd ../
+	fi
+	echo "Revision: $revision"
+}
+
+
 case $verm in
-	trunk) 
-		svn co svn://svn.openwrt.org/openwrt/trunk ./openwrt-trunk  || exit 0
+	trunk)
+		#svn co svn://svn.openwrt.org/openwrt/trunk ./openwrt-trunk  || exit 0
+		update_git "git://github.com/mirrors/openwrt.git" "openwrt-trunk"
 	;;
 	*)
-		svn co svn://svn.openwrt.org/openwrt/branches/$verm ./openwrt-$verm || exit 0
+		#svn co svn://svn.openwrt.org/openwrt/branches/$verm ./openwrt-$verm || exit 0
+		update_git "git://github.com/freifunk/backfire.git" "openwrt-$verm"
 	;;
 esac
-if [ $openwrt_revision ] ; then
-	case $verm in
-		trunk) 
-			cd openwrt-trunk
-			svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/trunk || exit 0
-			cd ..
-			;;
-		*)
-			cd openwrt-$verm
-			svn sw -r $openwrt_revision svn://svn.openwrt.org/openwrt/branches/$verm || exit 0
-			cd ..
-			;;
-	esac
-fi
-
 
 
 timestamp=`date "+%F_%H-%M"`
@@ -43,105 +66,24 @@ cd feeds
 cd ..
 [ -d $verm/patches ] || mkdir $verm/patches
 rm -f $verm/patches/*.patch
-
-if [ -d yaffmap-agent ] ; then
-	echo "update yaffmap-agent git pull"
-	cd yaffmap-agent
-	git pull origin master || exit 0
-	[ -z $yaffmap_agent_revision ] || git checkout $yaffmap_agent_revision || exit 0
-	yaffmap_agent_revision=$(git rev-parse HEAD)
-	cd ../
-else
-	echo "create yaffmap-agent git clone"
-	git clone git://github.com/freifunk/yaffmap-agent.git || exit 0
-	cd yaffmap-agent
-	[ -z $yaffmap_agent_revision ] || git checkout $yaffmap_agent_revision || exit 0
-	yaffmap_agent_revision=$(git rev-parse HEAD)
-	cd ../
-fi
-echo "yaffmap-agent Revision: $yaffmap_agent_revision" >> VERSION.txt
-
-if [ -d luci-app-bulletin-node ] ; then
-	echo "update luci-app-bulletin-node git pull"
-	cd luci-app-bulletin-node
-	git reset --hard
-	git pull origin master || exit 0
-	[ -z $luci_app_bulletin_node_revision ] || git checkout $luci_app_bulletin_node_revision || exit 0
-	luci_app_bulletin_node_revision=$(git rev-parse HEAD)
-	cd ../
-else
-	echo "create luci-app-bulletin-node git clone"
-	git clone git://github.com/freifunk/luci-app-bulletin-node.git || exit 0
-	cd luci-app-bulletin-node
-	[ -z $luci_app_bulletin_node_revision ] || git checkout $luci_app_bulletin_node_revision || exit 0
-	luci_app_bulletin_node_revision=$(git rev-parse HEAD)
-	cd ../
-fi
-echo "luci-app-bulletin-node Revision: $luci_app_bulletin_node_revision" >> VERSION.txt
-
+#echo "yaffmap-agent Revision: $yaffmap_agent_revision" >> VERSION.txt
+update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
+#echo "luci-app-bulletin-node Revision: $luci_app_bulletin_node_revision" >> VERSION.txt
+update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
+update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
+update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
 
 case $verm in
 	trunk)
-		packages_dir='packages'
-		if [ -d $packages_dir ] ; then
-			echo "update $packages_dir svn up"
-			cd $packages_dir
-			rm -rf $(svn status)
-			if [ -z $packages_revision ] ; then
-				svn up  || exit 0
-			else
-				svn sw -r $packages_revision "svn://svn.openwrt.org/openwrt/$packages_dir"  || exit 0
-			fi
-			packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-			cd ../
-		else
-			echo "create $packages_dir svn co"
-			svn co "svn://svn.openwrt.org/openwrt/$packages_dir"
-			if [ -z $packages_revision ] ; then
-				svn co "svn://svn.openwrt.org/openwrt/$packages_dir"
-			else
-				svn co "svn://svn.openwrt.org/openwrt/$packages_dir"
-				cd $packages_dir
-				svn sw -r $packages_revision "svn://svn.openwrt.org/branches/$packages_dir"
-				cd ..
-			fi
-			cd $packages_dir
-			packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-			cd ../
-		fi
+		update_git  "git://github.com/freifunk/packages.git" "packages"
+		packages_dir="packages"
 	;;
 	*)
-		packages_dir='packages_10.03.2'
-		if [ -d $packages_dir ] ; then
-			echo "update $packages_dir svn up"
-			cd $packages_dir
-			rm -rf $(svn status)
-			if [ -z $packages_revision ] ; then
-				svn up  || exit 0
-			else
-				svn sw -r $packages_revision "svn://svn.openwrt.org/openwrt/branches/$packages_dir"  || exit 0
-			fi
-			packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-			cd ../
-		else
-			echo "create $packages_dir svn co"
-			svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
-			if [ -z $packages_revision ] ; then
-				svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
-			else
-				svn co "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
-				cd $packages_dir
-				svn sw -r $packages_revision "svn://svn.openwrt.org/openwrt/branches/$packages_dir"
-				cd ..
-			fi
-			cd $packages_dir
-			packages_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
-			cd ../
-		fi
+		update_git  "git://github.com/freifunk/packages_10.03.2" "packages_10.03.2"
+		packages_dir="packages_10.03.2"
 	;;
 esac
 
-echo "OpenWrt $packages_dir Revision: $packages_revision" >> VERSION.txt
 case $verm in
 	trunk) 
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
@@ -178,71 +120,7 @@ rm libs/argp-standalone/patches/001-throw-in-funcdef.patch
 
 cd ..
 
-#update and patch repos
-if [ -d packages-pberg ] ; then
-	echo "update packages-pberg git pull"
-	cd packages-pberg
-	git reset --hard
-	git pull origin master || exit 0
-	[ -z $packages_pberg_revision ] || git checkout $packages_pberg_revision || exit 0
-	packages_pberg_revision=$(git rev-parse HEAD)
-	cd ../
-else
-	echo "create packages-pberg git clone"
-	git clone git://github.com/freifunk/packages-pberg.git || exit 0
-	cd packages-pberg
-	[ -z $packages_pberg_revision ] || git checkout $packages_pberg_revision || exit 0
-	packages_pberg_revision=$(git rev-parse HEAD)
-	cd ../
-fi
-echo "packages-pberg Revision: $packages_pberg_revision" >> VERSION.txt
-
-if [ -d piratenfreifunk-packages ] ; then
-	echo "update piratenfreifunk-packages manual git pull"
-	cd piratenfreifunk-packages
-	git reset --hard
-	git pull origin master || exit 0
-	[ -z $piratenfreifunk_packages_revision ] || git checkout $piratenfreifunk_packages_revision || exit 0
-	piratenfreifunk_packages_revision=$(git rev-parse HEAD)
-	cd ../
-else
-	echo "create piratenfreifunk-packages git clone"
-	git clone git://github.com/freifunk/piratenfreifunk-packages.git || exit 0
-	cd piratenfreifunk-packages
-	[ -z $piratenfreifunk_packages_revision ] || git checkout $piratenfreifunk_packages_revision || exit 0
-	piratenfreifunk_packages_revision=$(git rev-parse HEAD)
-	cd ../
-fi
-echo "piratenfreifunk-packages Revision: $piratenfreifunk_packages_revision" >> VERSION.txt
-
-if [ -d luci-master ] ; then
-	echo "update luci-master git pull"
-	cd luci-master
-	git add .
-	rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
-	[ -z "$rm" ] || rm "$rmf"
-	git reset --hard
-	git checkout master .
-	git remote rm origin
-	git remote add origin git@github.com:freifunk/luci.git
-	git pull -u origin master || exit 0
-	[ -z $luci_version ]  || git checkout "$luci_version"  || exit 0
-	[ -z $luci_revision ] || git checkout "$luci_revision" || exit 0
-	luci_revision=$(git rev-parse HEAD)
-	cd ../
-else
-	echo "create HEAD master"
-	git clone git@github.com:freifunk/luci.git luci-master || exit 0
-	cd luci-master
-	[ -z $luci_version ]  || git checkout "$luci_version"  || exit 0
-	[ -z $luci_revision ] || git checkout "$luci_revision" || exit 0
-	luci_revision=$(git rev-parse HEAD)
-	cd ../
-fi
-
-echo "LUCI Branch: luci-master" >> VERSION.txt
-echo "LUCI Revision: $luci_revision" >> VERSION.txt
-
+update_git  "git://github.com/freifunk/luci.git" "luci-master"
 cd luci-master
 LUCIPATCHES="$LUCIPATCHES luci-profile_muenster.patch"
 LUCIPATCHES="$LUCIPATCHES luci-profile_cottbus.patch"
@@ -372,18 +250,24 @@ for board in $boards ; do
 #	rm -rf staging_dir
 	rm -rf files
 	mkdir -p files
-	rm -rf $(svn status)
+	#rm -rf $(svn status)
 	case $verm in
 		trunk) 
 			#svn co svn://svn.openwrt.org/openwrt/trunk ./  || exit 0
-			rsync -a ../../openwrt-trunk/* ./
+			rsync -a ../../openwrt-trunk/ ./
 			;;
 		*)
 			#svn co svn://svn.openwrt.org/openwrt/branches/$verm ./ || exit 0
-			rsync -a ../../openwrt-$verm/* ./
+			rsync -a ../../openwrt-$verm/ ./
 			;;
 	esac
-	openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
+	git add .
+	rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
+	[ -z "$rm" ] || rm "$rmf"
+	git reset --hard
+	git checkout master .
+
+	#openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 	cp ../../VERSION.txt VERSION.txt
 	echo "OpenWrt Branch: $verm" >> VERSION.txt
 	echo "OpenWrt Revision: $openwrt_revision" >> VERSION.txt
@@ -465,13 +349,14 @@ for board in $boards ; do
 	PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-system.patch"
 	PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
-	PATCHES="$PATCHES package-crda-1.1.2.patch"
+	PATCHES="$PATCHES package-crda-backport.patch"
 	PATCHES="$PATCHES package-iw-3.3.patch"
-	PATCHES="$PATCHES package-libnl-tiny-0.1.3.patch"
+	PATCHES="$PATCHES package-libnl-tiny-backport.patch"
 	PATCHES="$PATCHES package-mac80211-trunk.patch"
 	PATCHES="$PATCHES package-mac80211-backport.patch"
-	PATCHES="$PATCHES package-wireless-tools-trunk.patch"
-	PATCHES="$PATCHES package-iwinfo-trunk.patch"
+	PATCHES="$PATCHES package-wireless-tools-backport.patch"
+	PATCHES="$PATCHES package-iwinfo-backport.patch"
+	PATCHES="$PATCHES package-hostapd-backport.patch"
 	#PATCHES="$PATCHES package-mac80211-dir300.patch"
 	#PATCHES="$PATCHES package-mac80211.patch"
 	#PATCHES="$PATCHES make-art-writeable.patch"

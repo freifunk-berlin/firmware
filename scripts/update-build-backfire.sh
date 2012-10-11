@@ -471,10 +471,8 @@ for board in $boards ; do
 	PATCHES="$PATCHES package-mac80211-trunk.patch"
 	PATCHES="$PATCHES package-mac80211-backport.patch"
 	PATCHES="$PATCHES package-wireless-tools-trunk.patch"
+	PATCHES="$PATCHES package-iwinfo-trunk.patch"
 	#PATCHES="$PATCHES package-mac80211-dir300.patch"
-	#PATCHES="$PATCHES package-iwinfo-1.patch" #no trunk
-	#PATCHES="$PATCHES package-iwinfo-2.patch" #no trunk
-	#PATCHES="$PATCHES package-iwinfo-3.patch" #no trunk
 	#PATCHES="$PATCHES package-mac80211.patch"
 	#PATCHES="$PATCHES make-art-writeable.patch"
 	for i in $PATCHES ; do

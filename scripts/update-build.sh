@@ -2,7 +2,9 @@
 
 . ./config
 
-MAKE=${MAKE:-nice -n 10 make}
+#MAKE=${MAKE:-nice -n 10 make}
+#MAKE=${MAKE:-make -j4}
+MAKE=${MAKE:-make}
 
 for board in $boards ; do
 	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
@@ -22,8 +24,8 @@ update_git() {
 		echo "update $repodir git pull"
 		cd $repodir
 		git add .
-		rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
-		[ -z "$rm" ] || rm "$rmf"
+		#rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
+		#[ -z "$rmf" ] || rm "$rmf"
 		git reset --hard
 		git checkout master .
 		git remote rm origin
@@ -40,17 +42,14 @@ update_git() {
 		revision=$(git rev-parse HEAD)
 		cd ../
 	fi
-	echo "Revision: $revision"
 }
 
-
+revision=""
 case $verm in
 	trunk)
-		#svn co svn://svn.openwrt.org/openwrt/trunk ./openwrt-trunk  || exit 0
-		update_git "git://github.com/mirrors/openwrt.git" "openwrt-trunk"
+		update_git "git://github.com/freifunk/openwrt.git" "openwrt-trunk"
 	;;
 	*)
-		#svn co svn://svn.openwrt.org/openwrt/branches/$verm ./openwrt-$verm || exit 0
 		update_git "git://github.com/freifunk/backfire.git" "openwrt-$verm"
 	;;
 esac
@@ -60,26 +59,31 @@ timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
 date +"%Y/%m/%d %H:%M">VERSION.txt
 echo "Build on $(hostname)" >>VERSION.txt
+echo "openwrt Revision: $revision"  >>VERSION.txt
 
 [ -d feeds ] || mkdir feeds
 cd feeds
 cd ..
-[ -d $verm/patches ] || mkdir $verm/patches
+[ -d $verm/patches ] || mkdir -p $verm/patches
 rm -f $verm/patches/*.patch
-#echo "yaffmap-agent Revision: $yaffmap_agent_revision" >> VERSION.txt
 update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
-#echo "luci-app-bulletin-node Revision: $luci_app_bulletin_node_revision" >> VERSION.txt
+echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
+echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
+echo "packages-pberg Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
+echo "piratenfreifunk-packages Revision: $revision"  >>VERSION.txt
 
 case $verm in
 	trunk)
 		update_git  "git://github.com/freifunk/packages.git" "packages"
+		echo "packages Revision: $revision"  >>VERSION.txt
 		packages_dir="packages"
 	;;
 	*)
-		update_git  "git://github.com/freifunk/packages_10.03.2" "packages_10.03.2"
+		update_git  "git://github.com/freifunk/packages_10.03.2" "packages_10.03.2" >>VERSION.txt
+		echo "packages Revision: $revision"  >>VERSION.txt
 		packages_dir="packages_10.03.2"
 	;;
 esac
@@ -88,7 +92,7 @@ case $verm in
 	trunk) 
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
-		PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
+		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
 		;;
 	*)
 		#PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch" #no trunk
@@ -121,6 +125,7 @@ rm libs/argp-standalone/patches/001-throw-in-funcdef.patch
 cd ..
 
 update_git  "git://github.com/freifunk/luci.git" "luci-master"
+echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
 LUCIPATCHES="$LUCIPATCHES luci-profile_muenster.patch"
 LUCIPATCHES="$LUCIPATCHES luci-profile_cottbus.patch"
@@ -253,24 +258,21 @@ for board in $boards ; do
 	#rm -rf $(svn status)
 	case $verm in
 		trunk) 
-			#svn co svn://svn.openwrt.org/openwrt/trunk ./  || exit 0
 			rsync -a ../../openwrt-trunk/ ./
 			;;
 		*)
-			#svn co svn://svn.openwrt.org/openwrt/branches/$verm ./ || exit 0
 			rsync -a ../../openwrt-$verm/ ./
 			;;
 	esac
 	git add .
-	rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
-	[ -z "$rm" ] || rm "$rmf"
+	#rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
+	#[ -z "$rmf" ] || rm "$rmf"
 	git reset --hard
 	git checkout master .
 
 	#openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 	cp ../../VERSION.txt VERSION.txt
 	echo "OpenWrt Branch: $verm" >> VERSION.txt
-	echo "OpenWrt Revision: $openwrt_revision" >> VERSION.txt
 	echo "OpenWrt Board: $board" >> VERSION.txt
 	cat ../../ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
 	cp VERSION.txt package/base-files/files/etc
@@ -328,9 +330,6 @@ for board in $boards ; do
 					PATCHES="$PATCHES  target-ixp4xx-avila-sysupgrade.patch" #no trunk
 					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
 				;;
-				brcm-2.4)
-					PATCHES="$PATCHES brcm-2.4-reboot-fix.patch" #no trunk
-				;;
 				x86_kvm_guest)
 #					PATCHES="$PATCHES x86-virtio-usb-boot.patch"
 					PATCHES="$PATCHES add-qcow-images.patch"
@@ -344,19 +343,19 @@ for board in $boards ; do
 					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
 				;;
 			esac
+			PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
+			PATCHES="$PATCHES package-crda-backport.patch"
+			PATCHES="$PATCHES package-iw-3.3.patch"
+			PATCHES="$PATCHES package-libnl-tiny-backport.patch"
+			PATCHES="$PATCHES package-mac80211-trunk.patch"
+			PATCHES="$PATCHES package-mac80211-backport.patch"
+			PATCHES="$PATCHES package-wireless-tools-backport.patch"
+			PATCHES="$PATCHES package-iwinfo-backport.patch"
+			PATCHES="$PATCHES package-hostapd-backport.patch"
 			;;
 	esac
 	PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-system.patch"
-	PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
-	PATCHES="$PATCHES package-crda-backport.patch"
-	PATCHES="$PATCHES package-iw-3.3.patch"
-	PATCHES="$PATCHES package-libnl-tiny-backport.patch"
-	PATCHES="$PATCHES package-mac80211-trunk.patch"
-	PATCHES="$PATCHES package-mac80211-backport.patch"
-	PATCHES="$PATCHES package-wireless-tools-backport.patch"
-	PATCHES="$PATCHES package-iwinfo-backport.patch"
-	PATCHES="$PATCHES package-hostapd-backport.patch"
 	#PATCHES="$PATCHES package-mac80211-dir300.patch"
 	#PATCHES="$PATCHES package-mac80211.patch"
 	#PATCHES="$PATCHES make-art-writeable.patch"
@@ -386,81 +385,40 @@ for board in $boards ; do
 	[ -h dl ] || ln -s ../../dl dl
 	cp -a ../../ff-control/patches/regulatory.bin dl/regulatory.bin
 	build_fail=0
+	rm -f bin/*/*
+	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+	cp  ../../ff-control/configs/$verm-$board.config .config
+	genconfig "$make_options_ver"
+	genconfig "$make_options"
+	genconfig "$make_min_options"
+	genconfig "$make_min_options_2_6"
+	make oldconfig
+	${MAKE} V=99 world || build_fail=1
+	rsync_web minimal
+	rm -f bin/*/*
+	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+	cp  ../../ff-control/configs/$verm-$board.config .config
+	genconfig "$make_options_ver"
+	genconfig "$make_options"
+	genconfig "$make_options_2_6"
+	make oldconfig
+	${MAKE} V=99 world || build_fail=1
+	rsync_web
+	rm -f bin/*/*
+	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+	cp  ../../ff-control/configs/$verm-$board.config .config
+	genconfig "$make_options_ver"
+	genconfig "$make_options"
+	genconfig "$make_options_2_6"
+	genconfig "$make_pi_options"
+	make oldconfig
+	${MAKE} V=99 world || build_fail=1
+	rsync_web "piraten"
 	case $board in
-		brcm-2.4)
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_options_2_4"
-			genconfig "$make_min_options"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web minimal
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_options_2_4"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_options_2_4"
-			genconfig "$make_pi_options"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web "piraten"
-		;;
 		atheros|brcm47xx|brcm63xx)
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_min_options"
-			genconfig "$make_min_options_2_6"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web minimal
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_options_2_6"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_options_2_6"
-			genconfig "$make_pi_options"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web "piraten"
+			echo "no usb"
 		;;
 		*)
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_min_options"
-			genconfig "$make_min_options_2_6"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web minimal
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_options_2_6"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 			cp  ../../ff-control/configs/$verm-$board.config .config
@@ -469,17 +427,9 @@ for board in $boards ; do
 			genconfig "$make_usb_options"
 			genconfig "$make_options_2_6"
 			genconfig "$make_big_options"
+			make oldconfig
 			${MAKE} V=99 world || build_fail=1
 			rsync_web "full"
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$make_options_ver"
-			genconfig "$make_options"
-			genconfig "$make_options_2_6"
-			genconfig "$make_pi_options"
-			${MAKE} V=99 world || build_fail=1
-			rsync_web "piraten"
 		;;
 	esac
 	if [ $build_fail -eq 1 ] ; then

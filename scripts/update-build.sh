@@ -3,8 +3,10 @@
 . ./config
 
 #MAKE=${MAKE:-nice -n 10 make}
-#MAKE=${MAKE:-make -j4}
-MAKE=${MAKE:-make}
+MAKE=${MAKE:-make -j2}
+
+[ -z $verm ] && exit 0
+[ -z $ver ] && exit 0
 
 for board in $boards ; do
 	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
@@ -50,7 +52,7 @@ case $verm in
 		update_git "git://github.com/freifunk/openwrt.git" "openwrt-trunk"
 	;;
 	*)
-		update_git "git://github.com/freifunk/backfire.git" "openwrt-$verm"
+		update_git "git://github.com/freifunk/$verm.git" "openwrt-$verm"
 	;;
 esac
 
@@ -82,14 +84,19 @@ case $verm in
 		packages_dir="packages"
 	;;
 	*)
-		update_git  "git://github.com/freifunk/packages_10.03.2" "packages_10.03.2" >>VERSION.txt
+		update_git  "git://github.com/freifunk/packages_$ver" "packages_$ver" >>VERSION.txt
 		echo "packages Revision: $revision"  >>VERSION.txt
-		packages_dir="packages_10.03.2"
+		packages_dir="packages_$ver"
 	;;
 esac
 
 case $verm in
-	trunk) 
+	trunk)
+		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
+		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
+		;;
+	attitude_adjustment)
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
 		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
@@ -144,13 +151,13 @@ LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-index.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-backup-style.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sshkeys.patch"
-#LUCIPATCHES="$LUCIPATCHES luci-sys-routes6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd_gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-common.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-splash-css.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-migrate.patch"
 LUCIPATCHES="$LUCIPATCHES luci-gwcheck-makefile.patch"
 LUCIPATCHES="$LUCIPATCHES luci-theme-bootstrap.patch"
+LUCIPATCHES="$LUCIPATCHES luci-theme-bootstrap-header.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsr-view.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsr-service-view.patch"
 LUCIPATCHES="$LUCIPATCHES luci-splash-mark.patch"
@@ -170,7 +177,10 @@ rm -rf $(find . | grep \.orig$)
 cd ..
 
 case $verm in
-	trunk) 
+	trunk)
+		sed -i -e "s,177,178," packages-pberg/net/l2gvpn/Makefile
+		;;
+	attitude_adjustment)
 		sed -i -e "s,177,178," packages-pberg/net/l2gvpn/Makefile
 		;;
 	*)
@@ -297,6 +307,17 @@ for board in $boards ; do
 		trunk)
 			#PATCHES="$PATCHES trunk-base-passwd-admin.patch"
 			#PATCHES="$PATCHES trunk-atheros-config.patch"
+			#rm -f package/base-files/files/etc/shadow
+			case $board in
+				x86_kvm_guest)
+					PATCHES="$PATCHES kvm-default-config.patch"
+				;;
+			esac
+			make_options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
+			;;
+		attitude_adjustment)
+			#PATCHES="$PATCHES trunk-base-passwd-admin.patch"
+			#PATCHES="$PATCHES trunk-atheros-config.patch"
 			case $board in
 				x86_kvm_guest)
 					PATCHES="$PATCHES kvm-default-config.patch"
@@ -306,7 +327,6 @@ for board in $boards ; do
 			;;
 		*)
 			sed -i -e 's/\(DISTRIB_DESCRIPTION=".*\)"/\1 (r'$openwrt_revision') build date: '$timestamp'"/' package/base-files/files/etc/openwrt_release
-			#sed -i -e "s,downloads\.openwrt\.org.*,$servername/$verm/$ver-timestamp/$timestamp/$board/packages," package/opkg/files/opkg.conf
 			make_options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
 			PATCHES="$PATCHES base-disable-ipv6-autoconf.patch" #no trunk
 			PATCHES="$PATCHES base-passwd-admin.patch"
@@ -391,28 +411,25 @@ for board in $boards ; do
 	genconfig "$make_options_ver"
 	genconfig "$make_options"
 	genconfig "$make_min_options"
-	genconfig "$make_min_options_2_6"
 	make oldconfig
-	${MAKE} V=99 world || build_fail=1
+	${MAKE} world || build_fail=1
 	rsync_web minimal
 	rm -f bin/*/*
 	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 	cp  ../../ff-control/configs/$verm-$board.config .config
 	genconfig "$make_options_ver"
 	genconfig "$make_options"
-	genconfig "$make_options_2_6"
 	make oldconfig
-	${MAKE} V=99 world || build_fail=1
+	${MAKE} world || build_fail=1
 	rsync_web
 	rm -f bin/*/*
 	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 	cp  ../../ff-control/configs/$verm-$board.config .config
 	genconfig "$make_options_ver"
 	genconfig "$make_options"
-	genconfig "$make_options_2_6"
 	genconfig "$make_pi_options"
 	make oldconfig
-	${MAKE} V=99 world || build_fail=1
+	${MAKE} world || build_fail=1
 	rsync_web "piraten"
 	case $board in
 		atheros|brcm47xx|brcm63xx)
@@ -425,10 +442,9 @@ for board in $boards ; do
 			genconfig "$make_options_ver"
 			genconfig "$make_options"
 			genconfig "$make_usb_options"
-			genconfig "$make_options_2_6"
 			genconfig "$make_big_options"
 			make oldconfig
-			${MAKE} V=99 world || build_fail=1
+			${MAKE} world || build_fail=1
 			rsync_web "full"
 		;;
 	esac
@@ -455,6 +471,6 @@ for board in $boards ; do
 	#pid=$!
 	#echo $pid > update-build-$verm-$board.pid
 done
-echo "rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp openwrt@pberg.freifunk.net:$wwwdir/$verm/$ver-timestamp/"
-echo "ssh openwrt@pberg.freifunk.net 'rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/'"
+echo "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp openwrt@pberg.freifunk.net:$wwwdir/$verm/$ver-timestamp/"
+echo "ssh openwrt@pberg.freifunk.net 'rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/'"
 

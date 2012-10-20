@@ -1,8 +1,13 @@
 diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
-index 6fb7f14..3c797eb 100644
+index 9c0ca74..3a621f0 100644
 --- a/contrib/package/luci/Makefile
 +++ b/contrib/package/luci/Makefile
-@@ -233,7 +233,7 @@ define Package/luci-mod-freifunk-community
+@@ -228,11 +228,11 @@ define Package/luci-mod-freifunk-community
+   SUBMENU:=9. Freifunk
+   TITLE:=Freifunk Community Meta-Package
+   DEPENDS+= \
+-   +luci-lib-web +luci-app-splash +luci-i18n-german \
++   +luci-lib-web +luci-i18n-german \
     +PACKAGE_luci-mod-freifunk-community:olsrd +PACKAGE_luci-mod-freifunk-community:olsrd-mod-dyn-gw-plain \
     +PACKAGE_luci-mod-freifunk-community:olsrd-mod-txtinfo +PACKAGE_luci-mod-freifunk-community:olsrd-mod-nameservice \
     +PACKAGE_luci-mod-freifunk-community:olsrd-mod-watchdog +PACKAGE_luci-mod-freifunk-community:kmod-tun \
@@ -11,7 +16,7 @@ index 6fb7f14..3c797eb 100644
     +luci-app-olsr-services +freifunk-gwcheck +freifunk-mapupdate
  endef
  
-@@ -278,11 +278,11 @@ define Package/luci-mod-admin-core/extra-install
+@@ -277,12 +277,12 @@ define Package/luci-mod-admin-core/extra-install
  	touch $(1)/etc/init.d/luci_fixtime || true
  endef
  
@@ -23,20 +28,7 @@ index 6fb7f14..3c797eb 100644
  $(eval $(call module,failsafe,LuCI Fail-Safe - Fail-Safe sysupgrade module,+luci-mod-admin-core))
  $(eval $(call module,rpc,LuCI RPC - JSON-RPC API,+luci-lib-json))
 -$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall +freifunk-common +community-profiles))
-+$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-mini +PACKAGE_luci-mod-freifunk:freifunk-firewall +freifunk-common +community-profiles))
++$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-mini +freifunk-common +community-profiles))
  $(eval $(call module,niu,NIU - Next Generation Interface,+luci-mod-admin-core @BROKEN))
  
  
-@@ -411,10 +411,10 @@ $(eval $(call application,openvpn,LuCI Support for OpenVPN,\
- 	+PACKAGE_luci-app-openvpn:openvpn))
- 
- $(eval $(call application,p2pblock,LuCI Support for the Freifunk P2P-Block addon,\
--	luci-app-firewall +PACKAGE_luci-app-p2pblock:freifunk-p2pblock))
-+	+PACKAGE_luci-app-p2pblock:firewall +PACKAGE_luci-app-p2pblock:freifunk-p2pblock))
- 
- $(eval $(call application,multiwan,LuCI Support for the OpenWrt MultiWAN agent,\
--	luci-app-firewall +PACKAGE_luci-app-multiwan:multiwan))
-+	+PACKAGE_luci-app-multiwan:firewall +PACKAGE_luci-app-multiwan:multiwan))
- 
- $(eval $(call application,wol,LuCI Support for Wake-on-LAN,\
- 	+PACKAGE_luci-app-wol:etherwake))

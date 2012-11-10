@@ -1,15 +1,15 @@
-Index: net/olsrd/files/olsrd.init
-===================================================================
---- net/olsrd/files/olsrd.init	(Revision 29639)
-+++ net/olsrd/files/olsrd.init	(Arbeitskopie)
-@@ -681,8 +681,8 @@
+diff --git net/olsrd/files/olsrd.init net/olsrd/files/olsrd.init
+index 7578316..b658423 100644
+--- net/olsrd/files/olsrd.init
++++ net/olsrd/files/olsrd.init
+@@ -662,8 +662,8 @@ start() {
  	if [ "$OLSRD_IPVERSION_6AND4" -ne 0 ]; then
  		bindv6only="$(sysctl -n net.ipv6.bindv6only)"
  		sysctl -w net.ipv6.bindv6only=1 > /dev/null
 -		sed -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
 -		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
 +		sed -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' -e 's/etx_ff/etx_ffeth/' -e '/NatThreshold/d' -e '/RtTable/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
-+		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' -e 's/ether/mesh/' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
++		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^\tPlParam \"[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:].*//' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' -e 's/ether/mesh/' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
  		rm $OLSRD_CONFIG_FILE
  
  		# some filenames should get the suffix .ipv6

@@ -1,0 +1,13 @@
+diff --git libs/pthsem/Makefile libs/pthsem/Makefile
+index c40930b..890af7a 100644
+--- libs/pthsem/Makefile
++++ libs/pthsem/Makefile
+@@ -21,7 +21,7 @@ define Package/pthsem
+   CATEGORY:=Libraries
+   TITLE:=GNU pth extended with semaphore support
+   URL:=http://www.auto.tuwien.ac.at/~mkoegler/index.php/pth
+-  DEPENDS:=@USE_EGLIBC @TARGET_x86
++  DEPENDS:=@TARGET_x86
+ endef
+ 
+ define Package/pthsem/description

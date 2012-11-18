@@ -1,0 +1,22 @@
+diff --git net/openvpn-devel/Makefile net/openvpn-devel/Makefile
+index 3aa207b..f238f0d 100644
+--- net/openvpn-devel/Makefile
++++ net/openvpn-devel/Makefile
+@@ -34,7 +34,7 @@ define Package/openvpn-devel/Default
+   URL:=http://openvpn.net
+   SUBMENU:=VPN
+   MENU:=1
+-  DEPENDS:=+kmod-tun +OPENVPN_DEVEL_$(1)_ENABLE_LZO:liblzo +OPENVPN_DEVEL_$(1)_ENABLE_IPROUTE2:ip $(3)
++  DEPENDS:=+kmod-tun +OPENVPN_DEVEL_$(1)_ENABLE_LZO:liblzo @OPENVPN_DEVEL_$(1)_ENABLE_IPROUTE2:BUSYBOX_CONFIG_IP $(3)
+   VARIANT:=$(1)
+   MAINTAINER:=Mirko Vogt <mirko@openwrt.org>
+ endef
+@@ -77,7 +77,7 @@ endif
+ CONFIGURE_VARS += \
+ 	IFCONFIG=/sbin/ifconfig \
+ 	ROUTE=/sbin/route \
+-	IPROUTE=/usr/sbin/ip \
++	IPROUTE=/bin/ip \
+ 	NETSTAT=/sbin/netstat
+ 
+ define Build/Configure

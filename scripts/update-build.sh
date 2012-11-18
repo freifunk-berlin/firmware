@@ -4,6 +4,7 @@
 
 #MAKE=${MAKE:-nice -n 10 make}
 MAKE=${MAKE:-make -j2}
+#MAKE=${MAKE:-echo}
 
 [ -z $verm ] && exit 0
 [ -z $ver ] && exit 0
@@ -24,6 +25,7 @@ update_git() {
 			exit 0
 		fi
 		echo "update $repodir git pull"
+		[ -z $revision ] || echo "git checkout $revision"
 		cd $repodir
 		git add .
 		#rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
@@ -49,10 +51,10 @@ update_git() {
 revision=""
 case $verm in
 	trunk)
-		update_git "git://github.com/freifunk/openwrt.git" "openwrt-trunk"
+		update_git "git://github.com/freifunk/openwrt.git" "openwrt-trunk" "$openwrt_revision"
 	;;
 	*)
-		update_git "git://github.com/freifunk/$verm.git" "openwrt-$verm"
+		update_git "git://github.com/freifunk/$verm.git" "openwrt-$verm" "$openwrt_revision"
 	;;
 esac
 
@@ -94,11 +96,14 @@ case $verm in
 	trunk)
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
 		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
 		;;
 	attitude_adjustment)
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-openvpn-devel-use-busybox-ip.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
 		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
 		;;
 	*)
@@ -162,6 +167,7 @@ LUCIPATCHES="$LUCIPATCHES luci-olsr-view.patch"
 LUCIPATCHES="$LUCIPATCHES luci-olsr-service-view.patch"
 LUCIPATCHES="$LUCIPATCHES luci-splash-mark.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-dhcp.patch"
+LUCIPATCHES="$LUCIPATCHES luci-freifunk-map.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -268,17 +274,22 @@ for board in $boards ; do
 	#rm -rf $(svn status)
 	case $verm in
 		trunk) 
-			rsync -a ../../openwrt-trunk/ ./
+			echo "rsync --delete -a ../../openwrt-trunk/* ./"
+			rsync --delete -a ../../openwrt-trunk/* ./
+			rsync --delete -a ../../openwrt-trunk/.git ./
 			;;
 		*)
-			rsync -a ../../openwrt-$verm/ ./
+			echo "rsync  --delete -a ../../openwrt-$verm/* ./"
+			rsync --delete -a ../../openwrt-$verm/* ./
+			rsync --delete -a ../../openwrt-$verm/.git ./
 			;;
 	esac
+	echo "git add ."
 	git add .
 	#rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
 	#[ -z "$rmf" ] || rm "$rmf"
-	git reset --hard
-	git checkout master .
+	#git reset --hard
+	#git checkout master .
 
 	#openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 	cp ../../VERSION.txt VERSION.txt
@@ -312,6 +323,10 @@ for board in $boards ; do
 				x86_kvm_guest)
 					PATCHES="$PATCHES kvm-default-config.patch"
 				;;
+				atheros)
+					PATCHES="$PATCHES aa-atheros-disable-pci-usb.patch" #no trunk
+					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
+				;;
 			esac
 			make_options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
 			;;
@@ -321,6 +336,10 @@ for board in $boards ; do
 			case $board in
 				x86_kvm_guest)
 					PATCHES="$PATCHES kvm-default-config.patch"
+				;;
+				atheros)
+					PATCHES="$PATCHES aa-atheros-disable-pci-usb.patch" #no trunk
+					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 				;;
 			esac
 			make_options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
@@ -405,37 +424,74 @@ for board in $boards ; do
 	[ -h dl ] || ln -s ../../dl dl
 	cp -a ../../ff-control/patches/regulatory.bin dl/regulatory.bin
 	build_fail=0
-	rm -f bin/*/*
-	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-	cp  ../../ff-control/configs/$verm-$board.config .config
-	genconfig "$make_options_ver"
-	genconfig "$make_options"
-	genconfig "$make_min_options"
-	make oldconfig
-	${MAKE} world || build_fail=1
-	rsync_web minimal
-	rm -f bin/*/*
-	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-	cp  ../../ff-control/configs/$verm-$board.config .config
-	genconfig "$make_options_ver"
-	genconfig "$make_options"
-	make oldconfig
-	${MAKE} world || build_fail=1
-	rsync_web
-	rm -f bin/*/*
-	echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-	cp  ../../ff-control/configs/$verm-$board.config .config
-	genconfig "$make_options_ver"
-	genconfig "$make_options"
-	genconfig "$make_pi_options"
-	make oldconfig
-	${MAKE} world || build_fail=1
-	rsync_web "piraten"
 	case $board in
-		atheros|brcm47xx|brcm63xx)
-			echo "no usb"
+		atheros)
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_min_options"
+			make oldconfig
+			${MAKE} world || build_fail=1
+			rsync_web
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_min_options"
+			genconfig "$make_pi_options"
+			make oldconfig
+			genconfig "CONFIG_AUDIO_SUPPORT=n"
+			genconfig "CONFIG_PCI_SUPPORT=n"
+			genconfig "CONFIG_USB_SUPPORT=n"
+			${MAKE} world || build_fail=1
+			rsync_web "piraten"
+		;;
+		brcm47xx|brcm63xx)
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_min_options"
+			make oldconfig
+			${MAKE} world || build_fail=1
+			rsync_web
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_min_options"
+			genconfig "$make_pi_options"
+			make oldconfig
+			${MAKE} world || build_fail=1
+			rsync_web "piraten"
 		;;
 		*)
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_min_options"
+			make oldconfig
+			${MAKE} world || build_fail=1
+			rsync_web minimal
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			make oldconfig
+			${MAKE} world || build_fail=1
+			rsync_web
+			rm -f bin/*/*
+			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+			cp  ../../ff-control/configs/$verm-$board.config .config
+			genconfig "$make_options_ver"
+			genconfig "$make_options"
+			genconfig "$make_pi_options"
+			make oldconfig
+			${MAKE} world || build_fail=1
+			rsync_web "piraten"
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 			cp  ../../ff-control/configs/$verm-$board.config .config
@@ -461,11 +517,11 @@ for board in $boards ; do
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/update-build-$verm-$board.log.txt
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/update-build-$verm-$board.log.txt
 #	(
-#		rsync -av --delete "$wwwdir/$verm/$ver-timestamp/$timestamp" "openwrt@pberg.freifunk.net:$wwwdir/$verm/$ver-timestamp/"
-#		ssh openwrt@pberg.freifunk.net "rsync -av --delete $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
-		#if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
-		#	curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm #$ver for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
-		#fi
+#		rsync -av "$wwwdir/$verm/$ver-timestamp/$timestamp" "openwrt@pberg.freifunk.net:$wwwdir/$verm/$ver-timestamp/"
+#		ssh openwrt@pberg.freifunk.net "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
+#		if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
+#			curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm $ver-rc1-pberg for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
+#		fi
 #	)&
 	#&
 	#pid=$!

@@ -14,8 +14,8 @@ index aceeb4a..8e1a263 100644
 @@ -19,6 +21,7 @@ function index()
  	node("splash", "blocked").target  = template("splash/blocked")
  
- 	entry({"admin", "status", "splash"}, call("action_status_admin"), _("Client-Splash")).i18n = "freifunk"
-+	entry({"mini", "status", "splash"}, call("action_status_admin"), _("Client-Splash-Status")).i18n = "freifunk"
+ 	entry({"admin", "status", "splash"}, call("action_status_admin"), _("Client-Splash"))
++	entry({"mini", "status", "splash"}, call("action_status_admin"), _("Client-Splash-Status"))
  
  	local page  = node("splash", "publicstatus")
  	page.target = call("action_status_public")

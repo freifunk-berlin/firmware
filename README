@@ -33,3 +33,83 @@ customize:
 	or
 	#ff-control/scripts/update-build.sh
 
+dnsfoo:
+	create a dnskey
+	#dnssec-keygen -a HMAC-MD5 -b 512 -n USER myhostname.pberg.freifunk.net.
+	Bind:
+	#grep Key ./Kmyhostname.pberg.freifunk.net.*.private
+	is the secret and myhostname.pberg.freifunk.net. is the key name.
+	add key section in named.conf
+key myhostname.pberg.freifunk.net. {
+    algorithm hmac-md5;
+    secret "From your keyfile ";
+};
+	add to update policy in zone config
+zone "pberg.freifunk.net" in {
+        file "master/pberg.freifunk.net";
+        type master;
+        notify yes;
+        update-policy {
+                grant myhostname.pberg.freifunk.net. wildcard *.myhostname.pberg.freifunk.net.;
+        };
+};
+
+	Mac OS X:
+	#grep Key ./Kmyhostname.pberg.freifunk.net.*.private
+	is the password and myhostname.pberg.freifunk.net. the username.
+	settings-->share-->[edit] hostname-->myhostname.pberg.freifunk.net.
+	
+	OLSR:
+	#dnssec-keygen -a HMAC-MD5 -b 512 -n USER pberg.freifunk.net
+	#grep Key ./Kmyhostname.pberg.freifunk.net.*.private
+	is the secret and myhostname.pberg.freifunk.net. is the key name.
+	add key section in named.conf
+key pberg.freifunk.net. {
+    algorithm hmac-md5;
+    secret "From your keyfile ";
+};
+	add to update policy in zone config forward and reverse
+zone "pberg.freifunk.net" in {
+        file "master/pberg.freifunk.net";
+        type master;
+        notify yes;
+        update-policy {
+                grant pberg.freifunk.net. wildcard *.pberg.freifunk.net.;
+        };
+};
+zone "8.3.0.5.0.7.4.0.1.0.0.2.ip6.arpa" IN {
+    type master;
+    file "master/2001:470:5038";
+    update-policy {
+        grant pberg.freifunk.net wildcard *.8.3.0.5.0.7.4.0.1.0.0.2.ip6.arpa.;
+    };
+};
+	edit  scripts/dns-bonjour-geo.sh
+	modify the first 20 lines
+	#OLSR Router IPv6 Adresse
+ROUTER="2001:470:6c:393::2"
+#DNS Master Servername or IPv6 Adresse
+SERVER="::1"
+#DNS Zonenenname for AAAA entry's
+ZONENAME="pberg.freifunk.net."
+#DNS Reverse IPv6 Zone for PTR revnibbles.arpa entry's
+ZONENET="2001:470:5038"
+#TODO Automate
+#uci show olsrd
+#olsrd.@LoadPlugin[4].library=olsrd_nameservice.so.0.3
+#olsrd.@LoadPlugin[4].hosts_file=/var/etc/hosts.olsr
+HOSTS="/var/etc/hosts.olsr.ipv6"
+TTL="240"
+#Key file from dnssec-keygen output
+KEYFILE="/etc/named.d/Kpberg.freifunk.net.+157+33698"
+
+	create a ssh key for access to your olsr router
+	#ssh-keygen
+	#scp root@myrouter.olsr:/etc/dropbear/authorized_keys ./
+	#cat ~/.ssh/id_rsa.pub >> authorized_keys
+	#scp authorized_keys root@myrouter.olsr:/etc/dropbear/
+	then try run scripts/dns-bonjour-geo.sh
+	scripts/dns-bonjour-pberg.sh is a script thet make basic dns entrys
+	for the pberg.freifunk.net domain.
+
+	

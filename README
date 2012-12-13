@@ -12,24 +12,24 @@ usage:
 	change the config if you want
 	#nano config
 	run the buildscript
-	#ff-control/scripts/update-build-backfire.sh
+	#ff-control/scripts/update-build.sh
 	go sleeping ;-)
-	build only one package for all boards do
+	rebuild only one package for all boards do
 	#ff-control/scripts/update-build-pkg-backfire.sh packetname
 	e.g.
-	#ff-control/scripts/update-build-pkg-backfire.sh luci-app-ffwizard-piraten
+	#ff-control/scripts/update-build-pkg-backfire.sh olsrd
 	
 customize:
-  #cd ff-build
-  #mkdir -p feeds/my-package
-  Create a openwrt Makefile see http://wiki.openwrt.org/doc/devel/packages
-  #nano feeds/my-package/Makefile
-  Add the "my-package" y|m Build-In or Modul (opkg) to config
-  #echo 'make_options=$make_options" CONFIG_PACKAGE_my-package=m"' >> config
-  or
-  #nano config
-  the you can build your package or a new router image
-  #ff-control/scripts/update-build-pkg-backfire.sh my-package
-  or
-  #ff-control/scripts/update-build-backfire.sh
+	#cd ff-build
+	#mkdir -p feeds/my-package
+	Create a openwrt Makefile see http://wiki.openwrt.org/doc/devel/packages
+	#nano feeds/my-package/Makefile
+	Add the "my-package" y|m Build-In or Modul (opkg) to config
+	#echo 'make_options=$make_options" CONFIG_PACKAGE_my-package=m"' >> config
+	or
+	#nano config
+	the you can build your package or a new router image
+	#ff-control/scripts/update-build-pkg-backfire.sh my-package
+	or
+	#ff-control/scripts/update-build.sh
 

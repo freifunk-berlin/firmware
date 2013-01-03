@@ -1,18 +1,16 @@
 diff --git a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
-index 666f086..68a0d1a 100644
+index e81e07c..60c487c 100644
 --- a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 +++ b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
-@@ -53,9 +53,7 @@ function index()
- 	page.setuser  = false
+@@ -54,6 +54,7 @@ function index()
  	page.setgroup = false
  
--	entry({"freifunk", "status.json"}, call("jsonstatus"))
+ 	entry({"freifunk", "status.json"}, call("jsonstatus"))
++	entry({"freifunk", "owm.json"}, call("jsonowm"))
  	entry({"freifunk", "status", "zeroes"}, call("zeroes"), "Testdownload")
--	entry({"freifunk", "status", "public_status_json"}, call("public_status_json")).leaf = true
+ 	entry({"freifunk", "status", "public_status_json"}, call("public_status_json")).leaf = true
  
- 	if nixio.fs.access("/usr/sbin/luci-splash") then
- 		assign({"freifunk", "status", "splash"}, {"splash", "publicstatus"}, _("Splash"), 40)
-@@ -68,42 +66,49 @@ function index()
+@@ -68,90 +69,129 @@ function index()
  	end
  
  	-- backend
@@ -66,3 +64,227 @@ index 666f086..68a0d1a 100644
  end
  
  local function fetch_olsrd()
+ 	local sys = require "luci.sys"
+ 	local util = require "luci.util"
+ 	local table = require "table"
+-	local rawdata = sys.httpget("http://127.0.0.1:2006/")
+-
+-	if #rawdata == 0 then
+-		if nixio.fs.access("/proc/net/ipv6_route", "r") then
+-			rawdata = sys.httpget("http://[::1]:2006/")
+-			if #rawdata == 0 then
+-				return nil
+-			end
+-		else
+-			return nil
+-		end
++	local rawdata4 = sys.httpget("http://127.0.0.1:2006/")
++	local rawdata6 = sys.httpget("http://[::1]:2006/")
++	--rawdata6 = {}
++	if #rawdata6 == 0 and #rawdata4 == 0 then
++		return nil
+ 	end
+ 
+ 	local data = {}
+ 
+-	local tables = util.split(util.trim(rawdata), "\r?\n\r?\n", nil, true)
+-
+-
+-	for i, tbl in ipairs(tables) do
+-		local lines = util.split(tbl, "\r?\n", nil, true)
+-		local name  = table.remove(lines, 1):sub(8)
+-		local keys  = util.split(table.remove(lines, 1), "\t")
+-		local split = #keys - 1
+-
+-		data[name] = {}
+-
+-		for j, line in ipairs(lines) do
+-			local fields = util.split(line, "\t", split)
+-			data[name][j] = {}
+-			for k, key in pairs(keys) do
+-				data[name][j][key] = fields[k]
++	if #rawdata4 ~= 0 then
++		local tables = util.split(util.trim(rawdata4), "\r?\n\r?\n", nil, true)
++	
++		for i, tbl in ipairs(tables) do
++			local lines = util.split(tbl, "\r?\n", nil, true)
++			local name  = table.remove(lines, 1):sub(8)
++			local keys  = util.split(table.remove(lines, 1), "\t")
++			local split = #keys - 1
++			if name == 'Links' then
++				data[name] = {}
++				for j, line in ipairs(lines) do
++					local fields = util.split(line, "\t", split)
++					data[name][j] = {}
++					for k, key in pairs(keys) do
++						if key == 'Local IP' then
++							data[name][j]['sourceAddr'] = fields[k]
++						elseif key == 'Remote IP' then
++							data[name][j]['destAddr'] = fields[k]
++							hostname = nixio.getnameinfo(fields[k], "inet")
++							if hostname then
++								data[name][j]['destNodeId'] = string.gsub(hostname, "mid..", "")
++							end
++						else
++							data[name][j][key] = fields[k]
++						end
++					end
++				end
+ 			end
++		end
++	end
++
+ 
+-			if data[name][j].Linkcost then
+-				data[name][j].LinkQuality,
+-				data[name][j].NLQ,
+-				data[name][j].ETX =
+-				data[name][j].Linkcost:match("([%w.]+)/([%w.]+)[%s]+([%w.]+)")
++	if #rawdata6 ~= 0 then
++		local tables = util.split(util.trim(rawdata6), "\r?\n\r?\n", nil, true)
++	
++		for i, tbl in ipairs(tables) do
++			local lines = util.split(tbl, "\r?\n", nil, true)
++			local name  = table.remove(lines, 1):sub(8)
++			local keys  = util.split(table.remove(lines, 1), "\t")
++			local split = #keys - 1
++			if name == 'Links' then
++--				if data[name] ~= 0 then
++--					data[name] = {}
++--				end
++				for j, line in ipairs(lines) do
++					local fields = util.split(line, "\t", split)
++					data[name][#data[name]+1] = {}
++					for k, key in pairs(keys) do
++						if key == 'Local IP' then
++							data[name][#data[name]]['sourceAddr'] = fields[k]
++						elseif key == 'Remote IP' then
++							data[name][#data[name]]['destAddr'] = fields[k]
++							hostname = nixio.getnameinfo(fields[k], "inet6")
++							if hostname then
++								data[name][#data[name]]['destNodeId'] = string.gsub(hostname, "mid..", "")
++							end
++						else
++							data[name][#data[name]][key] = fields[k]
++						end
++					end
++				end
+ 			end
+ 		end
+ 	end
+-
++	
+ 	return data
+ end
+ 
+@@ -170,6 +210,102 @@ function zeroes()
+ 	end
+ end
+ 
++function jsonowm()
++	local root = {}
++	local sys = require "luci.sys"
++	local uci = require "luci.model.uci"
++	local util = require "luci.util"
++	local http = require "luci.http"
++	local json = require "luci.json"
++	local ltn12 = require "luci.ltn12"
++	local version = require "luci.version"
++	local webadmin = require "luci.tools.webadmin"
++
++	local cursor = uci.cursor_state()
++
++	local ffzone = webadmin.firewall_find_zone("freifunk")
++	local ffznet = ffzone and cursor:get("firewall", ffzone, "network")
++	local ffwifs = ffznet and util.split(ffznet, " ") or {}
++
++
++	--root.protocol = 1
++	root.type = 'node' --owm
++
++	--root.system = {
++	--	uptime = {sys.uptime()},
++	--	loadavg = {sys.loadavg()},
++	--	sysinfo = {sys.sysinfo()},
++	--	hostname = sys.hostname()
++	--}
++	root.hostname = sys.hostname() --owm
++
++
++	-- s system,a arch,r ram owm
++	local s,a,r = sys.sysinfo() --owm
++	root.hardware = s --owm
++	
++
++	root.firmware = {
++	--	luciname=version.luciname,
++	--	luciversion=version.luciversion,
++	--	distname=version.distname,
++		name=version.distname, --owm
++	--	distversion=version.distversion,
++		revision=version.distversion --owm
++	}
++
++	--root.freifunk = {}
++	--cursor:foreach("freifunk", "public", function(s)
++	--	root.freifunk[s[".name"]] = s
++	--end)
++
++	cursor:foreach("system", "system", function(s) --owm
++		root.latitude = tonumber(s.latitude) --owm
++		root.longitude = tonumber(s.longitude) --owm
++	end)
++
++	--root.network = {}
++	root.interfaces = {} --owm
++	--root.wireless = {devices = {}, interfaces = {}, status = {}}
++	--local wifs = root.wireless.interfaces
++	local netdata = luci.sys.net.deviceinfo() or {}
++
++	for _, vif in ipairs(ffwifs) do
++		--root.network[vif] = cursor:get_all("network", vif)
++		root.interfaces[#root.interfaces+1] = cursor:get_all("network", vif) --owm
++		root.interfaces[#root.interfaces].name = root.interfaces[#root.interfaces].ifname --owm
++		root.interfaces[#root.interfaces].ipv4Addresses = {root.interfaces[#root.interfaces].ipaddr} --owm
++		root.interfaces[#root.interfaces].ipv6Addresses = {root.interfaces[#root.interfaces].ip6addr} --owm
++		--root.wireless.devices[vif] = cursor:get_all("wireless", vif)
++		--cursor:foreach("wireless", "wifi-iface", function(s)
++		--	if s.device == vif and s.network == vif then
++		--		wifs[#wifs+1] = s
++		--		if s.ifname then
++		--			local iwinfo = luci.sys.wifi.getiwinfo(s.ifname)
++		--			if iwinfo then
++		--				root.wireless.status[s.ifname] = { }
++
++		--				local _, f
++		--				for _, f in ipairs({
++		--					"channel", "txpower", "bitrate", "signal", "noise",
++		--					"quality", "quality_max", "mode", "ssid", "bssid", "encryption", "ifname"
++		--				}) do
++		--					root.wireless.status[s.ifname][f] = iwinfo[f]
++		--				end
++		--			end
++		--		end
++		--	end
++		--end)
++	end
++
++	root.routingNeighbors = {}
++	root.routingNeighbors.olsr = fetch_olsrd()
++
++	http.prepare_content("application/json")
++	ltn12.pump.all(json.Encoder(root):source(), http.write)
++end
++
++
+ function jsonstatus()
+ 	local root = {}
+ 	local sys = require "luci.sys"
+@@ -256,6 +392,7 @@ function public_status_json(devs)
+ 	local sys	= require "luci.sys"
+ 	local i18n	= require "luci.i18n"
+ 	local rv 	= { }
++	devs		= devs or ""
+ 
+ 	local dev
+ 	for dev in devs:gmatch("[%w%.%-]+") do

@@ -38,11 +38,16 @@ for board in $boards ; do
 	[ -f update-build-$verm-$board.lock ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
 	touch update-build-$verm-$board.lock
 	cd $verm/$board/
+	echo "openwrt feeds update"
+	scripts/feeds update
+	echo "openwrt feeds install"
+	scripts/feeds install -a
 	pkgpath=""
 	pkgpath=$(find package -maxdepth 1 | grep /$pkgname$)
 	echo "$pkgpath"
 	[ "$pkgpath" == "" ] && pkgpath=$(find package/feeds -maxdepth 2 | grep /$pkgname$)
 	echo "$pkgpath"
+	cp  ../../ff-control/configs/$verm-$board.config .config
 	genconfig "$make_options"
 	make $pkgpath/clean V=99 && \
 	make $pkgpath/compile V=99 && \

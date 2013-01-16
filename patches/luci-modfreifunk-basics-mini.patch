@@ -1,0 +1,13 @@
+diff --git a/modules/freifunk/luasrc/model/cbi/freifunk/basics.lua b/modules/freifunk/luasrc/model/cbi/freifunk/basics.lua
+index 8987b1c..a07b8a7 100644
+--- a/modules/freifunk/luasrc/model/cbi/freifunk/basics.lua
++++ b/modules/freifunk/luasrc/model/cbi/freifunk/basics.lua
+@@ -34,7 +34,7 @@ end
+ 
+ n = Map("system", translate("Basic system settings"))
+ function n.on_after_commit(self)
+-	luci.http.redirect(luci.dispatcher.build_url("admin", "freifunk", "basics"))
++	luci.http.redirect(luci.dispatcher.build_url("mini", "freifunk", "basics"))
+ end
+ 
+ b = n:section(TypedSection, "system")

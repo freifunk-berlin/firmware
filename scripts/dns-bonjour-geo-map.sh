@@ -130,161 +130,272 @@ main() {
 }
 
 
-tempfile=/tmp/router.json
->$tempfile
-ssh root@$ROUTER "egrep \"^Node|^Self\" $LATLON" | sed -e 's/^Node(//' -e 's/^Self(//' -e 's/);$//' | while read line ; do
-	echo $line >> $tempfile
-done
+#router_file=/tmp/router.json
+#echo "fetch latlon from $ROUTER"
+#ssh root@$ROUTER "egrep \"^Node|^Self\" $LATLON" | sed -e 's/^Node(//' -e 's/^Self(//' -e 's/);$//' >$router_file
 
-tempfilev4=/tmp/routerv4.json
->$tempfilev4
-ssh root@$ROUTER "egrep \"^Node|^Self\" $LATLONV4" | sed -e 's/^Node(//' -e 's/^Self(//' -e 's/);$//' | while read line ; do
-	echo "$line" >> $tempfilev4
-done
+#links_file=/tmp/links.json
+#echo "fetch latlon links from $ROUTER"
+#ssh root@$ROUTER "egrep \"^PLink\" $LATLON" | sed -e 's/^PLink(//' -e 's/);$//' >$links_file
+
+hosts="/tmp/$ROUTER.hosts"
+> "$hosts"
+#echo "fetch hosts from $ROUTER"
+#ssh "root@$ROUTER" "cat $HOSTS" | grep "$ZONENET" > "$hosts"
+
+router_filev4=/tmp/routerv4.json
+echo "fetch latlonv4 from $ROUTER"
+ssh root@$ROUTER "egrep \"^Node|^Self\" $LATLONV4" | sed -e 's/^Node(//' -e 's/^Self(//' -e 's/);$//' >$router_filev4
+
+links_filev4=/tmp/linksv4.json
+echo "fetch latlonv4 links from $ROUTER"
+ssh root@$ROUTER "egrep \"^PLink\" $LATLONV4" | sed -e 's/^PLink(//' -e 's/);$//' >$links_filev4
+
+hostsv4="/tmp/$ROUTER.hostsv4"
+> "$hostsv4"
+echo "fetch hostsv4 from $ROUTER"
+ssh "root@$ROUTER" "cat $HOSTSV4" | grep "$ZONENETV4" > "$hostsv4"
+
+
 
 mkdir -p /tmp/hosts
 rm -f /tmp/hosts/*
+mkdir -p /tmp/links
+rm -f /tmp/links/*
 hosts_if=''
-ssh root@$ROUTER "cat $HOSTS" | grep "$ZONENET" | while read line ; do
-    json=''
-    host_m=''
-    set $line;addr=$1;host=$2
-    host_m="$(echo "$host" | sed -e 's/^mid[0-9].//' -e 's/.olsr$//')"
-    json="$(grep \'"$host_m"\' $tempfile)" 
-    if [ '11'"$json" != '11' ] ; then
-	OIFS="$IFS";IFS=","
-	set $json;addr1=$1;lat=$2;lon=$3;west=$4;addr2=$5;host1=$6
-	IFS=$OIFS
-	if [ -f /tmp/hosts/$host_m ] ; then
-		echo "},{" >> /tmp/hosts/$host_m
-		echo '"name": "'$host'",' >> /tmp/hosts/$host_m
-		echo '"ipv6Addresses":["'$addr'"]' >> /tmp/hosts/$host_m
-	else
-		hosts_if="$hosts_if $host_m"
-		echo '"interfaces":[{' > /tmp/hosts/$host_m
-		echo '"name": "'$host'",'>> /tmp/hosts/$host_m
-		echo '"ipv6Addresses":["'$addr'"]' >> /tmp/hosts/$host_m
+cat "$hosts" | while read line ; do
+	echo "$line"
+	json=''
+	host_m=''
+	set $line;addr=$1;host=$2
+	host_m="$(echo "$host" | sed -e 's/^mid[0-9].//' -e 's/.olsr$//')"
+	json="$(grep \'"$host_m"\' $router_file)"
+	if [ '11'"$json" != '11' ] ; then
+		OIFS="$IFS";IFS=","
+		set $json;addr1=$1;lat=$2;lon=$3;west=$4;addr2=$5;host1=$6
+		IFS=$OIFS
+		if ! [ -f /tmp/hosts/$host_m.json ] ; then
+			rm -f /tmp/owm.json
+			curl -sg --connect-timeout 3 "http://[$addr]/cgi-bin/luci/freifunk/owm.json" > /tmp/owm.json
+			if grep -q "$addr" /tmp/owm.json ; then
+				mv /tmp/owm.json /tmp/hosts/$host_m.json
+			fi
+		fi
+		if ! [ -f /tmp/hosts/$host_m.json ] ; then
+			if [ -f /tmp/hosts/$host_m ] ; then
+				echo "},{" >> /tmp/hosts/$host_m
+				echo '"name": "'$host'",' >> /tmp/hosts/$host_m
+				echo '"ipv6Addresses":["'$addr'"]' >> /tmp/hosts/$host_m
+			else
+				hosts_if="$hosts_if $host_m"
+				echo '"interfaces":[{' > /tmp/hosts/$host_m
+				echo '"name": "'$host'",'>> /tmp/hosts/$host_m
+				echo '"ipv6Addresses":["'$addr'"]' >> /tmp/hosts/$host_m
+			fi
+			echo "grep links $addr1 from $links_file"
+			#set -x
+			egrep "^$addr1" "$links_file" | while read jsonr ; do
+				echo "jsonr: $jsonr"
+				OIFS="$IFS";IFS=","
+				set $jsonr;src=$1;dst=$2;lq=$3;nlq=$4;etx=$5
+				IFS=$OIFS
+				dst=${dst/\'/}
+				dst=${dst/\'/}
+				echo "grep $dst $hosts"
+				dstjson=$(egrep "^$dst" "$hosts")
+				echo $dstjson
+				set $dstjson;dstaddr=$1;dsthost=$2
+				dsthost_m="$(echo "$dsthost" | sed -e 's/^mid[0-9].//' -e 's/.olsr$//')"
+				if [ -f /tmp/links/$host_m ] ; then
+					echo "},{" >> /tmp/links/$host_m
+					echo '"interface": "'$host'",' >> /tmp/links/$host_m
+					echo '"id": "'$dsthost_m'.'$ZONENAMEV4'",' >> /tmp/links/$host_m
+					echo '"quality": '$etx >> /tmp/links/$host_m
+				else
+					hosts_if="$hosts_if $host_m"
+					echo '"neighbors":[{' > /tmp/links/$host_m
+					echo '"interface": "'$host'",'>> /tmp/links/$host_m
+					echo '"id": "'$dsthost_m'.'$ZONENAMEV4'",' >> /tmp/links/$host_m
+					echo '"quality": '$etx >> /tmp/links/$host_m
+				fi
+			done
+			#set +x
+		fi
+		latdeg="$(echo $lat | cut -d '.' -f1)"
+		OIFS="$IFS";IFS="."
+		set $lat;latdeg=$1;latval=$2
+		IFS=$OIFS
+		if [ $latdeg -lt 0 ] ; then
+			northsouth='S'
+		else
+			northsouth='N'
+		fi
+		#TODO replace bc
+		#latmin=$(((latval/10000)*6/10))
+		#latsec=$(((latval-(latval/10000)*10000)/100*60/100))
+		#latsecfrac=$(printf %02d $((latval-(latval/100)*100)))
+		latmin=$(echo "($latval*60/1000000)" | bc)
+		latmin_=$(echo "scale=5;($latval*60/1000000)" | bc)
+		latsec=$(echo "scale=4;(($latmin_ - $latmin)*100000)*60/100000" | bc)
+		
+		IFS=$OIFS
+		londeg="$(echo $lon | cut -d '.' -f1)"
+		OIFS="$IFS";IFS="."
+		set $lon;londeg=$1;lonval=$2
+		IFS=$OIFS
+		if [ $londeg -lt 0 ] ; then
+			eastwest= 'W'
+		else
+			eastwest='E'
+		fi
+		#TODO replace bc
+		#lonmin=$(((lonval/10000)*6/10))
+		#lonsec=$(((lonval-(lonval/10000)*10000)/1000*6))
+		#lonsecfrac=$(printf %02d $((lonval-(lonval/100)*100)))
+		lonmin=$(echo "($lonval*60/1000000)" | bc)
+		lonmin_=$(echo "scale=5;($lonval*60/1000000)" | bc)
+		lonsec=$(echo "scale=4;(($lonmin_ - $lonmin)*100000)*60/100000" | bc)
+		
+		loc="$latdeg $latmin $latsec $northsouth $londeg $lonmin $lonsec $eastwest"
+		loc="$loc 30.00m 1.00m 1.00m 1.00m"
 	fi
-	latdeg="$(echo $lat | cut -d '.' -f1)"
-	OIFS="$IFS";IFS="."
-	set $lat;latdeg=$1;latval=$2
-	IFS=$OIFS
-	if [ $latdeg -lt 0 ] ; then
-		northsouth= 'S'
-	else
-		northsouth='N'
-	fi
-	#TODO replace bc
-	#latmin=$(((latval/10000)*6/10))
-	#latsec=$(((latval-(latval/10000)*10000)/100*60/100))
-	#latsecfrac=$(printf %02d $((latval-(latval/100)*100)))
-	latmin=$(echo "($latval*60/1000000)" | bc)
-	latmin_=$(echo "scale=5;($latval*60/1000000)" | bc)
-	latsec=$(echo "scale=4;(($latmin_ - $latmin)*100000)*60/100000" | bc)
-
-	IFS=$OIFS
-	londeg="$(echo $lon | cut -d '.' -f1)"
-	OIFS="$IFS";IFS="."
-	set $lon;londeg=$1;lonval=$2
-	IFS=$OIFS
-	if [ $londeg -lt 0 ] ; then
-		eastwest= 'W'
-	else
-		eastwest='E'
-	fi
-	#TODO replace bc
-	#lonmin=$(((lonval/10000)*6/10))
-	#lonsec=$(((lonval-(lonval/10000)*10000)/1000*6))
-	#lonsecfrac=$(printf %02d $((lonval-(lonval/100)*100)))
-	lonmin=$(echo "($lonval*60/1000000)" | bc)
-	lonmin_=$(echo "scale=5;($lonval*60/1000000)" | bc)
-	lonsec=$(echo "scale=4;(($lonmin_ - $lonmin)*100000)*60/100000" | bc)
-
-	loc="$latdeg $latmin $latsec $northsouth $londeg $lonmin $lonsec $eastwest"
-	loc="$loc 30.00m 1.00m 1.00m 1.00m"
-   fi
-   main "$addr" "$host" "$loc"
+	#main "$addr" "$host" "$loc"
 done
 
-rm -rf /tmp/hostsv4
+
 mkdir -p /tmp/hostsv4
+rm -f /tmp/hostsv4/*
+mkdir -p /tmp/linksv4
+rm -f /tmp/linksv4/*
 hostsv4_if=''
-ssh root@$ROUTER "cat $HOSTSV4" | grep "$ZONENETV4" | while read line ; do
-    json=''
-    host_m=''
-    addr=''
-    host=''
-    set $line;addr="$1";host="$2"
-    host_m="$(echo "$host" | sed -e 's/^mid[0-9].//' -e 's/.olsr$//')"
-    json="$(grep \'"$host_m"\' $tempfilev4)"
-    if [ '11'"$json" != '11' ] ; then
-	OIFS="$IFS";IFS=","
-	set $json;addr1=$1;lat=$2;lon=$3;west=$4;addr2=$5;host1=$6
-	IFS=$OIFS
-	if [ -f /tmp/hostsv4/$host_m ] ; then
-		echo "},{" >> /tmp/hostsv4/$host_m
-		echo '"name": "'$host'",' >> /tmp/hostsv4/$host_m
-		echo '"ipv4Addresses":["'$addr'"]' >> /tmp/hostsv4/$host_m
-	else
-		hostsv4_if="$hostsv4_if $host_m"
-		echo '"interfaces":[{' > /tmp/hostsv4/$host_m
-		echo '"name": "'"$host"'",'>> /tmp/hostsv4/$host_m
-		echo '"ipv4Addresses":["'$addr'"]' >> /tmp/hostsv4/$host_m
+cat "$hostsv4" | while read line ; do
+	json=''
+	host_m=''
+	addr=''
+	host=''
+	set $line;addr="$1";host="$2"
+	host_m="$(echo "$host" | sed -e 's/^mid[0-9].//' -e 's/.olsr$//')"
+	json="$(grep \'"$host_m"\' $router_filev4)"
+	if [ '11'"$json" != '11' ] ; then
+		echo "$host_m $host"
+		OIFS="$IFS";IFS=","
+		set $json;addr1=$1;lat=$2;lon=$3;west=$4;addr2=$5;host1=$6
+		IFS=$OIFS
+		if ! [ -f /tmp/hostsv4/$host_m.json ] ; then
+			rm -f /tmp/owm.json
+			curl -sg --connect-timeout 3 "http://$addr/cgi-bin/luci/owm.json" > /tmp/owm.json
+			if grep -q "$addr" /tmp/owm.json ; then
+				mv /tmp/owm.json /tmp/hostsv4/$host_m.json
+			fi
+		fi
+		if ! [ -f /tmp/hostsv4/$host_m.json ] ; then
+			if [ -f /tmp/hostsv4/$host_m ] ; then
+				echo "},{" >> /tmp/hostsv4/$host_m
+				echo '"name": "'$host'",' >> /tmp/hostsv4/$host_m
+				echo '"ipv4Addresses":["'$addr'"]' >> /tmp/hostsv4/$host_m
+			else
+				hostsv4_if="$hostsv4_if $host_m"
+				echo '"interfaces":[{' > /tmp/hostsv4/$host_m
+				echo '"name": "'"$host"'",'>> /tmp/hostsv4/$host_m
+				echo '"ipv4Addresses":["'$addr'"]' >> /tmp/hostsv4/$host_m
+			fi
+			echo "grep links $addr1 from $links_filev4"
+			egrep "^$addr1" "$links_filev4" | while read jsonr ; do
+				echo "jsonr: $jsonr"
+				OIFS="$IFS";IFS=","
+				set $jsonr;src=$1;dst=$2;lq=$3;nlq=$4;etx=$5
+				IFS=$OIFS
+				dst=${dst/\'/}
+				dst=${dst/\'/}
+				echo "grep $dst $hosts"
+				dstjson=$(egrep "^$dst" "$hostsv4")
+				echo $dstjson
+				set $dstjson;dstaddr=$1;dsthost=$2
+				dsthost_m="$(echo "$dsthost" | sed -e 's/^mid[0-9].//' -e 's/.olsr$//')"
+				if [ -f /tmp/linksv4/$host_m ] ; then
+					echo "},{" >> /tmp/linksv4/$host_m
+					echo '"interface": "'$host'",' >> /tmp/linksv4/$host_m
+					echo '"id": "'$dsthost_m'.'$ZONENAMEV4'",' >> /tmp/linksv4/$host_m
+					echo '"quality": '$etx >> /tmp/linksv4/$host_m
+				else
+					hosts_if="$hosts_if $host_m"
+					echo '"neighbors":[{' > /tmp/linksv4/$host_m
+					echo '"interface": "'$host'",'>> /tmp/linksv4/$host_m
+					echo '"id": "'$dsthost_m'.'$ZONENAMEV4'",' >> /tmp/linksv4/$host_m
+					echo '"quality": '$etx >> /tmp/linksv4/$host_m
+				fi
+			done
+		fi
 	fi
-   fi
 done
 
 
 mkdir -p /tmp/hosts
 cd /tmp/hosts/
 for i in * ; do
-	json="$(grep \'"$i"\' $tempfile)"
-	OIFS="$IFS";IFS=","
-	set $json;addr1=$1;lat=$2;lon=$3;west=$4;addr2=$5;host1=$6
-	IFS=$OIFS
-	echo "}]" >> "$i"
-	ifaces="$(cat /tmp/hosts/"$i")"
-	rev=''
-	rev=$(curl -4 -sIX HEAD $COUCHDB/$i.$ZONENAME 2>/dev/null | grep ETag | cut -d '"' -f2)
-	if [ -z $rev ] ; then
-		curl -4 -sX PUT -H "Content-Type: application/json" $COUCHDB/$i.$ZONENAME -d '{"type": "node", "hostname": "'$i.$ZONENAME'", "longitude": '$lon', "latitude": '$lat', '"$ifaces"'}' > /dev/null
-	else
-		curl -4 -sX PUT -H "Content-Type: application/json" $COUCHDB/$i.$ZONENAME -d '{"_rev": "'$rev'", "type": "node", "hostname": "'$i.$ZONENAME'", "longitude": '$lon', "latitude": '$lat', '"$ifaces"'}' > /dev/null
-	fi
-	
-	for j in 'interfaces' 'links' 'routes' ; do
-		curl -6 -s --connect-timeout 3 "$i.$ZONENAME:9090/$j" 2>/dev/null | sed -e 's/^\"data/{"data/' > $i.$ZONENAME.olsr-$j.json
-		if [ -f "$i".$ZONENAME.olsr-$j.json ] ; then
-			rev=$(curl -4 -sIX HEAD $COUCHDB/$i.$ZONENAME 2>/dev/null | grep ETag | cut -d '"' -f2)
-			curl -4 -sX PUT -H "Content-Type: application/json" $COUCHDB/$i.$ZONENAME/olsr-$j.json?rev=$rev --data "$(cat $i.$ZONENAME.olsr-$j.json)" > /dev/null
+	[ $i == '*' ] && break
+	echo "update $i"
+	host=${i/.json/}
+	if [ -f /tmp/hosts/"$host".json ] ; then
+		echo "update server $COUCHDB/$host.$ZONENAMEV4 with luci json"
+		rev=$(curl -4 -sIX HEAD $COUCHDB/$host.$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
+		if [ -z $rev ] ; then
+			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hosts/"$host".json
+		else
+			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hosts/"$host".json
 		fi
-	done
+	else			
+		echo "update server $COUCHDB/$host.$ZONENAMEV4 with bash json begin"
+		json="$(grep \'"$host"\' $router_file)"
+		OIFS="$IFS";IFS=","
+		set $json;addr1=$1;lat=$2;lon=$3;west=$4;addr2=$5;host1=$6
+		IFS=$OIFS
+		echo "}]" >> /tmp/hosts/"$host"
+		echo "}]" >> /tmp/links/"$host"
+		ifaces="$(cat /tmp/hosts/"$host")"
+		links="$(cat /tmp/links/"$host")"
+		echo '{"type": "node", "hostname": "'$host.$ZONENAMEV4'", "longitude": '$lon', "latitude": '$lat', '"$ifaces"',' "$links"'}' > /tmp/hosts/"$host".json
+		rev=''
+		rev=$(curl -4 -sIX HEAD $COUCHDB/$host.$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
+		if [ -z $rev ] ; then
+			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hosts/"$host".json
+		else
+			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hosts/"$host".json
+		fi
+	fi
 done
 
 mkdir -p /tmp/hostsv4
 cd /tmp/hostsv4/
 for i in * ; do
-	json="$(grep \'"$i"\' $tempfilev4)"
-	OIFS="$IFS";IFS=","
-	set $json;addr1=$1;lat=$2;lon=$3;west=$4;addr2=$5;host1=$6
-	IFS=$OIFS
-	echo "}]" >> "$i"
-	ifaces="$(cat /tmp/hostsv4/"$i")"
-	rev=''
-	rev=$(curl -4 -sIX HEAD $COUCHDB/"$i".$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
-	if [ -z $rev ] ; then
-		curl -4 -sX PUT -H "Content-Type: application/json" $COUCHDB/$i.$ZONENAMEV4 -d '{"type": "node", "hostname": "'$i.$ZONENAMEV4'", "longitude": '$lon', "latitude": '$lat', '"$ifaces"'}' > /dev/null
-	else
-		curl -4 -sX PUT -H "Content-Type: application/json" $COUCHDB/$i.$ZONENAMEV4 -d '{"_rev": "'$rev'", "type": "node", "hostname": "'"$i".$ZONENAMEV4'", "longitude": '$lon', "latitude": '$lat', '"$ifaces"'}' > /dev/null
-	fi
-	
-	for j in 'interfaces' 'links' 'routes' ; do
-		curl -4 -s --connect-timeout 3 "$i.$ZONENAMEV4:9090/$j" 2>/dev/null | sed -e 's/^\"data/{"data/' > /tmp/hostsv4/"$i".$ZONENAMEV4.olsr-v4-$j.json
-		if [ -f /tmp/hostsv4/"$i".$ZONENAMEV4.olsr-v4-$j.json ] ; then
-			rev=$(curl -4 -sIX HEAD $COUCHDB/"$i".$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
-			curl -4 -sX PUT -H "Content-Type: application/json" $COUCHDB/$i.$ZONENAMEV4/olsr-v4-$j.json?rev=$rev --data "$(cat /tmp/hostsv4/"$i".$ZONENAMEV4.olsr-v4-$j.json)" > /dev/null
+	[ $i == '*' ] && break
+	host=${i/.json/}
+	echo $host
+	if [ -f /tmp/hostsv4/"$host".json ] ; then
+		rev=$(curl -4 -sIX HEAD $COUCHDB/$host.$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
+		if [ -z $rev ] ; then
+			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hostsv4/"$host".json
+		else
+			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hostsv4/"$host".json
 		fi
-	done
+	else			
+		json="$(grep \'"$host"\' $router_filev4)"
+		OIFS="$IFS";IFS=","
+		set $json;addr1=$1;lat=$2;lon=$3;west=$4;addr2=$5;host1=$6
+		IFS=$OIFS
+		echo "}]" >> /tmp/hostsv4/"$host"
+		echo "}]" >> /tmp/linksv4/"$host"
+		ifaces="$(cat /tmp/hostsv4/"$host")"
+		links="$(cat /tmp/linksv4/"$host")"
+		echo '{"type": "node", "hostname": "'$host.$ZONENAMEV4'", "longitude": '$lon', "latitude": '$lat', '"$ifaces"',' "$links"'}' > /tmp/hostsv4/"$host".json
+		rev=''
+		rev=$(curl -4 -sIX HEAD $COUCHDB/"$host".$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
+		if [ -z $rev ] ; then
+			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hostsv4/"$host".json
+		else
+			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hostsv4/"$host".json
+		fi
+	fi
 done
 cd
 

@@ -150,6 +150,7 @@ LUCIPATCHES="$LUCIPATCHES luci-app-olsr-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini-status.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
+LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-basics-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-common-neighb6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
@@ -297,7 +298,7 @@ for board in $boards ; do
 	echo "OpenWrt Board: $board" >> VERSION.txt
 	cat ../../ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
 	cp VERSION.txt package/base-files/files/etc
-	echo "URL http://$servername/$verm/$ver-timestamp/$timestamp/$board on $(hostname)">> package/base-files/files/etc/banner
+	echo "timestamp: $timestamp url: http://$servername/$verm/$ver/$board host: $(hostname)">> package/base-files/files/etc/banner
 
 	echo "Generate feeds.conf"
 	>feeds.conf
@@ -328,9 +329,10 @@ for board in $boards ; do
 					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 				;;
 			esac
-			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
+			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		attitude_adjustment)
+			PATCHES="$PATCHES package-mac80211-regdb.patch"
 			case $board in
 				x86_kvm_guest)
 					PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
@@ -340,11 +342,11 @@ for board in $boards ; do
 					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 				;;
 			esac
-			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
+			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		*)
 			sed -i -e 's/\(DISTRIB_DESCRIPTION=".*\)"/\1 (r'$openwrt_revision') build date: '$timestamp'"/' package/base-files/files/etc/openwrt_release
-			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver-timestamp/$timestamp/$board/packages\""
+			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			PATCHES="$PATCHES base-disable-ipv6-autoconf.patch" #no trunk
 			PATCHES="$PATCHES base-passwd-admin.patch"
 			PATCHES="$PATCHES package-lua.patch"
@@ -544,8 +546,8 @@ for board in $boards ; do
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/update-build-$verm-$board.log.txt
 	cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/update-build-$verm-$board.log.txt
 	(
-		rsync -av "$wwwdir/$verm/$ver-timestamp/$timestamp" "$user@$servername:$wwwdir/$verm/$ver-timestamp/"
-		ssh $user@$servername "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
+		rsync -av "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
+		#ssh $user@$servername "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
 		if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
 			curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm $ver-rc1-pberg for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
 		fi

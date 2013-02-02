@@ -74,7 +74,7 @@ update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
 echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
 echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
+#update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
 echo "packages-pberg Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
 echo "piratenfreifunk-packages Revision: $revision"  >>VERSION.txt
@@ -139,26 +139,21 @@ cd ..
 update_git  "git://github.com/freifunk/luci.git" "luci-master"
 echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
-LUCIPATCHES="$LUCIPATCHES luci-profile_muenster.patch"
-LUCIPATCHES="$LUCIPATCHES luci-profile_cottbus.patch"
-LUCIPATCHES="$LUCIPATCHES luci-profile_ndb.patch"
-LUCIPATCHES="$LUCIPATCHES luci-profile_ffwtal.patch"
-LUCIPATCHES="$LUCIPATCHES luci-profile_berlin.patch"
-LUCIPATCHES="$LUCIPATCHES luci-profile_bno.patch"
-LUCIPATCHES="$LUCIPATCHES luci-profile_pberg.patch"
+#REMOVE LUCIPATCHES="$LUCIPATCHES luci-profile_muenster.patch"
+#REMOVE LUCIPATCHES="$LUCIPATCHES luci-profile_cottbus.patch"
+#REMOVE LUCIPATCHES="$LUCIPATCHES luci-profile_ndb.patch"
+#REMOVE LUCIPATCHES="$LUCIPATCHES luci-profile_ffwtal.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-olsr-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini-status.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-basics-mini.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk-common-neighb6.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-index.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-backup-style.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sshkeys.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd_gvpn.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk-common.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-splash-css.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-migrate.patch"
 LUCIPATCHES="$LUCIPATCHES luci-gwcheck-makefile.patch"
@@ -169,6 +164,8 @@ LUCIPATCHES="$LUCIPATCHES luci-olsr-service-view.patch"
 LUCIPATCHES="$LUCIPATCHES luci-splash-mark.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-dhcp.patch"
 LUCIPATCHES="$LUCIPATCHES luci-freifunk-map.patch"
+LUCIPATCHES="$LUCIPATCHES luci-admin-mini-install-full.patch"
+LUCIPATCHES="$LUCIPATCHES luci-admin-mini-wifi.patch"
 for i in $LUCIPATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -238,8 +235,8 @@ rsync_web() {
 	mkdir -p	$wwwdir/$verm/$ver/$board$build_profile
 	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver/$board$build_profile
 	rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
-	mkdir -p	$wwwdir/$verm/$ver/$board/packages
-	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver/$board/packages
+	mkdir -p $wwwdir/$verm/$ver/$board/packages
+	rsync -lptgoD bin/*/packages/* $wwwdir/$verm/$ver/$board/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver/$board$build_profile/opkg-status.txt
 	cp VERSION.txt	$wwwdir/$verm/$ver/$board$build_profile
 	cp .config	$wwwdir/$verm/$ver/$board$build_profile/config.txt
@@ -336,6 +333,7 @@ for board in $boards ; do
 			case $board in
 				x86_kvm_guest)
 					PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
+					PATCHES="$PATCHES target-x86_kvm_guest-add-qcow.patch"
 				;;
 				atheros)
 					PATCHES="$PATCHES aa-atheros-disable-pci-usb.patch" #no trunk

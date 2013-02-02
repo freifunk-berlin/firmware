@@ -1,0 +1,93 @@
+diff --git target/linux/x86/image/Config.in target/linux/x86/image/Config.in
+index 08880e5..393aa4a 100644
+--- target/linux/x86/image/Config.in
++++ target/linux/x86/image/Config.in
+@@ -63,16 +63,22 @@ config X86_VDI_IMAGES
+ 	bool "Build VirtualBox image files (VDI)"
+ 	depends X86_GRUB_IMAGES
+ 	depends TARGET_x86
+-	depends TARGET_ROOTFS_EXT4FS
++	depends TARGET_ROOTFS_EXT4FS || TARGET_ROOTFS_SQUASHFS
+ 	select PACKAGE_kmod-pcnet32
+ 
+ config X86_VMDK_IMAGES
+ 	bool "Build VMware image files (VMDK)"
+ 	depends X86_GRUB_IMAGES
+ 	depends TARGET_x86
+-	depends TARGET_ROOTFS_EXT4FS
++	depends TARGET_ROOTFS_EXT4FS || TARGET_ROOTFS_SQUASHFS
+ 	select PACKAGE_kmod-e1000
+ 
++config X86_QCOW2_IMAGES
++	bool "Build kvm image files (QCOW2)"
++	depends X86_GRUB_IMAGES
++	depends TARGET_x86
++	depends TARGET_ROOTFS_EXT4FS || TARGET_ROOTFS_SQUASHFS
++	select PACKAGE_kmod-e1000
+ 
+ config OLPC_BOOTSCRIPT_IMAGES
+ 	bool "Build images with bootscript"
+diff --git target/linux/x86/image/Makefile target/linux/x86/image/Makefile
+index 13da511..0207a6e 100644
+--- target/linux/x86/image/Makefile
++++ target/linux/x86/image/Makefile
+@@ -192,6 +192,15 @@ ifneq ($(CONFIG_X86_VDI_IMAGES),)
+ 		# XXX: VBoxManage insists on setting perms to 0600
+ 		chmod 0644 $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vdi
+     endif
++    ifeq ($(1),squashfs)
++		rm $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vdi || true
++		cp $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vdi.img
++		dd if=/dev/zero bs=512 conv=notrunc count="45000" >> $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vdi.img
++		qemu-img convert -f raw -O vmdk \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vdi.img \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vmdk
++		rm $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vdi.img || true
++    endif
+   endef
+ endif
+ 
+@@ -204,6 +213,35 @@ ifneq ($(CONFIG_X86_VMDK_IMAGES),)
+ 			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img \
+ 			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vmdk
+     endif
++    ifeq ($(1),squashfs)
++		rm $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vmdk || true
++		cp $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vmdk.img
++		dd if=/dev/zero bs=512 conv=notrunc count="45000" >> $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vmdk.img
++		qemu-img convert -f raw -O vmdk \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vmdk.img \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vmdk
++		rm $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vmdk.img || true
++    endif
++  endef
++endif
++
++ifneq ($(CONFIG_X86_QCOW2_IMAGES),)
++  define Image/Build/qcow2
++    # left here because the image builder doesnt need these
++    ifeq ($(1),ext4)
++		rm $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).qcow2 || true
++		qemu-img convert -f raw -O qcow2 \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).qcow2
++    endif
++    ifeq ($(1),squashfs)
++		rm $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).qcow2 || true
++		qemu-img convert -f raw -O qcow2 \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).qcow2
++		qemu-img resize \
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).qcow2 +23M
++    endif
+   endef
+ endif
+ 
+@@ -253,6 +291,7 @@ define Image/Build
+ 	$(call Image/Build/$(if $(CONFIG_X86_USE_GRUB2),grub2,grub),$(1))
+ 	$(call Image/Build/vdi,$(1))
+ 	$(call Image/Build/vmdk,$(1))
++	$(call Image/Build/qcow2,$(1))
+   endif
+ 	$(CP) $(KDIR)/root.$(1) $(BIN_DIR)/$(IMG_PREFIX)-rootfs-$(1).img
+ 	$(CP) $(KDIR)/bzImage $(BIN_DIR)/$(IMG_PREFIX)-vmlinuz

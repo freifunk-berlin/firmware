@@ -1,0 +1,27 @@
+diff --git a/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua b/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
+index a18c072..2638509 100644
+--- a/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
++++ b/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
+@@ -19,17 +19,15 @@ local fs  = require "nixio.fs"
+ local sys = require "luci.sys"
+ local uci = require "luci.model.uci".cursor()
+ 
+-if not uci:get("network", "wan") then
+-	uci:section("network", "interface", "wan", {proto="none", ifname=" "})
+-	uci:save("network")
+-	uci:commit("network")
+-end
+-
+ local wlcursor = luci.model.uci.cursor_state()
+-local wireless = wlcursor:get_all("wireless")
++local wireless = wlcursor:get_all("wireless") or {}
+ local wifidevs = {}
+ local ifaces = {}
+ 
++if #wireless < 1 then
++	return
++end
++
+ for k, v in pairs(wireless) do
+ 	if v[".type"] == "wifi-iface" then
+ 		table.insert(ifaces, v)

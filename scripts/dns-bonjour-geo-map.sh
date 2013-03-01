@@ -7,7 +7,7 @@ ROUTER="2001:470:6c:393::2"
 #SERVER="127.0.0.1"
 SERVER="ns1.pberg.freifunk.net"
 #DNS Zonenenname for AAAA entry's
-ZONENAME="pberg.freifunk.net"
+ZONENAME="olsr.pberg.freifunk.net"
 ZONENAMEV4="olsr"
 #DNS Reverse IPv6 Zone for PTR revnibbles.arpa entry's
 ZONENET="2001:470:5038"
@@ -29,7 +29,7 @@ IPV4_REGEX='[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,
 TIME=$(date --rfc-3339=ns)
 #COUCHDB="http://couch.pberg.freifunk.net/openwifimap"
 #COUCHDB="http://map.pberg.freifunk.net/openwifimap"
-# via ssh getunnelt ssh -L5984:127.0.0.1:5984 openwrt@couch.pberg.freifunk.net
+# via ssh getunnelt ssh -L5984:127.0.0.1:5984 openwrt@couch.pberg.freifunk.net -N &
 COUCHDB="http://127.0.0.1:5984/openwifimap"
 
 
@@ -130,31 +130,31 @@ main() {
 }
 
 
-#router_file=/tmp/router.json
-#echo "fetch latlon from $ROUTER"
-#ssh root@$ROUTER "egrep \"^Node|^Self\" $LATLON" | sed -e 's/^Node(//' -e 's/^Self(//' -e 's/);$//' >$router_file
+router_file=/tmp/router.json
+echo "fetch latlon from $ROUTER"
+ssh root@$ROUTER "egrep \"^Node|^Self\" $LATLON" | sed -e 's/^Node(//' -e 's/^Self(//' -e 's/);$//' >$router_file
 
-#links_file=/tmp/links.json
-#echo "fetch latlon links from $ROUTER"
-#ssh root@$ROUTER "egrep \"^PLink\" $LATLON" | sed -e 's/^PLink(//' -e 's/);$//' >$links_file
+links_file=/tmp/links.json
+echo "fetch latlon links from $ROUTER"
+ssh root@$ROUTER "egrep \"^PLink\" $LATLON" | sed -e 's/^PLink(//' -e 's/);$//' >$links_file
 
 hosts="/tmp/$ROUTER.hosts"
 > "$hosts"
-#echo "fetch hosts from $ROUTER"
-#ssh "root@$ROUTER" "cat $HOSTS" | grep "$ZONENET" > "$hosts"
+echo "fetch hosts from $ROUTER"
+ssh "root@$ROUTER" "cat $HOSTS" | grep "$ZONENET" > "$hosts"
 
-router_filev4=/tmp/routerv4.json
-echo "fetch latlonv4 from $ROUTER"
-ssh root@$ROUTER "egrep \"^Node|^Self\" $LATLONV4" | sed -e 's/^Node(//' -e 's/^Self(//' -e 's/);$//' >$router_filev4
+#router_filev4=/tmp/routerv4.json
+#echo "fetch latlonv4 from $ROUTER"
+#ssh root@$ROUTER "egrep \"^Node|^Self\" $LATLONV4" | sed -e 's/^Node(//' -e 's/^Self(//' -e 's/);$//' >$router_filev4
 
-links_filev4=/tmp/linksv4.json
-echo "fetch latlonv4 links from $ROUTER"
-ssh root@$ROUTER "egrep \"^PLink\" $LATLONV4" | sed -e 's/^PLink(//' -e 's/);$//' >$links_filev4
+#links_filev4=/tmp/linksv4.json
+#echo "fetch latlonv4 links from $ROUTER"
+#ssh root@$ROUTER "egrep \"^PLink\" $LATLONV4" | sed -e 's/^PLink(//' -e 's/);$//' >$links_filev4
 
-hostsv4="/tmp/$ROUTER.hostsv4"
-> "$hostsv4"
-echo "fetch hostsv4 from $ROUTER"
-ssh "root@$ROUTER" "cat $HOSTSV4" | grep "$ZONENETV4" > "$hostsv4"
+#hostsv4="/tmp/$ROUTER.hostsv4"
+#> "$hostsv4"
+#echo "fetch hostsv4 from $ROUTER"
+#ssh "root@$ROUTER" "cat $HOSTSV4" | grep "$ZONENETV4" > "$hostsv4"
 
 
 
@@ -259,7 +259,7 @@ cat "$hosts" | while read line ; do
 		loc="$latdeg $latmin $latsec $northsouth $londeg $lonmin $lonsec $eastwest"
 		loc="$loc 30.00m 1.00m 1.00m 1.00m"
 	fi
-	#main "$addr" "$host" "$loc"
+	main "$addr" "$host" "$loc"
 done
 
 
@@ -357,11 +357,11 @@ for i in * ; do
 		echo '{"type": "node", "hostname": "'$host.$ZONENAMEV4'", "longitude": '$lon', "latitude": '$lat', '"$ifaces"',' "$links"'}' > /tmp/hosts/"$host".json
 		rev=''
 		rev=$(curl -4 -sIX HEAD $COUCHDB/$host.$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
-		if [ -z $rev ] ; then
-			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hosts/"$host".json
-		else
-			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hosts/"$host".json
-		fi
+		#if [ -z $rev ] ; then
+		#	curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hosts/"$host".json
+		#else
+		#	curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hosts/"$host".json
+		#fi
 	fi
 done
 
@@ -373,11 +373,11 @@ for i in * ; do
 	echo $host
 	if [ -f /tmp/hostsv4/"$host".json ] ; then
 		rev=$(curl -4 -sIX HEAD $COUCHDB/$host.$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
-		if [ -z $rev ] ; then
-			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hostsv4/"$host".json
-		else
-			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hostsv4/"$host".json
-		fi
+		#if [ -z $rev ] ; then
+		#	curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hostsv4/"$host".json
+		#else
+		#	curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hostsv4/"$host".json
+		#fi
 	else			
 		json="$(grep \'"$host"\' $router_filev4)"
 		OIFS="$IFS";IFS=","
@@ -390,11 +390,11 @@ for i in * ; do
 		echo '{"type": "node", "hostname": "'$host.$ZONENAMEV4'", "longitude": '$lon', "latitude": '$lat', '"$ifaces"',' "$links"'}' > /tmp/hostsv4/"$host".json
 		rev=''
 		rev=$(curl -4 -sIX HEAD $COUCHDB/"$host".$ZONENAMEV4 2>/dev/null | grep ETag | cut -d '"' -f2)
-		if [ -z $rev ] ; then
-			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hostsv4/"$host".json
-		else
-			curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hostsv4/"$host".json
-		fi
+		#if [ -z $rev ] ; then
+		#	curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4" -T /tmp/hostsv4/"$host".json
+		#else
+		#	curl -4 -sX PUT -H "Content-Type: application/json" "$COUCHDB/$host.$ZONENAMEV4?rev=$rev" -T /tmp/hostsv4/"$host".json
+		#fi
 	fi
 done
 cd

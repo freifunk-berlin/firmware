@@ -282,8 +282,8 @@ for board in $boards ; do
 			rsync --delete -a ../../openwrt-$verm/.git ./
 			;;
 	esac
-	echo "git add ."
-	git add .
+	#echo "git add ."
+	#git add .
 	#rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
 	#[ -z "$rmf" ] || rm "$rmf"
 	#git reset --hard

@@ -49,6 +49,7 @@ for board in $boards ; do
 	echo "$pkgpath"
 	cp  ../../ff-control/configs/$verm-$board.config .config
 	genconfig "$make_options"
+	make oldconfig
 	make $pkgpath/clean V=99 && \
 	make $pkgpath/compile V=99 && \
 	make $pkgpath/install V=99 && \

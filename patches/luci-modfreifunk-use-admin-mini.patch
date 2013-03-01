@@ -1,8 +1,8 @@
 diff --git a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
-index e81e07c..b88a513 100644
+index 2ea0067..13ea736 100644
 --- a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 +++ b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
-@@ -68,42 +68,50 @@ function index()
+@@ -67,42 +67,50 @@ function index()
  	end
  
  	-- backend

@@ -1,8 +1,8 @@
 diff --git a/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua b/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
-index a18c072..2638509 100644
+index a18c072..d365ca9 100644
 --- a/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
 +++ b/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
-@@ -19,17 +19,15 @@ local fs  = require "nixio.fs"
+@@ -19,17 +19,13 @@ local fs  = require "nixio.fs"
  local sys = require "luci.sys"
  local uci = require "luci.model.uci".cursor()
  
@@ -13,14 +13,11 @@ index a18c072..2638509 100644
 -end
 -
  local wlcursor = luci.model.uci.cursor_state()
--local wireless = wlcursor:get_all("wireless")
-+local wireless = wlcursor:get_all("wireless") or {}
+ local wireless = wlcursor:get_all("wireless")
  local wifidevs = {}
  local ifaces = {}
  
-+if #wireless < 1 then
-+	return
-+end
++if not wireless then return end
 +
  for k, v in pairs(wireless) do
  	if v[".type"] == "wifi-iface" then

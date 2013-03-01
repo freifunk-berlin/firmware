@@ -39,9 +39,9 @@ index 13da511..0207a6e 100644
 +		rm $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vdi || true
 +		cp $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vdi.img
 +		dd if=/dev/zero bs=512 conv=notrunc count="45000" >> $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vdi.img
-+		qemu-img convert -f raw -O vmdk \
++		qemu-img convert -f raw -O vdi \
 +			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vdi.img \
-+			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vmdk
++			$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).vdi
 +		rm $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1)-pad-vdi.img || true
 +    endif
    endef

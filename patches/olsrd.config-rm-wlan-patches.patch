@@ -1,11 +1,14 @@
-Index: net/olsrd/files/olsrd.config
-===================================================================
---- net/olsrd/files/olsrd.config	(Revision 27085)
-+++ net/olsrd/files/olsrd.config	(Arbeitskopie)
-@@ -21,6 +21,3 @@
- config LoadPlugin
+diff --git net/olsrd/files/olsrd.config net/olsrd/files/olsrd.config
+index 9a19eb9..9f173ee 100644
+--- net/olsrd/files/olsrd.config
++++ net/olsrd/files/olsrd.config
+@@ -22,5 +22,7 @@ config LoadPlugin
  	option library 'olsrd_txtinfo.so.0.1'
  	option accept '0.0.0.0'
--
+ 
 -config Interface
 -	list interface 'wlan'
++config LoadPlugin
++	option library 'olsrd_jsoninfo.so.0.0'
++	option accept '0.0.0.0'
++

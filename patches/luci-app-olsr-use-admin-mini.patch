@@ -1,110 +1,3 @@
-diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
-index 371bad8..7b642f2 100644
---- a/applications/luci-olsr/luasrc/controller/olsr.lua
-+++ b/applications/luci-olsr/luasrc/controller/olsr.lua
-@@ -10,6 +10,7 @@ function index()
- 	page.title  = _("OLSR")
- 	page.i18n   = "olsr"
- 	page.subindex = true
-+	assign({"mini", "status", "olsr"}, {"admin", "status", "olsr"}, "OLSR", 30)
- 
- 	local page  = node("admin", "status", "olsr", "neighbors")
- 	page.target = call("action_neigh")
-@@ -53,26 +54,31 @@ function index()
- 	)
- 	ol.i18n = "olsr"
- 	ol.subindex = true
-+	assign({"mini", "services", "olsrd"}, {"admin", "services", "olsrd"}, _("olsr"))
- 
- 	entry(
- 		{"admin", "services", "olsrd", "iface"},
- 		cbi("olsr/olsrdiface")
- 	).leaf = true
-+	assign({"mini", "services", "olsrd", "iface"}, {"admin", "services", "olsrd", "iface"}, _("Interface"))
- 
- 	entry(
- 		{"admin", "services", "olsrd", "hna"},
- 		cbi("olsr/olsrdhna"), _("HNA Announcements")
- 	)
-+	assign({"mini", "services", "olsrd", "hna"}, {"admin", "services", "olsrd", "hna"}, _("HNA Announcements"))
- 
- 	oplg = entry(
- 		{"admin", "services", "olsrd", "plugins"},
- 		cbi("olsr/olsrdplugins"), _("Plugins")
- 	)
-+	assign({"mini", "services", "olsrd", "plugins"}, {"admin", "services", "olsrd", "plugins"}, _("Plugins"))
- 
- 	odsp = entry(
- 		{"admin", "services", "olsrd", "display"},
- 		cbi("olsr/olsrddisplay"), _("Display")
--		)
-+	)
-+	assign({"mini", "services", "olsrd", "display"}, {"admin", "services", "olsrd", "display"}, _("Display"))
- 
- 	oplg.i18n = "olsr"
- 	oplg.leaf = true
-@@ -87,6 +93,11 @@ function index()
- 				cbi("olsr/olsrdplugins"),
- 				nil --'Plugin "%s"' % lib:gsub("^olsrd_",""):gsub("%.so.+$","")
- 			)
-+			assign(
-+				{"mini", "services", "olsrd", "plugins", lib },
-+				{"admin", "services", "olsrd", "plugins", lib},
-+				lib
-+			)
- 		end
- 	)
- end
-@@ -237,6 +248,7 @@ function fetch_txtinfo(otable)
- 	local dataindex = 0
- 	local name = ""
- 	local defaultgw
-+	local defaultgw6
- 
- 	if #rawdata ~= 0 then
- 		local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
-@@ -309,6 +321,18 @@ function fetch_txtinfo(otable)
- 
- 	if #rawdatav6 ~= 0 then
- 		local tables = luci.util.split(luci.util.trim(rawdatav6), "\r?\n\r?\n", nil, true)
-+		if otable == "links" then
-+			dr6 = luci.sys.net.defaultroute6()
-+			if dr6 then
-+				defaultgw6 = dr6.nexthop:string()
-+				if defaultgw6 then
-+					defaultgw6 = string.gsub(defaultgw6, ':0:', '::',1)
-+					defaultgw6 = string.gsub(defaultgw6, ':0:', ':')
-+					defaultgw6 = string.gsub(defaultgw6, ':0:', ':')
-+					defaultgw6 = string.lower(defaultgw6)
-+				end
-+			end
-+		end
- 		for i, tbl in ipairs(tables) do
- 			local lines = luci.util.split(tbl, "\r?\n", nil, true)
- 			name  = table.remove(lines, 1):sub(8)
-@@ -330,16 +354,19 @@ function fetch_txtinfo(otable)
- 							if hostname then
- 								data[name][di]["Hostname"] = hostname
- 							end
-+							if defaultgw6 == fields[k] then
-+								data[name][di]["defaultgw"] = 1
-+							end
- 						end
- 					elseif key == "Local IP" then
- 						data[name][di][key] = fields[k]
- 						data[name][di]['Local Device'] = fields[k]
-+						local localip = string.gsub(fields[k], '	', ''):lower()
- 						uci:foreach("network", "interface",
- 						function(s)
--							local localip = string.gsub(fields[k], '	', ''):upper()
- 							if s.ip6addr then
--								s.ip6addr = luci.ip.IPv6(s.ip6addr):string()
--								local ip6addr = string.gsub(s.ip6addr, '\/.*', '')
-+								local ip6addr = s.ip6addr
-+								ip6addr = string.gsub(ip6addr, '\/.*', '')
- 								if ip6addr == localip then
- 									data[name][di]['Local Device'] = s['.name'] or s.interface
- 								end
 diff --git a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua b/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
 index 9bdf3a3..dd9eac1 100644
 --- a/applications/luci-olsr/luasrc/model/cbi/olsr/olsrd.lua
@@ -144,3 +37,107 @@ index 2cfccdd..7e1d4ba 100644
  	end
  
  	ign = t:option( Flag, "ignore", translate("Enabled") )
+diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
+index fc44820..02d2dd3 100644
+--- a/applications/luci-olsr/luasrc/controller/olsr.lua
++++ b/applications/luci-olsr/luasrc/controller/olsr.lua
+@@ -9,6 +9,7 @@ function index()
+ 	page.target = template("status-olsr/overview")
+ 	page.title  = _("OLSR")
+ 	page.subindex = true
++	assign({"mini", "status", "olsr"}, {"admin", "status", "olsr"}, "OLSR", 30)
+ 
+ 	local page  = node("admin", "status", "olsr", "neighbors")
+ 	page.target = call("action_neigh")
+@@ -51,26 +52,31 @@ function index()
+ 		cbi("olsr/olsrd"), "OLSR"
+ 	)
+ 	ol.subindex = true
++	assign({"mini", "services", "olsrd"}, {"admin", "services", "olsrd"}, _("olsr"))
+ 
+ 	entry(
+ 		{"admin", "services", "olsrd", "iface"},
+ 		cbi("olsr/olsrdiface")
+ 	).leaf = true
++	assign({"mini", "services", "olsrd", "iface"}, {"admin", "services", "olsrd", "iface"}, _("Interface"))
+ 
+ 	entry(
+ 		{"admin", "services", "olsrd", "hna"},
+ 		cbi("olsr/olsrdhna"), _("HNA Announcements")
+ 	)
++	assign({"mini", "services", "olsrd", "hna"}, {"admin", "services", "olsrd", "hna"}, _("HNA Announcements"))
+ 
+ 	oplg = entry(
+ 		{"admin", "services", "olsrd", "plugins"},
+ 		cbi("olsr/olsrdplugins"), _("Plugins")
+ 	)
++	assign({"mini", "services", "olsrd", "plugins"}, {"admin", "services", "olsrd", "plugins"}, _("Plugins"))
+ 
+ 	odsp = entry(
+ 		{"admin", "services", "olsrd", "display"},
+ 		cbi("olsr/olsrddisplay"), _("Display")
+-		)
++	)
++	assign({"mini", "services", "olsrd", "display"}, {"admin", "services", "olsrd", "display"}, _("Display"))
+ 
+ 	oplg.leaf = true
+ 	oplg.subindex = true
+@@ -84,6 +90,11 @@ function index()
+ 				cbi("olsr/olsrdplugins"),
+ 				nil --'Plugin "%s"' % lib:gsub("^olsrd_",""):gsub("%.so.+$","")
+ 			)
++			assign(
++				{"mini", "services", "olsrd", "plugins", lib },
++				{"admin", "services", "olsrd", "plugins", lib},
++				lib
++			)
+ 		end
+ 	)
+ end
+@@ -234,6 +245,7 @@ function fetch_txtinfo(otable)
+ 	local dataindex = 0
+ 	local name = ""
+ 	local defaultgw
++	local defaultgw6
+ 
+ 	if #rawdata ~= 0 then
+ 		local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
+@@ -306,6 +318,18 @@ function fetch_txtinfo(otable)
+ 
+ 	if #rawdatav6 ~= 0 then
+ 		local tables = luci.util.split(luci.util.trim(rawdatav6), "\r?\n\r?\n", nil, true)
++		if otable == "links" then
++			dr6 = luci.sys.net.defaultroute6()
++			if dr6 then
++				defaultgw6 = dr6.nexthop:string()
++				if defaultgw6 then
++					defaultgw6 = string.gsub(defaultgw6, ':0:', '::',1)
++					defaultgw6 = string.gsub(defaultgw6, ':0:', ':')
++					defaultgw6 = string.gsub(defaultgw6, ':0:', ':')
++					defaultgw6 = string.lower(defaultgw6)
++				end
++			end
++		end
+ 		for i, tbl in ipairs(tables) do
+ 			local lines = luci.util.split(tbl, "\r?\n", nil, true)
+ 			name  = table.remove(lines, 1):sub(8)
+@@ -327,14 +351,17 @@ function fetch_txtinfo(otable)
+ 							if hostname then
+ 								data[name][di]["Hostname"] = hostname
+ 							end
++							if defaultgw6 == fields[k] then
++								data[name][di]["defaultgw"] = 1
++							end
+ 						end
+ 					elseif key == "Local IP" then
+ 						data[name][di][key] = fields[k]
+ 						data[name][di]['Local Device'] = fields[k]
++						local localip = string.gsub(fields[k], '	', ''):upper()
++						localip = luci.ip.IPv6(localip):string()
+ 						uci:foreach("network", "interface",
+ 						function(s)
+-							local localip = string.gsub(fields[k], '	', ''):upper()
+-							localip = luci.ip.IPv6(localip):string()
+ 							if s.ip6addr then
+ 								s.ip6addr = luci.ip.IPv6(s.ip6addr):string()
+ 								local ip6addr = string.gsub(s.ip6addr, '\/.*', ''):upper()

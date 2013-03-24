@@ -1,0 +1,15 @@
+--- /dev/null	2013-02-17 21:23:56.068000000 +0100
++++ libs/pthsem/patches/001-linux3x-fix.patch	2012-01-10 12:44:59.000000000 +0100
+@@ -0,0 +1,12 @@
++--- pthsem-2.0.8/acinclude.m4
+++++ pthsem-2.0.8/acinclude.m4
++@@ -892,6 +892,8 @@
++         case "x`uname -r`" in
++ changequote(, )dnl
++             x2.[23456789]* ) ;;
+++changequote(, )dnl
+++            x3.* ) ;;
++ changequote([, ])
++             * ) braindead=yes ;;
++         esac
++

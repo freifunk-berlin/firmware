@@ -1,7 +1,7 @@
-diff --git a/net/olsrd/Makefile b/net/olsrd/Makefile
+diff --git net/olsrd/Makefile net/olsrd/Makefile
 index e176185..e25d408 100644
---- a/net/olsrd/Makefile
-+++ b/net/olsrd/Makefile
+--- net/olsrd/Makefile
++++ net/olsrd/Makefile
 @@ -8,13 +8,13 @@
  include $(TOPDIR)/rules.mk
  
@@ -60,39 +60,10 @@ index e176185..e25d408 100644
 -$(eval $(call BuildPackage,olsrd-mod-tas))
  $(eval $(call BuildPackage,olsrd-mod-txtinfo))
  $(eval $(call BuildPackage,olsrd-mod-watchdog))
-diff --git a/net/olsrd/files/olsrd.config b/net/olsrd/files/olsrd.config
-index 9a19eb9..9f173ee 100644
---- a/net/olsrd/files/olsrd.config
-+++ b/net/olsrd/files/olsrd.config
-@@ -22,5 +22,7 @@ config LoadPlugin
- 	option library 'olsrd_txtinfo.so.0.1'
- 	option accept '0.0.0.0'
- 
--config Interface
--	list interface 'wlan'
-+config LoadPlugin
-+	option library 'olsrd_jsoninfo.so.0.0'
-+	option accept '0.0.0.0'
-+
-diff --git a/net/olsrd/files/olsrd.init b/net/olsrd/files/olsrd.init
-index 7578316..434aefe 100644
---- a/net/olsrd/files/olsrd.init
-+++ b/net/olsrd/files/olsrd.init
-@@ -662,8 +662,8 @@ start() {
- 	if [ "$OLSRD_IPVERSION_6AND4" -ne 0 ]; then
- 		bindv6only="$(sysctl -n net.ipv6.bindv6only)"
- 		sysctl -w net.ipv6.bindv6only=1 > /dev/null
--		sed -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
--		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
-+		sed -e 's/0.0.0.0/::/' -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' -e 's/etx_ff/etx_ffeth/' -e '/NatThreshold/d' -e '/RtTable/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
-+		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^\tPlParam \"[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:].*//' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' -e 's/ether/mesh/' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
- 		rm $OLSRD_CONFIG_FILE
- 
- 		# some filenames should get the suffix .ipv6
-diff --git a/net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch b/net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch
+diff --git net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch
 deleted file mode 100644
 index 77c2323..0000000
---- a/net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch
+--- net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch
 +++ /dev/null
 @@ -1,52 +0,0 @@
 -From f4d250ad4fad5fcfe5b5feaac3f3e121adef3fba Mon Sep 17 00:00:00 2001

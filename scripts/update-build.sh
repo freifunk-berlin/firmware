@@ -102,8 +102,10 @@ case $verm in
 	attitude_adjustment)
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-olsrd-version.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-openvpn-devel-use-busybox-ip.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-chk-linux-3.patch"
 		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
 		;;
 	*)

@@ -1,7 +1,7 @@
-diff --git libs/pthsem/Makefile libs/pthsem/Makefile
+diff --git a/libs/pthsem/Makefile b/libs/pthsem/Makefile
 index c40930b..890af7a 100644
---- libs/pthsem/Makefile
-+++ libs/pthsem/Makefile
+--- a/libs/pthsem/Makefile
++++ b/libs/pthsem/Makefile
 @@ -21,7 +21,7 @@ define Package/pthsem
    CATEGORY:=Libraries
    TITLE:=GNU pth extended with semaphore support

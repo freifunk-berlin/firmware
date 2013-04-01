@@ -1,7 +1,7 @@
-diff --git net/olsrd/Makefile net/olsrd/Makefile
+diff --git a/net/olsrd/Makefile b/net/olsrd/Makefile
 index e176185..e25d408 100644
---- net/olsrd/Makefile
-+++ net/olsrd/Makefile
+--- a/net/olsrd/Makefile
++++ b/net/olsrd/Makefile
 @@ -8,13 +8,13 @@
  include $(TOPDIR)/rules.mk
  
@@ -63,7 +63,7 @@ index e176185..e25d408 100644
 diff --git net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch
 deleted file mode 100644
 index 77c2323..0000000
---- net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch
+--- a/net/olsrd/patches/100-olsrd-fix-stack-corruption-in-net_output.patch
 +++ /dev/null
 @@ -1,52 +0,0 @@
 -From f4d250ad4fad5fcfe5b5feaac3f3e121adef3fba Mon Sep 17 00:00:00 2001

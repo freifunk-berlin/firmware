@@ -1,7 +1,7 @@
-diff --git net/olsrd/files/olsrd.init net/olsrd/files/olsrd.init
+diff --git a/net/olsrd/files/olsrd.init b/net/olsrd/files/olsrd.init
 index 7578316..b658423 100644
---- net/olsrd/files/olsrd.init
-+++ net/olsrd/files/olsrd.init
+--- a/net/olsrd/files/olsrd.init
++++ b/net/olsrd/files/olsrd.init
 @@ -662,8 +662,8 @@ start() {
  	if [ "$OLSRD_IPVERSION_6AND4" -ne 0 ]; then
  		bindv6only="$(sysctl -n net.ipv6.bindv6only)"

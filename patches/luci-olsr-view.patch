@@ -1,70 +1,87 @@
 diff --git a/applications/luci-olsr/luasrc/view/status-olsr/hna.htm b/applications/luci-olsr/luasrc/view/status-olsr/hna.htm
-index bde1f00..889ac15 100644
+index 689bafd..19d30e2 100644
 --- a/applications/luci-olsr/luasrc/view/status-olsr/hna.htm
 +++ b/applications/luci-olsr/luasrc/view/status-olsr/hna.htm
-@@ -32,8 +32,8 @@ local i = 1
- 		<% for k, route in ipairs(routes) do %>
+@@ -99,8 +99,8 @@ XHR.poll(10, '<%=REQUEST_URI%>', { status: 1 },
+ 		<% for k, route in ipairs(hna) do %>
  
- 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
--			<td class="cbi-section-table-cell"><%=route.Destination%></td>
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%> proto-<%=hna[k].proto%>">
+-			<td class="cbi-section-table-cell"><%=hna[k].destination%>/<%=hna[k].genmask%> </td>
 -			<td class="cbi-section-table-cell">
-+			<td class="cbi-section-table-titles"><%=route.Destination%></td>
++			<td class="cbi-section-table-titles"><%=hna[k].destination%>/<%=hna[k].genmask%> </td>
 +			<td class="cbi-section-table-titles">
- 				<a href="http://<%=route.Gateway%>/cgi-bin-status.html"><%=route.Gateway%></a>
- 				<% if route.Hostname then %>
- 				        / <a href="http://<%=route.Hostname%>/cgi-bin-status.html"><%=route.Hostname%></a>
+ 				<% if hna[k].proto == '6' then %>
+ 				<a href="http://[<%=hna[k].gateway%>]/cgi-bin-status.html"><%=hna[k].gateway%></a>
+ 				<% else %>
+@@ -116,7 +116,7 @@ XHR.poll(10, '<%=REQUEST_URI%>', { status: 1 },
+ 				validity = '-'
+ 			end %>
+ 
+-			<td class="cbi-section-table-cell"><%=validity%></td>
++			<td class="cbi-section-table-titles"><%=validity%></td>
+ 		</tr>
+ 
+ 		<% i = ((i % 2) + 1)
 diff --git a/applications/luci-olsr/luasrc/view/status-olsr/interfaces.htm b/applications/luci-olsr/luasrc/view/status-olsr/interfaces.htm
-index 17090ff..c9156f6 100644
+index dd1a21e..423115b 100644
 --- a/applications/luci-olsr/luasrc/view/status-olsr/interfaces.htm
 +++ b/applications/luci-olsr/luasrc/view/status-olsr/interfaces.htm
 @@ -39,13 +39,13 @@ local i = 1
  		<% for k, iface in ipairs(iface) do %>
  
- 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
--			<td class="cbi-section-table-cell"><%=iface.Name%></td>
--			<td class="cbi-section-table-cell"><%=iface.State%></td>
--			<td class="cbi-section-table-cell"><%=iface.MTU%></td>
--			<td class="cbi-section-table-cell"><%=iface.WLAN%></td>
--			<td class="cbi-section-table-cell"><%=iface["Src-Adress"]%></td>
--			<td class="cbi-section-table-cell"><%=iface.Mask%></td>
--			<td class="cbi-section-table-cell"><%=iface["Dst-Adress"]%></td>
-+			<td class="cbi-section-table-titles"><%=iface.Name%></td>
-+			<td class="cbi-section-table-titles"><%=iface.State%></td>
-+			<td class="cbi-section-table-titles"><%=iface.MTU%></td>
-+			<td class="cbi-section-table-titles"><%=iface.WLAN%></td>
-+			<td class="cbi-section-table-titles"><%=iface["Src-Adress"]%></td>
-+			<td class="cbi-section-table-titles"><%=iface.Mask%></td>
-+			<td class="cbi-section-table-titles"><%=iface["Dst-Adress"]%></td>
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%> proto-<%=iface.proto%>">
+-			<td class="cbi-section-table-cell"><%=iface.name%></td>
+-			<td class="cbi-section-table-cell"><%=iface.state%></td>
+-			<td class="cbi-section-table-cell"><%=iface.olsrMTU%></td>
+-			<td class="cbi-section-table-cell"><%=iface.wireless and luci.i18n.translate('yes') or luci.i18n.translate('no')%></td>
+-			<td class="cbi-section-table-cell"><%=iface.ipv4Address or iface.ipv6Address%></td>
+-			<td class="cbi-section-table-cell"><%=iface.netmask%></td>
+-			<td class="cbi-section-table-cell"><%=iface.broadcast or iface.multicast%></td>
++			<td class="cbi-section-table-titles"><%=iface.name%></td>
++			<td class="cbi-section-table-titles"><%=iface.state%></td>
++			<td class="cbi-section-table-titles"><%=iface.olsrMTU%></td>
++			<td class="cbi-section-table-titles"><%=iface.wireless and luci.i18n.translate('yes') or luci.i18n.translate('no')%></td>
++			<td class="cbi-section-table-titles"><%=iface.ipv4Address or iface.ipv6Address%></td>
++			<td class="cbi-section-table-titles"><%=iface.netmask%></td>
++			<td class="cbi-section-table-titles"><%=iface.broadcast or iface.multicast%></td>
  		</tr>
  		<% i = ((i % 2) + 1)
  		end %>
 diff --git a/applications/luci-olsr/luasrc/view/status-olsr/mid.htm b/applications/luci-olsr/luasrc/view/status-olsr/mid.htm
-index 48823b5..61d7189 100644
+index ec5caaa..9d9b950 100644
 --- a/applications/luci-olsr/luasrc/view/status-olsr/mid.htm
 +++ b/applications/luci-olsr/luasrc/view/status-olsr/mid.htm
-@@ -31,8 +31,8 @@ local i = 1
- 		<% for k, mid in ipairs(mids) do %>
+@@ -46,8 +46,8 @@ local i = 1
+ 		%>
  
- 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
--			<td class="cbi-section-table-cell"><a href="http://<%=mid["IP address"]%>/cgi-bin-status.html"><%=mid["IP address"]%></a></td>
--			<td class="cbi-section-table-cell"><%=mid.Aliases%></td>
-+			<td class="cbi-section-table-titles"><a href="http://<%=mid["IP address"]%>/cgi-bin-status.html"><%=mid["IP address"]%></a></td>
-+			<td class="cbi-section-table-titles"><%=mid.Aliases%></td>
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%> proto-<%=mid.proto%>">
+-			<td class="cbi-section-table-cell"><a href="http://<%=host%>/cgi-bin-status.html"><%=mid.ipAddress%></a></td>
+-			<td class="cbi-section-table-cell"><%=aliases%></td>
++			<td class="cbi-section-table-titles"><a href="http://<%=host%>/cgi-bin-status.html"><%=mid.ipAddress%></a></td>
++			<td class="cbi-section-table-titles"><%=aliases%></td>
  		</tr>
  
  		<% i = ((i % 2) + 1)
 diff --git a/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm b/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
-index 029f585..7170418 100644
+index 4d84241..9baf5ca 100644
 --- a/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
 +++ b/applications/luci-olsr/luasrc/view/status-olsr/neighbors.htm
-@@ -62,27 +62,27 @@ end
- 
- 					s += String.format(
- 						'<tr class="cbi-section-table-row cbi-rowstyle-'+(1 + (idx % 2))+'">' +
--							'<td class="cbi-section-table-cell" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
-+							'<td class="cbi-section-table-titles" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
- 						neigh.dfgcolor, neigh.rip, neigh.rip
- 						);
+@@ -66,33 +66,33 @@ end
+ 					if (neigh.proto == '6') {
+ 						s += String.format(
+ 							'<tr class="cbi-section-table-row cbi-rowstyle-'+(1 + (idx % 2))+' proto-%s">' +
+-								'<td class="cbi-section-table-cell" style="background-color:%s"><a href="http://[%s]/cgi-bin-status.html">%s</a></td>',
++								'<td class="cbi-section-table-titles" style="background-color:%s"><a href="http://[%s]/cgi-bin-status.html">%s</a></td>',
+ 							neigh.proto, neigh.dfgcolor, neigh.rip, neigh.rip
+ 							);
+ 					} else {
+ 						s += String.format(
+ 							'<tr class="cbi-section-table-row cbi-rowstyle-'+(1 + (idx % 2))+' proto-%s">' +
+-								'<td class="cbi-section-table-cell" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
++								'<td class="cbi-section-table-titles" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
+ 							neigh.proto, neigh.dfgcolor, neigh.rip, neigh.rip
+ 							);
+ 					}
  					if (neigh.hn) {
  						s += String.format(					
 -							'<td class="cbi-section-table-cell" style="background-color:%s"><a href="http://%s/cgi-bin-status.html">%s</a></td>',
@@ -84,89 +101,53 @@ index 029f585..7170418 100644
 -							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
 -							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
 -							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
--							'<td class="cbi-section-table-cell" style="background-color:%s">%s</td>' +
-+							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
 +							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
 +							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
 +							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
 +							'<td class="cbi-section-table-titles" style="background-color:%s">%s</td>' +
  						'</tr>',
  							
- 							neigh.dfgcolor, neigh.lip, neigh.dfgcolor, neigh.dev, neigh.dfgcolor, neigh.lq, neigh.dfgcolor, neigh.nlq, neigh.color, neigh.cost || '?'
-@@ -127,13 +127,13 @@ end
- 		%>
+ 							neigh.dfgcolor, neigh.lip, neigh.dfgcolor, neigh.lq, neigh.dfgcolor, neigh.nlq, neigh.color, neigh.cost || '?'
+@@ -143,15 +143,15 @@ end
  
- 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
--			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Remote IP"]%>/cgi-bin-status.html"><%=link["Remote IP"]%></a></td>
--			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Hostname"]%>/cgi-bin-status.html"><%=link["Hostname"]%></a></td>
--			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link["Local IP"]%></td>
--			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link["Local Device"]%></td>
--			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link.LQ%></td>
--			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link.NLQ%></td>
--			<td class="cbi-section-table-cell" style="background-color:<%=color%>"><%=string.format("%.3f", link.Cost)%></td>
-+			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Remote IP"]%>/cgi-bin-status.html"><%=link["Remote IP"]%></a></td>
-+			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link["Hostname"]%>/cgi-bin-status.html"><%=link["Hostname"]%></a></td>
-+			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link["Local IP"]%></td>
-+			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link["Local Device"]%></td>
-+			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link.LQ%></td>
-+			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link.NLQ%></td>
-+			<td class="cbi-section-table-titles" style="background-color:<%=color%>"><%=string.format("%.3f", link.Cost)%></td>
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%> proto-<%=link.proto%>">
+ 			<% if link.proto == "6" then %>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><a href="http://[<%=link.remoteIP%>]/cgi-bin-status.html"><%=link.remoteIP%></a></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><a href="http://[<%=link.remoteIP%>]/cgi-bin-status.html"><%=link.remoteIP%></a></td>
+ 			<% else %>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link.remoteIP%>/cgi-bin-status.html"><%=link.remoteIP%></a></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link.remoteIP%>/cgi-bin-status.html"><%=link.remoteIP%></a></td>
+ 			<% end %>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link.hostname%>/cgi-bin-status.html"><%=link.hostname%></a></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=link.localIP%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=string.format("%.3f", link.linkQuality)%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=defaultgw_color%>"><%=string.format("%.3f", link.neighborLinkQuality)%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=color%>"><%=string.format("%.3f", link.linkCost)%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><a href="http://<%=link.hostname%>/cgi-bin-status.html"><%=link.hostname%></a></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=link.localIP%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=string.format("%.3f", link.linkQuality)%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=defaultgw_color%>"><%=string.format("%.3f", link.neighborLinkQuality)%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=color%>"><%=string.format("%.3f", link.linkCost)%></td>
  		</tr>
  		<% 
  			i = ((i % 2) + 1)
-diff --git a/applications/luci-olsr/luasrc/view/status-olsr/overview.htm b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
-index d57da7c..b6bfa48 100644
---- a/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
-+++ b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
-@@ -218,6 +218,7 @@ XHR.poll(30, '<%=REQUEST_URI%>', { status: 1 },
- 				</div>
- 			</div>
- 			<br/>
-+			<br/>
- 		</div>
- 
- 		<div class="cbi-value">
-@@ -234,6 +235,7 @@ XHR.poll(30, '<%=REQUEST_URI%>', { status: 1 },
- 				</div>
- 			</div>
- 			<br/>
-+			<br/>
- 		</div>
- 
- 		<div class="cbi-value">
-@@ -250,6 +252,7 @@ XHR.poll(30, '<%=REQUEST_URI%>', { status: 1 },
- 				</div>
- 			</div>
- 			<br/>
-+			<br/>
- 		</div>
- 
- 		<div class="cbi-value">
-@@ -264,6 +267,7 @@ XHR.poll(30, '<%=REQUEST_URI%>', { status: 1 },
- 				</div>
- 			</div>
- 			<br/>
-+			<br/>
- 		</div>
- 	</div>
- </div>
 diff --git a/applications/luci-olsr/luasrc/view/status-olsr/routes.htm b/applications/luci-olsr/luasrc/view/status-olsr/routes.htm
-index e32b696..094ce2b 100644
+index 76e1b10..96534c4 100644
 --- a/applications/luci-olsr/luasrc/view/status-olsr/routes.htm
 +++ b/applications/luci-olsr/luasrc/view/status-olsr/routes.htm
-@@ -55,8 +55,8 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
+@@ -57,8 +57,8 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
  
  					s += String.format(
- 						'<tr class="cbi-section-table-row cbi-rowstyle-'+(1 + (idx % 2))+'">' +
--							'<td class="cbi-section-table-cell">%s</td>' +
+ 						'<tr class="cbi-section-table-row cbi-rowstyle-'+(1 + (idx % 2))+' proto-%s">' +
+-							'<td class="cbi-section-table-cell">%s/%s</td>' +
 -							'<td class="cbi-section-table-cell">' +
-+							'<td class="cbi-section-table-titles">%s</td>' +
++							'<td class="cbi-section-table-titles">%s/%s</td>' +
 +							'<td class="cbi-section-table-titles">' +
  			                	                '<a href="http://%s/cgi-bin-status.html">%s</a>',
- 								route.dest, route.gw, route.gw
+ 								route.proto, route.dest, route.genmask, route.gw, route.gw
  						)
-@@ -70,9 +70,9 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
- 						}
+@@ -79,9 +79,9 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
+ 					}
  					s += String.format(
  				                        '</td>' +
 -							'<td class="cbi-section-table-cell">%s</td>' +
@@ -178,74 +159,109 @@ index e32b696..094ce2b 100644
  						'</tr>',
  						route.interface, route.metric, route.color, route.etx || '?'
  					);
-@@ -109,16 +109,16 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
+@@ -121,8 +121,8 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
  	%>
  
- 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
--			<td class="cbi-section-table-cell"><%=route.Destination%></td>
+ 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%> proto-<%=route.proto%>">
+-			<td class="cbi-section-table-cell"><%=route.destination%>/<%=route.genmask%></td>
 -			<td class="cbi-section-table-cell">
-+			<td class="cbi-section-table-titles"><%=route.Destination%></td>
++			<td class="cbi-section-table-titles"><%=route.destination%>/<%=route.genmask%></td>
 +			<td class="cbi-section-table-titles">
- 				<a href="http://<%=route["Gateway IP"]%>/cgi-bin-status.html"><%=route["Gateway IP"]%></a>
- 				<% if route.Hostname then %>
- 					/ <a href="http://<%=route.Hostname%>/cgi-bin-status.html"><%=route.Hostname%></a>  
+ 				<% if route.proto == '6' then %>
+ 				<a href="http://[<%=route.gateway%>]/cgi-bin-status.html"><%=route.gateway%></a>
+ 				<% else  %>
+@@ -132,9 +132,9 @@ XHR.poll(20, '<%=REQUEST_URI%>', { status: 1 },
+ 					/ <a href="http://<%=route.Hostname%>/cgi-bin-status.html"><%=route.hostname%></a>  
  				<% end %>
  			</td>
--			<td class="cbi-section-table-cell"><%=route.Interface%></td>
--			<td class="cbi-section-table-cell"><%=route.Metric%></td>
--			<td class="cbi-section-table-cell" style="background-color:<%=color%>"><%=string.format("%.3f", tonumber(route.ETX) or 0)%></td>
-+			<td class="cbi-section-table-titles"><%=route.Interface%></td>
-+			<td class="cbi-section-table-titles"><%=route.Metric%></td>
-+			<td class="cbi-section-table-titles" style="background-color:<%=color%>"><%=string.format("%.3f", tonumber(route.ETX) or 0)%></td>
+-			<td class="cbi-section-table-cell"><%=route.networkInterface%></td>
+-			<td class="cbi-section-table-cell"><%=route.metric%></td>
+-			<td class="cbi-section-table-cell" style="background-color:<%=color%>"><%=string.format("%.3f", ETX)%></td>
++			<td class="cbi-section-table-titles"><%=route.networkInterface%></td>
++			<td class="cbi-section-table-titles"><%=route.metric%></td>
++			<td class="cbi-section-table-titles" style="background-color:<%=color%>"><%=string.format("%.3f", ETX)%></td>
  		</tr>
  	<% 
  		i = ((i % 2) + 1)
 diff --git a/applications/luci-olsr/luasrc/view/status-olsr/smartgw.htm b/applications/luci-olsr/luasrc/view/status-olsr/smartgw.htm
-index 7fa8730..effe4f6 100644
+index 75d0c1c..f4fb23c 100644
 --- a/applications/luci-olsr/luasrc/view/status-olsr/smartgw.htm
 +++ b/applications/luci-olsr/luasrc/view/status-olsr/smartgw.htm
-@@ -46,15 +46,15 @@ end)
- 			<% for k, gw in ipairs(gws) do %>
+@@ -70,15 +70,15 @@ XHR.poll(10, '<%=REQUEST_URI%>', { status: 1 },
+ 			}
  
- 			<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
--				<td class="cbi-section-table-cell"><a href="http://<%=gw["Gateway IP"]%>/cgi-bin-status.html"><%=gw["Gateway IP"]%></a></td>
--				<td class="cbi-section-table-cell"><%=gw.Status%></td>
--				<td class="cbi-section-table-cell"><%=gw.ETX%></td>
--				<td class="cbi-section-table-cell"><%=gw.Hopcnt%></td>
--				<td class="cbi-section-table-cell"><%=gw.Uplink%></td>
--				<td class="cbi-section-table-cell"><%=gw.Downlnk%></td>
--				<td class="cbi-section-table-cell"><%=gw.IPv4%></td>
--				<td class="cbi-section-table-cell"><%=gw.IPv6%></td>
--				<td class="cbi-section-table-cell"><%=gw.Prefix%></td>
-+				<td class="cbi-section-table-titles"><a href="http://<%=gw["Gateway IP"]%>/cgi-bin-status.html"><%=gw["Gateway IP"]%></a></td>
-+				<td class="cbi-section-table-titles"><%=gw.Status%></td>
-+				<td class="cbi-section-table-titles"><%=gw.ETX%></td>
-+				<td class="cbi-section-table-titles"><%=gw.Hopcnt%></td>
-+				<td class="cbi-section-table-titles"><%=gw.Uplink%></td>
-+				<td class="cbi-section-table-titles"><%=gw.Downlnk%></td>
-+				<td class="cbi-section-table-titles"><%=gw.IPv4%></td>
-+				<td class="cbi-section-table-titles"><%=gw.IPv6%></td>
-+				<td class="cbi-section-table-titles"><%=gw.Prefix%></td>
+ 			s += String.format(
+-                                '<td class="cbi-section-table-cell">%s</td>' +
+-                                '<td class="cbi-section-table-cell">%s</td>' +
+-                                '<td class="cbi-section-table-cell">%s</td>' +
+-                                '<td class="cbi-section-table-cell">%s</td>' +
+-                                '<td class="cbi-section-table-cell">%s</td>' +
+-                                '<td class="cbi-section-table-cell">%s</td>' +
+-                                '<td class="cbi-section-table-cell">%s</td>' +
+-                                '<td class="cbi-section-table-cell">%s</td>' +
+-                                '<td class="cbi-section-table-cell">%s</td>',
++                                '<td class="cbi-section-table-titles">%s</td>' +
++                                '<td class="cbi-section-table-titles">%s</td>' +
++                                '<td class="cbi-section-table-titles">%s</td>' +
++                                '<td class="cbi-section-table-titles">%s</td>' +
++                                '<td class="cbi-section-table-titles">%s</td>' +
++                                '<td class="cbi-section-table-titles">%s</td>' +
++                                '<td class="cbi-section-table-titles">%s</td>' +
++                                '<td class="cbi-section-table-titles">%s</td>' +
++                                '<td class="cbi-section-table-titles">%s</td>',
+ 				linkgw, smartgw.status, smartgw.tcPathCost, smartgw.hopCount, smartgw.uplinkSpeed, smartgw.downlinkSpeed, smartgw.v4, smartgw.v6, smartgw.externalPrefix
+                                 )
+ 			s += '</tr>'
+@@ -132,14 +132,14 @@ XHR.poll(10, '<%=REQUEST_URI%>', { status: 1 },
+ 					<td class="cbi-section-table-cell"><a href="http://<%=gw.ipAddress%>/cgi-bin-status.html"><%=gw.ipAddress%></a></td>
+ 				<% end %>
+ 
+-				<td class="cbi-section-table-cell"><%=gw.ipv4Status or gw.ipv6Status or '-' %></td>
+-				<td class="cbi-section-table-cell"><%=string.format("%.3f", gw.tcPathCost)%></td>
+-				<td class="cbi-section-table-cell"><%=gw.hopCount%></td>
+-				<td class="cbi-section-table-cell"><%=gw.uplinkSpeed%></td>
+-				<td class="cbi-section-table-cell"><%=gw.downlinkSpeed%></td>
+-				<td class="cbi-section-table-cell"><%=gw.ipv4 and luci.i18n.translate('yes') or luci.i18n.translate('no')%></td>
+-				<td class="cbi-section-table-cell"><%=gw.ipv6 and luci.i18n.translate('yes') or luci.i18n.translate('no')%></td>
+-				<td class="cbi-section-table-cell"><%=gw.externalPrefix%></td>
++				<td class="cbi-section-table-titles"><%=gw.ipv4Status or gw.ipv6Status or '-' %></td>
++				<td class="cbi-section-table-titles"><%=string.format("%.3f", gw.tcPathCost)%></td>
++				<td class="cbi-section-table-titles"><%=gw.hopCount%></td>
++				<td class="cbi-section-table-titles"><%=gw.uplinkSpeed%></td>
++				<td class="cbi-section-table-titles"><%=gw.downlinkSpeed%></td>
++				<td class="cbi-section-table-titles"><%=gw.ipv4 and luci.i18n.translate('yes') or luci.i18n.translate('no')%></td>
++				<td class="cbi-section-table-titles"><%=gw.ipv6 and luci.i18n.translate('yes') or luci.i18n.translate('no')%></td>
++				<td class="cbi-section-table-titles"><%=gw.externalPrefix%></td>
  			</tr>
  
  			<% i = ((i % 2) + 1)
 diff --git a/applications/luci-olsr/luasrc/view/status-olsr/topology.htm b/applications/luci-olsr/luasrc/view/status-olsr/topology.htm
-index d0e8528..61f3b0a 100644
+index eb3df5f..904d829 100644
 --- a/applications/luci-olsr/luasrc/view/status-olsr/topology.htm
 +++ b/applications/luci-olsr/luasrc/view/status-olsr/topology.htm
-@@ -38,11 +38,11 @@ local olsrtools = require "luci.tools.olsr"
- 		%>
+@@ -43,19 +43,19 @@ local olsrtools = require "luci.tools.olsr"
  
- 		<tr class="cbi-section-table-row cbi-rowstyle-<%=i%>">
--			<td class="cbi-section-table-cell"><a href="http://<%=route["Dest. IP"]%>/cgi-bin-status.html"><%=route["Dest. IP"]%></a></td>
--			<td class="cbi-section-table-cell"><a href="http://<%=route["Last hop IP"]%>/cgi-bin-status.html"><%=route["Last hop IP"]%></a></td>
--			<td class="cbi-section-table-cell"><%=route.LQ%></td>
--			<td class="cbi-section-table-cell"><%=route.NLQ%></td>
+ 			<% if route.proto == "6" then %>
+ 
+-			<td class="cbi-section-table-cell"><a href="http://[<%=route.destinationIP%>]/cgi-bin-status.html"><%=route.destinationIP%></a></td>
+-			<td class="cbi-section-table-cell"><a href="http://[<%=route.lastHopIP%>]/cgi-bin-status.html"><%=route.lastHopIP%></a></td>
++			<td class="cbi-section-table-titles"><a href="http://[<%=route.destinationIP%>]/cgi-bin-status.html"><%=route.destinationIP%></a></td>
++			<td class="cbi-section-table-titles"><a href="http://[<%=route.lastHopIP%>]/cgi-bin-status.html"><%=route.lastHopIP%></a></td>
+ 
+ 			<% else %>
+ 
+-			<td class="cbi-section-table-cell"><a href="http://<%=route.destinationIP%>/cgi-bin-status.html"><%=route.destinationIP%></a></td>
+-			<td class="cbi-section-table-cell"><a href="http://<%=route.lastHopIP%>/cgi-bin-status.html"><%=route.lastHopIP%></a></td>
++			<td class="cbi-section-table-titles"><a href="http://<%=route.destinationIP%>/cgi-bin-status.html"><%=route.destinationIP%></a></td>
++			<td class="cbi-section-table-titles"><a href="http://<%=route.lastHopIP%>/cgi-bin-status.html"><%=route.lastHopIP%></a></td>
+ 
+ 			<%end%>
+ 
+-			<td class="cbi-section-table-cell"><%=lq%></td>
+-			<td class="cbi-section-table-cell"><%=nlq%></td>
 -			<td class="cbi-section-table-cell" style="background-color:<%=color%>"><%=cost%></td>
-+			<td class="cbi-section-table-titles"><a href="http://<%=route["Dest. IP"]%>/cgi-bin-status.html"><%=route["Dest. IP"]%></a></td>
-+			<td class="cbi-section-table-titles"><a href="http://<%=route["Last hop IP"]%>/cgi-bin-status.html"><%=route["Last hop IP"]%></a></td>
-+			<td class="cbi-section-table-titles"><%=route.LQ%></td>
-+			<td class="cbi-section-table-titles"><%=route.NLQ%></td>
++			<td class="cbi-section-table-titles"><%=lq%></td>
++			<td class="cbi-section-table-titles"><%=nlq%></td>
 +			<td class="cbi-section-table-titles" style="background-color:<%=color%>"><%=cost%></td>
  		</tr>
  

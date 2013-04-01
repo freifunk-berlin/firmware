@@ -1,0 +1,24 @@
+diff --git a/admin/nagios-plugins/Makefile b/admin/nagios-plugins/Makefile
+index 6bb7a23..a00f71d 100644
+--- a/admin/nagios-plugins/Makefile
++++ b/admin/nagios-plugins/Makefile
+@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=nagios-plugins
+ PKG_VERSION:=1.4.14
+-PKG_RELEASE:=3
++PKG_RELEASE:=4
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+ PKG_SOURCE_URL:=@SF/nagiosplug
+@@ -42,7 +42,9 @@ CONFIGURE_ARGS += \
+ 	--with-ps-varlist="&procuid$(comma)&procpid$(comma)&procvsz$(comma)procstat$(comma)procprog$(comma)&pos" \
+ 	--with-uptime-command="/usr/bin/uptime" \
+ 	--with-ssh-command="/usr/bin/ssh" \
+-	--with-nslookup-command="/usr/bin/nslookup"
++	--with-nslookup-command="/usr/bin/nslookup" \
++	--with-snmpget-command="/usr/bin/snmpget" \
++	--with-snmpgetnext-command="/usr/bin/snmpgetnext"
+ 
+ define Package/nagios-plugins/install
+ 	$(INSTALL_DIR) $(1)/usr/libexec/nagios

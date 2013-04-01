@@ -1,7 +1,7 @@
-diff --git net/openvpn-devel/Makefile net/openvpn-devel/Makefile
+diff --git a/net/openvpn-devel/Makefile b/net/openvpn-devel/Makefile
 index 3aa207b..f238f0d 100644
---- net/openvpn-devel/Makefile
-+++ net/openvpn-devel/Makefile
+--- a/net/openvpn-devel/Makefile
++++ b/net/openvpn-devel/Makefile
 @@ -34,7 +34,7 @@ define Package/openvpn-devel/Default
    URL:=http://openvpn.net
    SUBMENU:=VPN

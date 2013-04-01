@@ -106,6 +106,8 @@ case $verm in
 		PACKAGESPATCHES="$PACKAGESPATCHES package-openvpn-devel-use-busybox-ip.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-chk-linux-3.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-nagios-plugins.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-net-snmp.patch"
 		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
 		;;
 	*)
@@ -121,7 +123,7 @@ PACKAGESPATCHES="$PACKAGESPATCHES olsrd.config-rm-wlan-patches.patch"
 
 cd $packages_dir
 for i in $PACKAGESPATCHES ; do
-	pparm='-p0'
+	pparm='-p1'
 	patch $pparm < ../ff-control/patches/$i || exit 0
 	mkdir -p ../$verm/patches
 	cp ../ff-control/patches/$i ../$verm/patches || exit 0
@@ -155,7 +157,7 @@ LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-index.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-backup-style.patch"
 LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sshkeys.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd_gvpn.patch"
+#LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd_gvpn.patch"
 LUCIPATCHES="$LUCIPATCHES luci-app-splash-css.patch"
 LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-migrate.patch"
 LUCIPATCHES="$LUCIPATCHES luci-gwcheck-makefile.patch"

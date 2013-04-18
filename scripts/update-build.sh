@@ -74,7 +74,7 @@ update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
 echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
 echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
-#update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
+update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
 echo "packages-pberg Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
 echo "piratenfreifunk-packages Revision: $revision"  >>VERSION.txt

@@ -3,7 +3,7 @@
 . ./config
 
 #MAKE=${MAKE:-nice -n 10 make}
-MAKE=${MAKE:-make -j2}
+MAKE=${MAKE:-make -j4}
 #MAKE=${MAKE:-echo}
 
 [ -z $verm ] && exit 0
@@ -74,7 +74,7 @@ update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
 echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
 echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
-#update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
+update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
 echo "packages-pberg Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
 echo "piratenfreifunk-packages Revision: $revision"  >>VERSION.txt
@@ -103,12 +103,13 @@ case $verm in
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-olsrd-version.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-openvpn-devel-use-busybox-ip.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-openvpn-use-busybox-ip.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-chk-linux-3.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-nagios-plugins.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-net-snmp.patch"
 		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-6scripts.patch"
 		;;
 	*)
 		#PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch" #no trunk
@@ -334,6 +335,7 @@ for board in $boards ; do
 			;;
 		attitude_adjustment)
 			PATCHES="$PATCHES package-mac80211-regdb.patch"
+			PATCHES="$PATCHES target-brcm2708-gzip.patch"
 			case $board in
 				x86_kvm_guest)
 					PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
@@ -507,7 +509,7 @@ for board in $boards ; do
 			${MAKE} world || build_fail=1
 			rsync_web "piraten"
 			case $board in
-				x86|x86_kvm_guest)
+				x86|x86_kvm_guest|brcm2708)
 #########################Freifunk max##########################################
 					rm -f bin/*/*
 					echo "copy config ../../ff-control/configs/$verm-$board.config .config"

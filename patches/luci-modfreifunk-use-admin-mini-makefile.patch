@@ -1,8 +1,8 @@
 diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
-index 9c0ca74..3a621f0 100644
+index dc7a493..88514ee 100644
 --- a/contrib/package/luci/Makefile
 +++ b/contrib/package/luci/Makefile
-@@ -228,11 +228,11 @@ define Package/luci-mod-freifunk-community
+@@ -211,11 +211,11 @@ define Package/luci-mod-freifunk-community
    SUBMENU:=9. Freifunk
    TITLE:=Freifunk Community Meta-Package
    DEPENDS+= \
@@ -16,7 +16,7 @@ index 9c0ca74..3a621f0 100644
     +luci-app-olsr-services +freifunk-gwcheck +freifunk-mapupdate
  endef
  
-@@ -277,12 +277,12 @@ define Package/luci-mod-admin-core/extra-install
+@@ -260,12 +260,12 @@ define Package/luci-mod-admin-core/extra-install
  	touch $(1)/etc/init.d/luci_fixtime || true
  endef
  
@@ -32,3 +32,12 @@ index 9c0ca74..3a621f0 100644
  $(eval $(call module,niu,NIU - Next Generation Interface,+luci-mod-admin-core @BROKEN))
  
  
+@@ -311,7 +311,7 @@ $(eval $(call application,siitwizard,SIIT IPv4-over-IPv6 configuration wizard,\
+ 	+PACKAGE_luci-app-siitwizard:kmod-siit))
+ 
+ $(eval $(call application,firewall,Firewall and Portforwarding application,\
+-	+PACKAGE_luci-app-firewall:firewall3))
++	+PACKAGE_luci-app-firewall:firewall))
+ 
+ $(eval $(call application,freifunk-policyrouting,Policy routing for mesh traffic,\
+         +PACKAGE_luci-app-freifunk-policyrouting:freifunk-policyrouting))

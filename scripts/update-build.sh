@@ -58,6 +58,13 @@ case $verm in
 	;;
 esac
 
+if [ -f build ] ; then
+    build_number="$(cat build)"
+else
+    build_number=0
+fi
+build_number=$((build_number+1))
+echo $build_number > build
 
 timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
@@ -78,6 +85,31 @@ update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
 echo "packages-pberg Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
 echo "piratenfreifunk-packages Revision: $revision"  >>VERSION.txt
+update_git "git://github.com/openwrt-routing/packages.git" "routing"
+echo "routing packages Revision: $revision"  >>VERSION.txt
+
+PATCHES=""
+case $verm in
+	trunk)
+		PATCHES="$PATCHES routing-olsrd.init_6and4-patches.patch"
+		#PATCHES="$PATCHES routing-olsrd-version.patch"
+	;;
+	*)
+		PATCHES="$PATCHES routing-olsrd.init_6and4-patches.patch"
+		#PATCHES="$PATCHES routing-olsrd-version.patch"
+	;;
+esac
+
+cd routing
+for i in $PATCHES ; do
+	pparm='-p1'
+	patch $pparm < ../ff-control/patches/$i || exit 0
+	mkdir -p ../$verm/patches
+	cp ../ff-control/patches/$i ../$verm/patches || exit 0
+done
+rm -rf $(find . | grep \.orig$)
+cd ..
+
 
 case $verm in
 	trunk)
@@ -95,14 +127,11 @@ esac
 case $verm in
 	trunk)
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
 		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
 		;;
 	attitude_adjustment)
 		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES trunk-olsrd.init_6and4-patches.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-olsrd-version.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-openvpn-use-busybox-ip.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-chk-linux-3.patch"
@@ -110,12 +139,12 @@ case $verm in
 		PACKAGESPATCHES="$PACKAGESPATCHES package-net-snmp.patch"
 		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
 		PACKAGESPATCHES="$PACKAGESPATCHES package-6scripts.patch"
+		PACKAGESPATCHES="$PACKAGESPATCHES package-argp-standalone.patch"
 		;;
 	*)
 		#PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch" #no trunk
 		PACKAGESPATCHES="$PACKAGESPATCHES package-radvd.patch" #no trunk
 		#PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch" #no trunk
-		PACKAGESPATCHES="$PACKAGESPATCHES package-olsrd.patch" #no trunk
 		PACKAGESPATCHES="$PACKAGESPATCHES package-collectd.patch" #no trunk
 		PACKAGESPATCHES="$PACKAGESPATCHES package-libmodbus-3.1.0.patch"
 		;;
@@ -137,7 +166,6 @@ for i in $PACKAGESRPATCHES ; do
 	cp ../ff-control/patches/$i ../$verm/patches || exit 0
 done
 rm -rf $(find . | grep \.orig$)
-rm libs/argp-standalone/patches/001-throw-in-funcdef.patch
 
 cd ..
 
@@ -298,6 +326,7 @@ for board in $boards ; do
 	cp ../../VERSION.txt VERSION.txt
 	echo "OpenWrt Branch: $verm" >> VERSION.txt
 	echo "OpenWrt Board: $board" >> VERSION.txt
+	echo "OpenWrt Build: $vername-$build_number" >> VERSION.txt
 	cat ../../ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
 	cp VERSION.txt package/base-files/files/etc
 	echo "timestamp: $timestamp url: http://$servername/$verm/$ver/$board host: $(hostname)">> package/base-files/files/etc/banner
@@ -305,6 +334,7 @@ for board in $boards ; do
 	echo "Generate feeds.conf"
 	>feeds.conf
 	echo "src-link packages ../../../$packages_dir" >> feeds.conf
+	echo "src-link routing ../../../routing" >> feeds.conf
 	echo "src-link packagespberg ../../../packages-pberg" >> feeds.conf
 	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
 	echo "src-link luci ../../../luci-master" >> feeds.conf
@@ -317,6 +347,7 @@ for board in $boards ; do
 	scripts/feeds update
 	echo "openwrt feeds install"
 	scripts/feeds install -a
+	PATCHES=""
 	case $verm in
 		trunk)
 			#PATCHES="$PATCHES trunk-base-passwd-admin.patch"
@@ -336,6 +367,10 @@ for board in $boards ; do
 		attitude_adjustment)
 			PATCHES="$PATCHES package-mac80211-regdb.patch"
 			PATCHES="$PATCHES target-brcm2708-gzip.patch"
+			PATCHES="$PATCHES target-brcm2708-kernel-config.patch"
+			PATCHES="$PATCHES target-brcm2708-spi-i2c.patch"
+			PATCHES="$PATCHES target-brcm2708-gpu-fw.patch"
+			PATCHES="$PATCHES target-brcm2708-inittab.patch"
 			case $board in
 				x86_kvm_guest)
 					PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
@@ -403,7 +438,7 @@ for board in $boards ; do
 	#PATCHES="$PATCHES package-mac80211.patch"
 	#PATCHES="$PATCHES make-art-writeable.patch"
 	for i in $PATCHES ; do
-		pparm='-p0'
+		pparm='-p1'
 		echo "Patch: $i"
 		patch $pparm < ../../ff-control/patches/$i || exit 0
 		mkdir -p ../patches
@@ -428,6 +463,9 @@ for board in $boards ; do
 	[ -h dl ] || ln -s ../../dl dl
 	cp -a ../../ff-control/patches/regulatory.bin dl/regulatory.bin
 	build_fail=0
+
+	genconfig "CONFIG_VERSION_NUMBER=$vername-$build_number"
+
 	case $board in
 		atheros)
 #########################Freifunk Minimal##########################################
@@ -553,7 +591,7 @@ for board in $boards ; do
 		rsync -av "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
 		#ssh $user@$servername "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
 		if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
-			curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm $ver-rc1-pberg for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
+			curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm $ver-pberg-$build_number for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
 		fi
 	)&
 	#&

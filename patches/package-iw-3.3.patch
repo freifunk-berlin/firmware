@@ -1,5 +1,5 @@
---- package/iw/Makefile	2012-08-17 15:40:40.041971000 +0200
-+++ package/iw/Makefile	2012-08-18 14:47:24.265458001 +0200
+--- a/package/iw/Makefile	2012-08-17 15:40:40.041971000 +0200
++++ b/package/iw/Makefile	2012-08-18 14:47:24.265458001 +0200
 @@ -8,13 +8,12 @@
  include $(TOPDIR)/rules.mk
  
@@ -35,8 +35,8 @@
  	-DCONFIG_LIBNL20 \
  	-D_GNU_SOURCE
 diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/001-nl80211_h_sync.patch openwrt-trunk/package/iw/patches/001-nl80211_h_sync.patch
---- package/iw/patches/001-nl80211_h_sync.patch	1970-01-01 01:00:00.000000000 +0100
-+++ package/iw/patches/001-nl80211_h_sync.patch	2012-08-18 14:47:24.265458001 +0200
+--- a/package/iw/patches/001-nl80211_h_sync.patch	1970-01-01 01:00:00.000000000 +0100
++++ b/package/iw/patches/001-nl80211_h_sync.patch	2012-08-18 14:47:24.265458001 +0200
 @@ -0,0 +1,284 @@
 +--- a/nl80211.h
 ++++ b/nl80211.h
@@ -322,9 +322,9 @@ diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/001-nl80211_h_syn
 + };
 + 
 + /**
-diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/001-nl80211_sync.patch openwrt-trunk/package/iw/patches/001-nl80211_sync.patch
---- package/iw/patches/001-nl80211_sync.patch	2012-08-17 15:40:40.041971000 +0200
-+++ package/iw/patches/001-nl80211_sync.patch	1970-01-01 01:00:00.000000000 +0100
+diff '--exclude=.svn' -Nur a/openwrt-backfire/package/iw/patches/001-nl80211_sync.patch b/openwrt-trunk/package/iw/patches/001-nl80211_sync.patch
+--- a/package/iw/patches/001-nl80211_sync.patch	2012-08-17 15:40:40.041971000 +0200
++++ b/package/iw/patches/001-nl80211_sync.patch	1970-01-01 01:00:00.000000000 +0100
 @@ -1,81 +0,0 @@
 ---- a/nl80211.h
 -+++ b/nl80211.h
@@ -407,9 +407,9 @@ diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/001-nl80211_sync.
 -  * @__NL80211_MESH_SETUP_ATTR_AFTER_LAST: Internal use
 -  */
 - enum nl80211_mesh_setup_params {
-diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/100-rx_rate.patch openwrt-trunk/package/iw/patches/100-rx_rate.patch
---- package/iw/patches/100-rx_rate.patch	2012-08-17 15:40:40.041971000 +0200
-+++ package/iw/patches/100-rx_rate.patch	2012-08-18 14:47:24.265458001 +0200
+diff '--exclude=.svn' -Nur a/openwrt-backfire/package/iw/patches/100-rx_rate.patch b/openwrt-trunk/package/iw/patches/100-rx_rate.patch
+--- a/package/iw/patches/100-rx_rate.patch	2012-08-17 15:40:40.041971000 +0200
++++ b/package/iw/patches/100-rx_rate.patch	2012-08-18 14:47:24.265458001 +0200
 @@ -43,9 +43,9 @@
   	struct nlattr *sinfo[NL80211_STA_INFO_MAX + 1];
  -	struct nlattr *rinfo[NL80211_RATE_INFO_MAX + 1];
@@ -442,9 +442,9 @@ diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/100-rx_rate.patch
   		printf("\n\tsignal avg:\t%d dBm",
   			(int8_t)nla_get_u8(sinfo[NL80211_STA_INFO_SIGNAL_AVG]));
   
-diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/110-fix_rate_calculation.patch openwrt-trunk/package/iw/patches/110-fix_rate_calculation.patch
---- package/iw/patches/110-fix_rate_calculation.patch	2012-08-17 15:40:40.041971000 +0200
-+++ package/iw/patches/110-fix_rate_calculation.patch	1970-01-01 01:00:00.000000000 +0100
+diff '--exclude=.svn' -Nur a/openwrt-backfire/package/iw/patches/110-fix_rate_calculation.patch b/openwrt-trunk/package/iw/patches/110-fix_rate_calculation.patch
+--- a/package/iw/patches/110-fix_rate_calculation.patch	2012-08-17 15:40:40.041971000 +0200
++++ b/package/iw/patches/110-fix_rate_calculation.patch	1970-01-01 01:00:00.000000000 +0100
 @@ -1,11 +0,0 @@
 ---- a/ibss.c
 -+++ b/ibss.c
@@ -457,9 +457,9 @@ diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/110-fix_rate_calc
 - 		argv++;
 - 		argc--;
 - 	}
-diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/110-per_chain_signal_strength.patch openwrt-trunk/package/iw/patches/110-per_chain_signal_strength.patch
---- package/iw/patches/110-per_chain_signal_strength.patch	1970-01-01 01:00:00.000000000 +0100
-+++ package/iw/patches/110-per_chain_signal_strength.patch	2012-08-18 14:47:24.265458001 +0200
+diff '--exclude=.svn' -Nur a/openwrt-backfire/package/iw/patches/110-per_chain_signal_strength.patch b/openwrt-trunk/package/iw/patches/110-per_chain_signal_strength.patch
+--- a/package/iw/patches/110-per_chain_signal_strength.patch	1970-01-01 01:00:00.000000000 +0100
++++ b/package/iw/patches/110-per_chain_signal_strength.patch	2012-08-18 14:47:24.265458001 +0200
 @@ -0,0 +1,70 @@
 +--- a/station.c
 ++++ b/station.c
@@ -531,9 +531,9 @@ diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/110-per_chain_sig
 + 
 + 	print_sta_bitrate(sinfo[NL80211_STA_INFO_TX_BITRATE], "tx bitrate");
 + 	print_sta_bitrate(sinfo[NL80211_STA_INFO_RX_BITRATE], "rx bitrate");
-diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/120-ibss_ht.patch openwrt-trunk/package/iw/patches/120-ibss_ht.patch
---- package/iw/patches/120-ibss_ht.patch	2012-08-17 15:40:40.041971000 +0200
-+++ package/iw/patches/120-ibss_ht.patch	1970-01-01 01:00:00.000000000 +0100
+diff '--exclude=.svn' -Nur a/openwrt-backfire/package/iw/patches/120-ibss_ht.patch b/openwrt-trunk/package/iw/patches/120-ibss_ht.patch
+--- a/package/iw/patches/120-ibss_ht.patch	2012-08-17 15:40:40.041971000 +0200
++++ b/package/iw/patches/120-ibss_ht.patch	1970-01-01 01:00:00.000000000 +0100
 @@ -1,113 +0,0 @@
 ---- a/ibss.c
 -+++ b/ibss.c
@@ -648,9 +648,9 @@ diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/120-ibss_ht.patch
 - static void print_mcs_index(const __u8 *mcs)
 - {
 - 	unsigned int mcs_bit, prev_bit = -2, prev_cont = 0;
-diff '--exclude=.svn' -Nur openwrt-backfire/package/iw/patches/120-tdls_peer_indentation.patch openwrt-trunk/package/iw/patches/120-tdls_peer_indentation.patch
---- package/iw/patches/120-tdls_peer_indentation.patch	1970-01-01 01:00:00.000000000 +0100
-+++ package/iw/patches/120-tdls_peer_indentation.patch	2012-08-18 14:47:24.265458001 +0200
+diff '--exclude=.svn' -Nur a/openwrt-backfire/package/iw/patches/120-tdls_peer_indentation.patch b/openwrt-trunk/package/iw/patches/120-tdls_peer_indentation.patch
+--- a/package/iw/patches/120-tdls_peer_indentation.patch	1970-01-01 01:00:00.000000000 +0100
++++ b/package/iw/patches/120-tdls_peer_indentation.patch	2012-08-18 14:47:24.265458001 +0200
 @@ -0,0 +1,11 @@
 +--- a/station.c
 ++++ b/station.c

@@ -1,6 +1,6 @@
-diff --exclude .svn -Nru package/crda/Makefile package/crda/Makefile
---- package/crda/Makefile	2012-08-17 15:40:44.901971001 +0200
-+++ package/crda/Makefile	2012-08-18 14:47:32.615458002 +0200
+diff --exclude .svn -Nru a/package/crda/Makefile b/package/crda/Makefile
+--- a/package/crda/Makefile	2012-08-17 15:40:44.901971001 +0200
++++ b/package/crda/Makefile	2012-08-18 14:47:32.615458002 +0200
 @@ -1,5 +1,5 @@
  #
 -# Copyright (C) 2009 OpenWrt.org
@@ -31,9 +31,9 @@ diff --exclude .svn -Nru package/crda/Makefile package/crda/Makefile
    URL:=http://wireless.kernel.org/en/developers/Regulatory/CRDA
  endef
  
-diff --exclude .svn -Nru package/crda/patches/101-make_crypto_use_optional.patch package/crda/patches/101-make_crypto_use_optional.patch
---- package/crda/patches/101-make_crypto_use_optional.patch	2012-08-17 15:40:44.901971001 +0200
-+++ package/crda/patches/101-make_crypto_use_optional.patch	2012-08-18 14:47:32.615458002 +0200
+diff --exclude .svn -Nru a/package/crda/patches/101-make_crypto_use_optional.patch b/package/crda/patches/101-make_crypto_use_optional.patch
+--- a/package/crda/patches/101-make_crypto_use_optional.patch	2012-08-17 15:40:44.901971001 +0200
++++ b/package/crda/patches/101-make_crypto_use_optional.patch	2012-08-18 14:47:32.615458002 +0200
 @@ -1,6 +1,6 @@
  --- a/Makefile
  +++ b/Makefile

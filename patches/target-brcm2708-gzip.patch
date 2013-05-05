@@ -1,0 +1,44 @@
+diff --git a/target/linux/brcm2708/image/Makefile b/target/linux/brcm2708/image/Makefile
+index a8dbef1..30e13f9 100644
+--- a/target/linux/brcm2708/image/Makefile
++++ b/target/linux/brcm2708/image/Makefile
+@@ -20,27 +20,34 @@ define Image/Build/RaspberryPi
+ 
+ 	mkdosfs $(KDIR)/boot.img -C $(FAT32_BLOCKS)
+ 	# Raspberry Pi has no bootloader, instead the GPU loads and starts the kernel
+-	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/arm128_start.elf ::
+-	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/arm192_start.elf ::
+-	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/arm224_start.elf ::
++	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/start_x.elf ::
++	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/start_cd.elf ::
+ 	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/bootcode.bin ::
+ 	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/COPYING.linux ::
+ 	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/LICENCE.broadcom ::
+-	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/loader.bin ::
+-	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/arm$(2)_start.elf ::start.elf  #Copy file for memory/gpu division
++	mcopy -i $(KDIR)/boot.img $(BUILD_DIR)/brcm2708-gpu-fw-boot/start.elf ::start.elf  #Copy file for memory/gpu division
+ 	mcopy -i $(KDIR)/boot.img cmdline.txt ::
+ 	mcopy -i $(KDIR)/boot.img $(KDIR)/Image ::kernel.img  # Copy OpenWrt built kernel
+ 	./gen_rpi_sdcard_img.sh $(BIN_DIR)/$(IMG_PREFIX)-sdcard-vfat-$(1)_$(2).img $(KDIR)/boot.img $(KDIR)/root.$(1) \
+ 		$(CONFIG_BRCM2708_SD_BOOT_PARTSIZE) $(CONFIG_TARGET_ROOTFS_PARTSIZE)
+ endef
+ 
++define Image/Build/gzip/RaspberryPi
++    gzip -f9 $(BIN_DIR)/$(IMG_PREFIX)-$(1)
++endef
++
+ define Image/Build
+ 	$(CP) $(KDIR)/root.$(1) $(BIN_DIR)/$(IMG_PREFIX)-$(1).img
++	$(call Image/Build/gzip/RaspberryPi,$(1).img)
+ 	$(CP) $(KDIR)/Image $(BIN_DIR)/$(IMG_PREFIX)-Image
++	$(call Image/Build/gzip/RaspberryPi,Image)
+ 
+ 	$(call Image/Build/RaspberryPi,$(1),128)
++	$(call Image/Build/gzip/RaspberryPi,sdcard-vfat-$(1)_128.img)
+ 	$(call Image/Build/RaspberryPi,$(1),192)
++	$(call Image/Build/gzip/RaspberryPi,sdcard-vfat-$(1)_192.img)
+ 	$(call Image/Build/RaspberryPi,$(1),224)
++	$(call Image/Build/gzip/RaspberryPi,sdcard-vfat-$(1)_224.img)
+ endef
+ 
+ $(eval $(call BuildImage))

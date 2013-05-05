@@ -1,7 +1,7 @@
-Index: target/linux/atheros/image/Makefile
+Index: a/target/linux/atheros/image/Makefile
 ===================================================================
---- target/linux/atheros/image/Makefile	(Revision 33210)
-+++ target/linux/atheros/image/Makefile	(Arbeitskopie)
+--- a/target/linux/atheros/image/Makefile	(Revision 33210)
++++ b/target/linux/atheros/image/Makefile	(Arbeitskopie)
 @@ -56,6 +56,10 @@
  		"$(BIN_DIR)/$(IMG_PREFIX)-vmlinux.lzma" \
  		"$(BIN_DIR)/$(IMG_PREFIX)-root.$(1)" \

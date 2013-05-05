@@ -1,7 +1,7 @@
-Index: package/busybox/Makefile
+Index: a/package/busybox/Makefile
 ===================================================================
---- package/busybox/Makefile	(Revision 28700)
-+++ package/busybox/Makefile	(Arbeitskopie)
+--- a/package/busybox/Makefile	(Revision 28700)
++++ b/package/busybox/Makefile	(Arbeitskopie)
 @@ -81,6 +81,7 @@
  endef
  

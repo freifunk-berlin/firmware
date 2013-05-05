@@ -1,7 +1,7 @@
-Index: package/crda/Makefile
+Index: a/package/crda/Makefile
 ===================================================================
---- package/crda/Makefile	(Revision 33210)
-+++ package/crda/Makefile	(Arbeitskopie)
+--- a/package/crda/Makefile	(Revision 33210)
++++ b/package/crda/Makefile	(Arbeitskopie)
 @@ -58,7 +58,7 @@
  	NL1FOUND="" NL2FOUND=Y \
  	NLLIBNAME="libnl-tiny" \
@@ -21,7 +21,7 @@ Index: package/crda/Makefile
  
  $(eval $(call BuildPackage,crda))
 --- /dev/null	2012-08-17 07:36:30.570000003 +0200
-+++ package/crda/patches/200-openwrt_key.patch	2012-08-19 01:10:01.989152002 +0200
++++ b/package/crda/patches/200-openwrt_key.patch	2012-08-19 01:10:01.989152002 +0200
 @@ -0,0 +1,12 @@
 +--- /dev/null	2012-08-17 07:36:30.570000003 +0200
 ++++ a/pubkeys/openwrt.key.pub.pem	2012-08-19 01:03:20.019152001 +0200

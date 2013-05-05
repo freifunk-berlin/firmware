@@ -1,7 +1,7 @@
-Index: package/base-files/files/etc/config/system
+Index: a/package/base-files/files/etc/config/system
 ===================================================================
---- package/base-files/files/etc/config/system	(Revision 21854)
-+++ package/base-files/files/etc/config/system	(Arbeitskopie)
+--- a/package/base-files/files/etc/config/system	(Revision 21854)
++++ b/package/base-files/files/etc/config/system	(Arbeitskopie)
 @@ -1,6 +1,7 @@
  config system
  	option hostname	OpenWrt

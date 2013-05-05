@@ -1,7 +1,7 @@
-diff --git package/mac80211/files/regdb.txt package/mac80211/files/regdb.txt
+diff --git a/package/mac80211/files/regdb.txt b/package/mac80211/files/regdb.txt
 index b250e69..2354470 100644
---- package/mac80211/files/regdb.txt
-+++ package/mac80211/files/regdb.txt
+--- a/package/mac80211/files/regdb.txt
++++ b/package/mac80211/files/regdb.txt
 @@ -1,697 +1,39 @@
  # This is the world regulatory domain
  country 00:

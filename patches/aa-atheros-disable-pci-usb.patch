@@ -1,7 +1,7 @@
-diff --git target/linux/atheros/config-3.3 target/linux/atheros/config-3.3
+diff --git a/target/linux/atheros/config-3.3 b/target/linux/atheros/config-3.3
 index 524965f..eae35a4 100644
---- target/linux/atheros/config-3.3
-+++ target/linux/atheros/config-3.3
+--- a/target/linux/atheros/config-3.3
++++ b/target/linux/atheros/config-3.3
 @@ -6,7 +6,7 @@ CONFIG_ARCH_HIBERNATION_POSSIBLE=y
  CONFIG_ARCH_REQUIRE_GPIOLIB=y
  CONFIG_ARCH_SUSPEND_POSSIBLE=y

@@ -3,7 +3,7 @@
 . ./config
 
 #MAKE=${MAKE:-nice -n 10 make}
-MAKE=${MAKE:-make -j4}
+MAKE=${MAKE:-make -j6}
 #MAKE=${MAKE:-echo}
 
 [ -z $verm ] && exit 0
@@ -28,8 +28,6 @@ update_git() {
 		[ -z $revision ] || echo "git checkout $revision"
 		cd $repodir
 		git add .
-		#rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
-		#[ -z "$rmf" ] || rm "$rmf"
 		git reset --hard
 		git checkout master .
 		git remote rm origin
@@ -69,7 +67,7 @@ echo $build_number > build
 timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
 date +"%Y/%m/%d %H:%M">VERSION.txt
-echo "Build on $(hostname)" >>VERSION.txt
+echo "Build Nr.: $build_number on $(hostname)" >>VERSION.txt
 echo "openwrt Revision: $revision"  >>VERSION.txt
 
 [ -d feeds ] || mkdir feeds
@@ -89,17 +87,8 @@ update_git "git://github.com/openwrt-routing/packages.git" "routing"
 echo "routing packages Revision: $revision"  >>VERSION.txt
 
 PATCHES=""
-case $verm in
-	trunk)
-		PATCHES="$PATCHES routing-olsrd.init_6and4-patches.patch"
-		#PATCHES="$PATCHES routing-olsrd-version.patch"
-	;;
-	*)
-		PATCHES="$PATCHES routing-olsrd.init_6and4-patches.patch"
-		#PATCHES="$PATCHES routing-olsrd-version.patch"
-	;;
-esac
-
+PATCHES="$PATCHES routing-olsrd.init_6and4.patch"
+PATCHES="$PATCHES routing-olsrd.config-rm-wlan.patch"
 cd routing
 for i in $PATCHES ; do
 	pparm='-p1'
@@ -124,43 +113,36 @@ case $verm in
 	;;
 esac
 
+PATCHES=""
+RPATCHES=""
 case $verm in
 	trunk)
-		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
-		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
+		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
+		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
+		#RPATCHES="$RPATCHES packages-r31282.patch"
 		;;
 	attitude_adjustment)
-		PACKAGESPATCHES="$PACKAGESPATCHES trunk-radvd-ifconfig.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-openvpn-use-busybox-ip.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-disable-eglibc-dep.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-pthsem-chk-linux-3.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-nagios-plugins.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-net-snmp.patch"
-		#PACKAGESRPATCHES="$PACKAGESRPATCHES packages-r31282.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-6scripts.patch"
-		PACKAGESPATCHES="$PACKAGESPATCHES package-argp-standalone.patch"
-		;;
-	*)
-		#PACKAGESPATCHES="$PACKAGESPATCHES radvd-ifconfig.patch" #no trunk
-		PACKAGESPATCHES="$PACKAGESPATCHES package-radvd.patch" #no trunk
-		#PACKAGESPATCHES="$PACKAGESPATCHES olsrd.init_6and4-patches.patch" #no trunk
-		PACKAGESPATCHES="$PACKAGESPATCHES package-collectd.patch" #no trunk
-		PACKAGESPATCHES="$PACKAGESPATCHES package-libmodbus-3.1.0.patch"
+		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
+		PATCHES="$PATCHES package-openvpn-use-busybox-ip.patch"
+		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
+		PATCHES="$PATCHES package-pthsem-chk-linux-3.patch"
+		PATCHES="$PATCHES package-nagios-plugins.patch"
+		PATCHES="$PATCHES package-net-snmp.patch"
+		#PATCHES="$PATCHES packages-r31282.patch"
+		PATCHES="$PATCHES package-6scripts.patch"
+		PATCHES="$PATCHES package-argp-standalone.patch"
 		;;
 esac
-PACKAGESPATCHES="$PACKAGESPATCHES olsrd.config-rm-wlan-patches.patch"
 
 cd $packages_dir
-for i in $PACKAGESPATCHES ; do
+for i in $PATCHES ; do
 	pparm='-p1'
 	patch $pparm < ../ff-control/patches/$i || exit 0
 	mkdir -p ../$verm/patches
 	cp ../ff-control/patches/$i ../$verm/patches || exit 0
 done
-for i in $PACKAGESRPATCHES ; do
+for i in $RPATCHES ; do
 	pparm='-p1 -R'
-	#echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i || exit 0
 	mkdir -p ../$verm/patches
 	cp ../ff-control/patches/$i ../$verm/patches || exit 0
@@ -172,44 +154,36 @@ cd ..
 update_git  "git://github.com/freifunk/luci.git" "luci-master"
 echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
-#REMOVE LUCIPATCHES="$LUCIPATCHES luci-profile_muenster.patch"
-#REMOVE LUCIPATCHES="$LUCIPATCHES luci-profile_cottbus.patch"
-#REMOVE LUCIPATCHES="$LUCIPATCHES luci-profile_ndb.patch"
-#REMOVE LUCIPATCHES="$LUCIPATCHES luci-profile_ffwtal.patch"
-LUCIPATCHES="$LUCIPATCHES luci-app-olsr-use-admin-mini.patch"
-LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini.patch"
-LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini-status.patch"
-LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
-LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-basics-mini.patch"
-LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sysupgrade.patch"
-LUCIPATCHES="$LUCIPATCHES luci-admin-mini-splash.patch"
-LUCIPATCHES="$LUCIPATCHES luci-admin-mini-index.patch"
-LUCIPATCHES="$LUCIPATCHES luci-admin-mini-backup-style.patch"
-LUCIPATCHES="$LUCIPATCHES luci-admin-mini-sshkeys.patch"
-#LUCIPATCHES="$LUCIPATCHES luci-freifunk_radvd_gvpn.patch"
-LUCIPATCHES="$LUCIPATCHES luci-app-splash-css.patch"
-LUCIPATCHES="$LUCIPATCHES luci-modfreifunk-migrate.patch"
-LUCIPATCHES="$LUCIPATCHES luci-gwcheck-makefile.patch"
-LUCIPATCHES="$LUCIPATCHES luci-theme-bootstrap.patch"
-LUCIPATCHES="$LUCIPATCHES luci-theme-bootstrap-header.patch"
-LUCIPATCHES="$LUCIPATCHES luci-olsr-view.patch"
-LUCIPATCHES="$LUCIPATCHES luci-olsr-service-view.patch"
-LUCIPATCHES="$LUCIPATCHES luci-splash-mark.patch"
-LUCIPATCHES="$LUCIPATCHES luci-admin-mini-dhcp.patch"
-LUCIPATCHES="$LUCIPATCHES luci-freifunk-map.patch"
-LUCIPATCHES="$LUCIPATCHES luci-admin-mini-install-full.patch"
-LUCIPATCHES="$LUCIPATCHES luci-admin-mini-wifi.patch"
-for i in $LUCIPATCHES ; do
+PATCHES=""
+PATCHES="$PATCHES luci-app-olsr-use-admin-mini.patch"
+PATCHES="$PATCHES luci-modfreifunk-use-admin-mini.patch"
+PATCHES="$PATCHES luci-modfreifunk-use-admin-mini-status.patch"
+PATCHES="$PATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
+PATCHES="$PATCHES luci-modfreifunk-basics-mini.patch"
+PATCHES="$PATCHES luci-admin-mini-sysupgrade.patch"
+PATCHES="$PATCHES luci-admin-mini-splash.patch"
+PATCHES="$PATCHES luci-admin-mini-index.patch"
+PATCHES="$PATCHES luci-admin-mini-backup-style.patch"
+PATCHES="$PATCHES luci-admin-mini-sshkeys.patch"
+PATCHES="$PATCHES luci-app-splash-css.patch"
+PATCHES="$PATCHES luci-modfreifunk-migrate.patch"
+PATCHES="$PATCHES luci-gwcheck-makefile.patch"
+PATCHES="$PATCHES luci-theme-bootstrap.patch"
+PATCHES="$PATCHES luci-theme-bootstrap-header.patch"
+PATCHES="$PATCHES luci-olsr-view.patch"
+PATCHES="$PATCHES luci-olsr-service-view.patch"
+PATCHES="$PATCHES luci-splash-mark.patch"
+PATCHES="$PATCHES luci-admin-mini-dhcp.patch"
+PATCHES="$PATCHES luci-freifunk-map.patch"
+PATCHES="$PATCHES luci-admin-mini-install-full.patch"
+PATCHES="$PATCHES luci-admin-mini-wifi.patch"
+for i in $PATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
 	patch $pparm < ../ff-control/patches/$i || exit 0
 	mkdir -p ../$verm/patches
 	cp ../ff-control/patches/$i ../$verm/patches  || exit 0
 done
-
-rm -rf modules/freifunk/luasrc/controller/freifunk/remote_update.lua
-rm -rf modules/freifunk/luasrc/view/freifunk/remote_update.htm
-rm -rf contrib/package/freifunk-firewall/files/etc/hotplug.d/iface/22-firewall-nat-fix
 rm -rf $(find . | grep \.orig$)
 cd ..
 
@@ -219,9 +193,6 @@ case $verm in
 		;;
 	attitude_adjustment)
 		sed -i -e "s,177,178," packages-pberg/net/l2gvpn/Makefile
-		;;
-	*)
-		sed -i -e "s,178,177," packages-pberg/net/l2gvpn/Makefile
 		;;
 esac
 
@@ -302,7 +273,6 @@ for board in $boards ; do
 #	rm -rf staging_dir
 	rm -rf files
 	mkdir -p files
-	#rm -rf $(svn status)
 	case $verm in
 		trunk) 
 			echo "rsync --delete -a ../../openwrt-trunk/* ./"
@@ -315,14 +285,7 @@ for board in $boards ; do
 			rsync --delete -a ../../openwrt-$verm/.git ./
 			;;
 	esac
-	#echo "git add ."
-	#git add .
-	#rmf="$(git diff --cached | grep 'diff --git a' | cut -d ' ' -f 3 | cut -b 3-)"
-	#[ -z "$rmf" ] || rm "$rmf"
-	#git reset --hard
-	#git checkout master .
 
-	#openwrt_revision=$(svn info | grep Revision | cut -d ' ' -f 2)
 	cp ../../VERSION.txt VERSION.txt
 	echo "OpenWrt Branch: $verm" >> VERSION.txt
 	echo "OpenWrt Board: $board" >> VERSION.txt
@@ -350,18 +313,9 @@ for board in $boards ; do
 	PATCHES=""
 	case $verm in
 		trunk)
-			#PATCHES="$PATCHES trunk-base-passwd-admin.patch"
-			#PATCHES="$PATCHES trunk-atheros-config.patch"
-			#rm -f package/base-files/files/etc/shadow
-			case $board in
-				x86_kvm_guest)
-					PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
-				;;
-				atheros)
-					PATCHES="$PATCHES aa-atheros-disable-pci-usb.patch" #no trunk
-					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
-				;;
-			esac
+			PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
+			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
+			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		attitude_adjustment)
@@ -371,72 +325,16 @@ for board in $boards ; do
 			PATCHES="$PATCHES target-brcm2708-spi-i2c.patch"
 			PATCHES="$PATCHES target-brcm2708-gpu-fw.patch"
 			PATCHES="$PATCHES target-brcm2708-inittab.patch"
-			case $board in
-				x86_kvm_guest)
-					PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
-					PATCHES="$PATCHES target-x86_kvm_guest-add-qcow.patch"
-				;;
-				atheros)
-					PATCHES="$PATCHES aa-atheros-disable-pci-usb.patch" #no trunk
-					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
-				;;
-			esac
+			PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
+			PATCHES="$PATCHES target-x86_kvm_guest-add-qcow.patch"
+			PATCHES="$PATCHES target-ixp4xx-avila-sysupgrade.patch"
+			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
+			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
-			;;
-		*)
-			sed -i -e 's/\(DISTRIB_DESCRIPTION=".*\)"/\1 (r'$openwrt_revision') build date: '$timestamp'"/' package/base-files/files/etc/openwrt_release
-			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
-			PATCHES="$PATCHES base-disable-ipv6-autoconf.patch" #no trunk
-			PATCHES="$PATCHES base-passwd-admin.patch"
-			PATCHES="$PATCHES package-lua.patch"
-			PATCHES="$PATCHES package-dnsmasq-trunk.patch"
-			PATCHES="$PATCHES package-dnsmasq-ff-timing.patch"
-			PATCHES="$PATCHES package-libubox.patch"
-			PATCHES="$PATCHES sven-ola-luks.patch"
-			case $board in
-				ar71xx)
-					PATCHES="$PATCHES routerstation-bridge-wan-lan.patch" #no trunk
-					PATCHES="$PATCHES routerstation-pro-bridge-wan-lan.patch" #no trunk
-					PATCHES="$PATCHES ar71xx-package-mac80211-platform-compat.patch"
-				;;
-				atheros)
-					PATCHES="$PATCHES atheros-disable-pci-usb.patch" #no trunk
-					PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
-					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
-				;;
-				ixp4xx)
-					PATCHES="$PATCHES  target-ixp4xx-avila-sysupgrade.patch" #no trunk
-					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
-				;;
-				x86_kvm_guest)
-#					PATCHES="$PATCHES x86-virtio-usb-boot.patch"
-					PATCHES="$PATCHES add-qcow-images.patch"
-					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
-				;;
-#				x86)
-#					PATCHES="$PATCHES x86-usb-boot.patch"
-#					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
-#				;;
-				*)
-					PATCHES="$PATCHES package-mac80211-platform-compat.patch"
-				;;
-			esac
-			PATCHES="$PATCHES package-crda-regulatory-pberg.patch"
-			PATCHES="$PATCHES package-crda-backport.patch"
-			PATCHES="$PATCHES package-iw-3.3.patch"
-			PATCHES="$PATCHES package-libnl-tiny-backport.patch"
-			PATCHES="$PATCHES package-mac80211-trunk.patch"
-			PATCHES="$PATCHES package-mac80211-backport.patch"
-			PATCHES="$PATCHES package-wireless-tools-backport.patch"
-			PATCHES="$PATCHES package-iwinfo-backport.patch"
-			PATCHES="$PATCHES package-hostapd-backport.patch"
 			;;
 	esac
 	PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-system.patch"
-	#PATCHES="$PATCHES package-mac80211-dir300.patch"
-	#PATCHES="$PATCHES package-mac80211.patch"
-	#PATCHES="$PATCHES make-art-writeable.patch"
 	for i in $PATCHES ; do
 		pparm='-p1'
 		echo "Patch: $i"
@@ -444,9 +342,8 @@ for board in $boards ; do
 		mkdir -p ../patches
 		cp ../../ff-control/patches/$i ../patches || exit 0
 	done
-	#RPATCHES="$RPATCHES packages-r27821.patch"
-	#RPATCHES="$RPATCHES packages-r27815.patch"
-	for i in $RPATCHES ; do
+	PATCHES=""
+	for i in $PATCHES ; do
 		pparm='-p2 -R'
 		# get patch with:
 		# wget --no-check-certificate -O 'ff-control/patches/packages-r27821.patch' 'http://dev.openwrt.org/changeset/27821/branches/backfire/package?format=diff&new=27821'
@@ -559,6 +456,15 @@ for board in $boards ; do
 					make oldconfig
 					${MAKE} world || build_fail=1
 					rsync_web "full"
+#########################GA max##########################################
+					rm -f bin/*/*
+					echo "copy config ../../ff-control/configs/$verm-$board.config .config"
+					cp  ../../ff-control/configs/$verm-$board.config .config
+					genconfig "$options_ver"
+					genconfig "$options_GA"
+					make oldconfig
+					${MAKE} world || build_fail=1
+					rsync_web "ga"
 				;;
 				*)
 #########################Freifunk 8MB##########################################

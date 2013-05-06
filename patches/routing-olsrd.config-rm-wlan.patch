@@ -1,7 +1,7 @@
-diff --git a/net/olsrd/files/olsrd.config b/net/olsrd/files/olsrd.config
+diff --git a/olsrd/files/olsrd.config b/olsrd/files/olsrd.config
 index 9a19eb9..9f173ee 100644
---- a/net/olsrd/files/olsrd.config
-+++ b/net/olsrd/files/olsrd.config
+--- a/olsrd/files/olsrd.config
++++ b/olsrd/files/olsrd.config
 @@ -22,5 +22,7 @@ config LoadPlugin
  	option library 'olsrd_txtinfo.so.0.1'
  	option accept '0.0.0.0'

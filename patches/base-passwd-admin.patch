@@ -1,9 +1,0 @@
-Index: package/base-files/files/etc/passwd
-===================================================================
---- package/base-files/files/etc/passwd	(Revision 21854)
-+++ package/base-files/files/etc/passwd	(Arbeitskopie)
-@@ -1,3 +1,3 @@
--root:!:0:0:root:/root:/bin/ash
-+root:$1$xhfrr5XE$O5SKxfQ0Z8ftW/nB.DDdu/:0:0:root:/root:/bin/ash
- nobody:*:65534:65534:nobody:/var:/bin/false
- daemon:*:65534:65534:daemon:/var:/bin/false

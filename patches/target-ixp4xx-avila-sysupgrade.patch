@@ -1,7 +1,7 @@
-Index: target/linux/ixp4xx/image/Makefile
+Index: a/target/linux/ixp4xx/image/Makefile
 ===================================================================
---- target/linux/ixp4xx/image/Makefile	(Revision 33210)
-+++ target/linux/ixp4xx/image/Makefile	(Arbeitskopie)
+--- a/target/linux/ixp4xx/image/Makefile	(Revision 33210)
++++ b/target/linux/ixp4xx/image/Makefile	(Arbeitskopie)
 @@ -31,6 +31,13 @@
  	rm -f $(TARGET_DIR)/zImage
  endef
@@ -24,8 +24,8 @@ Index: target/linux/ixp4xx/image/Makefile
  endef
  
  $(eval $(call BuildImage))
---- /dev/null	2012-08-17 07:36:30.570000003 +0200
-+++ target/linux/ixp4xx/base-files/lib/upgrade/platform.sh	2012-08-21 23:26:34.644627002 +0200
+--- a/target/linux/ixp4xx/base-files/lib/upgrade/platform.sh	2012-08-17 07:36:30.570000003 +0200
++++ b/target/linux/ixp4xx/base-files/lib/upgrade/platform.sh	2012-08-21 23:26:34.644627002 +0200
 @@ -0,0 +1,76 @@
 +CI_BLKSZ=65536
 +CI_LDADR=0x200000

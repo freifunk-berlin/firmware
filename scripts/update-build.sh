@@ -293,6 +293,8 @@ for board in $boards ; do
 	cat ../../ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
 	cp VERSION.txt package/base-files/files/etc
 	echo "timestamp: $timestamp url: http://$servername/$verm/$ver/$board host: $(hostname)">> package/base-files/files/etc/banner
+	options_ver=""
+	options_ver=$options_ver" CONFIG_VERSION_NUMBER=\"$vername-$build_number\""
 
 	echo "Generate feeds.conf"
 	>feeds.conf
@@ -316,7 +318,7 @@ for board in $boards ; do
 			PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
 			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
 			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
-			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
+			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		attitude_adjustment)
 			PATCHES="$PATCHES package-mac80211-regdb.patch"
@@ -330,7 +332,7 @@ for board in $boards ; do
 			PATCHES="$PATCHES target-ixp4xx-avila-sysupgrade.patch"
 			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
 			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
-			options_ver="CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
+			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 	esac
 	PATCHES="$PATCHES busybox-iproute2.patch"
@@ -360,8 +362,6 @@ for board in $boards ; do
 	[ -h dl ] || ln -s ../../dl dl
 	cp -a ../../ff-control/patches/regulatory.bin dl/regulatory.bin
 	build_fail=0
-
-	genconfig "CONFIG_VERSION_NUMBER=$vername-$build_number"
 
 	case $board in
 		atheros)
@@ -419,6 +419,7 @@ for board in $boards ; do
 			rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 			cp  ../../ff-control/configs/$verm-$board.config .config
+			echo "$options_ver"
 			genconfig "$options_ver"
 			genconfig "$options_min"
 			make oldconfig

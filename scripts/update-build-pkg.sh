@@ -47,8 +47,7 @@ for board in $boards ; do
 	echo "$pkgpath"
 	[ "$pkgpath" == "" ] && pkgpath=$(find package/feeds -maxdepth 2 | grep /$pkgname$)
 	echo "$pkgpath"
-	cp  ../../ff-control/configs/$verm-$board.config .config
-	genconfig "$make_options"
+	cp ../../ff-control/configs/$verm-$board.config .config
 	make oldconfig
 	make $pkgpath/clean V=99 && \
 	make $pkgpath/compile V=99 && \
@@ -58,13 +57,25 @@ for board in $boards ; do
 	rsync -lptgoD bin/*/packages/* $wwwdir/$verm/$ver/$board/packages
 	cd ../../
 	rm update-build-$verm-$board.lock
-	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1
-	rsync -av "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
+	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1 &
+	#rsync -av "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
 	#&
 done
 
-# for i in $BOARD ; do
-#       make -C  $DIR/OpenWrt-ImageBuilder-$i-for-$HOST_ARCH package_index
-#       mkdir -p /var/www/kamikaze/$OPENWRT_VER/$i/packages
-#       rsync -av --delete $DIR/OpenWrt-ImageBuilder-$i-for-$HOST_ARCH/packages /var/www/kamikaze/$OPENWRT_VER/$i
-# done
+#for board in $boards ; do
+#	if [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_generic-for-suse-i586.tar.bz2 ] ; then
+#		ib_name=OpenWrt-ImageBuilder-"$board"_generic-for-suse-i586
+#	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"-for-suse-i586.tar.bz2 ] ; then
+#		ib_name=OpenWrt-ImageBuilder-"$board"-for-suse-i586
+#	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_au1500-for-suse-i586.tar.bz2 ] ; then
+#		ib_name=OpenWrt-ImageBuilder-"$board"_au1500-for-suse-i586
+#	else
+#		echo "No IB tar for $board found"
+#		exit 0
+#	fi
+#	rsync -av --delete "$DIR"/"$verm"/"$board"/bin/*/packages/ "$DIR"/"$verm"/meshkit/$ib_name/packages
+#	make -C "$DIR"/"$verm"/meshkit/$ib_name package_index
+#	sed -i "$DIR"/"$verm"/meshkit/$ib_name/packages/Packages -e '/^MD5Sum.*/d'
+#	touch "$DIR"/"$verm"/meshkit/$ib_name/packages/Packages.gz
+#done
+

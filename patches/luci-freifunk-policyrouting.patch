@@ -1,0 +1,42 @@
+diff --git a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+index 327e879..b49012a 100644
+--- a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
++++ b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+@@ -20,8 +20,8 @@ if [ "$ACTION" = "ifup" ] && [ "$enable" = "1" ]; then
+ 	if [ "$net" != "" -a -n "$dev" ]; then
+ 		eval $(/bin/ipcalc.sh $net)
+ 		if [ "$PREFIX" != "0" -a "$NETWORK" != "127.0.0.0" ]; then
+-			if [ ! "$(ip r s t localnets |grep "$NETWORK/$PREFIX dev")" ]; then
+-				cmd="ip r a $NETWORK/$PREFIX dev $dev table localnets"
++			if [ ! "$(ip route show table localnets |grep "$NETWORK/$PREFIX dev")" ]; then
++				cmd="ip route add $NETWORK/$PREFIX dev $dev table localnets"
+ 				$cmd
+ 				if [ "$?" = 0 ]; then
+ 					logger -s -t policyrouting "Add route: $cmd"
+@@ -33,7 +33,7 @@ if [ "$ACTION" = "ifup" ] && [ "$enable" = "1" ]; then
+ 		fi
+ 
+ 		if [ -n "$net6" ]; then
+-			cmd="ip -6 r a $net6 dev $dev table localnets"
++			cmd="ip -6 route add $net6 dev $dev table localnets"
+ 			$cmd 2>&1 > /dev/null
+ 			if [ "$?" = 0 ]; then
+ 				logger -s -t policyrouting "Add route: $cmd (IPv6)"
+@@ -52,7 +52,7 @@ if [ "$ACTION" = "ifup" ] && [ "$enable" = "1" ]; then
+ 		for n in $networks; do
+ 			if [ "$INTERFACE" = "$n" ]; then
+ 				for p in $proto; do
+-					if [ ! "$(ip -$p ru s | grep "from all iif $dev lookup olsr-default")" ]; then
++					if [ ! "$(ip -$p rule show | grep "from all iif $dev lookup olsr-default")" ]; then
+ 						ip -$p rule add dev "$dev" lookup olsr-default prio 20000
+ 						if [ "$strict" != 0 ]; then
+ 							ip -$p rule add dev "$dev" unreachable prio 20001
+@@ -88,7 +88,7 @@ if [ "$ACTION" = "ifdown" ]; then
+ 		for n in $networks; do
+ 			if [ "$INTERFACE" = "$n" ]; then
+ 				for p in $proto; do
+-					if [ "$(ip -$p ru s | grep "from all iif $dev lookup olsr-default")" ]; then
++					if [ "$(ip -$p rule show | grep "from all iif $dev lookup olsr-default")" ]; then
+ 						ip -$p rule del dev "$dev" lookup olsr-default prio 20000
+ 						ip -$p rule del dev "$dev" unreachable prio 20001
+ 						if [ "$?" = 0 ]; then

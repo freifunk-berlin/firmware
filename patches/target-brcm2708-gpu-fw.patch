@@ -1,15 +1,14 @@
-Index: a/package/brcm2708-gpu-fw/Makefile
-===================================================================
---- a/package/brcm2708-gpu-fw/Makefile	(revision 35471)
-+++ b/package/brcm2708-gpu-fw/Makefile	(working copy)
-@@ -8,8 +8,8 @@
- include $(INCLUDE_DIR)/kernel.mk
+diff --git a/package/brcm2708-gpu-fw/Makefile b/package/brcm2708-gpu-fw/Makefile
+index 0b79cd1..11b7b54 100644
+--- a/package/brcm2708-gpu-fw/Makefile
++++ b/package/brcm2708-gpu-fw/Makefile
+@@ -40,5 +40,9 @@ define Build/InstallDev
+ 	$(CP) $(PKG_BUILD_DIR)/* $(BUILD_DIR)/brcm2708-gpu-fw-boot
+ endef
  
- PKG_NAME:=brcm2708-gpu-fw
--PKG_REV:=29ce6bcf278e7e79cd8a2b84c6aa9db9864ca91d
--PKG_VERSION:=20120529
-+PKG_REV:=4bec05a5724bf0a224aab475a05225bdfd7633bf
-+PKG_VERSION:=20130428
- PKG_RELEASE:=1
++define Package/brcm2708-gpu-fw/install
++  # nothing to do
++endef
++
+ $(eval $(call BuildPackage,brcm2708-gpu-fw))
  
- PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2

@@ -1,5 +1,5 @@
 diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
-index dc7a493..88514ee 100644
+index 2542544..1cd94be 100644
 --- a/contrib/package/luci/Makefile
 +++ b/contrib/package/luci/Makefile
 @@ -211,11 +211,11 @@ define Package/luci-mod-freifunk-community
@@ -27,17 +27,8 @@ index dc7a493..88514ee 100644
  $(eval $(call module,admin-full,LuCI Administration - full-featured for full control,+luci-mod-admin-core +luci-lib-ipkg))
  $(eval $(call module,failsafe,LuCI Fail-Safe - Fail-Safe sysupgrade module,+luci-mod-admin-core))
  $(eval $(call module,rpc,LuCI RPC - JSON-RPC API,+luci-lib-json))
--$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall +freifunk-common +community-profiles))
-+$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-mini +freifunk-common +community-profiles))
+-$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall +freifunk-common))
++$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-mini +luci-lib-json +freifunk-common))
  $(eval $(call module,niu,NIU - Next Generation Interface,+luci-mod-admin-core @BROKEN))
  
  
-@@ -311,7 +311,7 @@ $(eval $(call application,siitwizard,SIIT IPv4-over-IPv6 configuration wizard,\
- 	+PACKAGE_luci-app-siitwizard:kmod-siit))
- 
- $(eval $(call application,firewall,Firewall and Portforwarding application,\
--	+PACKAGE_luci-app-firewall:firewall3))
-+	+PACKAGE_luci-app-firewall:firewall))
- 
- $(eval $(call application,freifunk-policyrouting,Policy routing for mesh traffic,\
-         +PACKAGE_luci-app-freifunk-policyrouting:freifunk-policyrouting))

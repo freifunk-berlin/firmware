@@ -157,7 +157,7 @@ index 31e0b1e..9dd1af0 100644
 +CONFIGURE_VARS += \
 +	IFCONFIG=/sbin/ifconfig \
 +	ROUTE=/sbin/route \
-+	IPROUTE=/usr/sbin/ip \
++	IPROUTE=/bin/ip \
 +	NETSTAT=/sbin/netstat
 +
 +define Build/Configure

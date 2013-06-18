@@ -3,7 +3,8 @@
 . ./config
 
 #MAKE=${MAKE:-nice -n 10 make}
-MAKE=${MAKE:-make -j6}
+MAKE=${MAKE:-make -j4}
+#MAKE=${MAKE:-make V=s}
 #MAKE=${MAKE:-echo}
 
 [ -z $verm ] && exit 0
@@ -172,11 +173,11 @@ PATCHES="$PATCHES luci-theme-bootstrap.patch"
 PATCHES="$PATCHES luci-theme-bootstrap-header.patch"
 PATCHES="$PATCHES luci-olsr-view.patch"
 PATCHES="$PATCHES luci-olsr-service-view.patch"
-PATCHES="$PATCHES luci-splash-mark.patch"
 PATCHES="$PATCHES luci-admin-mini-dhcp.patch"
 PATCHES="$PATCHES luci-freifunk-map.patch"
 PATCHES="$PATCHES luci-admin-mini-install-full.patch"
 PATCHES="$PATCHES luci-admin-mini-wifi.patch"
+PATCHES="$PATCHES luci-freifunk-policyrouting.patch"
 for i in $PATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -186,16 +187,6 @@ for i in $PATCHES ; do
 done
 rm -rf $(find . | grep \.orig$)
 cd ..
-
-case $verm in
-	trunk)
-		sed -i -e "s,177,178," packages-pberg/net/l2gvpn/Makefile
-		;;
-	attitude_adjustment)
-		sed -i -e "s,177,178," packages-pberg/net/l2gvpn/Makefile
-		;;
-esac
-
 
 genconfig() {
 	key_val_list="$1"
@@ -229,7 +220,7 @@ rsync_web() {
 	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
 	rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
 	mkdir -p	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
-	rsync -lptgoD bin/*/packages/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
+	rsync -lptgod --delete bin/*/packages/*	$wwwdir/$verm/$ver-timestamp/$timestamp/$board/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/opkg-status.txt
 	cp VERSION.txt	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile
 	cp .config	$wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/config.txt
@@ -240,7 +231,7 @@ rsync_web() {
 	rsync -lptgoDd bin/*/*	$wwwdir/$verm/$ver/$board$build_profile
 	rm -rf $wwwdir/$verm/$ver-timestamp/$timestamp/$board$build_profile/packages
 	mkdir -p $wwwdir/$verm/$ver/$board/packages
-	rsync -lptgoD bin/*/packages/* $wwwdir/$verm/$ver/$board/packages
+	rsync -lptgod --delete bin/*/packages/* $wwwdir/$verm/$ver/$board/packages
 	cp build_dir/target-$arch*/root-*/usr/lib/opkg/status $wwwdir/$verm/$ver/$board$build_profile/opkg-status.txt
 	cp VERSION.txt	$wwwdir/$verm/$ver/$board$build_profile
 	cp .config	$wwwdir/$verm/$ver/$board$build_profile/config.txt
@@ -259,6 +250,7 @@ for board in $boards ; do
 	echo "clean up"
 	rm -f .config
 #	make distclean
+#	make clean V=s
 #	rm -rf tmp
 #	rm -rf feeds/*
 #	rm -rf package/feeds/*
@@ -332,6 +324,8 @@ for board in $boards ; do
 			PATCHES="$PATCHES target-ixp4xx-avila-sysupgrade.patch"
 			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
 			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
+			PATCHES="$PATCHES package-cyassl-2.6.0.patch"
+			PATCHES="$PATCHES target-au1000-ib-support.patch"
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 	esac
@@ -365,12 +359,10 @@ for board in $boards ; do
 
 	case $board in
 		atheros)
-#########################Freifunk Minimal##########################################
-			rm -f bin/*/*
+			#rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 			cp  ../../ff-control/configs/$verm-$board.config .config
 			genconfig "$options_ver"
-			genconfig "$options_min"
 			make oldconfig
 			#Disable Audio,PCI and USB#################################
 			genconfig "CONFIG_AUDIO_SUPPORT=n"
@@ -378,108 +370,15 @@ for board in $boards ; do
 			genconfig "CONFIG_USB_SUPPORT=n"
 			${MAKE} world || build_fail=1
 			rsync_web
-			rm -f bin/*/*
-#########################Piraten Minimal#############################################
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$options_ver"
-			genconfig "$options_min"
-			genconfig "$options_pi"
-			make oldconfig
-			#Disable Audio,PCI and USB#################################
-			genconfig "CONFIG_AUDIO_SUPPORT=n"
-			genconfig "CONFIG_PCI_SUPPORT=n"
-			genconfig "CONFIG_USB_SUPPORT=n"
-			${MAKE} world || build_fail=1
-			rsync_web "piraten"
-		;;
-		brcm47xx|brcm63xx)
-#########################Freifunk Minimal##########################################
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$options_ver"
-			genconfig "$options_min"
-			make oldconfig
-			${MAKE} world || build_fail=1
-			rsync_web
-#########################Piraten Minimal#############################################
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$options_ver"
-			genconfig "$options_min"
-			genconfig "$options_pi"
-			make oldconfig
-			${MAKE} world || build_fail=1
-			rsync_web "piraten"
 		;;
 		*)
-#########################Freifunk Minimal##########################################
-			rm -f bin/*/*
+			#rm -f bin/*/*
 			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
 			cp  ../../ff-control/configs/$verm-$board.config .config
 			echo "$options_ver"
 			genconfig "$options_ver"
-			genconfig "$options_min"
 			make oldconfig
 			${MAKE} world || build_fail=1
-			rsync_web minimal
-#########################Freifunk 4MB#############################################
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$options_ver"
-			genconfig "$options_4MB"
-			make oldconfig
-			${MAKE} world || build_fail=1
-			rsync_web
-#########################Piraten 4MB#############################################
-			rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
-			genconfig "$options_ver"
-			genconfig "$options_4MB"
-			genconfig "$options_pi"
-			make oldconfig
-			${MAKE} world || build_fail=1
-			rsync_web "piraten"
-			case $board in
-				x86|x86_kvm_guest|brcm2708)
-#########################Freifunk max##########################################
-					rm -f bin/*/*
-					echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-					cp  ../../ff-control/configs/$verm-$board.config .config
-					genconfig "$options_ver"
-					genconfig "$options_4MB"
-					genconfig "$options_8MB"
-					genconfig "$options_max"
-					make oldconfig
-					${MAKE} world || build_fail=1
-					rsync_web "full"
-#########################GA max##########################################
-					rm -f bin/*/*
-					echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-					cp  ../../ff-control/configs/$verm-$board.config .config
-					genconfig "$options_ver"
-					genconfig "$options_GA"
-					make oldconfig
-					${MAKE} world || build_fail=1
-					rsync_web "ga"
-				;;
-				*)
-#########################Freifunk 8MB##########################################
-					rm -f bin/*/*
-					echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-					cp  ../../ff-control/configs/$verm-$board.config .config
-					genconfig "$options_ver"
-					genconfig "$options_4MB"
-					genconfig "$options_8MB"
-					make oldconfig
-					${MAKE} world || build_fail=1
-					rsync_web "full"
-				;;
-			esac
 		;;
 	esac
 	if [ $build_fail -eq 1 ] ; then
@@ -489,22 +388,22 @@ for board in $boards ; do
 	cd ../../
 	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1
-	rm -rf $wwwdir/$verm/$ver/patches
-	cp -a $verm/patches $wwwdir/$verm/$ver/
-	cp -a $verm/patches $wwwdir/$verm/$ver-timestamp/$timestamp/
-	cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/update-build-$verm-$board.log.txt
-	cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/update-build-$verm-$board.log.txt
-	(
-		rsync -av "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
+	#rm -rf $wwwdir/$verm/$ver/patches
+	#cp -a $verm/patches $wwwdir/$verm/$ver/
+	#cp -a $verm/patches $wwwdir/$verm/$ver-timestamp/$timestamp/
+	#cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/update-build-$verm-$board.log.txt
+	#cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/update-build-$verm-$board.log.txt
+	#(
+		#rsync -av --delete "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
 		#ssh $user@$servername "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
-		if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
-			curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm $ver-pberg-$build_number for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
-		fi
-	)&
+	#	if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
+	#		curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm $ver-pberg-$build_number for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
+	#	fi
+	#)&
 	#&
 	#pid=$!
 	#echo $pid > update-build-$verm-$board.pid
 done
-echo "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp $user@$servername:$wwwdir/$verm/$ver-timestamp/"
-echo "ssh $user@$servername 'rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/'"
+#echo "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp $user@$servername:$wwwdir/$verm/$ver-timestamp/"
+#echo "ssh $user@$servername 'rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/'"
 

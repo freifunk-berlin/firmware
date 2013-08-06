@@ -8,7 +8,7 @@ index f4641aa..42cf7d1 100644
  		sysctl -w net.ipv6.bindv6only=1 > /dev/null
 -		sed -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
 -		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
-+		sed -e 's/0.0.0.0/::/' -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' -e 's/etx_ff/etx_ffeth/' -e '/NatThreshold/d' -e '/RtTable/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
++		sed -e 's/0\.0\.0\.0/::/' -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' -e 's/etx_ff/etx_ffeth/' -e '/NatThreshold/d' -e '/RtTable/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
 +		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^\tPlParam \"[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:].*//' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' -e 's/ether/mesh/' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
  		rm $OLSRD_CONFIG_FILE
  

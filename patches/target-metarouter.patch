@@ -1,0 +1,5354 @@
+Index: target/linux/mr-ppc/image/Makefile
+===================================================================
+--- a/target/linux/mr-ppc/image/Makefile	(revision 0)
++++ b/target/linux/mr-ppc/image/Makefile	(revision 0)
+@@ -0,0 +1,14 @@
++# 
++# Copyright (C) 2006 OpenWrt.org
++#
++# This is free software, licensed under the GNU General Public License v2.
++# See /LICENSE for more information.
++#
++include $(TOPDIR)/rules.mk
++include $(INCLUDE_DIR)/image.mk
++
++define Image/BuildKernel
++	cp $(KDIR)/vmlinux.elf $(TARGET_DIR)/kernel
++endef
++
++$(eval $(call BuildImage))
+Index: target/linux/mr-ppc/config-2.6.31
+===================================================================
+--- a/target/linux/mr-ppc/config-2.6.31	(revision 0)
++++ b/target/linux/mr-ppc/config-2.6.31	(revision 0)
+@@ -0,0 +1,227 @@
++# CONFIG_PPC64 is not set
++
++#
++# Processor support
++#
++# CONFIG_6xx is not set
++# CONFIG_PPC_BOOK3S_32 is not set
++CONFIG_PPC_85xx=y
++# CONFIG_PPC_8xx is not set
++# CONFIG_40x is not set
++# CONFIG_44x is not set
++# CONFIG_E200 is not set
++CONFIG_E500=y
++# CONFIG_PPC_E500MC is not set
++CONFIG_BOOKE=y
++CONFIG_FSL_BOOKE=y
++CONFIG_FSL_EMB_PERFMON=y
++# CONFIG_PHYS_64BIT is not set
++# CONFIG_SPE is not set
++# CONFIG_PPC_MM_SLICES is not set
++CONFIG_PPC32=y
++CONFIG_WORD_SIZE=32
++CONFIG_PPC_MERGE=y
++CONFIG_MMU=y
++CONFIG_GENERIC_CMOS_UPDATE=y
++CONFIG_GENERIC_TIME=y
++CONFIG_GENERIC_TIME_VSYSCALL=y
++CONFIG_GENERIC_CLOCKEVENTS=y
++CONFIG_GENERIC_HARDIRQS=y
++# CONFIG_HAVE_SETUP_PER_CPU_AREA is not set
++CONFIG_IRQ_PER_CPU=y
++CONFIG_STACKTRACE_SUPPORT=y
++CONFIG_HAVE_LATENCYTOP_SUPPORT=y
++CONFIG_LOCKDEP_SUPPORT=y
++CONFIG_RWSEM_XCHGADD_ALGORITHM=y
++CONFIG_ARCH_HAS_ILOG2_U32=y
++CONFIG_GENERIC_HWEIGHT=y
++CONFIG_GENERIC_CALIBRATE_DELAY=y
++CONFIG_GENERIC_FIND_NEXT_BIT=y
++# CONFIG_ARCH_NO_VIRT_TO_BUS is not set
++CONFIG_PPC=y
++CONFIG_EARLY_PRINTK=y
++CONFIG_GENERIC_NVRAM=y
++CONFIG_SCHED_NO_NO_OMIT_FRAME_POINTER=y
++CONFIG_ARCH_MAY_HAVE_PC_FDC=y
++CONFIG_PPC_OF=y
++CONFIG_OF=y
++
++# CONFIG_PERF_COUNTERS is not set
++
++#
++# Platform support
++#
++# CONFIG_PPC_CELL is not set
++# CONFIG_PPC_CELL_NATIVE is not set
++# CONFIG_PQ2ADS is not set
++CONFIG_MPC85xx=y
++# CONFIG_MPC8540_ADS is not set
++# CONFIG_MPC8560_ADS is not set
++# CONFIG_MPC85xx_CDS is not set
++# CONFIG_MPC85xx_MDS is not set
++# CONFIG_MPC8536_DS is not set
++# CONFIG_MPC85xx_DS is not set
++# CONFIG_SOCRATES is not set
++# CONFIG_KSI8560 is not set
++# CONFIG_XES_MPC85xx is not set
++# CONFIG_STX_GP3 is not set
++# CONFIG_TQM8540 is not set
++# CONFIG_TQM8541 is not set
++# CONFIG_TQM8548 is not set
++# CONFIG_TQM8555 is not set
++# CONFIG_TQM8560 is not set
++# CONFIG_SBC8548 is not set
++# CONFIG_SBC8560 is not set
++CONFIG_METAROUTER=y
++# CONFIG_IPIC is not set
++# CONFIG_MPIC is not set
++# CONFIG_MPIC_WEIRD is not set
++# CONFIG_PPC_I8259 is not set
++# CONFIG_PPC_RTAS is not set
++# CONFIG_MMIO_NVRAM is not set
++# CONFIG_PPC_MPC106 is not set
++# CONFIG_PPC_970_NAP is not set
++# CONFIG_PPC_INDIRECT_IO is not set
++# CONFIG_GENERIC_IOMAP is not set
++# CONFIG_CPU_FREQ is not set
++# CONFIG_QUICC_ENGINE is not set
++# CONFIG_CPM2 is not set
++# CONFIG_MPC8xxx_GPIO is not set
++# CONFIG_FSL_ULI1575 is not set
++
++#
++# Kernel options
++#
++# CONFIG_HIGHMEM is not set
++CONFIG_TICK_ONESHOT=y
++# CONFIG_NO_HZ is not set
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_GENERIC_CLOCKEVENTS_BUILD=y
++CONFIG_HZ_100=y
++# CONFIG_HZ_250 is not set
++# CONFIG_HZ_300 is not set
++# CONFIG_HZ_1000 is not set
++CONFIG_HZ=100
++CONFIG_SCHED_HRTICK=y
++CONFIG_PREEMPT_NONE=y
++# CONFIG_PREEMPT_VOLUNTARY is not set
++# CONFIG_PREEMPT is not set
++CONFIG_MATH_EMULATION=y
++# CONFIG_SWIOTLB is not set
++CONFIG_FORCE_MAX_ZONEORDER=11
++# CONFIG_PROC_DEVICETREE is not set
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++CONFIG_ELF_CORE=y
++CONFIG_COMPAT_BRK=y
++
++#
++# Advanced setup
++#
++CONFIG_ADVANCED_OPTIONS=y
++CONFIG_LOWMEM_SIZE_BOOL=y
++CONFIG_LOWMEM_SIZE=0x60000000
++# CONFIG_LOWMEM_CAM_NUM_BOOL is not set
++# CONFIG_RELOCATABLE is not set
++CONFIG_PAGE_OFFSET_BOOL=y
++CONFIG_PAGE_OFFSET=0x80000000
++CONFIG_KERNEL_START_BOOL=y
++CONFIG_KERNEL_START=0x80000000
++# CONFIG_PHYSICAL_START_BOOL is not set
++CONFIG_PHYSICAL_START=0x00000000
++CONFIG_PHYSICAL_ALIGN=0x10000000
++CONFIG_TASK_SIZE_BOOL=y
++CONFIG_TASK_SIZE=0x80000000
++
++CONFIG_NETDEVICES=y
++CONFIG_NET_ETHERNET=y
++# CONFIG_MII is not set
++# CONFIG_AX88796 is not set
++CONFIG_MT_VETH=y
++# CONFIG_DM9000 is not set
++# CONFIG_IBM_NEW_EMAC_ZMII is not set
++# CONFIG_IBM_NEW_EMAC_RGMII is not set
++# CONFIG_IBM_NEW_EMAC_TAH is not set
++# CONFIG_IBM_NEW_EMAC_EMAC4 is not set
++# CONFIG_B44 is not set
++# CONFIG_NETDEV_1000 is not set
++# CONFIG_NETDEV_10000 is not set
++
++# CONFIG_MTD_OF_PARTS is not set
++# CONFIG_MTD_PHYSMAP_OF is not set
++# CONFIG_MACINTOSH_DRIVERS is not set
++# CONFIG_NVRAM is not set
++# CONFIG_GEN_RTC is not set
++# CONFIG_EDAC is not set
++# CONFIG_IRQSTACKS is not set
++# CONFIG_PPC_EARLY_DEBUG is not set
++
++CONFIG_INPUT=y
++# CONFIG_INPUT_FF_MEMLESS is not set
++# CONFIG_INPUT_POLLDEV is not set
++
++# CONFIG_VGA_CONSOLE is not set
++
++#
++# Userland interfaces
++#
++# CONFIG_INPUT_MOUSEDEV is not set
++# CONFIG_INPUT_JOYDEV is not set
++# CONFIG_INPUT_EVDEV is not set
++# CONFIG_INPUT_EVBUG is not set
++
++#
++# Input Device Drivers
++#
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_INPUT_JOYSTICK is not set
++# CONFIG_INPUT_TABLET is not set
++# CONFIG_INPUT_TOUCHSCREEN is not set
++# CONFIG_INPUT_MISC is not set
++
++#
++# Hardware I/O ports
++#
++# CONFIG_SERIO is not set
++# CONFIG_GAMEPORT is not set
++
++#
++# Character devices
++#
++# CONFIG_VT is not set
++# CONFIG_DEVKMEM is not set
++# CONFIG_SERIAL_NONSTANDARD is not set
++# CONFIG_NOZOMI is not set
++
++#
++# Serial drivers
++#
++# CONFIG_SERIAL_8250 is not set
++
++#
++# Non-8250 serial port support
++#
++CONFIG_UNIX98_PTYS=y
++CONFIG_LEGACY_PTYS=y
++CONFIG_LEGACY_PTY_COUNT=256
++CONFIG_HVC_DRIVER=y
++CONFIG_HVC_IRQ=y
++CONFIG_HVC_META=y
++# CONFIG_IPMI_HANDLER is not set
++# CONFIG_HW_RANDOM is not set
++# CONFIG_R3964 is not set
++# CONFIG_RAW_DRIVER is not set
++# CONFIG_I2C is not set
++# CONFIG_SPI is not set
++# CONFIG_W1 is not set
++# CONFIG_POWER_SUPPLY is not set
++# CONFIG_HWMON is not set
++# CONFIG_THERMAL is not set
++# CONFIG_THERMAL_HWMON is not set
++# CONFIG_WATCHDOG is not set
++
++CONFIG_META_FS=y
++CONFIG_CMDLINE="init=/etc/preinit console=hvc0"
++
++# CONFIG_PPC_DISABLE_WERROR is not set
+\ No newline at end of file
+Index: target/linux/mr-ppc/base-files/etc/inittab
+===================================================================
+--- a/target/linux/mr-ppc/base-files/etc/inittab	(revision 0)
++++ b/target/linux/mr-ppc/base-files/etc/inittab	(revision 0)
+@@ -0,0 +1,3 @@
++::sysinit:/etc/init.d/rcS S boot
++::shutdown:/etc/init.d/rcS K stop
++hvc0::askfirst:/bin/ash --login
+Index: target/linux/mr-ppc/base-files/etc/hotplug2-init.rules
+===================================================================
+--- a/target/linux/mr-ppc/base-files/etc/hotplug2-init.rules	(revision 0)
++++ b/target/linux/mr-ppc/base-files/etc/hotplug2-init.rules	(revision 0)
+@@ -0,0 +1,7 @@
++$include /etc/hotplug2-common.rules
++
++DEVICENAME ~~ (hvc) {
++        nothrottle
++        makedev /dev/%DEVICENAME% 0666
++        next
++}
+Index: target/linux/mr-ppc/patches-2.6.31/000-linux-metarouter.patch
+===================================================================
+--- a/target/linux/mr-ppc/patches-2.6.31/000-linux-metarouter.patch	(revision 0)
++++ b/target/linux/mr-ppc/patches-2.6.31/000-linux-metarouter.patch	(revision 0)
+@@ -0,0 +1,2360 @@
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/fixmap.h linux-2.6.31.10.new/arch/mips/include/asm/fixmap.h
++--- linux-2.6.31.10/arch/mips/include/asm/fixmap.h	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/mips/include/asm/fixmap.h	2010-04-12 15:54:46.000000000 +0300
++@@ -70,7 +70,11 @@
++ #if defined(CONFIG_CPU_TX39XX) || defined(CONFIG_CPU_TX49XX)
++ #define FIXADDR_TOP	((unsigned long)(long)(int)(0xff000000 - 0x20000))
++ #else
+++#ifndef CONFIG_MAPPED_KERNEL
++ #define FIXADDR_TOP	((unsigned long)(long)(int)0xfffe0000)
+++#else
+++#define FIXADDR_TOP	((unsigned long)(long)(int)0xdffe0000)
+++#endif
++ #endif
++ #define FIXADDR_SIZE	(__end_of_fixed_addresses << PAGE_SHIFT)
++ #define FIXADDR_START	(FIXADDR_TOP - FIXADDR_SIZE)
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/io.h linux-2.6.31.10.new/arch/mips/include/asm/io.h
++--- linux-2.6.31.10/arch/mips/include/asm/io.h	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/mips/include/asm/io.h	2010-04-12 15:54:46.000000000 +0300
++@@ -199,6 +199,7 @@
++ 		if (!size || last_addr < phys_addr)
++ 			return NULL;
++ 
+++#ifndef CONFIG_MAPPED_KERNEL
++ 		/*
++ 		 * Map uncached objects in the low 512MB of address
++ 		 * space using KSEG1.
++@@ -207,6 +208,7 @@
++ 		    flags == _CACHE_UNCACHED)
++ 			return (void __iomem *)
++ 				(unsigned long)CKSEG1ADDR(phys_addr);
+++#endif
++ 	}
++ 
++ 	return __ioremap(offset, size, flags);
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/kernel-entry-init.h linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/kernel-entry-init.h
++--- linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/kernel-entry-init.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/kernel-entry-init.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,44 @@
+++#ifndef __ASM_MACH_METAROUTER_KERNEL_ENTRY_H
+++#define __ASM_MACH_METAROUTER_KERNEL_ENTRY_H
+++
+++.macro	kernel_entry_setup
+++#ifdef CONFIG_MAPPED_KERNEL
+++	.set	push
+++	.set	mips32r2
+++	/* check whether we are running under 0xc0000000 address space */
+++	lui	t0, 0xf000
+++	bal	1f
+++1:	and	t1, ra, t0
+++	li	t0, 0xc0000000
+++	beq	t0, t1, 2f
+++	/* set up 0xc0000000 address space */
+++	mtc0	t0, CP0_ENTRYHI
+++	li	t0, 0x1f
+++	mtc0	t0, CP0_ENTRYLO0
+++	li	t0, 0x0010001f
+++	mtc0	t0, CP0_ENTRYLO1
+++	li	t0, PM_64M
+++	mtc0	t0, CP0_PAGEMASK
+++	li	t0, 0
+++	mtc0	t0, CP0_INDEX
+++	li	t0, 2
+++	mtc0	t0, CP0_WIRED
+++	ehb
+++	tlbwi
+++
+++	li	t0, 0xc8000000
+++	mtc0	t0, CP0_ENTRYHI
+++	li	t0, 0x0020001f
+++	mtc0	t0, CP0_ENTRYLO0
+++	li	t0, 0x0030001f
+++	mtc0	t0, CP0_ENTRYLO1
+++	li	t0, 1
+++	mtc0	t0, CP0_INDEX
+++	ehb
+++	tlbwi
+++2:
+++	.set	pop
+++#endif
+++.endm
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/spaces.h linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/spaces.h
++--- linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/spaces.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/spaces.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,24 @@
+++#ifndef _ASM_MACH_METAROUTER_SPACES_H
+++#define _ASM_MACH_METAROUTER_SPACES_H
+++
+++#include <linux/const.h>
+++
+++#define PHYS_OFFSET		_AC(0, UL)
+++
+++#ifdef CONFIG_MAPPED_KERNEL
+++#define CAC_BASE		_AC(0xc0000000, UL)
+++#else
+++#define CAC_BASE		_AC(0x80000000, UL)
+++#endif
+++#define IO_BASE			_AC(0xa0000000, UL)
+++#define UNCAC_BASE		_AC(0xa0000000, UL)
+++
+++#ifndef MAP_BASE
+++#define MAP_BASE		_AC(0xd0000000, UL)
+++#endif
+++
+++#define HIGHMEM_START		_AC(0x20000000, UL)
+++
+++#define PAGE_OFFSET		(CAC_BASE + PHYS_OFFSET)
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/war.h linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/war.h
++--- linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/war.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/war.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,18 @@
+++#ifndef __ASM_MIPS_MACH_METAROUTER_WAR_H
+++#define __ASM_MIPS_MACH_METAROUTER_WAR_H
+++
+++#define R4600_V1_INDEX_ICACHEOP_WAR	0
+++#define R4600_V1_HIT_CACHEOP_WAR	0
+++#define R4600_V2_HIT_CACHEOP_WAR	0
+++#define R5432_CP0_INTERRUPT_WAR		0
+++#define BCM1250_M3_WAR			0
+++#define SIBYTE_1956_WAR			0
+++#define MIPS4K_ICACHE_REFILL_WAR	0
+++#define MIPS_CACHE_SYNC_WAR		0
+++#define TX49XX_ICACHE_INDEX_INV_WAR	0
+++#define RM9000_CDEX_SMP_WAR		0
+++#define ICACHE_REFILLS_WORKAROUND_WAR   0
+++#define R10000_LLSC_WAR			0
+++#define MIPS34K_MISSED_ITLB_WAR		0
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/vm.h linux-2.6.31.10.new/arch/mips/include/asm/vm.h
++--- linux-2.6.31.10/arch/mips/include/asm/vm.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/include/asm/vm.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,45 @@
+++#ifndef MT_VM_H
+++#define MT_VM_H
+++
+++#define GFP_HYPERVISOR	GFP_KERNEL
+++
+++#define VIRQ_BASE	64
+++
+++#define hypercall(name, nr, ...)		\
+++	asm(					\
+++		".global " #name ";"		\
+++		".align 2;"			\
+++		".set	push;"			\
+++		".set	noreorder;"		\
+++		".type " #name ",@function;"	\
+++		".ent " #name ",0;"		\
+++		#name ": .frame $sp,0,$ra;"	\
+++		"li $3, " #nr ";"		\
+++		"li $2, -22;"			\
+++		"mtc0 $0, $1;"			\
+++		"jr $ra;"			\
+++		"nop;"				\
+++		".end " #name ";"		\
+++		".size " #name ",.-" #name ";"	\
+++		".set	pop"			\
+++        );					\
+++	asmlinkage extern int name(__VA_ARGS__);
+++
+++/* NOTE: do not allow vdma_descr to span multiple pages, so align it */
+++struct vdma_descr {
+++	unsigned addr;
+++	unsigned size;
+++	unsigned next;
+++} __attribute__((aligned(16)));
+++
+++#define DONE		0x80000000
+++
+++static inline unsigned get_virq_nr(unsigned hwirq)
+++{
+++	return VIRQ_BASE + hwirq;
+++}
+++
+++extern int vm_running(void);
+++#define hc_yield() asm volatile ("wait")
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/mips/Kconfig linux-2.6.31.10.new/arch/mips/Kconfig
++--- linux-2.6.31.10/arch/mips/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/mips/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -591,6 +591,19 @@
++ 	  Support the Mikrotik(tm) RouterBoard 532 series,
++ 	  based on the IDT RC32434 SoC.
++ 
+++config METAROUTER
+++	bool "Mikrotik MetaROUTER"
+++	select CEVT_R4K
+++	select CSRC_R4K
+++	select IRQ_CPU
+++	select DMA_NONCOHERENT
+++	select SYS_HAS_CPU_MIPS32_R1
+++	select SYS_SUPPORTS_BIG_ENDIAN
+++	select SYS_SUPPORTS_32BIT_KERNEL
+++	select MAPPED_KERNEL
+++	help
+++	  Support the Mikrotik(tm) MetaROUTER.
+++
++ config WR_PPMC
++ 	bool "Wind River PPMC board"
++ 	select CEVT_R4K
++diff -uNr linux-2.6.31.10/arch/mips/Makefile linux-2.6.31.10.new/arch/mips/Makefile
++--- linux-2.6.31.10/arch/mips/Makefile	2010-04-12 15:51:55.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -571,6 +571,15 @@
++ endif
++ all-$(CONFIG_SNI_RM)		:= vmlinux.ecoff
++ 
+++# Mikrotik MetaROUTER
+++#
+++core-$(CONFIG_METAROUTER) += arch/mips/metarouter/
+++cflags-$(CONFIG_METAROUTER) += -I$(srctree)/arch/mips/include/asm/mach-metarouter
+++load-$(CONFIG_METAROUTER) += 0xffffffffc0101000
+++ifdef CONFIG_METAROUTER
+++OBJCOPYFLAGS += --change-addresses=0xc0000000
+++endif
+++
++ #
++ # Common TXx9
++ #
++diff -uNr linux-2.6.31.10/arch/mips/metarouter/irq.c linux-2.6.31.10.new/arch/mips/metarouter/irq.c
++--- linux-2.6.31.10/arch/mips/metarouter/irq.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/metarouter/irq.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,97 @@
+++#include <linux/init.h>
+++#include <linux/linkage.h>
+++#include <linux/irq.h>
+++#include <linux/interrupt.h>
+++#include <linux/bitops.h>
+++#include <linux/module.h>
+++#include <asm/signal.h>
+++#include <asm/mipsregs.h>
+++#include <asm/irq_cpu.h>
+++#include <asm/bootinfo.h>
+++#include <asm/vm.h>
+++
+++asmlinkage void plat_irq_dispatch(void) {
+++	unsigned pending = read_c0_status() & read_c0_cause() & 0xfe00;
+++
+++	if (pending)
+++		do_IRQ(fls(pending) - 9);
+++}
+++
+++volatile unsigned long virqs;
+++EXPORT_SYMBOL(virqs);
+++
+++static void ack_virq(unsigned int irq)
+++{
+++	clear_bit(irq - VIRQ_BASE, &virqs);
+++}
+++
+++static inline void unmask_virq(unsigned int irq)
+++{
+++}
+++
+++static inline void mask_virq(unsigned int irq)
+++{
+++}
+++
+++static struct irq_chip virq_controller = {
+++	.name	= "virq",
+++	.ack	= ack_virq,
+++	.unmask = unmask_virq,
+++	.mask	= mask_virq,
+++};
+++
+++static irqreturn_t virq_cascade_irq(int irq, void *dev_id)
+++{
+++	unsigned i;
+++	unsigned irqs = virqs;
+++
+++	for (i = 0; irqs; ++i) {
+++		if (irqs & (1 << i)) {
+++			do_IRQ(i + VIRQ_BASE);
+++			irqs ^= (1 << i);
+++		}
+++	}
+++	return IRQ_HANDLED;
+++}
+++
+++static struct irqaction virq_cascade  = {
+++	.handler = virq_cascade_irq,
+++	.name = "virq-cascade",
+++};
+++
+++static void soft_irq_ack(unsigned int irq)
+++{
+++	clear_c0_cause(0x100 << (irq - MIPS_CPU_IRQ_BASE));
+++}
+++
+++static inline void unmask_soft_irq(unsigned int irq)
+++ {
+++	set_c0_status(0x100 << (irq - MIPS_CPU_IRQ_BASE));
+++	irq_enable_hazard();
+++ }
+++ 
+++static inline void mask_soft_irq(unsigned int irq)
+++{
+++	clear_c0_status(0x100 << (irq - MIPS_CPU_IRQ_BASE));
+++	irq_disable_hazard();
+++}
+++
+++static struct irq_chip soft_irq_controller = {
+++	.name	= "SoftIRQ",
+++	.ack	= soft_irq_ack,
+++	.unmask = unmask_soft_irq,
+++	.mask	= mask_soft_irq,
+++};
+++
+++void __init arch_init_irq(void)
+++{
+++	unsigned i;
+++
+++	mips_cpu_irq_init();
+++
+++	set_irq_chip_and_handler(1, &soft_irq_controller, handle_percpu_irq);
+++	setup_irq(1, &virq_cascade);
+++
+++	for (i = VIRQ_BASE;  i < VIRQ_BASE + 32; ++i)
+++		set_irq_chip_and_handler(i, &virq_controller, handle_edge_irq);
+++}
++diff -uNr linux-2.6.31.10/arch/mips/metarouter/Makefile linux-2.6.31.10.new/arch/mips/metarouter/Makefile
++--- linux-2.6.31.10/arch/mips/metarouter/Makefile	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/metarouter/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1 @@
+++obj-y += prom.o irq.o setup.o
++diff -uNr linux-2.6.31.10/arch/mips/metarouter/prom.c linux-2.6.31.10.new/arch/mips/metarouter/prom.c
++--- linux-2.6.31.10/arch/mips/metarouter/prom.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/metarouter/prom.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,66 @@
+++#include <linux/init.h>
+++#include <linux/mm.h>
+++#include <linux/module.h>
+++#include <linux/string.h>
+++#include <linux/console.h>
+++#include <asm/bootinfo.h>
+++#include <linux/bootmem.h>
+++#include <linux/ioport.h>
+++#include <linux/ctype.h>
+++#include <linux/irq.h>
+++
+++extern char arcs_cmdline[COMMAND_LINE_SIZE];
+++
+++extern unsigned long totalram_pages;
+++extern unsigned long mips_hpt_frequency;
+++
+++void __init prom_init(void)
+++{
+++	int argc = fw_arg0;
+++	char **argv = (char **) fw_arg1;
+++	unsigned i;
+++	unsigned offset = strlen(arcs_cmdline);
+++	if (offset > 0)
+++		offset += snprintf(arcs_cmdline + offset,
+++				   sizeof(arcs_cmdline) - offset,
+++				   " ");
+++
+++	/* HZ must be parsed here because otherwise it's too late */
+++	for (i = 0; (i < argc && argv[i] != NULL); i++) {
+++		if (strncmp(argv[i], "HZ=", 3) == 0) {
+++			mips_hpt_frequency = 
+++			    simple_strtoul(argv[i] + 3, 0, 10);
+++			continue;
+++		}
+++		offset += snprintf(arcs_cmdline + offset,
+++				   sizeof(arcs_cmdline) - offset,
+++				   "%s ", argv[i]);
+++	}
+++}
+++
+++void __init prom_free_prom_memory(void)
+++{
+++	unsigned long addr, end;
+++	extern char _text;
+++
+++	/*
+++	 * Free everything below the kernel itself but leave
+++	 * the first page reserved for the exception handlers.
+++	 */
+++
+++	end = __pa(&_text);
+++	addr = PAGE_SIZE;
+++
+++	while (addr < end) {
+++		ClearPageReserved(virt_to_page(__va(addr)));
+++		init_page_count(virt_to_page(__va(addr)));
+++		free_page((unsigned long)__va(addr));
+++		addr += PAGE_SIZE;
+++		++totalram_pages;
+++	}
+++}
+++
+++unsigned long long sched_clock(void)
+++{
+++	return read_c0_count() * 1000000000 / mips_hpt_frequency;
+++}
++diff -uNr linux-2.6.31.10/arch/mips/metarouter/setup.c linux-2.6.31.10.new/arch/mips/metarouter/setup.c
++--- linux-2.6.31.10/arch/mips/metarouter/setup.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/metarouter/setup.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,147 @@
+++#include <linux/interrupt.h>
+++#include <linux/sched.h>
+++#include <asm/reboot.h>
+++#include <asm/vm.h>
+++
+++#define BUF_SIZE	256
+++#define BUF_COUNT	4
+++
+++hypercall(vm_create_queue, 4, unsigned id, unsigned irq,
+++		 unsigned tx, unsigned rx);
+++hypercall(vm_release_queue, 5, unsigned id);
+++hypercall(vm_running, 6, void);
+++hypercall(vm_setup_irqs, 14, unsigned *irqs, unsigned count);
+++
+++static volatile struct vdma_descr tx_chain[BUF_COUNT];
+++static volatile struct vdma_descr rx_chain[BUF_COUNT];
+++static unsigned char tx_buffers[BUF_COUNT][BUF_SIZE];
+++static unsigned char rx_buffers[BUF_COUNT][BUF_SIZE];
+++
+++static unsigned cur_tx;
+++static unsigned cur_rx;
+++
+++static int send_message(const unsigned char *buf, int len)
+++{
+++	unsigned long flags;
+++
+++	local_irq_save(flags);
+++
+++	/* drop some data if full buffer */
+++	while (tx_chain[cur_tx].size & DONE)
+++		asm volatile ("wait");
+++
+++	len = min_t(int, len, BUF_SIZE);
+++	memcpy(tx_buffers[cur_tx], buf, len);
+++	tx_chain[cur_tx].size = len | DONE;
+++
+++	cur_tx = (cur_tx + 1) % BUF_COUNT;
+++
+++	local_irq_restore(flags);
+++
+++	return len;
+++}
+++
+++static int recv_message(char *buf, int len)
+++{
+++	unsigned long flags;
+++
+++	local_irq_save(flags);
+++
+++	if (!(rx_chain[cur_rx].size & DONE)) {
+++		local_irq_restore(flags);
+++		return 0;
+++	}
+++	
+++	len = min_t(int, len, rx_chain[cur_rx].size & ~DONE);
+++	memcpy(buf, rx_buffers[cur_rx], len);
+++
+++	rx_chain[cur_rx].size = BUF_SIZE;
+++	cur_rx = (cur_rx + 1) % BUF_COUNT;
+++
+++	local_irq_restore(flags);
+++
+++	return len;
+++}
+++
+++static irqreturn_t ctrl_interrupt(int irq, void *dev_id)
+++{
+++	struct task_struct *init;
+++	char buf[256];
+++	int len;
+++
+++	len = recv_message(buf, sizeof(buf));
+++	if (len <= 0)
+++		return IRQ_HANDLED;
+++
+++	if (strncmp(buf, "restart", len) == 0) {
+++		printk("RESTART\n");
+++		init = find_task_by_pid_ns(1, &init_pid_ns);
+++		if (init)
+++			send_sig(SIGINT, init, 1);
+++	} else if (strncmp(buf, "halt", len) == 0) {
+++	    printk("HALT\n");
+++		init = find_task_by_pid_ns(1, &init_pid_ns);
+++		if (init)
+++			send_sig(SIGWINCH, init, 1);
+++	}
+++
+++	return IRQ_HANDLED;
+++}
+++
+++static void rbvm_machine_restart(char *command)
+++{
+++	char msg[] = "restart";
+++
+++	send_message(msg, sizeof(msg));
+++}
+++
+++static void rbvm_machine_halt(void)
+++{
+++	char msg[] = "halt";
+++
+++	send_message(msg, sizeof(msg));
+++}
+++
+++const char *get_system_type(void)
+++{
+++	return "Mikrotik MetaROUTER";
+++}
+++
+++void __init plat_mem_setup(void)
+++{
+++	extern unsigned long virqs;
+++	int i;
+++
+++	vm_setup_irqs((unsigned *) &virqs, 32);
+++
+++	for (i = 0; i < BUF_COUNT; ++i) {
+++		rx_chain[i].addr = (unsigned) rx_buffers[i];
+++		rx_chain[i].size = BUF_SIZE;
+++		rx_chain[i].next = (unsigned) &rx_chain[i + 1];
+++		
+++		tx_chain[i].addr = (unsigned) tx_buffers[i];
+++		tx_chain[i].size = 0;
+++		tx_chain[i].next = (unsigned) &tx_chain[i + 1];
+++	}
+++	rx_chain[BUF_COUNT - 1].next = (unsigned) &rx_chain[0];
+++	tx_chain[BUF_COUNT - 1].next = (unsigned) &tx_chain[0];
+++
+++	vm_create_queue(0, 0, (unsigned) &tx_chain[0],
+++			(unsigned) &rx_chain[0]);
+++
+++	_machine_restart = rbvm_machine_restart;
+++	_machine_halt = rbvm_machine_halt;
+++}
+++
+++void __init plat_time_init(void)
+++{
+++}
+++
+++int __init init_ctrl_interrupt(void)
+++{
+++	if (request_irq(VIRQ_BASE + 0, ctrl_interrupt, 0, "ctrl", (void *) 1))
+++		return -EBUSY;
+++	return 0;
+++
+++}
+++arch_initcall(init_ctrl_interrupt);
++diff -uNr linux-2.6.31.10/arch/powerpc/include/asm/mtvic.h linux-2.6.31.10.new/arch/powerpc/include/asm/mtvic.h
++--- linux-2.6.31.10/arch/powerpc/include/asm/mtvic.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/powerpc/include/asm/mtvic.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,8 @@
+++#ifndef _ASM_POWERPC_MTVIC_H
+++#define _ASM_POWERPC_MTVIC_H
+++
+++void __init mtvic_init(int def);
+++unsigned mtvic_get_irq(void);
+++unsigned rb_get_irq(void);
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/powerpc/include/asm/pgtable-ppc32.h linux-2.6.31.10.new/arch/powerpc/include/asm/pgtable-ppc32.h
++--- linux-2.6.31.10/arch/powerpc/include/asm/pgtable-ppc32.h	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/include/asm/pgtable-ppc32.h	2010-04-12 15:54:46.000000000 +0300
++@@ -63,7 +63,7 @@
++ #ifdef CONFIG_HIGHMEM
++ #define KVIRT_TOP	PKMAP_BASE
++ #else
++-#define KVIRT_TOP	(0xfe000000UL)	/* for now, could be FIXMAP_BASE ? */
+++#define KVIRT_TOP	(0xf0000000UL)	/* for now, could be FIXMAP_BASE ? */
++ #endif
++ 
++ /*
++diff -uNr linux-2.6.31.10/arch/powerpc/include/asm/vm.h linux-2.6.31.10.new/arch/powerpc/include/asm/vm.h
++--- linux-2.6.31.10/arch/powerpc/include/asm/vm.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/powerpc/include/asm/vm.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,35 @@
+++#ifndef MT_VM_H
+++#define MT_VM_H
+++
+++#define hypercall(name, nr, ...)		\
+++	asm(					\
+++		".global " #name ";"		\
+++		".align 2;"			\
+++		".type " #name ",@function;"	\
+++		#name ":;"			\
+++		"li 0, " #nr ";"		\
+++		"crset so;"			\
+++		"mtspr 1023, 0;"		\
+++		"bnslr;"			\
+++		"li 3, -22;"			\
+++		"blr"				\
+++        );					\
+++	asmlinkage extern int name(__VA_ARGS__);
+++
+++/* NOTE: do not allow vdma_descr to span multiple pages, so align it */
+++struct vdma_descr {
+++	unsigned addr;
+++	unsigned size;
+++	unsigned next;
+++} __attribute__((aligned(16)));
+++
+++#define DONE		0x80000000
+++
+++unsigned get_virq_nr(unsigned hwirq);
+++int vm_yield(void);
+++int vm_running(void);
+++
+++#define hc_yield() vm_yield()
+++
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/powerpc/platforms/85xx/Kconfig linux-2.6.31.10.new/arch/powerpc/platforms/85xx/Kconfig
++--- linux-2.6.31.10/arch/powerpc/platforms/85xx/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/platforms/85xx/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -135,6 +135,12 @@
++ 	help
++ 	  This option enables support for the Wind River SBC8560 board
++ 
+++config METAROUTER
+++	bool "Mikrotik MetaROUTER"
+++	select MT_VIC
+++	help
+++	  This option enables support for the Mikrotik MetaROUTER
+++
++ endif # MPC85xx
++ 
++ config TQM85xx
++diff -uNr linux-2.6.31.10/arch/powerpc/platforms/85xx/Makefile linux-2.6.31.10.new/arch/powerpc/platforms/85xx/Makefile
++--- linux-2.6.31.10/arch/powerpc/platforms/85xx/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/platforms/85xx/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -9,10 +9,11 @@
++ obj-$(CONFIG_MPC8536_DS)  += mpc8536_ds.o
++ obj-$(CONFIG_MPC85xx_DS)  += mpc85xx_ds.o
++ obj-$(CONFIG_MPC85xx_MDS) += mpc85xx_mds.o
+++obj-$(CONFIG_METAROUTER)  += metarouter.o
++ obj-$(CONFIG_STX_GP3)	  += stx_gp3.o
++ obj-$(CONFIG_TQM85xx)	  += tqm85xx.o
++ obj-$(CONFIG_SBC8560)     += sbc8560.o
++ obj-$(CONFIG_SBC8548)     += sbc8548.o
++ obj-$(CONFIG_SOCRATES)    += socrates.o socrates_fpga_pic.o
++ obj-$(CONFIG_KSI8560)	  += ksi8560.o
++-obj-$(CONFIG_XES_MPC85xx) += xes_mpc85xx.o
++\ No newline at end of file
+++obj-$(CONFIG_XES_MPC85xx) += xes_mpc85xx.o
++diff -uNr linux-2.6.31.10/arch/powerpc/platforms/85xx/metarouter.c linux-2.6.31.10.new/arch/powerpc/platforms/85xx/metarouter.c
++--- linux-2.6.31.10/arch/powerpc/platforms/85xx/metarouter.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/powerpc/platforms/85xx/metarouter.c	2010-04-12 15:54:59.000000000 +0300
++@@ -0,0 +1,190 @@
+++#include <linux/interrupt.h>
+++#include <linux/of_platform.h>
+++#include <mm/mmu_decl.h>
+++#include <asm/time.h>
+++#include <asm/machdep.h>
+++#include <asm/mtvic.h>
+++#include <asm/vm.h>
+++
+++#define BUF_SIZE	256
+++#define BUF_COUNT	4
+++
+++hypercall(vm_create_queue, 4, unsigned id, unsigned irq,
+++	  unsigned tx, unsigned rx);
+++hypercall(vm_release_queue, 5, unsigned id);
+++hypercall(vm_running, 6, void);
+++
+++hypercall(vm_setup_irqs, 14, unsigned *irqs, unsigned count);
+++hypercall(vm_yield, 16, void);
+++
+++EXPORT_SYMBOL(vm_yield);
+++
+++static volatile struct vdma_descr tx_chain[BUF_COUNT];
+++static volatile struct vdma_descr rx_chain[BUF_COUNT];
+++static unsigned char tx_buffers[BUF_COUNT][BUF_SIZE];
+++static unsigned char rx_buffers[BUF_COUNT][BUF_SIZE];
+++
+++static unsigned cur_tx;
+++static unsigned cur_rx;
+++
+++static int send_message(const unsigned char *buf, int len)
+++{
+++	unsigned long flags;
+++
+++	local_irq_save(flags);
+++
+++	/* drop some data if full buffer */
+++	while (tx_chain[cur_tx].size & DONE)
+++		hc_yield();
+++
+++	len = min_t(int, len, BUF_SIZE);
+++	memcpy(tx_buffers[cur_tx], buf, len);
+++	tx_chain[cur_tx].size = len | DONE;
+++
+++	cur_tx = (cur_tx + 1) % BUF_COUNT;
+++
+++	local_irq_restore(flags);
+++
+++	return len;
+++}
+++
+++static int recv_message(char *buf, int len)
+++{
+++	unsigned long flags;
+++
+++	local_irq_save(flags);
+++
+++	if (!(rx_chain[cur_rx].size & DONE)) {
+++		local_irq_restore(flags);
+++		return 0;
+++	}
+++	
+++	len = min_t(int, len, rx_chain[cur_rx].size & ~DONE);
+++	memcpy(buf, rx_buffers[cur_rx], len);
+++
+++	rx_chain[cur_rx].size = BUF_SIZE;
+++	cur_rx = (cur_rx + 1) % BUF_COUNT;
+++
+++	local_irq_restore(flags);
+++
+++	return len;
+++}
+++
+++static irqreturn_t ctrl_interrupt(int irq, void *dev_id)
+++{
+++	struct task_struct *init;
+++	char buf[256];
+++	int len;
+++
+++	len = recv_message(buf, sizeof(buf));
+++	if (len <= 0)
+++		return IRQ_HANDLED;
+++
+++	if (strncmp(buf, "restart", len) == 0) {
+++		printk("RESTART\n");
+++		init = find_task_by_pid_ns(1, &init_pid_ns);
+++		if (init)
+++			send_sig(SIGINT, init, 1);
+++	} else if (strncmp(buf, "halt", len) == 0) {
+++	    printk("HALT\n");
+++		init = find_task_by_pid_ns(1, &init_pid_ns);
+++		if (init)
+++			send_sig(SIGWINCH, init, 1);
+++	}
+++
+++	return IRQ_HANDLED;
+++}
+++
+++static void rbvm_restart(char *command)
+++{
+++	char msg[] = "restart";
+++
+++	send_message(msg, sizeof(msg));
+++
+++	local_irq_disable();
+++	while (1);
+++}
+++
+++static void rbvm_power_off(void)
+++{
+++	char msg[] = "halt";
+++
+++	send_message(msg, sizeof(msg));
+++}
+++
+++static int __init rbvm_probe(void)
+++{
+++	char *model;
+++
+++	model = of_get_flat_dt_prop(of_get_flat_dt_root(), "model", NULL);
+++
+++	if (!model)
+++		return 0;
+++
+++	return strcmp(model, "RB MetaROUTER") == 0;
+++}
+++
+++static void __init rbvm_pic_init(void)
+++{
+++	extern struct irq_host *virq_host;
+++
+++	mtvic_init(1);
+++	vm_setup_irqs(virq_host->host_data, 32);
+++}
+++
+++static void rb_idle(void) {
+++	local_irq_enable();
+++	vm_yield();
+++	local_irq_disable();
+++}
+++
+++static void rb_show_cpuinfo(struct seq_file *m)
+++{
+++	seq_printf(m, "Vendor\t\t: Mikrotik\n");
+++	seq_printf(m, "Machine\t\t: %s\n", ppc_md.name);
+++	seq_printf(m, "Memory\t\t: %u MB\n", total_memory / (1024 * 1024));
+++}
+++
+++static void __init rbvm_setup_arch(void)
+++{
+++	unsigned i;
+++
+++	for (i = 0; i < BUF_COUNT; ++i) {
+++		rx_chain[i].addr = (unsigned) rx_buffers[i];
+++		rx_chain[i].size = BUF_SIZE;
+++		rx_chain[i].next = (unsigned) &rx_chain[i + 1];
+++		
+++		tx_chain[i].addr = (unsigned) tx_buffers[i];
+++		tx_chain[i].size = 0;
+++		tx_chain[i].next = (unsigned) &tx_chain[i + 1];
+++	}
+++	rx_chain[BUF_COUNT - 1].next = (unsigned) &rx_chain[0];
+++	tx_chain[BUF_COUNT - 1].next = (unsigned) &tx_chain[0];
+++
+++	vm_create_queue(0, 0, (unsigned) &tx_chain[0],
+++			(unsigned) &rx_chain[0]);
+++
+++	ppc_md.power_save = rb_idle;
+++}
+++
+++int __init init_ctrl_interrupt(void)
+++{
+++	if (request_irq(get_virq_nr(0), ctrl_interrupt,
+++			0, "ctrl", (void *) 1));
+++
+++	return 0;
+++}
+++machine_device_initcall(rbvm, init_ctrl_interrupt);
+++
+++define_machine(rbvm) {
+++	.name			= "RB MetaROUTER",
+++	.probe			= rbvm_probe,
+++	.setup_arch		= rbvm_setup_arch,
+++	.show_cpuinfo		= rb_show_cpuinfo,
+++	.get_irq		= mtvic_get_irq,
+++	.init_IRQ		= rbvm_pic_init,
+++	.calibrate_decr		= generic_calibrate_decr,
+++	.restart		= rbvm_restart,
+++	.power_off		= rbvm_power_off,
+++	.halt			= rbvm_power_off,
+++};
++diff -uNr linux-2.6.31.10/arch/powerpc/sysdev/Kconfig linux-2.6.31.10.new/arch/powerpc/sysdev/Kconfig
++--- linux-2.6.31.10/arch/powerpc/sysdev/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/sysdev/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -12,3 +12,6 @@
++ 	depends on PCI_MSI
++ 	default y if MPIC
++ 	default y if FSL_PCI
+++
+++config MT_VIC
+++	bool
++diff -uNr linux-2.6.31.10/arch/powerpc/sysdev/Makefile linux-2.6.31.10.new/arch/powerpc/sysdev/Makefile
++--- linux-2.6.31.10/arch/powerpc/sysdev/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/sysdev/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -7,6 +7,7 @@
++ mpic-msi-obj-$(CONFIG_PCI_MSI)	+= mpic_msi.o mpic_u3msi.o mpic_pasemi_msi.o
++ obj-$(CONFIG_MPIC)		+= mpic.o $(mpic-msi-obj-y)
++ fsl-msi-obj-$(CONFIG_PCI_MSI)	+= fsl_msi.o
+++obj-$(CONFIG_MT_VIC)		+= mtvic.o
++ obj-$(CONFIG_PPC_MSI_BITMAP)	+= msi_bitmap.o
++ 
++ obj-$(CONFIG_PPC_MPC106)	+= grackle.o
++diff -uNr linux-2.6.31.10/arch/powerpc/sysdev/mtvic.c linux-2.6.31.10.new/arch/powerpc/sysdev/mtvic.c
++--- linux-2.6.31.10/arch/powerpc/sysdev/mtvic.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/powerpc/sysdev/mtvic.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,73 @@
+++#include <linux/module.h>
+++#include <linux/irq.h>
+++#include <asm/mpic.h>
+++#include <asm/mtvic.h>
+++
+++struct irq_host *virq_host;
+++EXPORT_SYMBOL(virq_host);
+++
+++unsigned get_virq_nr(unsigned hwirq)
+++{
+++	return irq_create_mapping(virq_host, hwirq);
+++}
+++EXPORT_SYMBOL(get_virq_nr);
+++
+++void mtvic_mask_irq(unsigned int irq)
+++{
+++}
+++
+++void mtvic_unmask_irq(unsigned int irq)
+++{
+++}
+++
+++static struct irq_chip softirq_chip = {
+++	.mask	= mtvic_mask_irq,
+++	.unmask	= mtvic_unmask_irq,
+++};
+++
+++static int mtvic_map(struct irq_host *h, unsigned int virq, irq_hw_number_t hw)
+++{
+++	set_irq_chip_and_handler(virq, &softirq_chip, handle_simple_irq);
+++	return 0;
+++}
+++
+++static struct irq_host_ops mtvic_ops = {
+++	.map = mtvic_map,
+++};
+++
+++void __init mtvic_init(int def)
+++{
+++	static unsigned virqs;
+++
+++	virq_host = irq_alloc_host(NULL, IRQ_HOST_MAP_LINEAR, 32,
+++				   &mtvic_ops, 32);
+++	virq_host->host_data = &virqs;
+++
+++	if (def)
+++		irq_set_default_host(virq_host);
+++}
+++
+++unsigned mtvic_get_irq(void)
+++{
+++	static unsigned i = 0;
+++	unsigned *irqs = virq_host->host_data;
+++
+++	if (!irqs)
+++		return NO_IRQ;
+++
+++	for (i = (i + 1) & 31; *irqs; i = (i + 1) & 31) {
+++		if (*irqs & (1 << i)) {
+++			atomic_sub(1 << i, (atomic_t *) irqs);
+++			return irq_linear_revmap(virq_host, i);
+++		}
+++	}
+++	return NO_IRQ;
+++}
+++
+++unsigned rb_get_irq(void)
+++{
+++	unsigned irq = mtvic_get_irq();
+++	if (irq != NO_IRQ) return irq;
+++
+++	return mpic_get_irq();
+++}
++diff -uNr linux-2.6.31.10/drivers/char/hvc_meta.c linux-2.6.31.10.new/drivers/char/hvc_meta.c
++--- linux-2.6.31.10/drivers/char/hvc_meta.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/drivers/char/hvc_meta.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,134 @@
+++#include <linux/kernel.h>
+++#include <linux/init.h>
+++#include <linux/string.h>
+++#include <linux/errno.h>
+++#include <linux/mm.h>
+++#include <linux/bootmem.h>
+++#include <asm/vm.h>
+++#include <asm/irq.h>
+++#include "hvc_console.h"
+++
+++extern int vm_create_queue(unsigned id, unsigned irq,
+++			   unsigned tx, unsigned rx);
+++extern int vm_release_queue(unsigned id);
+++
+++#define BUF_SIZE	4096
+++
+++static volatile struct vdma_descr tx_descr;
+++static volatile struct vdma_descr rx_descr;
+++
+++static unsigned rx_offset;
+++static DEFINE_SPINLOCK(lock);
+++
+++static int put_chars(u32 vtermno, const char *buf, int count)
+++{
+++	unsigned long flags;
+++	int i;
+++
+++	spin_lock_irqsave(&lock, flags);
+++
+++#ifdef __powerpc__
+++	for (i = 0; i < 2000000; ++i) {
+++#else
+++	for (i = 0; i < 2; ++i) {
+++#endif
+++		unsigned size = xchg(&tx_descr.size, 0);
+++
+++		if (!(size & DONE)) {
+++			count = min(count, BUF_SIZE);
+++			memcpy((char *) tx_descr.addr, buf, count);
+++			tx_descr.size = count | DONE;
+++
+++			spin_unlock_irqrestore(&lock, flags);
+++			return count;
+++		}
+++
+++		if (size == (BUF_SIZE | DONE)) {
+++			if (i == 0) {
+++				tx_descr.size = size;
+++				hc_yield();
+++				continue;
+++			} else {
+++				unsigned drop = BUF_SIZE / 4;
+++				size = BUF_SIZE - drop;
+++				memcpy((char *) tx_descr.addr,
+++				       (char *) tx_descr.addr + drop,
+++				       size);
+++			}
+++		}
+++
+++		size &= ~DONE;
+++		count = min(BUF_SIZE - (int) size, count);
+++		memcpy((char *) tx_descr.addr + size, buf, count);
+++		tx_descr.size = (size + count) | DONE;
+++
+++		spin_unlock_irqrestore(&lock, flags);
+++		return count;
+++	}
+++
+++	spin_unlock_irqrestore(&lock, flags);
+++	return 0;
+++}
+++
+++static int get_chars(u32 vtermno, char *buf, int count)
+++{
+++	unsigned long flags;
+++	unsigned size;
+++
+++	spin_lock_irqsave(&lock, flags);
+++
+++	if (!(rx_descr.size & DONE)) {
+++		spin_unlock_irqrestore(&lock, flags);
+++		return -EAGAIN;
+++	}
+++	
+++	size = (rx_descr.size & ~DONE) - rx_offset;
+++	count = min(count, (int) size);
+++
+++	memcpy(buf, (char *) rx_descr.addr + rx_offset, count);
+++
+++	if (count == size) {
+++		rx_descr.size = BUF_SIZE;
+++		rx_offset = 0;
+++	} else {
+++		rx_offset += count;
+++	}
+++
+++	spin_unlock_irqrestore(&lock, flags);
+++	return count;
+++}
+++
+++static struct hv_ops cons = {
+++	.put_chars = put_chars,
+++	.get_chars = get_chars,
+++	.notifier_add = notifier_add_irq,
+++	.notifier_del = notifier_del_irq,
+++};
+++
+++static int __init cons_init(void)
+++{
+++	if (vm_running() != 0)
+++		return 0;
+++
+++	rx_descr.addr = (unsigned) kmalloc(BUF_SIZE, GFP_KERNEL);
+++	rx_descr.size = BUF_SIZE;
+++	rx_descr.next = (unsigned) &rx_descr;
+++	
+++	tx_descr.addr = (unsigned) kmalloc(BUF_SIZE, GFP_KERNEL);
+++	tx_descr.size = 0;
+++	tx_descr.next = (unsigned) &tx_descr;
+++
+++	vm_create_queue(1, 1,
+++			(unsigned) &tx_descr, (unsigned) &rx_descr);
+++
+++	return hvc_instantiate(0, 0, &cons);
+++}
+++console_initcall(cons_init);
+++
+++int vm_init(void)
+++{
+++	if (vm_running() == 0) 
+++		hvc_alloc(0, get_virq_nr(1), &cons, 256);
+++	return 0;
+++}
+++module_init(vm_init);
++diff -uNr linux-2.6.31.10/drivers/char/Kconfig linux-2.6.31.10.new/drivers/char/Kconfig
++--- linux-2.6.31.10/drivers/char/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/drivers/char/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -672,6 +672,13 @@
++        select HVC_DRIVER
++        default n
++ 
+++config HVC_META
+++	bool "MetaROUTER Hypervisor Console support"
+++	depends on METAROUTER
+++	select HVC_DRIVER
+++	select HVC_IRQ
+++	default y
+++
++ config VIRTIO_CONSOLE
++ 	tristate "Virtio console"
++ 	depends on VIRTIO
++diff -uNr linux-2.6.31.10/drivers/char/Makefile linux-2.6.31.10.new/drivers/char/Makefile
++--- linux-2.6.31.10/drivers/char/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/drivers/char/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -51,6 +51,7 @@
++ obj-$(CONFIG_HVC_DRIVER)	+= hvc_console.o
++ obj-$(CONFIG_HVC_IRQ)		+= hvc_irq.o
++ obj-$(CONFIG_HVC_XEN)		+= hvc_xen.o
+++obj-$(CONFIG_HVC_META)		+= hvc_meta.o
++ obj-$(CONFIG_HVC_IUCV)		+= hvc_iucv.o
++ obj-$(CONFIG_HVC_UDBG)		+= hvc_udbg.o
++ obj-$(CONFIG_VIRTIO_CONSOLE)	+= virtio_console.o
++diff -uNr linux-2.6.31.10/drivers/net/Kconfig linux-2.6.31.10.new/drivers/net/Kconfig
++--- linux-2.6.31.10/drivers/net/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/drivers/net/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -457,6 +457,11 @@
++ 	  If you have a Mikrotik RouterBoard 500 or IDT RC32434
++ 	  based system say Y. Otherwise say N.
++ 
+++config MT_VETH
+++	bool "MetaROUTER Virtual Ethernet support"
+++	depends on METAROUTER
+++	default y
+++
++ config MIPS_JAZZ_SONIC
++ 	tristate "MIPS JAZZ onboard SONIC Ethernet support"
++ 	depends on MACH_JAZZ
++diff -uNr linux-2.6.31.10/drivers/net/Makefile linux-2.6.31.10.new/drivers/net/Makefile
++--- linux-2.6.31.10/drivers/net/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/drivers/net/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -208,6 +208,7 @@
++ obj-$(CONFIG_MVME147_NET) += mvme147.o 7990.o
++ obj-$(CONFIG_EQUALIZER) += eql.o
++ obj-$(CONFIG_KORINA) += korina.o
+++obj-$(CONFIG_MT_VETH) += mtveth.o
++ obj-$(CONFIG_MIPS_JAZZ_SONIC) += jazzsonic.o
++ obj-$(CONFIG_MIPS_AU1X00_ENET) += au1000_eth.o
++ obj-$(CONFIG_MIPS_SIM_NET) += mipsnet.o
++diff -uNr linux-2.6.31.10/drivers/net/mtveth.c linux-2.6.31.10.new/drivers/net/mtveth.c
++--- linux-2.6.31.10/drivers/net/mtveth.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/drivers/net/mtveth.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,284 @@
+++#include <linux/skbuff.h>
+++#include <linux/netdevice.h>
+++#include <linux/etherdevice.h>
+++#include <linux/interrupt.h>
+++#include <asm/vm.h>
+++
+++#define MAX_IFACES	8
+++
+++#define TXBUF_COUNT	1024
+++#define RXBUF_COUNT	128
+++
+++#define RXBUF_SIZE	1600
+++
+++extern int vm_create_queue(unsigned id, unsigned irq,
+++			   unsigned tx, unsigned rx);
+++extern int vm_release_queue(unsigned id);
+++
+++#define CMD_NEWIFACE	0
+++#define CMD_DELIFACE	1
+++
+++struct ctrl_msg {
+++	unsigned cmd;
+++	unsigned short id;
+++	unsigned char hwaddr[6];
+++} __attribute__((packed));
+++
+++static volatile struct vdma_descr rx_descr[RXBUF_COUNT];
+++static volatile struct vdma_descr tx_descr[TXBUF_COUNT];
+++static struct sk_buff *rx_skbs[RXBUF_COUNT];
+++static struct sk_buff *tx_skbs[TXBUF_COUNT];
+++
+++static unsigned last_tx;
+++static atomic_t cur_tx;
+++static unsigned cur_rx;
+++static unsigned max_tx;
+++
+++static struct net_device *devs[MAX_IFACES];
+++
+++struct veth_private {
+++	unsigned id;
+++	atomic_t pending_tx;
+++};
+++
+++static void ctrl_receiver(struct work_struct *work);
+++
+++static struct sk_buff_head ctrl_queue;
+++static DECLARE_WORK(ctrl_work, ctrl_receiver);
+++
+++static int veth_xmit(struct sk_buff *skb, struct net_device *dev)
+++{
+++	struct veth_private *veth = netdev_priv(dev);
+++	unsigned cur = atomic_read(&cur_tx) % TXBUF_COUNT;
+++    
+++	if (skb_padto(skb, ETH_ZLEN))
+++		return NETDEV_TX_OK;
+++
+++	if (tx_descr[cur].size & DONE) {
+++		dev->stats.tx_dropped++;
+++		dev_kfree_skb_any(skb);
+++		return NETDEV_TX_OK;
+++	}
+++
+++	if (skb_headroom(skb) < 2) {
+++		struct sk_buff *s = skb;
+++		skb = skb_realloc_headroom(s, 2);
+++		dev_kfree_skb_any(s);
+++	} else {
+++		skb = skb_unshare(skb, GFP_ATOMIC);
+++	}
+++	if (!skb) {
+++		dev->stats.tx_dropped++;
+++		return NETDEV_TX_OK;
+++	}
+++	*(u16 *) skb_push(skb, 2) = veth->id;
+++
+++	dev->stats.tx_packets++;
+++	dev->stats.tx_bytes += skb->len;
+++
+++	tx_descr[cur].addr = (unsigned) skb->data;
+++	tx_descr[cur].size = skb->len | DONE;
+++
+++	if (tx_skbs[cur]) {
+++		/* should not happen */
+++		dev->stats.tx_dropped++;
+++		dev_kfree_skb_any(skb);
+++		return NETDEV_TX_BUSY;
+++	}
+++
+++	tx_skbs[cur] = skb;
+++	atomic_add(1, &cur_tx);
+++
+++	if (atomic_add_return(1, &veth->pending_tx) >= max_tx) {
+++		netif_stop_queue(dev);
+++
+++		/* in case we got rewaken right before stop */
+++		if (atomic_read(&veth->pending_tx) < max_tx)
+++			netif_wake_queue(dev);
+++	}
+++
+++	return 0;
+++}
+++
+++static irqreturn_t veth_interrupt(int irq, void *dev_id)
+++{
+++	unsigned cur;
+++
+++	while (last_tx != atomic_read(&cur_tx)) {
+++		unsigned last = last_tx % TXBUF_COUNT;
+++		struct net_device *dev;
+++		struct veth_private *veth;
+++
+++		if (tx_descr[last].size & DONE)
+++			break;
+++
+++		dev = tx_skbs[last]->dev;
+++		veth = netdev_priv(dev);
+++		dev_kfree_skb_irq(tx_skbs[last]);
+++		tx_skbs[last] = NULL;
+++
+++		++last_tx;
+++
+++		if (atomic_sub_return(1, &veth->pending_tx) < max_tx)
+++			netif_wake_queue(dev);
+++	}
+++
+++	cur = cur_rx % RXBUF_COUNT;
+++	while ((rx_descr[cur].size & DONE)) {
+++		struct sk_buff *skb = rx_skbs[cur];
+++		struct net_device *dev;
+++		unsigned id;
+++
+++		skb_put(skb, rx_descr[cur].size & ~DONE);
+++		if (skb->len < 2) {
+++			dev_kfree_skb_irq(skb);
+++			goto next;
+++		}
+++
+++		id = *(u16 *) skb->data;
+++		skb_pull(skb, 2);
+++
+++		if (id == 0) {
+++			__skb_queue_tail(&ctrl_queue, skb);
+++			schedule_work(&ctrl_work);
+++			goto next;
+++		}
+++		if (id >= MAX_IFACES || !devs[id]) {
+++			dev_kfree_skb_irq(skb);
+++			goto next;
+++		}
+++		dev = devs[id];
+++
+++		skb->dev = dev;
+++		skb->protocol = eth_type_trans(skb, dev);
+++
+++		dev->last_rx = jiffies;
+++		++dev->stats.rx_packets;
+++		dev->stats.rx_bytes += skb->len;
+++
+++		netif_rx(skb);
+++
+++	  next:
+++		skb = dev_alloc_skb(RXBUF_SIZE);
+++		rx_skbs[cur] = skb;
+++		if (skb) {
+++			rx_descr[cur].addr = (unsigned) skb->data;
+++			rx_descr[cur].size = RXBUF_SIZE;
+++		} else {
+++			rx_descr[cur].size = 0;
+++		}
+++
+++		++cur_rx;
+++		cur = cur_rx % RXBUF_COUNT;
+++	}
+++
+++	return IRQ_HANDLED;
+++}
+++
+++static const struct net_device_ops veth_netdev_ops = {
+++	.ndo_start_xmit		= veth_xmit,
+++};
+++
+++static int veth_alloc_dev(unsigned id, const unsigned char *hwaddr)
+++{
+++	struct veth_private *veth;
+++	struct net_device *dev;
+++	int err;
+++
+++	//SET_NETDEV_DEV(dev, &pdev->dev);
+++	//platform_set_drvdata(pdev, dev);
+++
+++	dev = alloc_etherdev(sizeof(struct veth_private));
+++	if (!dev)
+++		return -ENOMEM;
+++
+++	veth = netdev_priv(dev);
+++	veth->id = id;
+++	atomic_set(&veth->pending_tx, 1);
+++	memcpy(dev->dev_addr, hwaddr, 6);
+++	dev->netdev_ops = &veth_netdev_ops;
+++
+++	err = register_netdev(dev);
+++	if (err < 0) {
+++		printk("cannot register net device %u\n", err);
+++		goto netdev_err;
+++	}
+++
+++	devs[id] = dev;
+++	return 0;
+++
+++  netdev_err:
+++	free_netdev(dev);
+++	return err;
+++}
+++
+++static int recv_ctrl_msg(struct sk_buff *skb)
+++{
+++	struct ctrl_msg *msg = (struct ctrl_msg *) skb->data;
+++
+++	if (skb->len < sizeof(struct ctrl_msg))
+++		return -EINVAL;
+++
+++	if (msg->cmd == CMD_NEWIFACE) {
+++		if (msg->id >= MAX_IFACES || devs[msg->id])
+++			return -EBUSY;
+++
+++		veth_alloc_dev(msg->id, msg->hwaddr);
+++		return 0;
+++	} else if (msg->cmd == CMD_DELIFACE) {
+++		struct net_device *dev;
+++
+++		if (msg->id >= MAX_IFACES || !devs[msg->id])
+++			return -EINVAL;
+++		
+++		dev = devs[msg->id];
+++		devs[msg->id] = NULL;
+++
+++		unregister_netdev(dev);
+++	}
+++	return -EINVAL;
+++}
+++
+++static void ctrl_receiver(struct work_struct *work)
+++{
+++	struct sk_buff *skb;
+++
+++	while ((skb = skb_dequeue(&ctrl_queue)))
+++		recv_ctrl_msg(skb);
+++}
+++
+++int veth_init(void)
+++{
+++	unsigned i;
+++
+++	if (vm_running() != 0)
+++		return 0;
+++
+++	skb_queue_head_init(&ctrl_queue);
+++
+++	if (request_irq(get_virq_nr(3), veth_interrupt, IRQF_SHARED,
+++			"veth", (void *) 1))
+++		return -EBUSY;
+++
+++	for (i = 0; i < TXBUF_COUNT; ++i) {
+++		tx_descr[i].addr = 0;
+++		tx_descr[i].size = 0;
+++		tx_descr[i].next = (unsigned) &tx_descr[i + 1];
+++	}
+++	for (i = 0; i < RXBUF_COUNT; ++i) {
+++		rx_skbs[i] = dev_alloc_skb(RXBUF_SIZE);
+++		rx_descr[i].addr = (unsigned) rx_skbs[i]->data;
+++		rx_descr[i].size = RXBUF_SIZE;
+++		rx_descr[i].next = (unsigned) &rx_descr[i + 1];
+++	}
+++	tx_descr[TXBUF_COUNT - 1].next = (unsigned) &tx_descr[0];
+++	rx_descr[RXBUF_COUNT - 1].next = (unsigned) &rx_descr[0];
+++	
+++	vm_create_queue(3, 3,
+++			(unsigned) &tx_descr[0], (unsigned) &rx_descr[0]);
+++
+++	max_tx = TXBUF_COUNT / MAX_IFACES;
+++
+++	return 0;
+++}
+++module_init(veth_init);
++diff -uNr linux-2.6.31.10/fs/Kconfig linux-2.6.31.10.new/fs/Kconfig
++--- linux-2.6.31.10/fs/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/fs/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -173,6 +173,7 @@
++ source "fs/bfs/Kconfig"
++ source "fs/efs/Kconfig"
++ source "fs/jffs2/Kconfig"
+++source "fs/metafs/Kconfig"
++ # UBIFS File system configuration
++ source "fs/ubifs/Kconfig"
++ source "fs/cramfs/Kconfig"
++diff -uNr linux-2.6.31.10/fs/Makefile linux-2.6.31.10.new/fs/Makefile
++--- linux-2.6.31.10/fs/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/fs/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -73,6 +73,7 @@
++ obj-$(CONFIG_JBD)		+= jbd/
++ obj-$(CONFIG_JBD2)		+= jbd2/
++ obj-$(CONFIG_CRAMFS)		+= cramfs/
+++obj-$(CONFIG_META_FS)		+= metafs/
++ obj-$(CONFIG_SQUASHFS)		+= squashfs/
++ obj-y				+= ramfs/
++ obj-$(CONFIG_HUGETLBFS)		+= hugetlbfs/
++diff -uNr linux-2.6.31.10/fs/metafs/inode.c linux-2.6.31.10.new/fs/metafs/inode.c
++--- linux-2.6.31.10/fs/metafs/inode.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/fs/metafs/inode.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,902 @@
+++#include <linux/module.h>
+++#include <linux/fs.h>
+++#include <linux/statfs.h>
+++#include <linux/pagemap.h>
+++#include <linux/namei.h>
+++#include <asm/vm.h>
+++
+++#define CMD_GETINODE		0
+++#define CMD_RELEASE_INODE	1
+++#define CMD_LOOKUP		2
+++#define CMD_READPAGE		3
+++#define CMD_READLINK		4
+++#define CMD_READDIR		5
+++#define CMD_WRITEPAGE		6
+++#define CMD_CREATE		7
+++#define CMD_UNLINK		8
+++#define CMD_SYMLINK		9
+++#define CMD_RENAME		10
+++#define CMD_SETINODE		11
+++#define CMD_STATFS		12
+++#define CMD_HLINK		13
+++#define CMD_FSYNC		14
+++
+++struct hptime {
+++	unsigned sec;
+++	unsigned nsec;
+++};
+++
+++struct getinode_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++} __attribute__((packed));
+++
+++struct inode_rep {
+++	int status;
+++	unsigned long long ino;
+++	unsigned long long size;
+++	unsigned mode;
+++	unsigned nlink;
+++	unsigned uid;
+++	unsigned gid;
+++	unsigned rdev;
+++	struct hptime atime;
+++	struct hptime mtime;
+++	struct hptime ctime;
+++	unsigned long blksize;
+++	unsigned long long blocks;
+++} __attribute__((packed));
+++
+++struct setinode_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++	unsigned long long size;
+++	unsigned mode;
+++	unsigned uid;
+++	unsigned gid;
+++	unsigned rdev;
+++} __attribute__((packed));
+++
+++struct lookup_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct create_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	unsigned mode;
+++	unsigned dev;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct unlink_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct symlink_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	unsigned namelen;
+++	char names[0];
+++} __attribute__((packed));
+++
+++struct hlink_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	unsigned long long ino;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct rename_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long old_parent_ino;
+++	unsigned long long new_parent_ino;
+++	unsigned old_namelen;
+++	char names[0];
+++} __attribute__((packed));
+++
+++struct readpage_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++	unsigned long long offset;
+++	unsigned size;
+++} __attribute__((packed));
+++
+++struct writepage_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++	unsigned long long offset;
+++	unsigned size;
+++} __attribute__((packed));
+++
+++struct fsync_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++} __attribute__((packed));
+++
+++struct readlink_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++} __attribute__((packed));
+++
+++struct readlink_rep {
+++	int status;
+++	char target[0];
+++} __attribute__((packed));
+++
+++struct readdir_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++	unsigned long long offset;
+++	unsigned size;
+++} __attribute__((packed));
+++
+++struct dirnode {
+++	unsigned long long ino;
+++	unsigned long long offset;
+++	unsigned char type;
+++	unsigned short len;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct readdir_rep {
+++	int status;
+++	unsigned long long offset;
+++	struct dirnode entries[0];
+++} __attribute__((packed));
+++
+++struct statfs_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++} __attribute__((packed));
+++
+++struct statfs_rep {
+++	int status;
+++	unsigned blocks;
+++	unsigned bfree;
+++} __attribute__((packed));
+++
+++#define BUF_COUNT	16
+++
+++extern int vm_create_queue(unsigned id, unsigned irq,
+++			   unsigned tx, unsigned rx);
+++extern int vm_release_queue(unsigned id);
+++
+++static volatile struct vdma_descr rx_descr[BUF_COUNT];
+++static volatile struct vdma_descr tx_descr[BUF_COUNT];
+++
+++#define MFS_ID(sb) ((unsigned) sb->s_fs_info)
+++
+++
+++static void mfs_update_inode(struct inode *i, struct inode_rep *rep);
+++static struct inode *mfs_new_inode(struct super_block *sb,
+++				   struct inode_rep *rep);
+++
+++static void start_new_request(unsigned *tx_idx, unsigned tx_slots,
+++			      unsigned *rx_idx, unsigned rx_slots)
+++{
+++	static DEFINE_MUTEX(mfs_lock);
+++	static unsigned cur_tx;
+++	static unsigned cur_rx;
+++
+++	mutex_lock(&mfs_lock);
+++
+++	*tx_idx = cur_tx;
+++	cur_tx += tx_slots;
+++
+++	*rx_idx = cur_rx;
+++	cur_rx += rx_slots;
+++
+++	mutex_unlock(&mfs_lock);
+++}
+++
+++static void prepare_receive(unsigned idx, void *resp, unsigned rp_size)
+++{
+++	idx = idx & (BUF_COUNT - 1);
+++
+++	rx_descr[idx].addr = (unsigned) resp;
+++	rx_descr[idx].size = rp_size;
+++}
+++
+++static void post_request(unsigned idx, const void *req, unsigned rq_size)
+++{
+++	idx = idx & (BUF_COUNT - 1);
+++
+++	while (tx_descr[idx].size & DONE) {
+++		hc_yield();
+++	}
+++
+++	tx_descr[idx].addr = (unsigned) req;
+++	tx_descr[idx].size = rq_size | DONE;
+++}
+++
+++static unsigned wait_for_reply(unsigned idx)
+++{
+++	idx = idx & (BUF_COUNT - 1);
+++
+++	while (!(rx_descr[idx].size & DONE)) {
+++		hc_yield();
+++	}
+++	return rx_descr[idx].size & ~(PAGE_MASK<<1);
+++}
+++
+++static unsigned send_request(const void *req, unsigned rq_size,
+++			     void *resp, unsigned rp_size)
+++{
+++	unsigned tx;
+++	unsigned rx;
+++
+++	start_new_request(&tx, 1, &rx, 1);
+++	prepare_receive(rx, resp, rp_size);
+++	post_request(tx, req, rq_size);
+++	return wait_for_reply(rx);
+++}
+++
+++static struct kmem_cache *mfs_inode_cachep;
+++
+++static struct inode *mfs_alloc_inode(struct super_block *sb)
+++{
+++	return kmem_cache_alloc(mfs_inode_cachep, GFP_KERNEL);
+++}
+++
+++static void mfs_destroy_inode(struct inode *inode)
+++{
+++	kmem_cache_free(mfs_inode_cachep, inode);
+++}
+++
+++static struct dentry *mfs_lookup(struct inode *dir,
+++				 struct dentry *dentry, struct nameidata *nd)
+++{
+++	unsigned size = sizeof(struct lookup_req) + dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct lookup_req *req = (struct lookup_req *) buf;
+++	struct inode_rep rep;
+++	struct inode *inode = NULL;
+++	struct dentry *res = NULL;
+++	unsigned ret;
+++
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_LOOKUP;
+++	req->parent_ino = dir->i_ino;
+++	memcpy(req->name, dentry->d_name.name, dentry->d_name.len);
+++
+++	rep.status = -EINVAL;
+++	ret = send_request(req, size, &rep, sizeof(rep));
+++	if (ret == sizeof(rep) && rep.status == 0)
+++		inode = mfs_new_inode(dir->i_sb, &rep);
+++	d_add(dentry, inode);
+++	return res;
+++}
+++
+++static int mfs_create_file(struct inode *dir, struct dentry *dentry,
+++			   int mode, dev_t dev)
+++{
+++	unsigned size = sizeof(struct create_req) + dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct create_req *req = (struct create_req *) buf;
+++	struct inode_rep rep;
+++	struct inode *inode = NULL;
+++	unsigned ret;
+++
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_CREATE;
+++	req->parent_ino = dir->i_ino;
+++	req->mode = mode;
+++	req->dev = (unsigned) dev;
+++	memcpy(req->name, dentry->d_name.name, dentry->d_name.len);
+++
+++	rep.status = -EINVAL;
+++	ret = send_request(req, size, &rep, sizeof(rep));
+++	if (ret < sizeof(rep))
+++		return rep.status;
+++
+++	inode = mfs_new_inode(dir->i_sb, &rep);
+++	d_instantiate(dentry, inode);
+++	return 0;
+++}
+++
+++static int mfs_create(struct inode *dir, struct dentry *dentry, int mode,
+++		      struct nameidata *nd)
+++{
+++	return mfs_create_file(dir, dentry, mode, MKDEV(0, 0));
+++}
+++
+++static int mfs_unlink(struct inode *dir, struct dentry *dentry)
+++{
+++	unsigned size = sizeof(struct unlink_req) + dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct unlink_req *req = (struct unlink_req *) buf;
+++	int err = -EINVAL;
+++    
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_UNLINK;
+++	req->parent_ino = dir->i_ino;
+++	memcpy(req->name, dentry->d_name.name, dentry->d_name.len);
+++
+++	send_request(req, size, &err, sizeof(err));
+++	return err;
+++}
+++
+++static int mfs_symlink(struct inode *dir, struct dentry *dentry,
+++		       const char *target)
+++{
+++	unsigned tlen = strlen(target);
+++	unsigned size = sizeof(struct symlink_req) + dentry->d_name.len + tlen;
+++	unsigned char buf[size];
+++	struct symlink_req *req = (struct symlink_req *) buf;
+++	struct inode_rep rep;
+++	struct inode *inode = NULL;
+++	unsigned ret;
+++    
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_SYMLINK;
+++	req->parent_ino = dir->i_ino;
+++	req->namelen = dentry->d_name.len;
+++	memcpy(req->names, dentry->d_name.name, dentry->d_name.len);
+++	memcpy(req->names + req->namelen, target, tlen);
+++
+++	rep.status = -EINVAL;
+++	ret = send_request(req, size, &rep, sizeof(rep));
+++	if (ret < sizeof(rep))
+++		return rep.status;
+++
+++	inode = mfs_new_inode(dir->i_sb, &rep);
+++	d_instantiate(dentry, inode);
+++	return 0;
+++}
+++
+++static int mfs_link(struct dentry *old_dentry, struct inode *dir,
+++		    struct dentry *dentry)
+++{
+++	unsigned size = sizeof(struct hlink_req) + dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct hlink_req *req = (struct hlink_req *) buf;
+++	struct inode_rep rep;
+++	unsigned ret;
+++    
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_HLINK;
+++	req->parent_ino = dir->i_ino;
+++	req->ino = old_dentry->d_inode->i_ino;
+++	memcpy(req->name, dentry->d_name.name, dentry->d_name.len);
+++
+++	rep.status = -EINVAL;
+++	ret = send_request(req, size, &rep, sizeof(rep));
+++	if (ret < sizeof(rep))
+++		return rep.status;
+++
+++	mfs_update_inode(old_dentry->d_inode, &rep);
+++
+++	atomic_inc(&old_dentry->d_inode->i_count);
+++	d_instantiate(dentry, old_dentry->d_inode);
+++	return 0;
+++}
+++
+++static int mfs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+++{
+++	return mfs_create_file(dir, dentry, mode | S_IFDIR, MKDEV(0, 0));
+++}
+++
+++static int mfs_rmdir(struct inode *dir, struct dentry *dentry)
+++{
+++	return mfs_unlink(dir, dentry);
+++}
+++
+++static int mfs_mknod(struct inode *dir, struct dentry *dentry, int mode,
+++		     dev_t rdev) {
+++	return mfs_create_file(dir, dentry, mode, rdev);
+++}
+++
+++static int mfs_rename(struct inode *old_dir, struct dentry *old_dentry,
+++		      struct inode *new_dir, struct dentry *new_dentry)
+++{
+++	unsigned size = sizeof(struct rename_req) +
+++	    old_dentry->d_name.len + new_dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct rename_req *req = (struct rename_req *) buf;
+++	int err = -EINVAL;
+++    
+++	req->id = MFS_ID(old_dir->i_sb);
+++	req->cmd = CMD_RENAME;
+++	req->old_parent_ino = old_dir->i_ino;
+++	req->new_parent_ino = new_dir->i_ino;
+++	req->old_namelen = old_dentry->d_name.len;
+++	memcpy(req->names, old_dentry->d_name.name, old_dentry->d_name.len);
+++	memcpy(req->names + req->old_namelen,
+++	       new_dentry->d_name.name, new_dentry->d_name.len);
+++
+++	send_request(req, size, &err, sizeof(err));
+++	return err;
+++}
+++
+++static int mfs_readdir(struct file *file, void *dirent, filldir_t filldir)
+++{
+++	struct readdir_req req;
+++	struct readdir_rep *rep;
+++	struct dirnode *dn;
+++	unsigned len;
+++	int res = -EINVAL;
+++
+++	rep = kmalloc(PAGE_SIZE, GFP_KERNEL);
+++	if (!rep)
+++		return -ENOMEM;
+++
+++	req.id = MFS_ID(file->f_dentry->d_inode->i_sb);
+++	req.cmd = CMD_READDIR;
+++	req.ino = file->f_dentry->d_inode->i_ino;
+++	req.offset = file->f_pos;
+++	req.size = PAGE_SIZE;
+++
+++	len = send_request(&req, sizeof(req), rep, PAGE_SIZE);
+++	if (len <= sizeof(*rep)) {
+++		if (len >= sizeof(int))
+++			res = rep->status;
+++		goto eod;
+++	}
+++	
+++	dn = rep->entries;
+++	res = 0;
+++	while ((char *) dn + sizeof(struct dirnode) < (char *) rep + len) {
+++		if ((char *) dn + dn->len > (char *) rep + len)
+++			break;
+++		if (filldir(dirent, dn->name, dn->len - sizeof(struct dirnode),
+++			    dn->offset, dn->ino, dn->type) < 0)
+++			break;
+++		++res;
+++		dn = (struct dirnode *) ((unsigned char *) dn + dn->len);
+++	}
+++	file->f_pos = rep->offset;
+++
+++  eod:
+++	kfree(rep);
+++	return res;
+++}
+++
+++static int mfs_readpage(struct file *file, struct page *page)
+++{
+++	struct readpage_req req;
+++	void *buf;
+++	int res = -EIO;
+++	unsigned len;
+++	unsigned tx;
+++	unsigned rx;
+++
+++	buf = kmap(page);
+++	if (!buf)
+++		goto err_out;
+++
+++	req.id = MFS_ID(file->f_dentry->d_inode->i_sb);
+++	req.cmd = CMD_READPAGE;
+++	req.ino = file->f_dentry->d_inode->i_ino;
+++	req.offset = page_offset(page);
+++	req.size = PAGE_SIZE;
+++
+++	start_new_request(&tx, 1, &rx, 2);
+++	prepare_receive(rx, &res, sizeof(res));
+++	prepare_receive(rx + 1, buf, PAGE_SIZE);
+++	post_request(tx, &req, sizeof(req));
+++
+++	if (wait_for_reply(rx) < sizeof(res)) {
+++		res = -EINVAL;
+++		goto err_out;
+++	}
+++	if (res) {
+++		memset(buf, 0, PAGE_SIZE);
+++		SetPageError(page);
+++		goto err_buf;
+++	}
+++	len = wait_for_reply(rx + 1);
+++
+++	memset(buf + len, 0, PAGE_SIZE - len);
+++	SetPageUptodate(page);
+++
+++  err_buf:
+++	kunmap(page);
+++	flush_dcache_page(page);
+++  err_out:
+++	unlock_page(page);
+++	return res;
+++}
+++
+++static int mfs_write_begin(struct file *file, struct address_space *mapping,
+++			   loff_t pos, unsigned len, unsigned flags,
+++			   struct page **pagep, void **fsdata)
+++{
+++	pgoff_t index = pos >> PAGE_CACHE_SHIFT;
+++
+++	*pagep = grab_cache_page_write_begin(mapping, index, flags);
+++	if (!*pagep)
+++		return -ENOMEM;
+++
+++	// FIXME: do prereading
+++
+++	return 0;
+++}
+++
+++static int mfs_write_end(struct file *file, struct address_space *mapping,
+++			 loff_t pos, unsigned blen, unsigned copied,
+++			 struct page *page, void *fsdata)
+++{
+++	struct inode *i = file->f_dentry->d_inode;
+++	struct writepage_req req;
+++	void *buf;
+++	int len = -EFAULT;
+++	unsigned tx;
+++	unsigned rx;
+++	unsigned size;
+++
+++	flush_dcache_page(page);
+++
+++	buf = kmap(page);
+++	if (!buf)
+++		return -EINVAL;
+++
+++	req.id = MFS_ID(i->i_sb);
+++	req.cmd = CMD_WRITEPAGE;
+++	req.ino = file->f_dentry->d_inode->i_ino;
+++	req.offset = pos;
+++	req.size = blen;
+++
+++	start_new_request(&tx, 2, &rx, 1);
+++	prepare_receive(rx, &len, sizeof(len));
+++	post_request(tx, &req, sizeof(req));
+++	post_request(tx + 1, buf + (pos & (PAGE_CACHE_SIZE - 1)), blen);
+++	wait_for_reply(rx);
+++
+++	if (len >= 0) {
+++		if (len != blen) {
+++			SetPageError(page);
+++			ClearPageUptodate(page);
+++		} else {
+++			SetPageUptodate(page);
+++		}
+++
+++		size = req.offset + len;
+++		if (size > i_size_read(i)) i_size_write(i, size);
+++	}
+++
+++	kunmap(page);
+++	unlock_page(page);
+++	page_cache_release(page);
+++	return len;
+++}
+++
+++static int mfs_fsync(struct file *file, struct dentry *dentry, int datasync)
+++{
+++	struct fsync_req req;
+++	int err = -EINVAL;
+++
+++	req.id = MFS_ID(dentry->d_inode->i_sb);
+++	req.cmd = CMD_FSYNC;
+++	req.ino = file->f_dentry->d_inode->i_ino;
+++
+++	send_request(&req, sizeof(req), &err, sizeof(err));
+++	return err;
+++}
+++
+++static void *mfs_follow_link(struct dentry *dentry, struct nameidata *nd)
+++{
+++	struct readlink_req req;
+++	struct readlink_rep *rep;
+++	int len;
+++
+++	rep = kmalloc(256, GFP_KERNEL);
+++	if (!rep)
+++		return ERR_PTR(-ENOMEM);
+++
+++	req.id = MFS_ID(dentry->d_inode->i_sb);
+++	req.cmd = CMD_READLINK;
+++	req.ino = dentry->d_inode->i_ino;
+++	
+++	rep->status = -EINVAL;
+++	len = send_request(&req, sizeof(req), rep, 255);
+++	if (len < sizeof(*rep) + 1) {
+++		kfree(rep);
+++		return ERR_PTR(rep->status);
+++	}
+++
+++	*((char *) rep + len) = 0;
+++	nd_set_link(nd, rep->target);
+++	return NULL;
+++}
+++
+++static void mfs_put_link(struct dentry *direntry,
+++			 struct nameidata *nd, void *cookie)
+++{
+++	char *p = nd_get_link(nd);
+++
+++	if (!IS_ERR(p))
+++		kfree(p - sizeof(struct readlink_rep));
+++}
+++
+++static int mfs_setattr(struct dentry *dentry, struct iattr *attr)
+++{
+++	struct setinode_req req;
+++	struct inode_rep rep;
+++	struct inode *i = dentry->d_inode;
+++	unsigned ia = attr->ia_valid;
+++	unsigned len;
+++
+++	req.id = MFS_ID(i->i_sb);
+++	req.cmd = CMD_SETINODE;
+++	req.ino = i->i_ino;
+++	req.mode = ia & ATTR_MODE ? attr->ia_mode : i->i_mode;
+++	req.uid = ia & ATTR_UID ? attr->ia_uid : i->i_uid;
+++	req.gid = ia & ATTR_GID ? attr->ia_gid : i->i_gid;
+++	req.size = ia & ATTR_SIZE ? attr->ia_size : i->i_size;
+++
+++	len = send_request(&req, sizeof(req), &rep, sizeof(rep));
+++	if (len < sizeof(rep))
+++		return -EINVAL;
+++	    
+++	if (rep.status)
+++		return rep.status;
+++
+++	mfs_update_inode(i, &rep);
+++	return 0;
+++}
+++
+++static const struct file_operations mfs_dir_fops = {
+++	.read		= generic_read_dir,
+++	.readdir	= mfs_readdir,
+++};
+++
+++static const struct inode_operations mfs_dir_ops = {
+++	.lookup		= mfs_lookup,
+++	.create		= mfs_create,
+++	.link		= mfs_link,
+++	.unlink		= mfs_unlink,
+++	.symlink	= mfs_symlink,
+++	.mkdir		= mfs_mkdir,
+++	.rmdir		= mfs_rmdir,
+++	.mknod		= mfs_mknod,
+++	.rename		= mfs_rename,
+++	.setattr	= mfs_setattr,
+++};
+++
+++static const struct inode_operations mfs_file_ops = {
+++	.setattr	= mfs_setattr,
+++};
+++
+++static const struct file_operations mfs_fops = {
+++	.llseek		= generic_file_llseek,
+++	.read		= do_sync_read,
+++	.write		= do_sync_write,
+++	.aio_read	= generic_file_aio_read,
+++	.aio_write	= generic_file_aio_write,
+++	.mmap		= generic_file_readonly_mmap,
+++	.splice_read	= generic_file_splice_read,
+++	.fsync		= mfs_fsync,
+++};
+++
+++static const struct address_space_operations mfs_aops = {
+++	.readpage	= mfs_readpage,
+++	.write_begin	= mfs_write_begin,
+++	.write_end	= mfs_write_end,
+++};
+++
+++static const struct inode_operations mfs_link_ops = {
+++	.readlink	= generic_readlink,
+++	.follow_link	= mfs_follow_link,
+++	.put_link	= mfs_put_link,
+++	.setattr	= mfs_setattr,
+++};
+++
+++static void mfs_update_inode(struct inode *i, struct inode_rep *rep)
+++{
+++	i->i_ino = rep->ino;
+++	i->i_mode = rep->mode;
+++	i->i_nlink = rep->nlink;
+++	i->i_uid = rep->uid;
+++	i->i_gid = rep->gid;
+++	i->i_size = rep->size;
+++	i->i_atime.tv_sec = rep->atime.sec;
+++	i->i_atime.tv_nsec = rep->atime.nsec;
+++	i->i_mtime.tv_sec = rep->mtime.sec;
+++	i->i_mtime.tv_nsec = rep->mtime.nsec;
+++	i->i_ctime.tv_sec = rep->ctime.sec;
+++	i->i_ctime.tv_nsec = rep->ctime.nsec;
+++	i->i_blkbits = ffs(rep->blksize);
+++	i->i_blocks = rep->blocks;
+++
+++	if (i->i_sb->s_flags & MS_RDONLY)
+++		i->i_mode &= ~0222;
+++}
+++
+++static struct inode *mfs_new_inode(struct super_block *sb,
+++				   struct inode_rep *rep)
+++{
+++	struct inode *i = new_inode(sb);
+++	if (!i) return NULL;
+++
+++	mfs_update_inode(i, rep);
+++
+++	if (S_ISREG(rep->mode)) {
+++		i->i_op = &mfs_file_ops;
+++		i->i_fop = &mfs_fops;
+++		i->i_data.a_ops = &mfs_aops;
+++	} else if (S_ISDIR(rep->mode)) {
+++		i->i_op = &mfs_dir_ops;
+++		i->i_fop = &mfs_dir_fops;
+++	} else if (S_ISLNK(rep->mode)) {
+++		i->i_op = &mfs_link_ops;
+++	} else {
+++		init_special_inode(i, rep->mode, (dev_t) rep->rdev);
+++	}
+++
+++	insert_inode_hash(i);
+++	return i;
+++}
+++
+++static struct inode *mfs_getinode(struct super_block *sb,
+++				  unsigned long long ino)
+++{
+++	struct getinode_req req;
+++	struct inode_rep rep;
+++	unsigned len;
+++
+++	req.id = MFS_ID(sb);
+++	req.cmd = CMD_GETINODE;
+++	req.ino = ino;
+++	len = send_request(&req, sizeof(req), &rep, sizeof(rep));
+++
+++	if (len < sizeof(rep) || rep.status)
+++		return NULL;
+++
+++	return mfs_new_inode(sb, &rep);
+++}
+++
+++static void mfs_put_super(struct super_block *sb)
+++{
+++}
+++
+++static int mfs_statfs(struct dentry *dentry, struct kstatfs *buf)
+++{
+++	struct statfs_req req;
+++	struct statfs_rep rep;
+++	struct super_block *sb = dentry->d_sb;
+++	unsigned len;
+++
+++	req.id = MFS_ID(sb);
+++	req.cmd = CMD_STATFS;
+++	rep.status = -EINVAL;
+++	len = send_request(&req, sizeof(req), &rep, sizeof(rep));
+++
+++	if (len < sizeof(rep) || rep.status)
+++		return rep.status;
+++
+++	buf->f_type = sb->s_magic;
+++	buf->f_bsize = 512;
+++	buf->f_blocks = rep.blocks;
+++	buf->f_bfree = rep.bfree;
+++	buf->f_bavail = rep.bfree;
+++	buf->f_namelen = 255;
+++
+++	return 0;
+++}
+++
+++static const struct super_operations mfs_ops = {
+++	.alloc_inode	= mfs_alloc_inode,
+++	.destroy_inode	= mfs_destroy_inode,
+++	.put_super	= mfs_put_super,
+++	.statfs		= mfs_statfs,
+++};
+++
+++static int mfs_fill_super(struct super_block *sb, void *data, int silent)
+++{
+++	struct inode *root;
+++	unsigned id;
+++
+++	if (*(char *) data == '/') ++data;
+++	id = simple_strtoul((char *) data, NULL, 10);
+++
+++	sb->s_magic = 0xdeadbeef;
+++	sb->s_op = &mfs_ops;
+++	if (id == 0)
+++		sb->s_flags |= MS_RDONLY;
+++	sb->s_fs_info = (void *) id;
+++
+++	root = mfs_getinode(sb, 0);
+++	if (!root)	    
+++		goto out;
+++
+++	sb->s_root = d_alloc_root(root);
+++	if (!sb->s_root)
+++		goto outiput;
+++
+++	return 0;
+++
+++  outiput:
+++	iput(root);
+++  out:
+++	return -EINVAL;
+++}
+++
+++static int mfs_get_sb(struct file_system_type *fs_type,
+++	int flags, const char *dev_name, void *data, struct vfsmount *mnt)
+++{
+++	return get_sb_nodev(fs_type, flags,
+++			    (void *) dev_name, mfs_fill_super, mnt);
+++}
+++
+++static struct file_system_type mfs_fs_type = {
+++	.owner		= THIS_MODULE,
+++	.name		= "metafs",
+++	.get_sb		= mfs_get_sb,
+++	.kill_sb	= kill_block_super,
+++	.fs_flags	= FS_REQUIRES_DEV,
+++};
+++
+++static void init_once(void *foo)
+++{
+++	struct inode * inode = (struct inode *) foo;
+++
+++	inode_init_once(inode);
+++}
+++
+++static int __init init_mfs_fs(void)
+++{
+++	unsigned i;
+++	int err;
+++
+++	if (vm_running() != 0)
+++		return 0;
+++
+++	printk("MFS init\n");
+++	mfs_inode_cachep = kmem_cache_create("metafs_inode_cache",
+++					     sizeof(struct inode),
+++					     0, (SLAB_RECLAIM_ACCOUNT|
+++						 SLAB_MEM_SPREAD),
+++					     init_once);
+++	if (!mfs_inode_cachep)
+++		return -ENOMEM;
+++
+++	for (i = 0; i < BUF_COUNT; ++i) {
+++		tx_descr[i].addr = 0;
+++		tx_descr[i].size = 0;
+++		tx_descr[i].next = (unsigned) &tx_descr[i + 1];
+++
+++		rx_descr[i].addr = 0;
+++		rx_descr[i].size = DONE;
+++		rx_descr[i].next = (unsigned) &rx_descr[i + 1];
+++	}
+++	tx_descr[BUF_COUNT - 1].next = (unsigned) &tx_descr[0];
+++	rx_descr[BUF_COUNT - 1].next = (unsigned) &rx_descr[0];
+++	
+++	vm_create_queue(2, -1u,
+++			(unsigned) &tx_descr[0], (unsigned) &rx_descr[0]);
+++
+++        err = register_filesystem(&mfs_fs_type);
+++	if (err != 0) {
+++		kmem_cache_destroy(mfs_inode_cachep);
+++		return err;
+++	}
+++
+++	return 0;
+++}
+++
+++static void __exit exit_mfs_fs(void)
+++{
+++	unregister_filesystem(&mfs_fs_type);
+++	kmem_cache_destroy(mfs_inode_cachep);
+++}
+++
+++module_init(init_mfs_fs);
+++module_exit(exit_mfs_fs);
++diff -uNr linux-2.6.31.10/fs/metafs/Kconfig linux-2.6.31.10.new/fs/metafs/Kconfig
++--- linux-2.6.31.10/fs/metafs/Kconfig	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/fs/metafs/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,3 @@
+++config META_FS
+++	depends on METAROUTER
+++	tristate "MetaFS on Mikrotik MetaROUTER"
++diff -uNr linux-2.6.31.10/fs/metafs/Makefile linux-2.6.31.10.new/fs/metafs/Makefile
++--- linux-2.6.31.10/fs/metafs/Makefile	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/fs/metafs/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,3 @@
+++obj-y += metafs.o
+++
+++metafs-objs := inode.o
+Index: target/linux/mr-ppc/patches-2.6.31/699-phy-fix.patch
+===================================================================
+--- a/target/linux/mr-ppc/patches-2.6.31/699-phy-fix.patch	(revision 0)
++++ b/target/linux/mr-ppc/patches-2.6.31/699-phy-fix.patch	(revision 0)
+@@ -0,0 +1,11 @@
++diff -uNr linux-2.6.31.10.phy/include/linux/phy.h linux-2.6.31.10.new/include/linux/phy.h
++--- linux-2.6.31.10.phy/include/linux/phy.h	2010-04-12 15:58:52.000000000 +0300
+++++ linux-2.6.31.10.new/include/linux/phy.h	2010-04-12 15:59:28.000000000 +0300
++@@ -24,6 +24,7 @@
++ #include <linux/mii.h>
++ #include <linux/timer.h>
++ #include <linux/workqueue.h>
+++#include <linux/skbuff.h>
++ 
++ #include <asm/atomic.h>
++ 
+Index: target/linux/mr-ppc/Makefile
+===================================================================
+--- a/target/linux/mr-ppc/Makefile	(revision 0)
++++ b/target/linux/mr-ppc/Makefile	(revision 0)
+@@ -0,0 +1,19 @@
++#
++# Copyright (C) 2007-2008 OpenWrt.org
++#
++# This is free software, licensed under the GNU General Public License v2.
++# See /LICENSE for more information.
++#
++include $(TOPDIR)/rules.mk
++
++ARCH:=powerpc
++BOARD:=mr-ppc
++BOARDNAME:=Mikrotik MetaROUTER PowerPC
++FEATURES:=targz
++
++LINUX_VERSION:=2.6.31.10
++LINUX_KARCH:=powerpc
++
++include $(INCLUDE_DIR)/target.mk
++
++$(eval $(call BuildTarget))
+Index: target/linux/mr-mips/image/Makefile
+===================================================================
+--- a/target/linux/mr-mips/image/Makefile	(revision 0)
++++ b/target/linux/mr-mips/image/Makefile	(revision 0)
+@@ -0,0 +1,14 @@
++# 
++# Copyright (C) 2006 OpenWrt.org
++#
++# This is free software, licensed under the GNU General Public License v2.
++# See /LICENSE for more information.
++#
++include $(TOPDIR)/rules.mk
++include $(INCLUDE_DIR)/image.mk
++
++define Image/BuildKernel
++	cp $(KDIR)/vmlinux.elf $(TARGET_DIR)/kernel
++endef
++
++$(eval $(call BuildImage))
+Index: target/linux/mr-mips/config-2.6.31
+===================================================================
+--- a/target/linux/mr-mips/config-2.6.31	(revision 0)
++++ b/target/linux/mr-mips/config-2.6.31	(revision 0)
+@@ -0,0 +1,229 @@
++CONFIG_MIPS=y
++
++#
++# Machine selection
++#
++# CONFIG_MACH_ALCHEMY is not set
++# CONFIG_AR7 is not set
++# CONFIG_BASLER_EXCITE is not set
++# CONFIG_BCM47XX is not set
++# CONFIG_MIPS_COBALT is not set
++# CONFIG_MACH_DECSTATION is not set
++# CONFIG_MACH_JAZZ is not set
++# CONFIG_LASAT is not set
++# CONFIG_LEMOTE_FULONG is not set
++# CONFIG_MIPS_MALTA is not set
++# CONFIG_MIPS_SIM is not set
++# CONFIG_NEC_MARKEINS is not set
++# CONFIG_MACH_VR41XX is not set
++# CONFIG_NXP_STB220 is not set
++# CONFIG_NXP_STB225 is not set
++# CONFIG_PNX8550_JBS is not set
++# CONFIG_PNX8550_STB810 is not set
++# CONFIG_PMC_MSP is not set
++# CONFIG_PMC_YOSEMITE is not set
++# CONFIG_SGI_IP22 is not set
++# CONFIG_SGI_IP27 is not set
++# CONFIG_SGI_IP28 is not set
++# CONFIG_SGI_IP32 is not set
++# CONFIG_SIBYTE_CRHINE is not set
++# CONFIG_SIBYTE_CARMEL is not set
++# CONFIG_SIBYTE_CRHONE is not set
++# CONFIG_SIBYTE_RHONE is not set
++# CONFIG_SIBYTE_SWARM is not set
++# CONFIG_SIBYTE_LITTLESUR is not set
++# CONFIG_SIBYTE_SENTOSA is not set
++# CONFIG_SIBYTE_BIGSUR is not set
++# CONFIG_SNI_RM is not set
++# CONFIG_MACH_TX39XX is not set
++# CONFIG_MACH_TX49XX is not set
++# CONFIG_MIKROTIK_RB532 is not set
++CONFIG_METAROUTER=y
++# CONFIG_WR_PPMC is not set
++# CONFIG_CAVIUM_OCTEON_SIMULATOR is not set
++# CONFIG_CAVIUM_OCTEON_REFERENCE_BOARD is not set
++# CONFIG_ALCHEMY_GPIO_INDIRECT is not set
++# CONFIG_WR_PPMC is not set
++CONFIG_MAPPED_KERNEL=y
++CONFIG_RWSEM_GENERIC_SPINLOCK=y
++# CONFIG_ARCH_HAS_ILOG2_U32 is not set
++# CONFIG_ARCH_HAS_ILOG2_U64 is not set
++CONFIG_ARCH_SUPPORTS_OPROFILE=y
++CONFIG_GENERIC_FIND_NEXT_BIT=y
++CONFIG_GENERIC_HWEIGHT=y
++CONFIG_GENERIC_CALIBRATE_DELAY=y
++CONFIG_GENERIC_CLOCKEVENTS=y
++CONFIG_GENERIC_TIME=y
++CONFIG_GENERIC_CMOS_UPDATE=y
++CONFIG_SCHED_NO_NO_OMIT_FRAME_POINTER=y
++# CONFIG_GENERIC_HARDIRQS_NO__DO_IRQ is not set
++CONFIG_CEVT_R4K=y
++CONFIG_CSRC_R4K=y
++CONFIG_DMA_NONCOHERENT=y
++CONFIG_DMA_NEED_PCI_MAP_STATE=y
++# CONFIG_HOTPLUG_CPU is not set
++# CONFIG_NO_IOPORT is not set
++CONFIG_CPU_BIG_ENDIAN=y
++# CONFIG_CPU_LITTLE_ENDIAN is not set
++CONFIG_SYS_SUPPORTS_BIG_ENDIAN=y
++CONFIG_IRQ_CPU=y
++CONFIG_MIPS_L1_CACHE_SHIFT=5
++
++#
++# CPU selection
++#
++# CONFIG_CPU_LOONGSON2 is not set
++CONFIG_CPU_MIPS32_R1=y
++# CONFIG_CPU_MIPS32_R2 is not set
++# CONFIG_CPU_MIPS64_R1 is not set
++# CONFIG_CPU_MIPS64_R2 is not set
++# CONFIG_CPU_R3000 is not set
++# CONFIG_CPU_TX39XX is not set
++# CONFIG_CPU_VR41XX is not set
++# CONFIG_CPU_R4300 is not set
++# CONFIG_CPU_R4X00 is not set
++# CONFIG_CPU_TX49XX is not set
++# CONFIG_CPU_R5000 is not set
++# CONFIG_CPU_R5432 is not set
++# CONFIG_CPU_R6000 is not set
++# CONFIG_CPU_NEVADA is not set
++# CONFIG_CPU_R8000 is not set
++# CONFIG_CPU_R10000 is not set
++# CONFIG_CPU_RM7000 is not set
++# CONFIG_CPU_RM9000 is not set
++# CONFIG_CPU_SB1 is not set
++CONFIG_SYS_HAS_CPU_MIPS32_R1=y
++CONFIG_CPU_MIPS32=y
++CONFIG_CPU_MIPSR1=y
++CONFIG_SYS_SUPPORTS_32BIT_KERNEL=y
++CONFIG_CPU_SUPPORTS_32BIT_KERNEL=y
++
++#
++# Kernel type
++#
++CONFIG_32BIT=y
++# CONFIG_64BIT is not set
++CONFIG_PAGE_SIZE_4KB=y
++# CONFIG_PAGE_SIZE_8KB is not set
++# CONFIG_PAGE_SIZE_16KB is not set
++# CONFIG_PAGE_SIZE_64KB is not set
++CONFIG_CPU_HAS_PREFETCH=y
++CONFIG_MIPS_MT_DISABLED=y
++# CONFIG_MIPS_MT_SMP is not set
++# CONFIG_MIPS_MT_SMTC is not set
++CONFIG_CPU_HAS_LLSC=y
++CONFIG_CPU_HAS_SYNC=y
++CONFIG_GENERIC_HARDIRQS=y
++CONFIG_GENERIC_IRQ_PROBE=y
++CONFIG_CPU_SUPPORTS_HIGHMEM=y
++CONFIG_ARCH_FLATMEM_ENABLE=y
++CONFIG_ARCH_POPULATES_NODE_MAP=y
++CONFIG_FLATMEM=y
++CONFIG_FLAT_NODE_MEM_MAP=y
++# CONFIG_SPARSEMEM_STATIC is not set
++# CONFIG_SPARSEMEM_VMEMMAP_ENABLE is not set
++CONFIG_PAGEFLAGS_EXTENDED=y
++CONFIG_SPLIT_PTLOCK_CPUS=4
++# CONFIG_RESOURCES_64BIT is not set
++CONFIG_ZONE_DMA_FLAG=0
++CONFIG_VIRT_TO_BUS=y
++# CONFIG_TICK_ONESHOT is not set
++# CONFIG_NO_HZ is not set
++# CONFIG_HIGH_RES_TIMERS is not set
++CONFIG_GENERIC_CLOCKEVENTS_BUILD=y
++# CONFIG_HZ_48 is not set
++# CONFIG_HZ_100 is not set
++# CONFIG_HZ_128 is not set
++CONFIG_HZ_250=y
++# CONFIG_HZ_256 is not set
++# CONFIG_HZ_1000 is not set
++# CONFIG_HZ_1024 is not set
++CONFIG_SYS_SUPPORTS_ARBIT_HZ=y
++CONFIG_HZ=250
++CONFIG_PREEMPT_NONE=y
++# CONFIG_PREEMPT_VOLUNTARY is not set
++# CONFIG_PREEMPT is not set
++CONFIG_SECCOMP=y
++CONFIG_LOCKDEP_SUPPORT=y
++CONFIG_STACKTRACE_SUPPORT=y
++CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
++
++# CONFIG_PCSPKR_PLATFORM is not set
++# CONFIG_PROBE_INITRD_HEADER is not set
++# CONFIG_MTD is not set
++
++
++CONFIG_NETDEVICES=y
++CONFIG_NET_ETHERNET=y
++# CONFIG_MII is not set
++# CONFIG_AX88796 is not set
++CONFIG_MT_VETH=y
++# CONFIG_DM9000 is not set
++# CONFIG_IBM_NEW_EMAC_ZMII is not set
++# CONFIG_IBM_NEW_EMAC_RGMII is not set
++# CONFIG_IBM_NEW_EMAC_TAH is not set
++# CONFIG_IBM_NEW_EMAC_EMAC4 is not set
++# CONFIG_B44 is not set
++# CONFIG_NETDEV_1000 is not set
++# CONFIG_NETDEV_10000 is not set
++
++
++CONFIG_INPUT=y
++# CONFIG_INPUT_FF_MEMLESS is not set
++# CONFIG_INPUT_POLLDEV is not set
++
++# CONFIG_VGA_CONSOLE is not set
++
++#
++# Userland interfaces
++#
++# CONFIG_INPUT_MOUSEDEV is not set
++# CONFIG_INPUT_JOYDEV is not set
++# CONFIG_INPUT_EVDEV is not set
++# CONFIG_INPUT_EVBUG is not set
++
++#
++# Input Device Drivers
++#
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_INPUT_JOYSTICK is not set
++# CONFIG_INPUT_TABLET is not set
++# CONFIG_INPUT_TOUCHSCREEN is not set
++# CONFIG_INPUT_MISC is not set
++
++#
++# Hardware I/O ports
++#
++# CONFIG_SERIO is not set
++# CONFIG_GAMEPORT is not set
++
++#
++# Serial drivers
++#
++# CONFIG_SERIAL_8250 is not set
++
++#
++# Non-8250 serial port support
++#
++CONFIG_UNIX98_PTYS=y
++CONFIG_LEGACY_PTYS=y
++CONFIG_LEGACY_PTY_COUNT=256
++CONFIG_HVC_DRIVER=y
++CONFIG_HVC_IRQ=y
++CONFIG_HVC_META=y
++# CONFIG_IPMI_HANDLER is not set
++# CONFIG_HW_RANDOM is not set
++# CONFIG_R3964 is not set
++# CONFIG_RAW_DRIVER is not set
++# CONFIG_I2C is not set
++# CONFIG_SPI is not set
++# CONFIG_W1 is not set
++# CONFIG_POWER_SUPPLY is not set
++# CONFIG_HWMON is not set
++# CONFIG_THERMAL is not set
++# CONFIG_THERMAL_HWMON is not set
++# CONFIG_WATCHDOG is not set
++
++CONFIG_META_FS=y
++CONFIG_CMDLINE="init=/etc/preinit"
+Index: target/linux/mr-mips/base-files/etc/inittab
+===================================================================
+--- a/target/linux/mr-mips/base-files/etc/inittab	(revision 0)
++++ b/target/linux/mr-mips/base-files/etc/inittab	(revision 0)
+@@ -0,0 +1,3 @@
++::sysinit:/etc/init.d/rcS S boot
++::shutdown:/etc/init.d/rcS K stop
++hvc0::askfirst:/bin/ash --login
+Index: target/linux/mr-mips/base-files/etc/hotplug2-init.rules
+===================================================================
+--- a/target/linux/mr-mips/base-files/etc/hotplug2-init.rules	(revision 0)
++++ b/target/linux/mr-mips/base-files/etc/hotplug2-init.rules	(revision 0)
+@@ -0,0 +1,7 @@
++$include /etc/hotplug2-common.rules
++
++DEVICENAME ~~ (hvc) {
++        nothrottle
++        makedev /dev/%DEVICENAME% 0666
++        next
++}
+Index: target/linux/mr-mips/patches-2.6.31/000-linux-metarouter.patch
+===================================================================
+--- a/target/linux/mr-mips/patches-2.6.31/000-linux-metarouter.patch	(revision 0)
++++ b/target/linux/mr-mips/patches-2.6.31/000-linux-metarouter.patch	(revision 0)
+@@ -0,0 +1,2360 @@
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/fixmap.h linux-2.6.31.10.new/arch/mips/include/asm/fixmap.h
++--- linux-2.6.31.10/arch/mips/include/asm/fixmap.h	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/mips/include/asm/fixmap.h	2010-04-12 15:54:46.000000000 +0300
++@@ -70,7 +70,11 @@
++ #if defined(CONFIG_CPU_TX39XX) || defined(CONFIG_CPU_TX49XX)
++ #define FIXADDR_TOP	((unsigned long)(long)(int)(0xff000000 - 0x20000))
++ #else
+++#ifndef CONFIG_MAPPED_KERNEL
++ #define FIXADDR_TOP	((unsigned long)(long)(int)0xfffe0000)
+++#else
+++#define FIXADDR_TOP	((unsigned long)(long)(int)0xdffe0000)
+++#endif
++ #endif
++ #define FIXADDR_SIZE	(__end_of_fixed_addresses << PAGE_SHIFT)
++ #define FIXADDR_START	(FIXADDR_TOP - FIXADDR_SIZE)
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/io.h linux-2.6.31.10.new/arch/mips/include/asm/io.h
++--- linux-2.6.31.10/arch/mips/include/asm/io.h	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/mips/include/asm/io.h	2010-04-12 15:54:46.000000000 +0300
++@@ -199,6 +199,7 @@
++ 		if (!size || last_addr < phys_addr)
++ 			return NULL;
++ 
+++#ifndef CONFIG_MAPPED_KERNEL
++ 		/*
++ 		 * Map uncached objects in the low 512MB of address
++ 		 * space using KSEG1.
++@@ -207,6 +208,7 @@
++ 		    flags == _CACHE_UNCACHED)
++ 			return (void __iomem *)
++ 				(unsigned long)CKSEG1ADDR(phys_addr);
+++#endif
++ 	}
++ 
++ 	return __ioremap(offset, size, flags);
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/kernel-entry-init.h linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/kernel-entry-init.h
++--- linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/kernel-entry-init.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/kernel-entry-init.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,44 @@
+++#ifndef __ASM_MACH_METAROUTER_KERNEL_ENTRY_H
+++#define __ASM_MACH_METAROUTER_KERNEL_ENTRY_H
+++
+++.macro	kernel_entry_setup
+++#ifdef CONFIG_MAPPED_KERNEL
+++	.set	push
+++	.set	mips32r2
+++	/* check whether we are running under 0xc0000000 address space */
+++	lui	t0, 0xf000
+++	bal	1f
+++1:	and	t1, ra, t0
+++	li	t0, 0xc0000000
+++	beq	t0, t1, 2f
+++	/* set up 0xc0000000 address space */
+++	mtc0	t0, CP0_ENTRYHI
+++	li	t0, 0x1f
+++	mtc0	t0, CP0_ENTRYLO0
+++	li	t0, 0x0010001f
+++	mtc0	t0, CP0_ENTRYLO1
+++	li	t0, PM_64M
+++	mtc0	t0, CP0_PAGEMASK
+++	li	t0, 0
+++	mtc0	t0, CP0_INDEX
+++	li	t0, 2
+++	mtc0	t0, CP0_WIRED
+++	ehb
+++	tlbwi
+++
+++	li	t0, 0xc8000000
+++	mtc0	t0, CP0_ENTRYHI
+++	li	t0, 0x0020001f
+++	mtc0	t0, CP0_ENTRYLO0
+++	li	t0, 0x0030001f
+++	mtc0	t0, CP0_ENTRYLO1
+++	li	t0, 1
+++	mtc0	t0, CP0_INDEX
+++	ehb
+++	tlbwi
+++2:
+++	.set	pop
+++#endif
+++.endm
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/spaces.h linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/spaces.h
++--- linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/spaces.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/spaces.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,24 @@
+++#ifndef _ASM_MACH_METAROUTER_SPACES_H
+++#define _ASM_MACH_METAROUTER_SPACES_H
+++
+++#include <linux/const.h>
+++
+++#define PHYS_OFFSET		_AC(0, UL)
+++
+++#ifdef CONFIG_MAPPED_KERNEL
+++#define CAC_BASE		_AC(0xc0000000, UL)
+++#else
+++#define CAC_BASE		_AC(0x80000000, UL)
+++#endif
+++#define IO_BASE			_AC(0xa0000000, UL)
+++#define UNCAC_BASE		_AC(0xa0000000, UL)
+++
+++#ifndef MAP_BASE
+++#define MAP_BASE		_AC(0xd0000000, UL)
+++#endif
+++
+++#define HIGHMEM_START		_AC(0x20000000, UL)
+++
+++#define PAGE_OFFSET		(CAC_BASE + PHYS_OFFSET)
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/war.h linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/war.h
++--- linux-2.6.31.10/arch/mips/include/asm/mach-metarouter/war.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/include/asm/mach-metarouter/war.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,18 @@
+++#ifndef __ASM_MIPS_MACH_METAROUTER_WAR_H
+++#define __ASM_MIPS_MACH_METAROUTER_WAR_H
+++
+++#define R4600_V1_INDEX_ICACHEOP_WAR	0
+++#define R4600_V1_HIT_CACHEOP_WAR	0
+++#define R4600_V2_HIT_CACHEOP_WAR	0
+++#define R5432_CP0_INTERRUPT_WAR		0
+++#define BCM1250_M3_WAR			0
+++#define SIBYTE_1956_WAR			0
+++#define MIPS4K_ICACHE_REFILL_WAR	0
+++#define MIPS_CACHE_SYNC_WAR		0
+++#define TX49XX_ICACHE_INDEX_INV_WAR	0
+++#define RM9000_CDEX_SMP_WAR		0
+++#define ICACHE_REFILLS_WORKAROUND_WAR   0
+++#define R10000_LLSC_WAR			0
+++#define MIPS34K_MISSED_ITLB_WAR		0
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/mips/include/asm/vm.h linux-2.6.31.10.new/arch/mips/include/asm/vm.h
++--- linux-2.6.31.10/arch/mips/include/asm/vm.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/include/asm/vm.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,45 @@
+++#ifndef MT_VM_H
+++#define MT_VM_H
+++
+++#define GFP_HYPERVISOR	GFP_KERNEL
+++
+++#define VIRQ_BASE	64
+++
+++#define hypercall(name, nr, ...)		\
+++	asm(					\
+++		".global " #name ";"		\
+++		".align 2;"			\
+++		".set	push;"			\
+++		".set	noreorder;"		\
+++		".type " #name ",@function;"	\
+++		".ent " #name ",0;"		\
+++		#name ": .frame $sp,0,$ra;"	\
+++		"li $3, " #nr ";"		\
+++		"li $2, -22;"			\
+++		"mtc0 $0, $1;"			\
+++		"jr $ra;"			\
+++		"nop;"				\
+++		".end " #name ";"		\
+++		".size " #name ",.-" #name ";"	\
+++		".set	pop"			\
+++        );					\
+++	asmlinkage extern int name(__VA_ARGS__);
+++
+++/* NOTE: do not allow vdma_descr to span multiple pages, so align it */
+++struct vdma_descr {
+++	unsigned addr;
+++	unsigned size;
+++	unsigned next;
+++} __attribute__((aligned(16)));
+++
+++#define DONE		0x80000000
+++
+++static inline unsigned get_virq_nr(unsigned hwirq)
+++{
+++	return VIRQ_BASE + hwirq;
+++}
+++
+++extern int vm_running(void);
+++#define hc_yield() asm volatile ("wait")
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/mips/Kconfig linux-2.6.31.10.new/arch/mips/Kconfig
++--- linux-2.6.31.10/arch/mips/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/mips/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -591,6 +591,19 @@
++ 	  Support the Mikrotik(tm) RouterBoard 532 series,
++ 	  based on the IDT RC32434 SoC.
++ 
+++config METAROUTER
+++	bool "Mikrotik MetaROUTER"
+++	select CEVT_R4K
+++	select CSRC_R4K
+++	select IRQ_CPU
+++	select DMA_NONCOHERENT
+++	select SYS_HAS_CPU_MIPS32_R1
+++	select SYS_SUPPORTS_BIG_ENDIAN
+++	select SYS_SUPPORTS_32BIT_KERNEL
+++	select MAPPED_KERNEL
+++	help
+++	  Support the Mikrotik(tm) MetaROUTER.
+++
++ config WR_PPMC
++ 	bool "Wind River PPMC board"
++ 	select CEVT_R4K
++diff -uNr linux-2.6.31.10/arch/mips/Makefile linux-2.6.31.10.new/arch/mips/Makefile
++--- linux-2.6.31.10/arch/mips/Makefile	2010-04-12 15:51:55.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -571,6 +571,15 @@
++ endif
++ all-$(CONFIG_SNI_RM)		:= vmlinux.ecoff
++ 
+++# Mikrotik MetaROUTER
+++#
+++core-$(CONFIG_METAROUTER) += arch/mips/metarouter/
+++cflags-$(CONFIG_METAROUTER) += -I$(srctree)/arch/mips/include/asm/mach-metarouter
+++load-$(CONFIG_METAROUTER) += 0xffffffffc0101000
+++ifdef CONFIG_METAROUTER
+++OBJCOPYFLAGS += --change-addresses=0xc0000000
+++endif
+++
++ #
++ # Common TXx9
++ #
++diff -uNr linux-2.6.31.10/arch/mips/metarouter/irq.c linux-2.6.31.10.new/arch/mips/metarouter/irq.c
++--- linux-2.6.31.10/arch/mips/metarouter/irq.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/metarouter/irq.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,97 @@
+++#include <linux/init.h>
+++#include <linux/linkage.h>
+++#include <linux/irq.h>
+++#include <linux/interrupt.h>
+++#include <linux/bitops.h>
+++#include <linux/module.h>
+++#include <asm/signal.h>
+++#include <asm/mipsregs.h>
+++#include <asm/irq_cpu.h>
+++#include <asm/bootinfo.h>
+++#include <asm/vm.h>
+++
+++asmlinkage void plat_irq_dispatch(void) {
+++	unsigned pending = read_c0_status() & read_c0_cause() & 0xfe00;
+++
+++	if (pending)
+++		do_IRQ(fls(pending) - 9);
+++}
+++
+++volatile unsigned long virqs;
+++EXPORT_SYMBOL(virqs);
+++
+++static void ack_virq(unsigned int irq)
+++{
+++	clear_bit(irq - VIRQ_BASE, &virqs);
+++}
+++
+++static inline void unmask_virq(unsigned int irq)
+++{
+++}
+++
+++static inline void mask_virq(unsigned int irq)
+++{
+++}
+++
+++static struct irq_chip virq_controller = {
+++	.name	= "virq",
+++	.ack	= ack_virq,
+++	.unmask = unmask_virq,
+++	.mask	= mask_virq,
+++};
+++
+++static irqreturn_t virq_cascade_irq(int irq, void *dev_id)
+++{
+++	unsigned i;
+++	unsigned irqs = virqs;
+++
+++	for (i = 0; irqs; ++i) {
+++		if (irqs & (1 << i)) {
+++			do_IRQ(i + VIRQ_BASE);
+++			irqs ^= (1 << i);
+++		}
+++	}
+++	return IRQ_HANDLED;
+++}
+++
+++static struct irqaction virq_cascade  = {
+++	.handler = virq_cascade_irq,
+++	.name = "virq-cascade",
+++};
+++
+++static void soft_irq_ack(unsigned int irq)
+++{
+++	clear_c0_cause(0x100 << (irq - MIPS_CPU_IRQ_BASE));
+++}
+++
+++static inline void unmask_soft_irq(unsigned int irq)
+++ {
+++	set_c0_status(0x100 << (irq - MIPS_CPU_IRQ_BASE));
+++	irq_enable_hazard();
+++ }
+++ 
+++static inline void mask_soft_irq(unsigned int irq)
+++{
+++	clear_c0_status(0x100 << (irq - MIPS_CPU_IRQ_BASE));
+++	irq_disable_hazard();
+++}
+++
+++static struct irq_chip soft_irq_controller = {
+++	.name	= "SoftIRQ",
+++	.ack	= soft_irq_ack,
+++	.unmask = unmask_soft_irq,
+++	.mask	= mask_soft_irq,
+++};
+++
+++void __init arch_init_irq(void)
+++{
+++	unsigned i;
+++
+++	mips_cpu_irq_init();
+++
+++	set_irq_chip_and_handler(1, &soft_irq_controller, handle_percpu_irq);
+++	setup_irq(1, &virq_cascade);
+++
+++	for (i = VIRQ_BASE;  i < VIRQ_BASE + 32; ++i)
+++		set_irq_chip_and_handler(i, &virq_controller, handle_edge_irq);
+++}
++diff -uNr linux-2.6.31.10/arch/mips/metarouter/Makefile linux-2.6.31.10.new/arch/mips/metarouter/Makefile
++--- linux-2.6.31.10/arch/mips/metarouter/Makefile	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/metarouter/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1 @@
+++obj-y += prom.o irq.o setup.o
++diff -uNr linux-2.6.31.10/arch/mips/metarouter/prom.c linux-2.6.31.10.new/arch/mips/metarouter/prom.c
++--- linux-2.6.31.10/arch/mips/metarouter/prom.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/metarouter/prom.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,66 @@
+++#include <linux/init.h>
+++#include <linux/mm.h>
+++#include <linux/module.h>
+++#include <linux/string.h>
+++#include <linux/console.h>
+++#include <asm/bootinfo.h>
+++#include <linux/bootmem.h>
+++#include <linux/ioport.h>
+++#include <linux/ctype.h>
+++#include <linux/irq.h>
+++
+++extern char arcs_cmdline[COMMAND_LINE_SIZE];
+++
+++extern unsigned long totalram_pages;
+++extern unsigned long mips_hpt_frequency;
+++
+++void __init prom_init(void)
+++{
+++	int argc = fw_arg0;
+++	char **argv = (char **) fw_arg1;
+++	unsigned i;
+++	unsigned offset = strlen(arcs_cmdline);
+++	if (offset > 0)
+++		offset += snprintf(arcs_cmdline + offset,
+++				   sizeof(arcs_cmdline) - offset,
+++				   " ");
+++
+++	/* HZ must be parsed here because otherwise it's too late */
+++	for (i = 0; (i < argc && argv[i] != NULL); i++) {
+++		if (strncmp(argv[i], "HZ=", 3) == 0) {
+++			mips_hpt_frequency = 
+++			    simple_strtoul(argv[i] + 3, 0, 10);
+++			continue;
+++		}
+++		offset += snprintf(arcs_cmdline + offset,
+++				   sizeof(arcs_cmdline) - offset,
+++				   "%s ", argv[i]);
+++	}
+++}
+++
+++void __init prom_free_prom_memory(void)
+++{
+++	unsigned long addr, end;
+++	extern char _text;
+++
+++	/*
+++	 * Free everything below the kernel itself but leave
+++	 * the first page reserved for the exception handlers.
+++	 */
+++
+++	end = __pa(&_text);
+++	addr = PAGE_SIZE;
+++
+++	while (addr < end) {
+++		ClearPageReserved(virt_to_page(__va(addr)));
+++		init_page_count(virt_to_page(__va(addr)));
+++		free_page((unsigned long)__va(addr));
+++		addr += PAGE_SIZE;
+++		++totalram_pages;
+++	}
+++}
+++
+++unsigned long long sched_clock(void)
+++{
+++	return read_c0_count() * 1000000000 / mips_hpt_frequency;
+++}
++diff -uNr linux-2.6.31.10/arch/mips/metarouter/setup.c linux-2.6.31.10.new/arch/mips/metarouter/setup.c
++--- linux-2.6.31.10/arch/mips/metarouter/setup.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/mips/metarouter/setup.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,147 @@
+++#include <linux/interrupt.h>
+++#include <linux/sched.h>
+++#include <asm/reboot.h>
+++#include <asm/vm.h>
+++
+++#define BUF_SIZE	256
+++#define BUF_COUNT	4
+++
+++hypercall(vm_create_queue, 4, unsigned id, unsigned irq,
+++		 unsigned tx, unsigned rx);
+++hypercall(vm_release_queue, 5, unsigned id);
+++hypercall(vm_running, 6, void);
+++hypercall(vm_setup_irqs, 14, unsigned *irqs, unsigned count);
+++
+++static volatile struct vdma_descr tx_chain[BUF_COUNT];
+++static volatile struct vdma_descr rx_chain[BUF_COUNT];
+++static unsigned char tx_buffers[BUF_COUNT][BUF_SIZE];
+++static unsigned char rx_buffers[BUF_COUNT][BUF_SIZE];
+++
+++static unsigned cur_tx;
+++static unsigned cur_rx;
+++
+++static int send_message(const unsigned char *buf, int len)
+++{
+++	unsigned long flags;
+++
+++	local_irq_save(flags);
+++
+++	/* drop some data if full buffer */
+++	while (tx_chain[cur_tx].size & DONE)
+++		asm volatile ("wait");
+++
+++	len = min_t(int, len, BUF_SIZE);
+++	memcpy(tx_buffers[cur_tx], buf, len);
+++	tx_chain[cur_tx].size = len | DONE;
+++
+++	cur_tx = (cur_tx + 1) % BUF_COUNT;
+++
+++	local_irq_restore(flags);
+++
+++	return len;
+++}
+++
+++static int recv_message(char *buf, int len)
+++{
+++	unsigned long flags;
+++
+++	local_irq_save(flags);
+++
+++	if (!(rx_chain[cur_rx].size & DONE)) {
+++		local_irq_restore(flags);
+++		return 0;
+++	}
+++	
+++	len = min_t(int, len, rx_chain[cur_rx].size & ~DONE);
+++	memcpy(buf, rx_buffers[cur_rx], len);
+++
+++	rx_chain[cur_rx].size = BUF_SIZE;
+++	cur_rx = (cur_rx + 1) % BUF_COUNT;
+++
+++	local_irq_restore(flags);
+++
+++	return len;
+++}
+++
+++static irqreturn_t ctrl_interrupt(int irq, void *dev_id)
+++{
+++	struct task_struct *init;
+++	char buf[256];
+++	int len;
+++
+++	len = recv_message(buf, sizeof(buf));
+++	if (len <= 0)
+++		return IRQ_HANDLED;
+++
+++	if (strncmp(buf, "restart", len) == 0) {
+++		printk("RESTART\n");
+++		init = find_task_by_pid_ns(1, &init_pid_ns);
+++		if (init)
+++			send_sig(SIGINT, init, 1);
+++	} else if (strncmp(buf, "halt", len) == 0) {
+++	    printk("HALT\n");
+++		init = find_task_by_pid_ns(1, &init_pid_ns);
+++		if (init)
+++			send_sig(SIGWINCH, init, 1);
+++	}
+++
+++	return IRQ_HANDLED;
+++}
+++
+++static void rbvm_machine_restart(char *command)
+++{
+++	char msg[] = "restart";
+++
+++	send_message(msg, sizeof(msg));
+++}
+++
+++static void rbvm_machine_halt(void)
+++{
+++	char msg[] = "halt";
+++
+++	send_message(msg, sizeof(msg));
+++}
+++
+++const char *get_system_type(void)
+++{
+++	return "Mikrotik MetaROUTER";
+++}
+++
+++void __init plat_mem_setup(void)
+++{
+++	extern unsigned long virqs;
+++	int i;
+++
+++	vm_setup_irqs((unsigned *) &virqs, 32);
+++
+++	for (i = 0; i < BUF_COUNT; ++i) {
+++		rx_chain[i].addr = (unsigned) rx_buffers[i];
+++		rx_chain[i].size = BUF_SIZE;
+++		rx_chain[i].next = (unsigned) &rx_chain[i + 1];
+++		
+++		tx_chain[i].addr = (unsigned) tx_buffers[i];
+++		tx_chain[i].size = 0;
+++		tx_chain[i].next = (unsigned) &tx_chain[i + 1];
+++	}
+++	rx_chain[BUF_COUNT - 1].next = (unsigned) &rx_chain[0];
+++	tx_chain[BUF_COUNT - 1].next = (unsigned) &tx_chain[0];
+++
+++	vm_create_queue(0, 0, (unsigned) &tx_chain[0],
+++			(unsigned) &rx_chain[0]);
+++
+++	_machine_restart = rbvm_machine_restart;
+++	_machine_halt = rbvm_machine_halt;
+++}
+++
+++void __init plat_time_init(void)
+++{
+++}
+++
+++int __init init_ctrl_interrupt(void)
+++{
+++	if (request_irq(VIRQ_BASE + 0, ctrl_interrupt, 0, "ctrl", (void *) 1))
+++		return -EBUSY;
+++	return 0;
+++
+++}
+++arch_initcall(init_ctrl_interrupt);
++diff -uNr linux-2.6.31.10/arch/powerpc/include/asm/mtvic.h linux-2.6.31.10.new/arch/powerpc/include/asm/mtvic.h
++--- linux-2.6.31.10/arch/powerpc/include/asm/mtvic.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/powerpc/include/asm/mtvic.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,8 @@
+++#ifndef _ASM_POWERPC_MTVIC_H
+++#define _ASM_POWERPC_MTVIC_H
+++
+++void __init mtvic_init(int def);
+++unsigned mtvic_get_irq(void);
+++unsigned rb_get_irq(void);
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/powerpc/include/asm/pgtable-ppc32.h linux-2.6.31.10.new/arch/powerpc/include/asm/pgtable-ppc32.h
++--- linux-2.6.31.10/arch/powerpc/include/asm/pgtable-ppc32.h	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/include/asm/pgtable-ppc32.h	2010-04-12 15:54:46.000000000 +0300
++@@ -63,7 +63,7 @@
++ #ifdef CONFIG_HIGHMEM
++ #define KVIRT_TOP	PKMAP_BASE
++ #else
++-#define KVIRT_TOP	(0xfe000000UL)	/* for now, could be FIXMAP_BASE ? */
+++#define KVIRT_TOP	(0xf0000000UL)	/* for now, could be FIXMAP_BASE ? */
++ #endif
++ 
++ /*
++diff -uNr linux-2.6.31.10/arch/powerpc/include/asm/vm.h linux-2.6.31.10.new/arch/powerpc/include/asm/vm.h
++--- linux-2.6.31.10/arch/powerpc/include/asm/vm.h	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/powerpc/include/asm/vm.h	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,35 @@
+++#ifndef MT_VM_H
+++#define MT_VM_H
+++
+++#define hypercall(name, nr, ...)		\
+++	asm(					\
+++		".global " #name ";"		\
+++		".align 2;"			\
+++		".type " #name ",@function;"	\
+++		#name ":;"			\
+++		"li 0, " #nr ";"		\
+++		"crset so;"			\
+++		"mtspr 1023, 0;"		\
+++		"bnslr;"			\
+++		"li 3, -22;"			\
+++		"blr"				\
+++        );					\
+++	asmlinkage extern int name(__VA_ARGS__);
+++
+++/* NOTE: do not allow vdma_descr to span multiple pages, so align it */
+++struct vdma_descr {
+++	unsigned addr;
+++	unsigned size;
+++	unsigned next;
+++} __attribute__((aligned(16)));
+++
+++#define DONE		0x80000000
+++
+++unsigned get_virq_nr(unsigned hwirq);
+++int vm_yield(void);
+++int vm_running(void);
+++
+++#define hc_yield() vm_yield()
+++
+++
+++#endif
++diff -uNr linux-2.6.31.10/arch/powerpc/platforms/85xx/Kconfig linux-2.6.31.10.new/arch/powerpc/platforms/85xx/Kconfig
++--- linux-2.6.31.10/arch/powerpc/platforms/85xx/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/platforms/85xx/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -135,6 +135,12 @@
++ 	help
++ 	  This option enables support for the Wind River SBC8560 board
++ 
+++config METAROUTER
+++	bool "Mikrotik MetaROUTER"
+++	select MT_VIC
+++	help
+++	  This option enables support for the Mikrotik MetaROUTER
+++
++ endif # MPC85xx
++ 
++ config TQM85xx
++diff -uNr linux-2.6.31.10/arch/powerpc/platforms/85xx/Makefile linux-2.6.31.10.new/arch/powerpc/platforms/85xx/Makefile
++--- linux-2.6.31.10/arch/powerpc/platforms/85xx/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/platforms/85xx/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -9,10 +9,11 @@
++ obj-$(CONFIG_MPC8536_DS)  += mpc8536_ds.o
++ obj-$(CONFIG_MPC85xx_DS)  += mpc85xx_ds.o
++ obj-$(CONFIG_MPC85xx_MDS) += mpc85xx_mds.o
+++obj-$(CONFIG_METAROUTER)  += metarouter.o
++ obj-$(CONFIG_STX_GP3)	  += stx_gp3.o
++ obj-$(CONFIG_TQM85xx)	  += tqm85xx.o
++ obj-$(CONFIG_SBC8560)     += sbc8560.o
++ obj-$(CONFIG_SBC8548)     += sbc8548.o
++ obj-$(CONFIG_SOCRATES)    += socrates.o socrates_fpga_pic.o
++ obj-$(CONFIG_KSI8560)	  += ksi8560.o
++-obj-$(CONFIG_XES_MPC85xx) += xes_mpc85xx.o
++\ No newline at end of file
+++obj-$(CONFIG_XES_MPC85xx) += xes_mpc85xx.o
++diff -uNr linux-2.6.31.10/arch/powerpc/platforms/85xx/metarouter.c linux-2.6.31.10.new/arch/powerpc/platforms/85xx/metarouter.c
++--- linux-2.6.31.10/arch/powerpc/platforms/85xx/metarouter.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/powerpc/platforms/85xx/metarouter.c	2010-04-12 15:54:59.000000000 +0300
++@@ -0,0 +1,190 @@
+++#include <linux/interrupt.h>
+++#include <linux/of_platform.h>
+++#include <mm/mmu_decl.h>
+++#include <asm/time.h>
+++#include <asm/machdep.h>
+++#include <asm/mtvic.h>
+++#include <asm/vm.h>
+++
+++#define BUF_SIZE	256
+++#define BUF_COUNT	4
+++
+++hypercall(vm_create_queue, 4, unsigned id, unsigned irq,
+++	  unsigned tx, unsigned rx);
+++hypercall(vm_release_queue, 5, unsigned id);
+++hypercall(vm_running, 6, void);
+++
+++hypercall(vm_setup_irqs, 14, unsigned *irqs, unsigned count);
+++hypercall(vm_yield, 16, void);
+++
+++EXPORT_SYMBOL(vm_yield);
+++
+++static volatile struct vdma_descr tx_chain[BUF_COUNT];
+++static volatile struct vdma_descr rx_chain[BUF_COUNT];
+++static unsigned char tx_buffers[BUF_COUNT][BUF_SIZE];
+++static unsigned char rx_buffers[BUF_COUNT][BUF_SIZE];
+++
+++static unsigned cur_tx;
+++static unsigned cur_rx;
+++
+++static int send_message(const unsigned char *buf, int len)
+++{
+++	unsigned long flags;
+++
+++	local_irq_save(flags);
+++
+++	/* drop some data if full buffer */
+++	while (tx_chain[cur_tx].size & DONE)
+++		hc_yield();
+++
+++	len = min_t(int, len, BUF_SIZE);
+++	memcpy(tx_buffers[cur_tx], buf, len);
+++	tx_chain[cur_tx].size = len | DONE;
+++
+++	cur_tx = (cur_tx + 1) % BUF_COUNT;
+++
+++	local_irq_restore(flags);
+++
+++	return len;
+++}
+++
+++static int recv_message(char *buf, int len)
+++{
+++	unsigned long flags;
+++
+++	local_irq_save(flags);
+++
+++	if (!(rx_chain[cur_rx].size & DONE)) {
+++		local_irq_restore(flags);
+++		return 0;
+++	}
+++	
+++	len = min_t(int, len, rx_chain[cur_rx].size & ~DONE);
+++	memcpy(buf, rx_buffers[cur_rx], len);
+++
+++	rx_chain[cur_rx].size = BUF_SIZE;
+++	cur_rx = (cur_rx + 1) % BUF_COUNT;
+++
+++	local_irq_restore(flags);
+++
+++	return len;
+++}
+++
+++static irqreturn_t ctrl_interrupt(int irq, void *dev_id)
+++{
+++	struct task_struct *init;
+++	char buf[256];
+++	int len;
+++
+++	len = recv_message(buf, sizeof(buf));
+++	if (len <= 0)
+++		return IRQ_HANDLED;
+++
+++	if (strncmp(buf, "restart", len) == 0) {
+++		printk("RESTART\n");
+++		init = find_task_by_pid_ns(1, &init_pid_ns);
+++		if (init)
+++			send_sig(SIGINT, init, 1);
+++	} else if (strncmp(buf, "halt", len) == 0) {
+++	    printk("HALT\n");
+++		init = find_task_by_pid_ns(1, &init_pid_ns);
+++		if (init)
+++			send_sig(SIGWINCH, init, 1);
+++	}
+++
+++	return IRQ_HANDLED;
+++}
+++
+++static void rbvm_restart(char *command)
+++{
+++	char msg[] = "restart";
+++
+++	send_message(msg, sizeof(msg));
+++
+++	local_irq_disable();
+++	while (1);
+++}
+++
+++static void rbvm_power_off(void)
+++{
+++	char msg[] = "halt";
+++
+++	send_message(msg, sizeof(msg));
+++}
+++
+++static int __init rbvm_probe(void)
+++{
+++	char *model;
+++
+++	model = of_get_flat_dt_prop(of_get_flat_dt_root(), "model", NULL);
+++
+++	if (!model)
+++		return 0;
+++
+++	return strcmp(model, "RB MetaROUTER") == 0;
+++}
+++
+++static void __init rbvm_pic_init(void)
+++{
+++	extern struct irq_host *virq_host;
+++
+++	mtvic_init(1);
+++	vm_setup_irqs(virq_host->host_data, 32);
+++}
+++
+++static void rb_idle(void) {
+++	local_irq_enable();
+++	vm_yield();
+++	local_irq_disable();
+++}
+++
+++static void rb_show_cpuinfo(struct seq_file *m)
+++{
+++	seq_printf(m, "Vendor\t\t: Mikrotik\n");
+++	seq_printf(m, "Machine\t\t: %s\n", ppc_md.name);
+++	seq_printf(m, "Memory\t\t: %u MB\n", total_memory / (1024 * 1024));
+++}
+++
+++static void __init rbvm_setup_arch(void)
+++{
+++	unsigned i;
+++
+++	for (i = 0; i < BUF_COUNT; ++i) {
+++		rx_chain[i].addr = (unsigned) rx_buffers[i];
+++		rx_chain[i].size = BUF_SIZE;
+++		rx_chain[i].next = (unsigned) &rx_chain[i + 1];
+++		
+++		tx_chain[i].addr = (unsigned) tx_buffers[i];
+++		tx_chain[i].size = 0;
+++		tx_chain[i].next = (unsigned) &tx_chain[i + 1];
+++	}
+++	rx_chain[BUF_COUNT - 1].next = (unsigned) &rx_chain[0];
+++	tx_chain[BUF_COUNT - 1].next = (unsigned) &tx_chain[0];
+++
+++	vm_create_queue(0, 0, (unsigned) &tx_chain[0],
+++			(unsigned) &rx_chain[0]);
+++
+++	ppc_md.power_save = rb_idle;
+++}
+++
+++int __init init_ctrl_interrupt(void)
+++{
+++	if (request_irq(get_virq_nr(0), ctrl_interrupt,
+++			0, "ctrl", (void *) 1));
+++
+++	return 0;
+++}
+++machine_device_initcall(rbvm, init_ctrl_interrupt);
+++
+++define_machine(rbvm) {
+++	.name			= "RB MetaROUTER",
+++	.probe			= rbvm_probe,
+++	.setup_arch		= rbvm_setup_arch,
+++	.show_cpuinfo		= rb_show_cpuinfo,
+++	.get_irq		= mtvic_get_irq,
+++	.init_IRQ		= rbvm_pic_init,
+++	.calibrate_decr		= generic_calibrate_decr,
+++	.restart		= rbvm_restart,
+++	.power_off		= rbvm_power_off,
+++	.halt			= rbvm_power_off,
+++};
++diff -uNr linux-2.6.31.10/arch/powerpc/sysdev/Kconfig linux-2.6.31.10.new/arch/powerpc/sysdev/Kconfig
++--- linux-2.6.31.10/arch/powerpc/sysdev/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/sysdev/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -12,3 +12,6 @@
++ 	depends on PCI_MSI
++ 	default y if MPIC
++ 	default y if FSL_PCI
+++
+++config MT_VIC
+++	bool
++diff -uNr linux-2.6.31.10/arch/powerpc/sysdev/Makefile linux-2.6.31.10.new/arch/powerpc/sysdev/Makefile
++--- linux-2.6.31.10/arch/powerpc/sysdev/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/arch/powerpc/sysdev/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -7,6 +7,7 @@
++ mpic-msi-obj-$(CONFIG_PCI_MSI)	+= mpic_msi.o mpic_u3msi.o mpic_pasemi_msi.o
++ obj-$(CONFIG_MPIC)		+= mpic.o $(mpic-msi-obj-y)
++ fsl-msi-obj-$(CONFIG_PCI_MSI)	+= fsl_msi.o
+++obj-$(CONFIG_MT_VIC)		+= mtvic.o
++ obj-$(CONFIG_PPC_MSI_BITMAP)	+= msi_bitmap.o
++ 
++ obj-$(CONFIG_PPC_MPC106)	+= grackle.o
++diff -uNr linux-2.6.31.10/arch/powerpc/sysdev/mtvic.c linux-2.6.31.10.new/arch/powerpc/sysdev/mtvic.c
++--- linux-2.6.31.10/arch/powerpc/sysdev/mtvic.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/arch/powerpc/sysdev/mtvic.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,73 @@
+++#include <linux/module.h>
+++#include <linux/irq.h>
+++#include <asm/mpic.h>
+++#include <asm/mtvic.h>
+++
+++struct irq_host *virq_host;
+++EXPORT_SYMBOL(virq_host);
+++
+++unsigned get_virq_nr(unsigned hwirq)
+++{
+++	return irq_create_mapping(virq_host, hwirq);
+++}
+++EXPORT_SYMBOL(get_virq_nr);
+++
+++void mtvic_mask_irq(unsigned int irq)
+++{
+++}
+++
+++void mtvic_unmask_irq(unsigned int irq)
+++{
+++}
+++
+++static struct irq_chip softirq_chip = {
+++	.mask	= mtvic_mask_irq,
+++	.unmask	= mtvic_unmask_irq,
+++};
+++
+++static int mtvic_map(struct irq_host *h, unsigned int virq, irq_hw_number_t hw)
+++{
+++	set_irq_chip_and_handler(virq, &softirq_chip, handle_simple_irq);
+++	return 0;
+++}
+++
+++static struct irq_host_ops mtvic_ops = {
+++	.map = mtvic_map,
+++};
+++
+++void __init mtvic_init(int def)
+++{
+++	static unsigned virqs;
+++
+++	virq_host = irq_alloc_host(NULL, IRQ_HOST_MAP_LINEAR, 32,
+++				   &mtvic_ops, 32);
+++	virq_host->host_data = &virqs;
+++
+++	if (def)
+++		irq_set_default_host(virq_host);
+++}
+++
+++unsigned mtvic_get_irq(void)
+++{
+++	static unsigned i = 0;
+++	unsigned *irqs = virq_host->host_data;
+++
+++	if (!irqs)
+++		return NO_IRQ;
+++
+++	for (i = (i + 1) & 31; *irqs; i = (i + 1) & 31) {
+++		if (*irqs & (1 << i)) {
+++			atomic_sub(1 << i, (atomic_t *) irqs);
+++			return irq_linear_revmap(virq_host, i);
+++		}
+++	}
+++	return NO_IRQ;
+++}
+++
+++unsigned rb_get_irq(void)
+++{
+++	unsigned irq = mtvic_get_irq();
+++	if (irq != NO_IRQ) return irq;
+++
+++	return mpic_get_irq();
+++}
++diff -uNr linux-2.6.31.10/drivers/char/hvc_meta.c linux-2.6.31.10.new/drivers/char/hvc_meta.c
++--- linux-2.6.31.10/drivers/char/hvc_meta.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/drivers/char/hvc_meta.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,134 @@
+++#include <linux/kernel.h>
+++#include <linux/init.h>
+++#include <linux/string.h>
+++#include <linux/errno.h>
+++#include <linux/mm.h>
+++#include <linux/bootmem.h>
+++#include <asm/vm.h>
+++#include <asm/irq.h>
+++#include "hvc_console.h"
+++
+++extern int vm_create_queue(unsigned id, unsigned irq,
+++			   unsigned tx, unsigned rx);
+++extern int vm_release_queue(unsigned id);
+++
+++#define BUF_SIZE	4096
+++
+++static volatile struct vdma_descr tx_descr;
+++static volatile struct vdma_descr rx_descr;
+++
+++static unsigned rx_offset;
+++static DEFINE_SPINLOCK(lock);
+++
+++static int put_chars(u32 vtermno, const char *buf, int count)
+++{
+++	unsigned long flags;
+++	int i;
+++
+++	spin_lock_irqsave(&lock, flags);
+++
+++#ifdef __powerpc__
+++	for (i = 0; i < 2000000; ++i) {
+++#else
+++	for (i = 0; i < 2; ++i) {
+++#endif
+++		unsigned size = xchg(&tx_descr.size, 0);
+++
+++		if (!(size & DONE)) {
+++			count = min(count, BUF_SIZE);
+++			memcpy((char *) tx_descr.addr, buf, count);
+++			tx_descr.size = count | DONE;
+++
+++			spin_unlock_irqrestore(&lock, flags);
+++			return count;
+++		}
+++
+++		if (size == (BUF_SIZE | DONE)) {
+++			if (i == 0) {
+++				tx_descr.size = size;
+++				hc_yield();
+++				continue;
+++			} else {
+++				unsigned drop = BUF_SIZE / 4;
+++				size = BUF_SIZE - drop;
+++				memcpy((char *) tx_descr.addr,
+++				       (char *) tx_descr.addr + drop,
+++				       size);
+++			}
+++		}
+++
+++		size &= ~DONE;
+++		count = min(BUF_SIZE - (int) size, count);
+++		memcpy((char *) tx_descr.addr + size, buf, count);
+++		tx_descr.size = (size + count) | DONE;
+++
+++		spin_unlock_irqrestore(&lock, flags);
+++		return count;
+++	}
+++
+++	spin_unlock_irqrestore(&lock, flags);
+++	return 0;
+++}
+++
+++static int get_chars(u32 vtermno, char *buf, int count)
+++{
+++	unsigned long flags;
+++	unsigned size;
+++
+++	spin_lock_irqsave(&lock, flags);
+++
+++	if (!(rx_descr.size & DONE)) {
+++		spin_unlock_irqrestore(&lock, flags);
+++		return -EAGAIN;
+++	}
+++	
+++	size = (rx_descr.size & ~DONE) - rx_offset;
+++	count = min(count, (int) size);
+++
+++	memcpy(buf, (char *) rx_descr.addr + rx_offset, count);
+++
+++	if (count == size) {
+++		rx_descr.size = BUF_SIZE;
+++		rx_offset = 0;
+++	} else {
+++		rx_offset += count;
+++	}
+++
+++	spin_unlock_irqrestore(&lock, flags);
+++	return count;
+++}
+++
+++static struct hv_ops cons = {
+++	.put_chars = put_chars,
+++	.get_chars = get_chars,
+++	.notifier_add = notifier_add_irq,
+++	.notifier_del = notifier_del_irq,
+++};
+++
+++static int __init cons_init(void)
+++{
+++	if (vm_running() != 0)
+++		return 0;
+++
+++	rx_descr.addr = (unsigned) kmalloc(BUF_SIZE, GFP_KERNEL);
+++	rx_descr.size = BUF_SIZE;
+++	rx_descr.next = (unsigned) &rx_descr;
+++	
+++	tx_descr.addr = (unsigned) kmalloc(BUF_SIZE, GFP_KERNEL);
+++	tx_descr.size = 0;
+++	tx_descr.next = (unsigned) &tx_descr;
+++
+++	vm_create_queue(1, 1,
+++			(unsigned) &tx_descr, (unsigned) &rx_descr);
+++
+++	return hvc_instantiate(0, 0, &cons);
+++}
+++console_initcall(cons_init);
+++
+++int vm_init(void)
+++{
+++	if (vm_running() == 0) 
+++		hvc_alloc(0, get_virq_nr(1), &cons, 256);
+++	return 0;
+++}
+++module_init(vm_init);
++diff -uNr linux-2.6.31.10/drivers/char/Kconfig linux-2.6.31.10.new/drivers/char/Kconfig
++--- linux-2.6.31.10/drivers/char/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/drivers/char/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -672,6 +672,13 @@
++        select HVC_DRIVER
++        default n
++ 
+++config HVC_META
+++	bool "MetaROUTER Hypervisor Console support"
+++	depends on METAROUTER
+++	select HVC_DRIVER
+++	select HVC_IRQ
+++	default y
+++
++ config VIRTIO_CONSOLE
++ 	tristate "Virtio console"
++ 	depends on VIRTIO
++diff -uNr linux-2.6.31.10/drivers/char/Makefile linux-2.6.31.10.new/drivers/char/Makefile
++--- linux-2.6.31.10/drivers/char/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/drivers/char/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -51,6 +51,7 @@
++ obj-$(CONFIG_HVC_DRIVER)	+= hvc_console.o
++ obj-$(CONFIG_HVC_IRQ)		+= hvc_irq.o
++ obj-$(CONFIG_HVC_XEN)		+= hvc_xen.o
+++obj-$(CONFIG_HVC_META)		+= hvc_meta.o
++ obj-$(CONFIG_HVC_IUCV)		+= hvc_iucv.o
++ obj-$(CONFIG_HVC_UDBG)		+= hvc_udbg.o
++ obj-$(CONFIG_VIRTIO_CONSOLE)	+= virtio_console.o
++diff -uNr linux-2.6.31.10/drivers/net/Kconfig linux-2.6.31.10.new/drivers/net/Kconfig
++--- linux-2.6.31.10/drivers/net/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/drivers/net/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -457,6 +457,11 @@
++ 	  If you have a Mikrotik RouterBoard 500 or IDT RC32434
++ 	  based system say Y. Otherwise say N.
++ 
+++config MT_VETH
+++	bool "MetaROUTER Virtual Ethernet support"
+++	depends on METAROUTER
+++	default y
+++
++ config MIPS_JAZZ_SONIC
++ 	tristate "MIPS JAZZ onboard SONIC Ethernet support"
++ 	depends on MACH_JAZZ
++diff -uNr linux-2.6.31.10/drivers/net/Makefile linux-2.6.31.10.new/drivers/net/Makefile
++--- linux-2.6.31.10/drivers/net/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/drivers/net/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -208,6 +208,7 @@
++ obj-$(CONFIG_MVME147_NET) += mvme147.o 7990.o
++ obj-$(CONFIG_EQUALIZER) += eql.o
++ obj-$(CONFIG_KORINA) += korina.o
+++obj-$(CONFIG_MT_VETH) += mtveth.o
++ obj-$(CONFIG_MIPS_JAZZ_SONIC) += jazzsonic.o
++ obj-$(CONFIG_MIPS_AU1X00_ENET) += au1000_eth.o
++ obj-$(CONFIG_MIPS_SIM_NET) += mipsnet.o
++diff -uNr linux-2.6.31.10/drivers/net/mtveth.c linux-2.6.31.10.new/drivers/net/mtveth.c
++--- linux-2.6.31.10/drivers/net/mtveth.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/drivers/net/mtveth.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,284 @@
+++#include <linux/skbuff.h>
+++#include <linux/netdevice.h>
+++#include <linux/etherdevice.h>
+++#include <linux/interrupt.h>
+++#include <asm/vm.h>
+++
+++#define MAX_IFACES	8
+++
+++#define TXBUF_COUNT	1024
+++#define RXBUF_COUNT	128
+++
+++#define RXBUF_SIZE	1600
+++
+++extern int vm_create_queue(unsigned id, unsigned irq,
+++			   unsigned tx, unsigned rx);
+++extern int vm_release_queue(unsigned id);
+++
+++#define CMD_NEWIFACE	0
+++#define CMD_DELIFACE	1
+++
+++struct ctrl_msg {
+++	unsigned cmd;
+++	unsigned short id;
+++	unsigned char hwaddr[6];
+++} __attribute__((packed));
+++
+++static volatile struct vdma_descr rx_descr[RXBUF_COUNT];
+++static volatile struct vdma_descr tx_descr[TXBUF_COUNT];
+++static struct sk_buff *rx_skbs[RXBUF_COUNT];
+++static struct sk_buff *tx_skbs[TXBUF_COUNT];
+++
+++static unsigned last_tx;
+++static atomic_t cur_tx;
+++static unsigned cur_rx;
+++static unsigned max_tx;
+++
+++static struct net_device *devs[MAX_IFACES];
+++
+++struct veth_private {
+++	unsigned id;
+++	atomic_t pending_tx;
+++};
+++
+++static void ctrl_receiver(struct work_struct *work);
+++
+++static struct sk_buff_head ctrl_queue;
+++static DECLARE_WORK(ctrl_work, ctrl_receiver);
+++
+++static int veth_xmit(struct sk_buff *skb, struct net_device *dev)
+++{
+++	struct veth_private *veth = netdev_priv(dev);
+++	unsigned cur = atomic_read(&cur_tx) % TXBUF_COUNT;
+++    
+++	if (skb_padto(skb, ETH_ZLEN))
+++		return NETDEV_TX_OK;
+++
+++	if (tx_descr[cur].size & DONE) {
+++		dev->stats.tx_dropped++;
+++		dev_kfree_skb_any(skb);
+++		return NETDEV_TX_OK;
+++	}
+++
+++	if (skb_headroom(skb) < 2) {
+++		struct sk_buff *s = skb;
+++		skb = skb_realloc_headroom(s, 2);
+++		dev_kfree_skb_any(s);
+++	} else {
+++		skb = skb_unshare(skb, GFP_ATOMIC);
+++	}
+++	if (!skb) {
+++		dev->stats.tx_dropped++;
+++		return NETDEV_TX_OK;
+++	}
+++	*(u16 *) skb_push(skb, 2) = veth->id;
+++
+++	dev->stats.tx_packets++;
+++	dev->stats.tx_bytes += skb->len;
+++
+++	tx_descr[cur].addr = (unsigned) skb->data;
+++	tx_descr[cur].size = skb->len | DONE;
+++
+++	if (tx_skbs[cur]) {
+++		/* should not happen */
+++		dev->stats.tx_dropped++;
+++		dev_kfree_skb_any(skb);
+++		return NETDEV_TX_BUSY;
+++	}
+++
+++	tx_skbs[cur] = skb;
+++	atomic_add(1, &cur_tx);
+++
+++	if (atomic_add_return(1, &veth->pending_tx) >= max_tx) {
+++		netif_stop_queue(dev);
+++
+++		/* in case we got rewaken right before stop */
+++		if (atomic_read(&veth->pending_tx) < max_tx)
+++			netif_wake_queue(dev);
+++	}
+++
+++	return 0;
+++}
+++
+++static irqreturn_t veth_interrupt(int irq, void *dev_id)
+++{
+++	unsigned cur;
+++
+++	while (last_tx != atomic_read(&cur_tx)) {
+++		unsigned last = last_tx % TXBUF_COUNT;
+++		struct net_device *dev;
+++		struct veth_private *veth;
+++
+++		if (tx_descr[last].size & DONE)
+++			break;
+++
+++		dev = tx_skbs[last]->dev;
+++		veth = netdev_priv(dev);
+++		dev_kfree_skb_irq(tx_skbs[last]);
+++		tx_skbs[last] = NULL;
+++
+++		++last_tx;
+++
+++		if (atomic_sub_return(1, &veth->pending_tx) < max_tx)
+++			netif_wake_queue(dev);
+++	}
+++
+++	cur = cur_rx % RXBUF_COUNT;
+++	while ((rx_descr[cur].size & DONE)) {
+++		struct sk_buff *skb = rx_skbs[cur];
+++		struct net_device *dev;
+++		unsigned id;
+++
+++		skb_put(skb, rx_descr[cur].size & ~DONE);
+++		if (skb->len < 2) {
+++			dev_kfree_skb_irq(skb);
+++			goto next;
+++		}
+++
+++		id = *(u16 *) skb->data;
+++		skb_pull(skb, 2);
+++
+++		if (id == 0) {
+++			__skb_queue_tail(&ctrl_queue, skb);
+++			schedule_work(&ctrl_work);
+++			goto next;
+++		}
+++		if (id >= MAX_IFACES || !devs[id]) {
+++			dev_kfree_skb_irq(skb);
+++			goto next;
+++		}
+++		dev = devs[id];
+++
+++		skb->dev = dev;
+++		skb->protocol = eth_type_trans(skb, dev);
+++
+++		dev->last_rx = jiffies;
+++		++dev->stats.rx_packets;
+++		dev->stats.rx_bytes += skb->len;
+++
+++		netif_rx(skb);
+++
+++	  next:
+++		skb = dev_alloc_skb(RXBUF_SIZE);
+++		rx_skbs[cur] = skb;
+++		if (skb) {
+++			rx_descr[cur].addr = (unsigned) skb->data;
+++			rx_descr[cur].size = RXBUF_SIZE;
+++		} else {
+++			rx_descr[cur].size = 0;
+++		}
+++
+++		++cur_rx;
+++		cur = cur_rx % RXBUF_COUNT;
+++	}
+++
+++	return IRQ_HANDLED;
+++}
+++
+++static const struct net_device_ops veth_netdev_ops = {
+++	.ndo_start_xmit		= veth_xmit,
+++};
+++
+++static int veth_alloc_dev(unsigned id, const unsigned char *hwaddr)
+++{
+++	struct veth_private *veth;
+++	struct net_device *dev;
+++	int err;
+++
+++	//SET_NETDEV_DEV(dev, &pdev->dev);
+++	//platform_set_drvdata(pdev, dev);
+++
+++	dev = alloc_etherdev(sizeof(struct veth_private));
+++	if (!dev)
+++		return -ENOMEM;
+++
+++	veth = netdev_priv(dev);
+++	veth->id = id;
+++	atomic_set(&veth->pending_tx, 1);
+++	memcpy(dev->dev_addr, hwaddr, 6);
+++	dev->netdev_ops = &veth_netdev_ops;
+++
+++	err = register_netdev(dev);
+++	if (err < 0) {
+++		printk("cannot register net device %u\n", err);
+++		goto netdev_err;
+++	}
+++
+++	devs[id] = dev;
+++	return 0;
+++
+++  netdev_err:
+++	free_netdev(dev);
+++	return err;
+++}
+++
+++static int recv_ctrl_msg(struct sk_buff *skb)
+++{
+++	struct ctrl_msg *msg = (struct ctrl_msg *) skb->data;
+++
+++	if (skb->len < sizeof(struct ctrl_msg))
+++		return -EINVAL;
+++
+++	if (msg->cmd == CMD_NEWIFACE) {
+++		if (msg->id >= MAX_IFACES || devs[msg->id])
+++			return -EBUSY;
+++
+++		veth_alloc_dev(msg->id, msg->hwaddr);
+++		return 0;
+++	} else if (msg->cmd == CMD_DELIFACE) {
+++		struct net_device *dev;
+++
+++		if (msg->id >= MAX_IFACES || !devs[msg->id])
+++			return -EINVAL;
+++		
+++		dev = devs[msg->id];
+++		devs[msg->id] = NULL;
+++
+++		unregister_netdev(dev);
+++	}
+++	return -EINVAL;
+++}
+++
+++static void ctrl_receiver(struct work_struct *work)
+++{
+++	struct sk_buff *skb;
+++
+++	while ((skb = skb_dequeue(&ctrl_queue)))
+++		recv_ctrl_msg(skb);
+++}
+++
+++int veth_init(void)
+++{
+++	unsigned i;
+++
+++	if (vm_running() != 0)
+++		return 0;
+++
+++	skb_queue_head_init(&ctrl_queue);
+++
+++	if (request_irq(get_virq_nr(3), veth_interrupt, IRQF_SHARED,
+++			"veth", (void *) 1))
+++		return -EBUSY;
+++
+++	for (i = 0; i < TXBUF_COUNT; ++i) {
+++		tx_descr[i].addr = 0;
+++		tx_descr[i].size = 0;
+++		tx_descr[i].next = (unsigned) &tx_descr[i + 1];
+++	}
+++	for (i = 0; i < RXBUF_COUNT; ++i) {
+++		rx_skbs[i] = dev_alloc_skb(RXBUF_SIZE);
+++		rx_descr[i].addr = (unsigned) rx_skbs[i]->data;
+++		rx_descr[i].size = RXBUF_SIZE;
+++		rx_descr[i].next = (unsigned) &rx_descr[i + 1];
+++	}
+++	tx_descr[TXBUF_COUNT - 1].next = (unsigned) &tx_descr[0];
+++	rx_descr[RXBUF_COUNT - 1].next = (unsigned) &rx_descr[0];
+++	
+++	vm_create_queue(3, 3,
+++			(unsigned) &tx_descr[0], (unsigned) &rx_descr[0]);
+++
+++	max_tx = TXBUF_COUNT / MAX_IFACES;
+++
+++	return 0;
+++}
+++module_init(veth_init);
++diff -uNr linux-2.6.31.10/fs/Kconfig linux-2.6.31.10.new/fs/Kconfig
++--- linux-2.6.31.10/fs/Kconfig	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/fs/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -173,6 +173,7 @@
++ source "fs/bfs/Kconfig"
++ source "fs/efs/Kconfig"
++ source "fs/jffs2/Kconfig"
+++source "fs/metafs/Kconfig"
++ # UBIFS File system configuration
++ source "fs/ubifs/Kconfig"
++ source "fs/cramfs/Kconfig"
++diff -uNr linux-2.6.31.10/fs/Makefile linux-2.6.31.10.new/fs/Makefile
++--- linux-2.6.31.10/fs/Makefile	2010-01-07 00:27:24.000000000 +0200
+++++ linux-2.6.31.10.new/fs/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -73,6 +73,7 @@
++ obj-$(CONFIG_JBD)		+= jbd/
++ obj-$(CONFIG_JBD2)		+= jbd2/
++ obj-$(CONFIG_CRAMFS)		+= cramfs/
+++obj-$(CONFIG_META_FS)		+= metafs/
++ obj-$(CONFIG_SQUASHFS)		+= squashfs/
++ obj-y				+= ramfs/
++ obj-$(CONFIG_HUGETLBFS)		+= hugetlbfs/
++diff -uNr linux-2.6.31.10/fs/metafs/inode.c linux-2.6.31.10.new/fs/metafs/inode.c
++--- linux-2.6.31.10/fs/metafs/inode.c	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/fs/metafs/inode.c	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,902 @@
+++#include <linux/module.h>
+++#include <linux/fs.h>
+++#include <linux/statfs.h>
+++#include <linux/pagemap.h>
+++#include <linux/namei.h>
+++#include <asm/vm.h>
+++
+++#define CMD_GETINODE		0
+++#define CMD_RELEASE_INODE	1
+++#define CMD_LOOKUP		2
+++#define CMD_READPAGE		3
+++#define CMD_READLINK		4
+++#define CMD_READDIR		5
+++#define CMD_WRITEPAGE		6
+++#define CMD_CREATE		7
+++#define CMD_UNLINK		8
+++#define CMD_SYMLINK		9
+++#define CMD_RENAME		10
+++#define CMD_SETINODE		11
+++#define CMD_STATFS		12
+++#define CMD_HLINK		13
+++#define CMD_FSYNC		14
+++
+++struct hptime {
+++	unsigned sec;
+++	unsigned nsec;
+++};
+++
+++struct getinode_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++} __attribute__((packed));
+++
+++struct inode_rep {
+++	int status;
+++	unsigned long long ino;
+++	unsigned long long size;
+++	unsigned mode;
+++	unsigned nlink;
+++	unsigned uid;
+++	unsigned gid;
+++	unsigned rdev;
+++	struct hptime atime;
+++	struct hptime mtime;
+++	struct hptime ctime;
+++	unsigned long blksize;
+++	unsigned long long blocks;
+++} __attribute__((packed));
+++
+++struct setinode_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++	unsigned long long size;
+++	unsigned mode;
+++	unsigned uid;
+++	unsigned gid;
+++	unsigned rdev;
+++} __attribute__((packed));
+++
+++struct lookup_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct create_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	unsigned mode;
+++	unsigned dev;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct unlink_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct symlink_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	unsigned namelen;
+++	char names[0];
+++} __attribute__((packed));
+++
+++struct hlink_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long parent_ino;
+++	unsigned long long ino;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct rename_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long old_parent_ino;
+++	unsigned long long new_parent_ino;
+++	unsigned old_namelen;
+++	char names[0];
+++} __attribute__((packed));
+++
+++struct readpage_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++	unsigned long long offset;
+++	unsigned size;
+++} __attribute__((packed));
+++
+++struct writepage_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++	unsigned long long offset;
+++	unsigned size;
+++} __attribute__((packed));
+++
+++struct fsync_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++} __attribute__((packed));
+++
+++struct readlink_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++} __attribute__((packed));
+++
+++struct readlink_rep {
+++	int status;
+++	char target[0];
+++} __attribute__((packed));
+++
+++struct readdir_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++	unsigned long long ino;
+++	unsigned long long offset;
+++	unsigned size;
+++} __attribute__((packed));
+++
+++struct dirnode {
+++	unsigned long long ino;
+++	unsigned long long offset;
+++	unsigned char type;
+++	unsigned short len;
+++	char name[0];
+++} __attribute__((packed));
+++
+++struct readdir_rep {
+++	int status;
+++	unsigned long long offset;
+++	struct dirnode entries[0];
+++} __attribute__((packed));
+++
+++struct statfs_req {
+++	unsigned short id;
+++	unsigned short cmd;
+++} __attribute__((packed));
+++
+++struct statfs_rep {
+++	int status;
+++	unsigned blocks;
+++	unsigned bfree;
+++} __attribute__((packed));
+++
+++#define BUF_COUNT	16
+++
+++extern int vm_create_queue(unsigned id, unsigned irq,
+++			   unsigned tx, unsigned rx);
+++extern int vm_release_queue(unsigned id);
+++
+++static volatile struct vdma_descr rx_descr[BUF_COUNT];
+++static volatile struct vdma_descr tx_descr[BUF_COUNT];
+++
+++#define MFS_ID(sb) ((unsigned) sb->s_fs_info)
+++
+++
+++static void mfs_update_inode(struct inode *i, struct inode_rep *rep);
+++static struct inode *mfs_new_inode(struct super_block *sb,
+++				   struct inode_rep *rep);
+++
+++static void start_new_request(unsigned *tx_idx, unsigned tx_slots,
+++			      unsigned *rx_idx, unsigned rx_slots)
+++{
+++	static DEFINE_MUTEX(mfs_lock);
+++	static unsigned cur_tx;
+++	static unsigned cur_rx;
+++
+++	mutex_lock(&mfs_lock);
+++
+++	*tx_idx = cur_tx;
+++	cur_tx += tx_slots;
+++
+++	*rx_idx = cur_rx;
+++	cur_rx += rx_slots;
+++
+++	mutex_unlock(&mfs_lock);
+++}
+++
+++static void prepare_receive(unsigned idx, void *resp, unsigned rp_size)
+++{
+++	idx = idx & (BUF_COUNT - 1);
+++
+++	rx_descr[idx].addr = (unsigned) resp;
+++	rx_descr[idx].size = rp_size;
+++}
+++
+++static void post_request(unsigned idx, const void *req, unsigned rq_size)
+++{
+++	idx = idx & (BUF_COUNT - 1);
+++
+++	while (tx_descr[idx].size & DONE) {
+++		hc_yield();
+++	}
+++
+++	tx_descr[idx].addr = (unsigned) req;
+++	tx_descr[idx].size = rq_size | DONE;
+++}
+++
+++static unsigned wait_for_reply(unsigned idx)
+++{
+++	idx = idx & (BUF_COUNT - 1);
+++
+++	while (!(rx_descr[idx].size & DONE)) {
+++		hc_yield();
+++	}
+++	return rx_descr[idx].size & ~(PAGE_MASK<<1);
+++}
+++
+++static unsigned send_request(const void *req, unsigned rq_size,
+++			     void *resp, unsigned rp_size)
+++{
+++	unsigned tx;
+++	unsigned rx;
+++
+++	start_new_request(&tx, 1, &rx, 1);
+++	prepare_receive(rx, resp, rp_size);
+++	post_request(tx, req, rq_size);
+++	return wait_for_reply(rx);
+++}
+++
+++static struct kmem_cache *mfs_inode_cachep;
+++
+++static struct inode *mfs_alloc_inode(struct super_block *sb)
+++{
+++	return kmem_cache_alloc(mfs_inode_cachep, GFP_KERNEL);
+++}
+++
+++static void mfs_destroy_inode(struct inode *inode)
+++{
+++	kmem_cache_free(mfs_inode_cachep, inode);
+++}
+++
+++static struct dentry *mfs_lookup(struct inode *dir,
+++				 struct dentry *dentry, struct nameidata *nd)
+++{
+++	unsigned size = sizeof(struct lookup_req) + dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct lookup_req *req = (struct lookup_req *) buf;
+++	struct inode_rep rep;
+++	struct inode *inode = NULL;
+++	struct dentry *res = NULL;
+++	unsigned ret;
+++
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_LOOKUP;
+++	req->parent_ino = dir->i_ino;
+++	memcpy(req->name, dentry->d_name.name, dentry->d_name.len);
+++
+++	rep.status = -EINVAL;
+++	ret = send_request(req, size, &rep, sizeof(rep));
+++	if (ret == sizeof(rep) && rep.status == 0)
+++		inode = mfs_new_inode(dir->i_sb, &rep);
+++	d_add(dentry, inode);
+++	return res;
+++}
+++
+++static int mfs_create_file(struct inode *dir, struct dentry *dentry,
+++			   int mode, dev_t dev)
+++{
+++	unsigned size = sizeof(struct create_req) + dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct create_req *req = (struct create_req *) buf;
+++	struct inode_rep rep;
+++	struct inode *inode = NULL;
+++	unsigned ret;
+++
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_CREATE;
+++	req->parent_ino = dir->i_ino;
+++	req->mode = mode;
+++	req->dev = (unsigned) dev;
+++	memcpy(req->name, dentry->d_name.name, dentry->d_name.len);
+++
+++	rep.status = -EINVAL;
+++	ret = send_request(req, size, &rep, sizeof(rep));
+++	if (ret < sizeof(rep))
+++		return rep.status;
+++
+++	inode = mfs_new_inode(dir->i_sb, &rep);
+++	d_instantiate(dentry, inode);
+++	return 0;
+++}
+++
+++static int mfs_create(struct inode *dir, struct dentry *dentry, int mode,
+++		      struct nameidata *nd)
+++{
+++	return mfs_create_file(dir, dentry, mode, MKDEV(0, 0));
+++}
+++
+++static int mfs_unlink(struct inode *dir, struct dentry *dentry)
+++{
+++	unsigned size = sizeof(struct unlink_req) + dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct unlink_req *req = (struct unlink_req *) buf;
+++	int err = -EINVAL;
+++    
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_UNLINK;
+++	req->parent_ino = dir->i_ino;
+++	memcpy(req->name, dentry->d_name.name, dentry->d_name.len);
+++
+++	send_request(req, size, &err, sizeof(err));
+++	return err;
+++}
+++
+++static int mfs_symlink(struct inode *dir, struct dentry *dentry,
+++		       const char *target)
+++{
+++	unsigned tlen = strlen(target);
+++	unsigned size = sizeof(struct symlink_req) + dentry->d_name.len + tlen;
+++	unsigned char buf[size];
+++	struct symlink_req *req = (struct symlink_req *) buf;
+++	struct inode_rep rep;
+++	struct inode *inode = NULL;
+++	unsigned ret;
+++    
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_SYMLINK;
+++	req->parent_ino = dir->i_ino;
+++	req->namelen = dentry->d_name.len;
+++	memcpy(req->names, dentry->d_name.name, dentry->d_name.len);
+++	memcpy(req->names + req->namelen, target, tlen);
+++
+++	rep.status = -EINVAL;
+++	ret = send_request(req, size, &rep, sizeof(rep));
+++	if (ret < sizeof(rep))
+++		return rep.status;
+++
+++	inode = mfs_new_inode(dir->i_sb, &rep);
+++	d_instantiate(dentry, inode);
+++	return 0;
+++}
+++
+++static int mfs_link(struct dentry *old_dentry, struct inode *dir,
+++		    struct dentry *dentry)
+++{
+++	unsigned size = sizeof(struct hlink_req) + dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct hlink_req *req = (struct hlink_req *) buf;
+++	struct inode_rep rep;
+++	unsigned ret;
+++    
+++	req->id = MFS_ID(dir->i_sb);
+++	req->cmd = CMD_HLINK;
+++	req->parent_ino = dir->i_ino;
+++	req->ino = old_dentry->d_inode->i_ino;
+++	memcpy(req->name, dentry->d_name.name, dentry->d_name.len);
+++
+++	rep.status = -EINVAL;
+++	ret = send_request(req, size, &rep, sizeof(rep));
+++	if (ret < sizeof(rep))
+++		return rep.status;
+++
+++	mfs_update_inode(old_dentry->d_inode, &rep);
+++
+++	atomic_inc(&old_dentry->d_inode->i_count);
+++	d_instantiate(dentry, old_dentry->d_inode);
+++	return 0;
+++}
+++
+++static int mfs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+++{
+++	return mfs_create_file(dir, dentry, mode | S_IFDIR, MKDEV(0, 0));
+++}
+++
+++static int mfs_rmdir(struct inode *dir, struct dentry *dentry)
+++{
+++	return mfs_unlink(dir, dentry);
+++}
+++
+++static int mfs_mknod(struct inode *dir, struct dentry *dentry, int mode,
+++		     dev_t rdev) {
+++	return mfs_create_file(dir, dentry, mode, rdev);
+++}
+++
+++static int mfs_rename(struct inode *old_dir, struct dentry *old_dentry,
+++		      struct inode *new_dir, struct dentry *new_dentry)
+++{
+++	unsigned size = sizeof(struct rename_req) +
+++	    old_dentry->d_name.len + new_dentry->d_name.len;
+++	unsigned char buf[size];
+++	struct rename_req *req = (struct rename_req *) buf;
+++	int err = -EINVAL;
+++    
+++	req->id = MFS_ID(old_dir->i_sb);
+++	req->cmd = CMD_RENAME;
+++	req->old_parent_ino = old_dir->i_ino;
+++	req->new_parent_ino = new_dir->i_ino;
+++	req->old_namelen = old_dentry->d_name.len;
+++	memcpy(req->names, old_dentry->d_name.name, old_dentry->d_name.len);
+++	memcpy(req->names + req->old_namelen,
+++	       new_dentry->d_name.name, new_dentry->d_name.len);
+++
+++	send_request(req, size, &err, sizeof(err));
+++	return err;
+++}
+++
+++static int mfs_readdir(struct file *file, void *dirent, filldir_t filldir)
+++{
+++	struct readdir_req req;
+++	struct readdir_rep *rep;
+++	struct dirnode *dn;
+++	unsigned len;
+++	int res = -EINVAL;
+++
+++	rep = kmalloc(PAGE_SIZE, GFP_KERNEL);
+++	if (!rep)
+++		return -ENOMEM;
+++
+++	req.id = MFS_ID(file->f_dentry->d_inode->i_sb);
+++	req.cmd = CMD_READDIR;
+++	req.ino = file->f_dentry->d_inode->i_ino;
+++	req.offset = file->f_pos;
+++	req.size = PAGE_SIZE;
+++
+++	len = send_request(&req, sizeof(req), rep, PAGE_SIZE);
+++	if (len <= sizeof(*rep)) {
+++		if (len >= sizeof(int))
+++			res = rep->status;
+++		goto eod;
+++	}
+++	
+++	dn = rep->entries;
+++	res = 0;
+++	while ((char *) dn + sizeof(struct dirnode) < (char *) rep + len) {
+++		if ((char *) dn + dn->len > (char *) rep + len)
+++			break;
+++		if (filldir(dirent, dn->name, dn->len - sizeof(struct dirnode),
+++			    dn->offset, dn->ino, dn->type) < 0)
+++			break;
+++		++res;
+++		dn = (struct dirnode *) ((unsigned char *) dn + dn->len);
+++	}
+++	file->f_pos = rep->offset;
+++
+++  eod:
+++	kfree(rep);
+++	return res;
+++}
+++
+++static int mfs_readpage(struct file *file, struct page *page)
+++{
+++	struct readpage_req req;
+++	void *buf;
+++	int res = -EIO;
+++	unsigned len;
+++	unsigned tx;
+++	unsigned rx;
+++
+++	buf = kmap(page);
+++	if (!buf)
+++		goto err_out;
+++
+++	req.id = MFS_ID(file->f_dentry->d_inode->i_sb);
+++	req.cmd = CMD_READPAGE;
+++	req.ino = file->f_dentry->d_inode->i_ino;
+++	req.offset = page_offset(page);
+++	req.size = PAGE_SIZE;
+++
+++	start_new_request(&tx, 1, &rx, 2);
+++	prepare_receive(rx, &res, sizeof(res));
+++	prepare_receive(rx + 1, buf, PAGE_SIZE);
+++	post_request(tx, &req, sizeof(req));
+++
+++	if (wait_for_reply(rx) < sizeof(res)) {
+++		res = -EINVAL;
+++		goto err_out;
+++	}
+++	if (res) {
+++		memset(buf, 0, PAGE_SIZE);
+++		SetPageError(page);
+++		goto err_buf;
+++	}
+++	len = wait_for_reply(rx + 1);
+++
+++	memset(buf + len, 0, PAGE_SIZE - len);
+++	SetPageUptodate(page);
+++
+++  err_buf:
+++	kunmap(page);
+++	flush_dcache_page(page);
+++  err_out:
+++	unlock_page(page);
+++	return res;
+++}
+++
+++static int mfs_write_begin(struct file *file, struct address_space *mapping,
+++			   loff_t pos, unsigned len, unsigned flags,
+++			   struct page **pagep, void **fsdata)
+++{
+++	pgoff_t index = pos >> PAGE_CACHE_SHIFT;
+++
+++	*pagep = grab_cache_page_write_begin(mapping, index, flags);
+++	if (!*pagep)
+++		return -ENOMEM;
+++
+++	// FIXME: do prereading
+++
+++	return 0;
+++}
+++
+++static int mfs_write_end(struct file *file, struct address_space *mapping,
+++			 loff_t pos, unsigned blen, unsigned copied,
+++			 struct page *page, void *fsdata)
+++{
+++	struct inode *i = file->f_dentry->d_inode;
+++	struct writepage_req req;
+++	void *buf;
+++	int len = -EFAULT;
+++	unsigned tx;
+++	unsigned rx;
+++	unsigned size;
+++
+++	flush_dcache_page(page);
+++
+++	buf = kmap(page);
+++	if (!buf)
+++		return -EINVAL;
+++
+++	req.id = MFS_ID(i->i_sb);
+++	req.cmd = CMD_WRITEPAGE;
+++	req.ino = file->f_dentry->d_inode->i_ino;
+++	req.offset = pos;
+++	req.size = blen;
+++
+++	start_new_request(&tx, 2, &rx, 1);
+++	prepare_receive(rx, &len, sizeof(len));
+++	post_request(tx, &req, sizeof(req));
+++	post_request(tx + 1, buf + (pos & (PAGE_CACHE_SIZE - 1)), blen);
+++	wait_for_reply(rx);
+++
+++	if (len >= 0) {
+++		if (len != blen) {
+++			SetPageError(page);
+++			ClearPageUptodate(page);
+++		} else {
+++			SetPageUptodate(page);
+++		}
+++
+++		size = req.offset + len;
+++		if (size > i_size_read(i)) i_size_write(i, size);
+++	}
+++
+++	kunmap(page);
+++	unlock_page(page);
+++	page_cache_release(page);
+++	return len;
+++}
+++
+++static int mfs_fsync(struct file *file, struct dentry *dentry, int datasync)
+++{
+++	struct fsync_req req;
+++	int err = -EINVAL;
+++
+++	req.id = MFS_ID(dentry->d_inode->i_sb);
+++	req.cmd = CMD_FSYNC;
+++	req.ino = file->f_dentry->d_inode->i_ino;
+++
+++	send_request(&req, sizeof(req), &err, sizeof(err));
+++	return err;
+++}
+++
+++static void *mfs_follow_link(struct dentry *dentry, struct nameidata *nd)
+++{
+++	struct readlink_req req;
+++	struct readlink_rep *rep;
+++	int len;
+++
+++	rep = kmalloc(256, GFP_KERNEL);
+++	if (!rep)
+++		return ERR_PTR(-ENOMEM);
+++
+++	req.id = MFS_ID(dentry->d_inode->i_sb);
+++	req.cmd = CMD_READLINK;
+++	req.ino = dentry->d_inode->i_ino;
+++	
+++	rep->status = -EINVAL;
+++	len = send_request(&req, sizeof(req), rep, 255);
+++	if (len < sizeof(*rep) + 1) {
+++		kfree(rep);
+++		return ERR_PTR(rep->status);
+++	}
+++
+++	*((char *) rep + len) = 0;
+++	nd_set_link(nd, rep->target);
+++	return NULL;
+++}
+++
+++static void mfs_put_link(struct dentry *direntry,
+++			 struct nameidata *nd, void *cookie)
+++{
+++	char *p = nd_get_link(nd);
+++
+++	if (!IS_ERR(p))
+++		kfree(p - sizeof(struct readlink_rep));
+++}
+++
+++static int mfs_setattr(struct dentry *dentry, struct iattr *attr)
+++{
+++	struct setinode_req req;
+++	struct inode_rep rep;
+++	struct inode *i = dentry->d_inode;
+++	unsigned ia = attr->ia_valid;
+++	unsigned len;
+++
+++	req.id = MFS_ID(i->i_sb);
+++	req.cmd = CMD_SETINODE;
+++	req.ino = i->i_ino;
+++	req.mode = ia & ATTR_MODE ? attr->ia_mode : i->i_mode;
+++	req.uid = ia & ATTR_UID ? attr->ia_uid : i->i_uid;
+++	req.gid = ia & ATTR_GID ? attr->ia_gid : i->i_gid;
+++	req.size = ia & ATTR_SIZE ? attr->ia_size : i->i_size;
+++
+++	len = send_request(&req, sizeof(req), &rep, sizeof(rep));
+++	if (len < sizeof(rep))
+++		return -EINVAL;
+++	    
+++	if (rep.status)
+++		return rep.status;
+++
+++	mfs_update_inode(i, &rep);
+++	return 0;
+++}
+++
+++static const struct file_operations mfs_dir_fops = {
+++	.read		= generic_read_dir,
+++	.readdir	= mfs_readdir,
+++};
+++
+++static const struct inode_operations mfs_dir_ops = {
+++	.lookup		= mfs_lookup,
+++	.create		= mfs_create,
+++	.link		= mfs_link,
+++	.unlink		= mfs_unlink,
+++	.symlink	= mfs_symlink,
+++	.mkdir		= mfs_mkdir,
+++	.rmdir		= mfs_rmdir,
+++	.mknod		= mfs_mknod,
+++	.rename		= mfs_rename,
+++	.setattr	= mfs_setattr,
+++};
+++
+++static const struct inode_operations mfs_file_ops = {
+++	.setattr	= mfs_setattr,
+++};
+++
+++static const struct file_operations mfs_fops = {
+++	.llseek		= generic_file_llseek,
+++	.read		= do_sync_read,
+++	.write		= do_sync_write,
+++	.aio_read	= generic_file_aio_read,
+++	.aio_write	= generic_file_aio_write,
+++	.mmap		= generic_file_readonly_mmap,
+++	.splice_read	= generic_file_splice_read,
+++	.fsync		= mfs_fsync,
+++};
+++
+++static const struct address_space_operations mfs_aops = {
+++	.readpage	= mfs_readpage,
+++	.write_begin	= mfs_write_begin,
+++	.write_end	= mfs_write_end,
+++};
+++
+++static const struct inode_operations mfs_link_ops = {
+++	.readlink	= generic_readlink,
+++	.follow_link	= mfs_follow_link,
+++	.put_link	= mfs_put_link,
+++	.setattr	= mfs_setattr,
+++};
+++
+++static void mfs_update_inode(struct inode *i, struct inode_rep *rep)
+++{
+++	i->i_ino = rep->ino;
+++	i->i_mode = rep->mode;
+++	i->i_nlink = rep->nlink;
+++	i->i_uid = rep->uid;
+++	i->i_gid = rep->gid;
+++	i->i_size = rep->size;
+++	i->i_atime.tv_sec = rep->atime.sec;
+++	i->i_atime.tv_nsec = rep->atime.nsec;
+++	i->i_mtime.tv_sec = rep->mtime.sec;
+++	i->i_mtime.tv_nsec = rep->mtime.nsec;
+++	i->i_ctime.tv_sec = rep->ctime.sec;
+++	i->i_ctime.tv_nsec = rep->ctime.nsec;
+++	i->i_blkbits = ffs(rep->blksize);
+++	i->i_blocks = rep->blocks;
+++
+++	if (i->i_sb->s_flags & MS_RDONLY)
+++		i->i_mode &= ~0222;
+++}
+++
+++static struct inode *mfs_new_inode(struct super_block *sb,
+++				   struct inode_rep *rep)
+++{
+++	struct inode *i = new_inode(sb);
+++	if (!i) return NULL;
+++
+++	mfs_update_inode(i, rep);
+++
+++	if (S_ISREG(rep->mode)) {
+++		i->i_op = &mfs_file_ops;
+++		i->i_fop = &mfs_fops;
+++		i->i_data.a_ops = &mfs_aops;
+++	} else if (S_ISDIR(rep->mode)) {
+++		i->i_op = &mfs_dir_ops;
+++		i->i_fop = &mfs_dir_fops;
+++	} else if (S_ISLNK(rep->mode)) {
+++		i->i_op = &mfs_link_ops;
+++	} else {
+++		init_special_inode(i, rep->mode, (dev_t) rep->rdev);
+++	}
+++
+++	insert_inode_hash(i);
+++	return i;
+++}
+++
+++static struct inode *mfs_getinode(struct super_block *sb,
+++				  unsigned long long ino)
+++{
+++	struct getinode_req req;
+++	struct inode_rep rep;
+++	unsigned len;
+++
+++	req.id = MFS_ID(sb);
+++	req.cmd = CMD_GETINODE;
+++	req.ino = ino;
+++	len = send_request(&req, sizeof(req), &rep, sizeof(rep));
+++
+++	if (len < sizeof(rep) || rep.status)
+++		return NULL;
+++
+++	return mfs_new_inode(sb, &rep);
+++}
+++
+++static void mfs_put_super(struct super_block *sb)
+++{
+++}
+++
+++static int mfs_statfs(struct dentry *dentry, struct kstatfs *buf)
+++{
+++	struct statfs_req req;
+++	struct statfs_rep rep;
+++	struct super_block *sb = dentry->d_sb;
+++	unsigned len;
+++
+++	req.id = MFS_ID(sb);
+++	req.cmd = CMD_STATFS;
+++	rep.status = -EINVAL;
+++	len = send_request(&req, sizeof(req), &rep, sizeof(rep));
+++
+++	if (len < sizeof(rep) || rep.status)
+++		return rep.status;
+++
+++	buf->f_type = sb->s_magic;
+++	buf->f_bsize = 512;
+++	buf->f_blocks = rep.blocks;
+++	buf->f_bfree = rep.bfree;
+++	buf->f_bavail = rep.bfree;
+++	buf->f_namelen = 255;
+++
+++	return 0;
+++}
+++
+++static const struct super_operations mfs_ops = {
+++	.alloc_inode	= mfs_alloc_inode,
+++	.destroy_inode	= mfs_destroy_inode,
+++	.put_super	= mfs_put_super,
+++	.statfs		= mfs_statfs,
+++};
+++
+++static int mfs_fill_super(struct super_block *sb, void *data, int silent)
+++{
+++	struct inode *root;
+++	unsigned id;
+++
+++	if (*(char *) data == '/') ++data;
+++	id = simple_strtoul((char *) data, NULL, 10);
+++
+++	sb->s_magic = 0xdeadbeef;
+++	sb->s_op = &mfs_ops;
+++	if (id == 0)
+++		sb->s_flags |= MS_RDONLY;
+++	sb->s_fs_info = (void *) id;
+++
+++	root = mfs_getinode(sb, 0);
+++	if (!root)	    
+++		goto out;
+++
+++	sb->s_root = d_alloc_root(root);
+++	if (!sb->s_root)
+++		goto outiput;
+++
+++	return 0;
+++
+++  outiput:
+++	iput(root);
+++  out:
+++	return -EINVAL;
+++}
+++
+++static int mfs_get_sb(struct file_system_type *fs_type,
+++	int flags, const char *dev_name, void *data, struct vfsmount *mnt)
+++{
+++	return get_sb_nodev(fs_type, flags,
+++			    (void *) dev_name, mfs_fill_super, mnt);
+++}
+++
+++static struct file_system_type mfs_fs_type = {
+++	.owner		= THIS_MODULE,
+++	.name		= "metafs",
+++	.get_sb		= mfs_get_sb,
+++	.kill_sb	= kill_block_super,
+++	.fs_flags	= FS_REQUIRES_DEV,
+++};
+++
+++static void init_once(void *foo)
+++{
+++	struct inode * inode = (struct inode *) foo;
+++
+++	inode_init_once(inode);
+++}
+++
+++static int __init init_mfs_fs(void)
+++{
+++	unsigned i;
+++	int err;
+++
+++	if (vm_running() != 0)
+++		return 0;
+++
+++	printk("MFS init\n");
+++	mfs_inode_cachep = kmem_cache_create("metafs_inode_cache",
+++					     sizeof(struct inode),
+++					     0, (SLAB_RECLAIM_ACCOUNT|
+++						 SLAB_MEM_SPREAD),
+++					     init_once);
+++	if (!mfs_inode_cachep)
+++		return -ENOMEM;
+++
+++	for (i = 0; i < BUF_COUNT; ++i) {
+++		tx_descr[i].addr = 0;
+++		tx_descr[i].size = 0;
+++		tx_descr[i].next = (unsigned) &tx_descr[i + 1];
+++
+++		rx_descr[i].addr = 0;
+++		rx_descr[i].size = DONE;
+++		rx_descr[i].next = (unsigned) &rx_descr[i + 1];
+++	}
+++	tx_descr[BUF_COUNT - 1].next = (unsigned) &tx_descr[0];
+++	rx_descr[BUF_COUNT - 1].next = (unsigned) &rx_descr[0];
+++	
+++	vm_create_queue(2, -1u,
+++			(unsigned) &tx_descr[0], (unsigned) &rx_descr[0]);
+++
+++        err = register_filesystem(&mfs_fs_type);
+++	if (err != 0) {
+++		kmem_cache_destroy(mfs_inode_cachep);
+++		return err;
+++	}
+++
+++	return 0;
+++}
+++
+++static void __exit exit_mfs_fs(void)
+++{
+++	unregister_filesystem(&mfs_fs_type);
+++	kmem_cache_destroy(mfs_inode_cachep);
+++}
+++
+++module_init(init_mfs_fs);
+++module_exit(exit_mfs_fs);
++diff -uNr linux-2.6.31.10/fs/metafs/Kconfig linux-2.6.31.10.new/fs/metafs/Kconfig
++--- linux-2.6.31.10/fs/metafs/Kconfig	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/fs/metafs/Kconfig	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,3 @@
+++config META_FS
+++	depends on METAROUTER
+++	tristate "MetaFS on Mikrotik MetaROUTER"
++diff -uNr linux-2.6.31.10/fs/metafs/Makefile linux-2.6.31.10.new/fs/metafs/Makefile
++--- linux-2.6.31.10/fs/metafs/Makefile	1970-01-01 03:00:00.000000000 +0300
+++++ linux-2.6.31.10.new/fs/metafs/Makefile	2010-04-12 15:54:46.000000000 +0300
++@@ -0,0 +1,3 @@
+++obj-y += metafs.o
+++
+++metafs-objs := inode.o
+Index: target/linux/mr-mips/patches-2.6.31/099-mips_module_reloc_fix.patch
+===================================================================
+--- a/target/linux/mr-mips/patches-2.6.31/099-mips_module_reloc_fix.patch	(revision 0)
++++ b/target/linux/mr-mips/patches-2.6.31/099-mips_module_reloc_fix.patch	(revision 0)
+@@ -0,0 +1,12 @@
++diff -uNr linux-2.6.31.10/arch/mips/kernel/module.c linux-2.6.31.10.mod/arch/mips/kernel/module.c
++--- linux-2.6.31.10/arch/mips/kernel/module.c	2010-04-12 13:37:22.000000000 +0300
+++++ linux-2.6.31.10.mod/arch/mips/kernel/module.c	2010-04-12 13:42:46.000000000 +0300
++@@ -191,7 +191,7 @@
++ #ifdef CONFIG_64BIT
++ 	return (KSEGX((unsigned long)ptr) == CKSEG0);
++ #else
++-	return (KSEGX(ptr) == KSEG0);
+++	return ((_ACAST32_ (ptr)) & 0xf0000000) == 0xc0000000;
++ #endif
++ }
++ 
+Index: target/linux/mr-mips/Makefile
+===================================================================
+--- a/target/linux/mr-mips/Makefile	(revision 0)
++++ b/target/linux/mr-mips/Makefile	(revision 0)
+@@ -0,0 +1,17 @@
++#
++# Copyright (C) 2007-2008 OpenWrt.org
++#
++# This is free software, licensed under the GNU General Public License v2.
++# See /LICENSE for more information.
++#
++include $(TOPDIR)/rules.mk
++
++ARCH:=mips
++BOARD:=mr-mips
++BOARDNAME:=Mikrotik MetaROUTER MIPS
++FEATURES:=targz
++
++LINUX_VERSION:=2.6.31.10
++
++include $(INCLUDE_DIR)/target.mk
++$(eval $(call BuildTarget))

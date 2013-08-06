@@ -1,5 +1,5 @@
 diff --git a/contrib/package/freifunk-gwcheck/Makefile b/contrib/package/freifunk-gwcheck/Makefile
-index af8dda6..7ebb2c4 100644
+index c339d13..35f2da5 100644
 --- a/contrib/package/freifunk-gwcheck/Makefile
 +++ b/contrib/package/freifunk-gwcheck/Makefile
 @@ -15,7 +15,7 @@ define Package/freifunk-gwcheck
@@ -7,7 +7,7 @@ index af8dda6..7ebb2c4 100644
    SUBMENU:=9. Freifunk
    TITLE:=Freifunk gateway check script
 -  DEPENDS:=firewall +ip +iptables-mod-ipopt +olsrd-mod-dyn-gw-plain
-+  DEPENDS:=firewall +iptables-mod-ipopt +olsrd-mod-dyn-gw-plain
++  DEPENDS:=+firewall +olsrd-mod-dyn-gw-plain
  endef
  
  define Package/freifunk-gwcheck/description

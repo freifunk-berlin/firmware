@@ -1,0 +1,19 @@
+diff --git a/package/6relayd/patches/00-disable-route-check.patch b/package/6relayd/patches/00-disable-route-check.patch
+new file mode 100644
+index 0000000..81de4d5
+--- /dev/null
++++ b/package/6relayd/patches/00-disable-route-check.patch
+@@ -0,0 +1,13 @@
++diff --git a/src/router.c b/src/router.c
++index ad64a2a..ca646c1 100644
++--- a/src/router.c
+++++ b/src/router.c
++@@ -210,7 +210,7 @@ static bool parse_routes(struct relayd_ipaddr *n, ssize_t len)
++ 	rewind(fp_route);
++ 
++ 	char line[512], ifname[16];
++-	bool found_default = false;
+++	bool found_default = true;
++ 	struct relayd_ipaddr p = {IN6ADDR_ANY_INIT, 0, 0, 0};
++ 	while (fgets(line, sizeof(line), fp_route)) {
++ 		uint32_t rflags;

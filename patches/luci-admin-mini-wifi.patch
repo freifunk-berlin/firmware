@@ -1,5 +1,5 @@
 diff --git a/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua b/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
-index a18c072..d365ca9 100644
+index a18c072..e0bea46 100644
 --- a/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
 +++ b/modules/admin-mini/luasrc/model/cbi/mini/wifi.lua
 @@ -19,17 +19,13 @@ local fs  = require "nixio.fs"
@@ -22,3 +22,18 @@ index a18c072..d365ca9 100644
  for k, v in pairs(wireless) do
  	if v[".type"] == "wifi-iface" then
  		table.insert(ifaces, v)
+@@ -55,12 +51,12 @@ link = s:option(DummyValue, "_link", translate("Link"))
+ function link.cfgvalue(self, section)
+ 	local ifname = self.map:get(section, "ifname")
+ 	local iwinfo = sys.wifi.getiwinfo(ifname)
+-	return iwinfo and "%d/%d" %{ iwinfo.quality, iwinfo.quality_max } or "-"
++	return iwinfo and "%d/%d" %{ iwinfo.quality or 0, iwinfo.quality_max or 0 }
+ end
+ 
+ essid = s:option(DummyValue, "ssid", "ESSID")
+ 
+-bssid = s:option(DummyValue, "_bsiid", "BSSID")
++bssid = s:option(DummyValue, "_bssid", "BSSID")
+ function bssid.cfgvalue(self, section)
+ 	local ifname = self.map:get(section, "ifname")
+ 	local iwinfo = sys.wifi.getiwinfo(ifname)

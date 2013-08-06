@@ -136,7 +136,7 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 			| grep -v WP543 | grep -v WPE72 | grep -v NBG_460N_550N_550NH \
 			| grep -v JA76PF | grep -v EWDORIN | grep -v ALL0305 \
 			| grep -v ALFAAP96 | grep -v ^AP*)
-			#profiles="TLMR3020 TLWR1043 TLWR941"
+			#profiles="TLMR3020"
 			;;
 		*)
 			profiles=$(make -C "$meshkit"/"$ib_name" info | grep :$ | tail -n +2 | cut -d ":" -f 1)
@@ -186,7 +186,7 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 
 			###VPN###
 			for profile in $profiles; do
-				packages="$packages_board $packages_ff $packages_4MB $packages_vpn"
+				packages="$packages_board $packages_ff $packages_vpn"
 				build_profile $board $profile "vpn" $packages
 			done
 
@@ -227,7 +227,9 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 	rm -f $ib_tmp/$board/*/*/openwrt-*-vmlinux*
 	rm -f $ib_tmp/$board/*/*/openwrt-*-uImage*
 	rm -f $ib_tmp/$board/*/*/openwrt-*-kernel*
+	#cp -a "$DIR"/"$verm"/"$board"/bin/*/$ib_name.tar.bz2
 	rsync -a --delete $ib_tmp/$board $wwwdir/$verm/$ver
+	rsync -a "$DIR"/"$verm"/"$board"/bin/*/$ib_name.tar.bz2 $wwwdir/$verm/$ver/
 	rm -rf $ib_tmp/$board
 	p=$(dec_pids)
 	echo "update-wib-$verm-$board END PIDS: $p"
@@ -247,9 +249,9 @@ done
 		p=$(inc_pids $limit)
 	done
 	echo "Rsync PIDS: $p rsync -av --delete "$DIR"/"$verm"/patches $ib_tmp"
-	rsync -a --delete "$DIR"/"$verm"/patches $ib_tmp
-	rsync -a --delete $ib_tmp/patches $wwwdir/$verm/$ver
-	rsync -av --delete "$ib_tmp/" "$user@$servername:$wwwdir/$verm/$ver"
+	rsync -a --delete "$DIR"/"$verm"/patches $wwwdir/$verm/$ver
+	rsync -av --delete "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
+	#rsync --bwlimit=60 -av --delete "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver" 
 	p=$(dec_pids)
 ) >update-wib-$verm-rsync.log 2>&1 &
 

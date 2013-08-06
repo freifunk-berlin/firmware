@@ -3,7 +3,7 @@
 . ./config
 
 #MAKE=${MAKE:-nice -n 10 make}
-MAKE=${MAKE:-make -j4}
+MAKE=${MAKE:-make -j5}
 #MAKE=${MAKE:-make V=s}
 #MAKE=${MAKE:-echo}
 
@@ -115,7 +115,6 @@ case $verm in
 esac
 
 PATCHES=""
-RPATCHES=""
 case $verm in
 	trunk)
 		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
@@ -142,12 +141,6 @@ for i in $PATCHES ; do
 	mkdir -p ../$verm/patches
 	cp ../ff-control/patches/$i ../$verm/patches || exit 0
 done
-for i in $RPATCHES ; do
-	pparm='-p1 -R'
-	patch $pparm < ../ff-control/patches/$i || exit 0
-	mkdir -p ../$verm/patches
-	cp ../ff-control/patches/$i ../$verm/patches || exit 0
-done
 rm -rf $(find . | grep \.orig$)
 
 cd ..
@@ -156,7 +149,8 @@ update_git  "git://github.com/freifunk/luci.git" "luci-master"
 echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
 PATCHES=""
-PATCHES="$PATCHES luci-app-olsr-use-admin-mini.patch"
+PATCHES="$PATCHES luci-olsr-controller.patch"
+PATCHES="$PATCHES luci-olsr-model.patch"
 PATCHES="$PATCHES luci-modfreifunk-use-admin-mini.patch"
 PATCHES="$PATCHES luci-modfreifunk-use-admin-mini-status.patch"
 PATCHES="$PATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
@@ -244,9 +238,10 @@ for board in $boards ; do
 	(
 	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && return 0
 	touch "update-build-$verm-$board.lock"
-	echo "Board: $board"
+	pwd=$PWD
+	echo "Board: $pwd/$verm/$board"
 	mkdir -p $verm/$board
-	cd $verm/$board
+	cd $pwd/$verm/$board
 	echo "clean up"
 	rm -f .config
 #	make distclean
@@ -267,22 +262,22 @@ for board in $boards ; do
 	mkdir -p files
 	case $verm in
 		trunk) 
-			echo "rsync --delete -a ../../openwrt-trunk/* ./"
-			rsync --delete -a ../../openwrt-trunk/* ./
-			rsync --delete -a ../../openwrt-trunk/.git ./
+			echo "rsync --delete -a $pwd/openwrt-trunk/* ./"
+			rsync --delete -a $pwd/openwrt-trunk/* ./
+			rsync --delete -a $pwd/openwrt-trunk/.git ./
 			;;
 		*)
-			echo "rsync  --delete -a ../../openwrt-$verm/* ./"
-			rsync --delete -a ../../openwrt-$verm/* ./
-			rsync --delete -a ../../openwrt-$verm/.git ./
+			echo "rsync  --delete -a $pwd/openwrt-$verm/* ./"
+			rsync --delete -a $pwd/openwrt-$verm/* ./
+			rsync --delete -a $pwd/openwrt-$verm/.git ./
 			;;
 	esac
 
-	cp ../../VERSION.txt VERSION.txt
+	cp $pwd/VERSION.txt VERSION.txt
 	echo "OpenWrt Branch: $verm" >> VERSION.txt
 	echo "OpenWrt Board: $board" >> VERSION.txt
 	echo "OpenWrt Build: $vername-$build_number" >> VERSION.txt
-	cat ../../ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
+	cat $pwd/ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
 	cp VERSION.txt package/base-files/files/etc
 	echo "timestamp: $timestamp url: http://$servername/$verm/$ver/$board host: $(hostname)">> package/base-files/files/etc/banner
 	options_ver=""
@@ -290,16 +285,16 @@ for board in $boards ; do
 
 	echo "Generate feeds.conf"
 	>feeds.conf
-	echo "src-link packages ../../../$packages_dir" >> feeds.conf
-	echo "src-link routing ../../../routing" >> feeds.conf
-	echo "src-link packagespberg ../../../packages-pberg" >> feeds.conf
-	echo "src-link piratenluci ../../../piratenfreifunk-packages" >> feeds.conf
-	echo "src-link luci ../../../luci-master" >> feeds.conf
-	#echo "src-link wgaugsburg ../../../wgaugsburg/packages" >> feeds.conf
-	echo "src-link yaffmapagent ../../../yaffmap-agent" >> feeds.conf
-	echo "src-link bulletin ../../../luci-app-bulletin-node" >> feeds.conf
-	#echo "src-link forkeddaapd ../../../forked-daapd" >> feeds.conf
-	echo "src-link fffeeds ../../../feeds" >> feeds.conf
+	echo "src-link packages $pwd/$packages_dir" >> feeds.conf
+	echo "src-link routing $pwd/routing" >> feeds.conf
+	echo "src-link packagespberg $pwd/packages-pberg" >> feeds.conf
+	echo "src-link piratenluci $pwd/piratenfreifunk-packages" >> feeds.conf
+	echo "src-link luci $pwd/luci-master" >> feeds.conf
+	#echo "src-link wgaugsburg $pwd/wgaugsburg/packages" >> feeds.conf
+	echo "src-link yaffmapagent $pwd/yaffmap-agent" >> feeds.conf
+	echo "src-link bulletin $pwd/luci-app-bulletin-node" >> feeds.conf
+	#echo "src-link forkeddaapd $pwd/forked-daapd" >> feeds.conf
+	echo "src-link fffeeds $pwd/feeds" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
 	echo "openwrt feeds install"
@@ -329,39 +324,33 @@ for board in $boards ; do
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 	esac
+	case $board in
+		mr-mips)
+			PATCHES="$PATCHES target-mr-mips.patch"
+			;;
+	esac
 	PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-system.patch"
 	for i in $PATCHES ; do
 		pparm='-p1'
 		echo "Patch: $i"
-		patch $pparm < ../../ff-control/patches/$i || exit 0
-		mkdir -p ../patches
-		cp ../../ff-control/patches/$i ../patches || exit 0
-	done
-	PATCHES=""
-	for i in $PATCHES ; do
-		pparm='-p2 -R'
-		# get patch with:
-		# wget --no-check-certificate -O 'ff-control/patches/packages-r27821.patch' 'http://dev.openwrt.org/changeset/27821/branches/backfire/package?format=diff&new=27821'
-		# wget --no-check-certificate -O 'ff-control/patches/packages-r27815.patch' 'http://dev.openwrt.org/changeset/27815/branches/backfire/package?format=diff&new=27815'
-		echo "Patch: $i"
-		patch $pparm < ../../ff-control/patches/$i || exit 0
-		mkdir -p ../patches
-		cp ../../ff-control/patches/$i ../patches || exit 0
+		patch $pparm < $pwd/ff-control/patches/$i || exit 0
+		mkdir -p $pwd/$verm/patches
+		cp $pwd/ff-control/patches/$i $pwd/$verm/patches || exit 0
 	done
 	rm -rf $(find package | grep \.orig$)
 	rm -rf $(find target | grep \.orig$)
 	
-	mkdir -p ../../dl
-	[ -h dl ] || ln -s ../../dl dl
-	cp -a ../../ff-control/patches/regulatory.bin dl/regulatory.bin
+	mkdir -p $pwd/dl
+	[ -h dl ] || ln -s $pwd/dl dl
+	cp -a $pwd/ff-control/patches/regulatory.bin dl/regulatory.bin
 	build_fail=0
 
 	case $board in
 		atheros)
 			#rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
+			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
+			cp  $pwd/ff-control/configs/$verm-$board.config .config
 			genconfig "$options_ver"
 			make oldconfig
 			#Disable Audio,PCI and USB#################################
@@ -373,8 +362,8 @@ for board in $boards ; do
 		;;
 		*)
 			#rm -f bin/*/*
-			echo "copy config ../../ff-control/configs/$verm-$board.config .config"
-			cp  ../../ff-control/configs/$verm-$board.config .config
+			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
+			cp  $pwd/ff-control/configs/$verm-$board.config .config
 			echo "$options_ver"
 			genconfig "$options_ver"
 			make oldconfig
@@ -382,10 +371,10 @@ for board in $boards ; do
 		;;
 	esac
 	if [ $build_fail -eq 1 ] ; then
-		rm ../../update-build-$verm-$board.lock
+		rm $pwd/update-build-$verm-$board.lock
 		exit 1
 	fi
-	cd ../../
+	cd $pwd
 	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1
 	#rm -rf $wwwdir/$verm/$ver/patches

@@ -321,6 +321,7 @@ for board in $boards ; do
 			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 			PATCHES="$PATCHES package-cyassl-2.6.0.patch"
 			PATCHES="$PATCHES target-au1000-ib-support.patch"
+			PATCHES="$PATCHES package-6relayd.patch"
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 	esac

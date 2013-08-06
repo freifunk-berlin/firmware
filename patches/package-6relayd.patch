@@ -1,11 +1,11 @@
 diff --git a/package/6relayd/patches/00-disable-route-check.patch b/package/6relayd/patches/00-disable-route-check.patch
 new file mode 100644
-index 0000000..81de4d5
+index 0000000..1cc2996
 --- /dev/null
 +++ b/package/6relayd/patches/00-disable-route-check.patch
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,22 @@
 +diff --git a/src/router.c b/src/router.c
-+index ad64a2a..ca646c1 100644
++index ad64a2a..a236dc6 100644
 +--- a/src/router.c
 ++++ b/src/router.c
 +@@ -210,7 +210,7 @@ static bool parse_routes(struct relayd_ipaddr *n, ssize_t len)
@@ -17,3 +17,12 @@ index 0000000..81de4d5
 + 	struct relayd_ipaddr p = {IN6ADDR_ANY_INIT, 0, 0, 0};
 + 	while (fgets(line, sizeof(line), fp_route)) {
 + 		uint32_t rflags;
++@@ -322,7 +322,7 @@ static void send_router_advert(struct relayd_event *event)
++ 			p = &adv.prefix[cnt++];
++ 		}
++ 
++-		if ((addr->addr.s6_addr[0] & 0xfe) != 0xfc && addr->preferred > 0)
+++//		if ((addr->addr.s6_addr[0] & 0xfe) != 0xfc && addr->preferred > 0)
++ 			have_public = true;
++ 
++ 		memcpy(&p->nd_opt_pi_prefix, &addr->addr, 8);

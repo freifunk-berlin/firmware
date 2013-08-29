@@ -15,9 +15,11 @@ usage:
 	#ff-control/scripts/update-build.sh
 	go sleeping ;-)
 	rebuild only one package for all boards do
-	#ff-control/scripts/update-build-pkg-backfire.sh packetname
+	#ff-control/scripts/update-build-pkg.sh packetname
 	e.g.
-	#ff-control/scripts/update-build-pkg-backfire.sh olsrd
+	#ff-control/scripts/update-build-pkg.sh olsrd
+	build firmware images with Image Builder
+	#ff-control/scripts/update-wib.sh
 	
 customize:
 	#cd ff-build
@@ -29,7 +31,7 @@ customize:
 	or
 	#nano config
 	the you can build your package or a new router image
-	#ff-control/scripts/update-build-pkg-backfire.sh my-package
+	#ff-control/scripts/update-build-pkg.sh my-package
 	or
 	#ff-control/scripts/update-build.sh
 

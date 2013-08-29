@@ -124,6 +124,7 @@ case $verm in
 	attitude_adjustment)
 		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
 		PATCHES="$PATCHES package-openvpn-use-busybox-ip.patch"
+		PATCHES="$PATCHES package-openvpn-comp_lzo-value.patch"
 		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
 		PATCHES="$PATCHES package-pthsem-chk-linux-3.patch"
 		PATCHES="$PATCHES package-nagios-plugins.patch"
@@ -172,6 +173,7 @@ PATCHES="$PATCHES luci-freifunk-map.patch"
 PATCHES="$PATCHES luci-admin-mini-install-full.patch"
 PATCHES="$PATCHES luci-admin-mini-wifi.patch"
 PATCHES="$PATCHES luci-freifunk-policyrouting.patch"
+PATCHES="$PATCHES luci-app-freifunk-policyrouting.patch"
 for i in $PATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -359,7 +361,6 @@ for board in $boards ; do
 			genconfig "CONFIG_PCI_SUPPORT=n"
 			genconfig "CONFIG_USB_SUPPORT=n"
 			${MAKE} world || build_fail=1
-			rsync_web
 		;;
 		*)
 			#rm -f bin/*/*

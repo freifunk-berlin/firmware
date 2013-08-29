@@ -136,7 +136,8 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 			| grep -v WP543 | grep -v WPE72 | grep -v NBG_460N_550N_550NH \
 			| grep -v JA76PF | grep -v EWDORIN | grep -v ALL0305 \
 			| grep -v ALFAAP96 | grep -v ^AP*)
-			#profiles="TLMR3020"
+			#profiles="TLWDR4300"
+			#profiles="TLMR3020 TLWDR4300"
 			;;
 		*)
 			profiles=$(make -C "$meshkit"/"$ib_name" info | grep :$ | tail -n +2 | cut -d ":" -f 1)
@@ -227,7 +228,6 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 	rm -f $ib_tmp/$board/*/*/openwrt-*-vmlinux*
 	rm -f $ib_tmp/$board/*/*/openwrt-*-uImage*
 	rm -f $ib_tmp/$board/*/*/openwrt-*-kernel*
-	#cp -a "$DIR"/"$verm"/"$board"/bin/*/$ib_name.tar.bz2
 	rsync -a --delete $ib_tmp/$board $wwwdir/$verm/$ver
 	rsync -a "$DIR"/"$verm"/"$board"/bin/*/$ib_name.tar.bz2 $wwwdir/$verm/$ver/
 	rm -rf $ib_tmp/$board

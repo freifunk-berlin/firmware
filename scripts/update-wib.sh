@@ -88,7 +88,7 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 	p=$limit
 
 	if [ -f $meshkit/update-wib-$verm-$board-first.lock ] ; then
-		rand_sleep=$(($(hexdump -n1 -e\"%u\" /dev/urandom) / 3))
+		rand_sleep=$(($(hexdump -n1 -e\"%u\" /dev/urandom) / 3)) #syntax foo "
 	else
 		rand_sleep=1
 		touch $meshkit/update-wib-$verm-$board-first.lock
@@ -100,12 +100,15 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 	done
 	echo "update-wib-$verm-$board START PIDS: $p"
 
-	if [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_generic-for-suse-i586.tar.bz2 ] ; then
-		ib_name=OpenWrt-ImageBuilder-"$board"_generic-for-suse-i586
-	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"-for-suse-i586.tar.bz2 ] ; then
-		ib_name=OpenWrt-ImageBuilder-"$board"-for-suse-i586
-	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_au1500-for-suse-i586.tar.bz2 ] ; then
-		ib_name=OpenWrt-ImageBuilder-"$board"_au1500-for-suse-i586
+	target_arch=$(gcc -dumpmachine | cut -d '-' -f 1)
+	target_host=$(gcc -dumpmachine | cut -d '-' -f 2)
+	target="$target_host-$target_arch"
+	if [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_generic-for-$target.tar.bz2 ] ; then
+		ib_name=OpenWrt-ImageBuilder-"$board"_generic-for-$target
+	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"-for-$target.tar.bz2 ] ; then
+		ib_name=OpenWrt-ImageBuilder-"$board"-for-$target
+	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_au1500-for-$target.tar.bz2 ] ; then
+		ib_name=OpenWrt-ImageBuilder-"$board"_au1500-for-$target
 	else
 		echo "No IB tar for $board found"
 		exit 0
@@ -137,7 +140,8 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 			| grep -v JA76PF | grep -v EWDORIN | grep -v ALL0305 \
 			| grep -v ALFAAP96 | grep -v ^AP*)
 			#profiles="TLWDR4300"
-			#profiles="TLMR3020 TLWDR4300"
+			#profiles="TLMR3020"
+			#profiles="TLMR3020 TLWDR4300 TLWR1043"
 			;;
 		*)
 			profiles=$(make -C "$meshkit"/"$ib_name" info | grep :$ | tail -n +2 | cut -d ":" -f 1)

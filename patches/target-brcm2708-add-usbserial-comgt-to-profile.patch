@@ -1,0 +1,13 @@
+diff --git a/target/linux/brcm2708/Makefile b/target/linux/brcm2708/Makefile
+index 91207e9..fb3e40b 100644
+--- a/target/linux/brcm2708/Makefile
++++ b/target/linux/brcm2708/Makefile
+@@ -16,7 +16,7 @@ MAINTAINER:=Ian Ridge <ianridge[at]gmail.com>
+ LINUX_VERSION:=3.3.8
+ 
+ include $(INCLUDE_DIR)/target.mk
+-DEFAULT_PACKAGES += brcm2708-gpu-fw kmod-usb-hid kmod-sound-core kmod-sound-arm-bcm2835
++DEFAULT_PACKAGES += brcm2708-gpu-fw kmod-usb-hid kmod-sound-core kmod-sound-arm-bcm2835 kmod-usb-serial kmod-usb-serial-option comgt
+ 
+ define Target/Description
+ 	Build firmware image for Broadcom BCM2708/BCM2835 SoC devices.

@@ -3,9 +3,9 @@
 . ./config
 
 #MAKE=${MAKE:-nice -n 10 make}
-MAKE=${MAKE:-make -j5}
+#MAKE=${MAKE:-make -j5}
 #MAKE=${MAKE:-make V=s}
-#MAKE=${MAKE:-echo}
+MAKE=${MAKE:-echo}
 
 [ -z $verm ] && exit 0
 [ -z $ver ] && exit 0
@@ -51,16 +51,18 @@ revision=""
 case $verm in
 	trunk)
 		update_git "git://github.com/freifunk/openwrt.git" "openwrt-trunk" "$openwrt_revision"
+		echo "openwrt Revision: $revision"  >>VERSION.txt
 	;;
 	*)
 		update_git "git://github.com/freifunk/$verm.git" "openwrt-$verm" "$openwrt_revision"
+		echo "openwrt Revision: $revision"  >>VERSION.txt
 	;;
 esac
 
 if [ -f build ] ; then
-    build_number="$(cat build)"
+	build_number="$(cat build)"
 else
-    build_number=0
+	build_number=0
 fi
 build_number=$((build_number+1))
 echo $build_number > build
@@ -69,27 +71,28 @@ timestamp=`date "+%F_%H-%M"`
 echo $timestamp >timestamp
 date +"%Y/%m/%d %H:%M">VERSION.txt
 echo "Build Nr.: $build_number on $(hostname)" >>VERSION.txt
-echo "openwrt Revision: $revision"  >>VERSION.txt
+echo "openwrt Revision: $revision" >>VERSION.txt
 
 [ -d feeds ] || mkdir feeds
 cd feeds
 cd ..
 [ -d $verm/patches ] || mkdir -p $verm/patches
 rm -f $verm/patches/*.patch
-update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
+#update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
 echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
+#update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
 echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
+#update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
 echo "packages-pberg Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
+#update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
 echo "piratenfreifunk-packages Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/openwrt-routing/packages.git" "routing"
+#update_git "git://github.com/openwrt-routing/packages.git" "routing"
 echo "routing packages Revision: $revision"  >>VERSION.txt
 
 PATCHES=""
 PATCHES="$PATCHES routing-olsrd.init_6and4.patch"
 PATCHES="$PATCHES routing-olsrd.config-rm-wlan.patch"
+PATCHES=""
 cd routing
 for i in $PATCHES ; do
 	pparm='-p1'
@@ -103,13 +106,13 @@ cd ..
 
 case $verm in
 	trunk)
-		update_git  "git://github.com/freifunk/packages.git" "packages"
-		echo "packages Revision: $revision"  >>VERSION.txt
+		#update_git  "git://github.com/freifunk/packages.git" "packages"
+		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages"
 	;;
 	*)
-		update_git  "git://github.com/freifunk/packages_$ver" "packages_$ver" >>VERSION.txt
-		echo "packages Revision: $revision"  >>VERSION.txt
+		#update_git  "git://github.com/freifunk/packages_$ver" "packages_$ver" >>VERSION.txt
+		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages_$ver"
 	;;
 esac
@@ -119,7 +122,6 @@ case $verm in
 	trunk)
 		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
 		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
-		#RPATCHES="$RPATCHES packages-r31282.patch"
 		;;
 	attitude_adjustment)
 		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
@@ -129,11 +131,11 @@ case $verm in
 		PATCHES="$PATCHES package-pthsem-chk-linux-3.patch"
 		PATCHES="$PATCHES package-nagios-plugins.patch"
 		PATCHES="$PATCHES package-net-snmp.patch"
-		#PATCHES="$PATCHES packages-r31282.patch"
 		PATCHES="$PATCHES package-6scripts.patch"
 		PATCHES="$PATCHES package-argp-standalone.patch"
 		;;
 esac
+PATCHES=""
 
 cd $packages_dir
 for i in $PATCHES ; do
@@ -146,7 +148,7 @@ rm -rf $(find . | grep \.orig$)
 
 cd ..
 
-update_git  "git://github.com/freifunk/luci.git" "luci-master"
+#update_git "git://github.com/freifunk/luci.git" "luci-master"
 echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
 PATCHES=""
@@ -175,6 +177,7 @@ PATCHES="$PATCHES luci-freifunk-policyrouting.patch"
 PATCHES="$PATCHES luci-app-freifunk-policyrouting.patch"
 PATCHES="$PATCHES luci-freifunk-gwcheck.patch"
 PATCHES="$PATCHES luci-po-only-en-de.patch"
+PATCHES=""
 for i in $PATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -280,7 +283,7 @@ for board in $boards ; do
 	echo "OpenWrt Branch: $verm" >> VERSION.txt
 	echo "OpenWrt Board: $board" >> VERSION.txt
 	echo "OpenWrt Build: $vername-$build_number" >> VERSION.txt
-	cat $pwd/ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
+	#cat $pwd/ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
 	cp VERSION.txt package/base-files/files/etc
 	echo "timestamp: $timestamp url: http://$servername/$verm/$ver/$board host: $(hostname)">> package/base-files/files/etc/banner
 	options_ver=""
@@ -332,12 +335,8 @@ for board in $boards ; do
 			PATCHES="$PATCHES target-brcm2708-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-ixp4xx-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-x86-add-usbserial-comgt-to-profile.patch"
+			PATCHES="$PATCHES target-ar71xx-add-ATH79_MACH_RB_2011US.patch"
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
-			;;
-	esac
-	case $board in
-		mr-mips)
-			PATCHES="$PATCHES target-mr-mips.patch"
 			;;
 	esac
 	PATCHES="$PATCHES busybox-iproute2.patch"
@@ -359,7 +358,6 @@ for board in $boards ; do
 
 	case $board in
 		atheros)
-			#rm -f bin/*/*
 			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
 			cp  $pwd/ff-control/configs/$verm-$board.config .config
 			genconfig "$options_ver"
@@ -371,7 +369,6 @@ for board in $boards ; do
 			${MAKE} world || build_fail=1
 		;;
 		*)
-			#rm -f bin/*/*
 			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
 			cp  $pwd/ff-control/configs/$verm-$board.config .config
 			echo "$options_ver"
@@ -387,22 +384,5 @@ for board in $boards ; do
 	cd $pwd
 	rm update-build-$verm-$board.lock
 	) >update-build-$verm-$board.log 2>&1
-	#rm -rf $wwwdir/$verm/$ver/patches
-	#cp -a $verm/patches $wwwdir/$verm/$ver/
-	#cp -a $verm/patches $wwwdir/$verm/$ver-timestamp/$timestamp/
-	#cp update-build-$verm-$board.log $wwwdir/$verm/$ver-timestamp/$timestamp/$board/update-build-$verm-$board.log.txt
-	#cp update-build-$verm-$board.log $wwwdir/$verm/$ver/$board/update-build-$verm-$board.log.txt
-	#(
-		#rsync -av --delete "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
-		#ssh $user@$servername "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/"
-	#	if [ "$ca_user" != "" -a "$ca_pw" != "" ] ; then
-	#		curl -u "$ca_user:$ca_pw" -d status="$tags New Build #$verm $ver-pberg-$build_number for #$board Boards http://$servername/$verm/$ver/$board" http://identi.ca/api/statuses/update.xml >/dev/null
-	#	fi
-	#)&
-	#&
-	#pid=$!
-	#echo $pid > update-build-$verm-$board.pid
 done
-#echo "rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp $user@$servername:$wwwdir/$verm/$ver-timestamp/"
-#echo "ssh $user@$servername 'rsync -av $wwwdir/$verm/$ver-timestamp/$timestamp/ $wwwdir/$verm/$ver/'"
 

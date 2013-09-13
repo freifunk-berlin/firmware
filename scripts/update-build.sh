@@ -3,9 +3,9 @@
 . ./config
 
 #MAKE=${MAKE:-nice -n 10 make}
-#MAKE=${MAKE:-make -j5}
+MAKE=${MAKE:-make -j5}
 #MAKE=${MAKE:-make V=s}
-MAKE=${MAKE:-echo}
+#MAKE=${MAKE:-echo}
 
 [ -z $verm ] && exit 0
 [ -z $ver ] && exit 0
@@ -359,7 +359,7 @@ for board in $boards ; do
 	case $board in
 		atheros)
 			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
-			cp  $pwd/ff-control/configs/$verm-$board.config .config
+			cp $pwd/ff-control/configs/$verm-$board.config .config
 			genconfig "$options_ver"
 			make oldconfig
 			#Disable Audio,PCI and USB#################################
@@ -368,9 +368,25 @@ for board in $boards ; do
 			genconfig "CONFIG_USB_SUPPORT=n"
 			${MAKE} world || build_fail=1
 		;;
+		ar71xx_nand)
+			#make initramfs
+			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
+			cp $pwd/ff-control/configs/$verm-$board-initramfs.config .config
+			echo "$options_ver"
+			genconfig "$options_ver"
+			make oldconfig
+			${MAKE} world || build_fail=1
+			#make nand rootfs
+			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
+			cp $pwd/ff-control/configs/$verm-$board.config .config
+			echo "$options_ver"
+			genconfig "$options_ver"
+			make oldconfig
+			${MAKE} world || build_fail=1
+		;;
 		*)
 			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
-			cp  $pwd/ff-control/configs/$verm-$board.config .config
+			cp $pwd/ff-control/configs/$verm-$board.config .config
 			echo "$options_ver"
 			genconfig "$options_ver"
 			make oldconfig

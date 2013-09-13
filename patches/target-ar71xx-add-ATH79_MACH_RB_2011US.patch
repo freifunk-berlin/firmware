@@ -1,3 +1,31 @@
+diff --git a/target/linux/ar71xx/base-files/etc/uci-defaults/network b/target/linux/ar71xx/base-files/etc/uci-defaults/network
+index 7fa219d..7eddd7f 100755
+--- a/target/linux/ar71xx/base-files/etc/uci-defaults/network
++++ b/target/linux/ar71xx/base-files/etc/uci-defaults/network
+@@ -24,7 +24,8 @@ ubnt-unifi-outdoor)
+ 
+ db120 |\
+ rb-2011l | \
+-rb-2011uas-2hnd)
++rb-2011uas-2hnd | \
++rb-2011uas)
+ 	ucidef_set_interfaces_lan_wan "eth0.1 eth1" "eth0.2"
+ 	ucidef_add_switch "eth0" "1" "1"
+ 	ucidef_add_switch_vlan "eth0" "1" "0t 2 3 4 5"
+diff --git a/target/linux/ar71xx/base-files/lib/ar71xx.sh b/target/linux/ar71xx/base-files/lib/ar71xx.sh
+index 2bc8194..d78aa9e 100755
+--- a/target/linux/ar71xx/base-files/lib/ar71xx.sh
++++ b/target/linux/ar71xx/base-files/lib/ar71xx.sh
+@@ -303,6 +303,9 @@ ar71xx_board_detect() {
+ 	*"RouterBOARD 2011UAS-2HnD")
+ 		name="rb-2011uas-2hnd"
+ 		;;
++	*"RouterBOARD 2011UAS")
++		name="rb-2011uas"
++		;;
+ 	*"Rocket M")
+ 		name="rocket-m"
+ 		;;
 diff --git a/target/linux/ar71xx/files/arch/mips/ath79/mach-rb2011.c b/target/linux/ar71xx/files/arch/mips/ath79/mach-rb2011.c
 index 933a451..9476e52 100644
 --- a/target/linux/ar71xx/files/arch/mips/ath79/mach-rb2011.c

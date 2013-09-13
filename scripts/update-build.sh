@@ -78,21 +78,20 @@ cd feeds
 cd ..
 [ -d $verm/patches ] || mkdir -p $verm/patches
 rm -f $verm/patches/*.patch
-#update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
+update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
 echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
-#update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
+update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
 echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
-#update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
+update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
 echo "packages-pberg Revision: $revision"  >>VERSION.txt
-#update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
+update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
 echo "piratenfreifunk-packages Revision: $revision"  >>VERSION.txt
-#update_git "git://github.com/openwrt-routing/packages.git" "routing"
+update_git "git://github.com/openwrt-routing/packages.git" "routing"
 echo "routing packages Revision: $revision"  >>VERSION.txt
 
 PATCHES=""
 PATCHES="$PATCHES routing-olsrd.init_6and4.patch"
 PATCHES="$PATCHES routing-olsrd.config-rm-wlan.patch"
-PATCHES=""
 cd routing
 for i in $PATCHES ; do
 	pparm='-p1'
@@ -106,12 +105,12 @@ cd ..
 
 case $verm in
 	trunk)
-		#update_git  "git://github.com/freifunk/packages.git" "packages"
+		update_git  "git://github.com/freifunk/packages.git" "packages"
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages"
 	;;
 	*)
-		#update_git  "git://github.com/freifunk/packages_$ver" "packages_$ver" >>VERSION.txt
+		update_git  "git://github.com/freifunk/packages_$ver" "packages_$ver" >>VERSION.txt
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages_$ver"
 	;;
@@ -125,7 +124,7 @@ case $verm in
 		;;
 	attitude_adjustment)
 		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
-		PATCHES="$PATCHES package-openvpn-use-busybox-ip.patch"
+		PATCHES="$PATCHES package-openvpn-backport-2.3.patch"
 		PATCHES="$PATCHES package-openvpn-comp_lzo-value.patch"
 		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
 		PATCHES="$PATCHES package-pthsem-chk-linux-3.patch"
@@ -135,7 +134,6 @@ case $verm in
 		PATCHES="$PATCHES package-argp-standalone.patch"
 		;;
 esac
-PATCHES=""
 
 cd $packages_dir
 for i in $PATCHES ; do
@@ -148,7 +146,7 @@ rm -rf $(find . | grep \.orig$)
 
 cd ..
 
-#update_git "git://github.com/freifunk/luci.git" "luci-master"
+update_git "git://github.com/freifunk/luci.git" "luci-master"
 echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
 PATCHES=""
@@ -177,7 +175,6 @@ PATCHES="$PATCHES luci-freifunk-policyrouting.patch"
 PATCHES="$PATCHES luci-app-freifunk-policyrouting.patch"
 PATCHES="$PATCHES luci-freifunk-gwcheck.patch"
 PATCHES="$PATCHES luci-po-only-en-de.patch"
-PATCHES=""
 for i in $PATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -255,7 +252,7 @@ for board in $boards ; do
 #	rm -rf tmp
 #	rm -rf feeds/*
 #	rm -rf package/feeds/*
-#	rm -rf bin
+	rm -rf bin
 #	rm -rf build_dir/*/luci*
 #	rm -rf build_dir/*/libiwinfo*
 #	rm -rf build_dir/*/collectd*

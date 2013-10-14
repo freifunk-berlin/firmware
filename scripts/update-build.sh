@@ -3,8 +3,8 @@
 . ./config
 
 #MAKE=${MAKE:-nice -n 10 make}
-MAKE=${MAKE:-make -j5}
-#MAKE=${MAKE:-make V=s}
+#MAKE=${MAKE:-make -j5}
+MAKE=${MAKE:-make V=s}
 #MAKE=${MAKE:-echo}
 
 [ -z $verm ] && exit 0
@@ -53,6 +53,10 @@ case $verm in
 		update_git "git://github.com/freifunk/openwrt.git" "openwrt-trunk" "$openwrt_revision"
 		echo "openwrt Revision: $revision"  >>VERSION.txt
 	;;
+	barrier_breaker)
+		update_git "git://github.com/freifunk/openwrt.git" "openwrt-$verm" "$openwrt_revision"
+		echo "openwrt Revision: $revision"  >>VERSION.txt
+	;;
 	*)
 		update_git "git://github.com/freifunk/$verm.git" "openwrt-$verm" "$openwrt_revision"
 		echo "openwrt Revision: $revision"  >>VERSION.txt
@@ -92,6 +96,7 @@ echo "routing packages Revision: $revision"  >>VERSION.txt
 PATCHES=""
 PATCHES="$PATCHES routing-olsrd.init_6and4.patch"
 PATCHES="$PATCHES routing-olsrd.config-rm-wlan.patch"
+PATCHES="$PATCHES routing-olsrd-rm-hotplug.patch"
 cd routing
 for i in $PATCHES ; do
 	pparm='-p1'
@@ -109,6 +114,11 @@ case $verm in
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages"
 	;;
+	barrier_breaker)
+		update_git  "git://git.openwrt.org/packages.git" "packages"
+		echo "packages Revision: $revision" >>VERSION.txt
+		packages_dir="packages"
+	;;
 	*)
 		update_git  "git://github.com/freifunk/packages_$ver" "packages_$ver" >>VERSION.txt
 		echo "packages Revision: $revision" >>VERSION.txt
@@ -119,6 +129,10 @@ esac
 PATCHES=""
 case $verm in
 	trunk)
+		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
+		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
+		;;
+	barrier_breaker)
 		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
 		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
 		;;
@@ -166,7 +180,6 @@ PATCHES="$PATCHES luci-modfreifunk-migrate.patch"
 PATCHES="$PATCHES luci-theme-bootstrap.patch"
 PATCHES="$PATCHES luci-theme-bootstrap-header.patch"
 PATCHES="$PATCHES luci-olsr-view.patch"
-PATCHES="$PATCHES luci-olsr-service-view.patch"
 PATCHES="$PATCHES luci-admin-mini-dhcp.patch"
 PATCHES="$PATCHES luci-freifunk-map.patch"
 PATCHES="$PATCHES luci-admin-mini-install-full.patch"
@@ -175,6 +188,7 @@ PATCHES="$PATCHES luci-freifunk-policyrouting.patch"
 PATCHES="$PATCHES luci-app-freifunk-policyrouting.patch"
 PATCHES="$PATCHES luci-freifunk-gwcheck.patch"
 PATCHES="$PATCHES luci-po-only-en-de.patch"
+PATCHES="$PATCHES luci-freifunk-common-olsr-watchdog.patch"
 for i in $PATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -252,7 +266,7 @@ for board in $boards ; do
 #	rm -rf tmp
 #	rm -rf feeds/*
 #	rm -rf package/feeds/*
-	rm -rf bin
+#	rm -rf bin
 #	rm -rf build_dir/*/luci*
 #	rm -rf build_dir/*/libiwinfo*
 #	rm -rf build_dir/*/collectd*
@@ -305,9 +319,15 @@ for board in $boards ; do
 	PATCHES=""
 	case $verm in
 		trunk)
-			PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
-			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
+			#PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
+			#PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
 			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
+			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
+			;;
+		barrier_breaker)
+			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch"
+			PATCHES="$PATCHES target-mpc85xx-profile-wpad.patch"
+			PATCHES="$PATCHES target-ib-ppc.patch"
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		attitude_adjustment)
@@ -336,7 +356,7 @@ for board in $boards ; do
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 	esac
-	PATCHES="$PATCHES busybox-iproute2.patch"
+	#PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-system.patch"
 	for i in $PATCHES ; do
 		pparm='-p1'

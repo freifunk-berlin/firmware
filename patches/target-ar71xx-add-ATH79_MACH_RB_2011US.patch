@@ -1,36 +1,40 @@
 diff --git a/target/linux/ar71xx/base-files/etc/uci-defaults/network b/target/linux/ar71xx/base-files/etc/uci-defaults/network
-index 7fa219d..7eddd7f 100755
+index 7fa219d..f54a8a4 100755
 --- a/target/linux/ar71xx/base-files/etc/uci-defaults/network
 +++ b/target/linux/ar71xx/base-files/etc/uci-defaults/network
-@@ -24,7 +24,8 @@ ubnt-unifi-outdoor)
+@@ -24,7 +24,9 @@ ubnt-unifi-outdoor)
  
  db120 |\
  rb-2011l | \
 -rb-2011uas-2hnd)
 +rb-2011uas-2hnd | \
-+rb-2011uas)
++rb-2011uas | \
++rb-2011uias-in)
  	ucidef_set_interfaces_lan_wan "eth0.1 eth1" "eth0.2"
  	ucidef_add_switch "eth0" "1" "1"
  	ucidef_add_switch_vlan "eth0" "1" "0t 2 3 4 5"
 diff --git a/target/linux/ar71xx/base-files/lib/ar71xx.sh b/target/linux/ar71xx/base-files/lib/ar71xx.sh
-index 2bc8194..d78aa9e 100755
+index fe7c910..a88db8e 100755
 --- a/target/linux/ar71xx/base-files/lib/ar71xx.sh
 +++ b/target/linux/ar71xx/base-files/lib/ar71xx.sh
-@@ -303,6 +303,9 @@ ar71xx_board_detect() {
+@@ -303,6 +303,12 @@ ar71xx_board_detect() {
  	*"RouterBOARD 2011UAS-2HnD")
  		name="rb-2011uas-2hnd"
  		;;
 +	*"RouterBOARD 2011UAS")
 +		name="rb-2011uas"
 +		;;
++	*"RouterBOARD 2011UiAS-IN")
++		name="rb-2011uias-in"
++		;;
  	*"Rocket M")
  		name="rocket-m"
  		;;
 diff --git a/target/linux/ar71xx/files/arch/mips/ath79/mach-rb2011.c b/target/linux/ar71xx/files/arch/mips/ath79/mach-rb2011.c
-index 933a451..9476e52 100644
+index 933a451..c7c664f 100644
 --- a/target/linux/ar71xx/files/arch/mips/ath79/mach-rb2011.c
 +++ b/target/linux/ar71xx/files/arch/mips/ath79/mach-rb2011.c
-@@ -245,6 +245,14 @@ static void __init rb2011_setup(void)
+@@ -245,6 +245,17 @@ static void __init rb2011_setup(void)
  MIPS_MACHINE(ATH79_MACH_RB_2011L, "2011L", "MikroTik RouterBOARD 2011L",
  	     rb2011_setup);
  
@@ -42,26 +46,30 @@ index 933a451..9476e52 100644
 +MIPS_MACHINE(ATH79_MACH_RB_2011US, "2011US", "MikroTik RouterBOARD 2011UAS",
 +	     rb2011us_setup);
 +
++MIPS_MACHINE(ATH79_MACH_RB_2011US_R5, "2011US_R5", "MikroTik RouterBOARD 2011UiAS-IN",
++	     rb2011us_setup);
++
  static void __init rb2011g_setup(void)
  {
  	rb2011_setup();
 diff --git a/target/linux/ar71xx/patches-3.3/610-MIPS-ath79-openwrt-machines.patch b/target/linux/ar71xx/patches-3.3/610-MIPS-ath79-openwrt-machines.patch
-index 0230908..7e0c9ad 100644
+index 0230908..be9949f 100644
 --- a/target/linux/ar71xx/patches-3.3/610-MIPS-ath79-openwrt-machines.patch
 +++ b/target/linux/ar71xx/patches-3.3/610-MIPS-ath79-openwrt-machines.patch
 @@ -1,6 +1,6 @@
  --- a/arch/mips/ath79/machtypes.h
  +++ b/arch/mips/ath79/machtypes.h
 -@@ -16,18 +16,102 @@
-+@@ -16,18 +16,103 @@
++@@ -16,18 +16,104 @@
   
   enum ath79_mach_type {
   	ATH79_MACH_GENERIC = 0,
-@@ -51,6 +51,7 @@
+@@ -51,6 +51,8 @@
  +	ATH79_MACH_RB_751,		/* MikroTik RouterBOARD 751 */
  +	ATH79_MACH_RB_751G,		/* Mikrotik RouterBOARD 751G */
  +	ATH79_MACH_RB_2011G,		/* Mikrotik RouterBOARD 2011UAS-2HnD */
 ++	ATH79_MACH_RB_2011US,		/* Mikrotik RouterBOARD 2011UAS */
+++	ATH79_MACH_RB_2011US_R5,	/* Mikrotik RouterBOARD 2011UiAS-IN */
  +	ATH79_MACH_RB_2011L,		/* Mikrotik RouterBOARD 2011L */
  +	ATH79_MACH_RW2458N,		/* Redwave RW2458N */
  +	ATH79_MACH_TEW_632BRP,		/* TRENDnet TEW-632BRP */

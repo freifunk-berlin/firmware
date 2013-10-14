@@ -54,7 +54,7 @@ for board in $boards ; do
 	make $pkgpath/install V=99 && \
 	make package/index && \
 	mkdir -p $wwwdir/$verm/$ver/$board/packages && \
-	rsync -lptgoD bin/*/packages/* $wwwdir/$verm/$ver/$board/packages
+	rsync -lptgoDv bin/*/packages/* $wwwdir/$verm/$ver/$board/packages
 	cd ../../
 	rm update-build-$verm-$board.lock
 	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1 &

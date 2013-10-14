@@ -1,5 +1,5 @@
 diff --git a/contrib/package/freifunk-gwcheck/Makefile b/contrib/package/freifunk-gwcheck/Makefile
-index c339d13..7d6c92f 100644
+index 6c2affe..c2263ff 100644
 --- a/contrib/package/freifunk-gwcheck/Makefile
 +++ b/contrib/package/freifunk-gwcheck/Makefile
 @@ -15,7 +15,7 @@ define Package/freifunk-gwcheck
@@ -12,7 +12,7 @@ index c339d13..7d6c92f 100644
  
  define Package/freifunk-gwcheck/description
 diff --git a/contrib/package/freifunk-gwcheck/files/etc/config/freifunk-gwcheck b/contrib/package/freifunk-gwcheck/files/etc/config/freifunk-gwcheck
-index b174dd6..ff2b224 100644
+index b174dd6..9d60ee2 100644
 --- a/contrib/package/freifunk-gwcheck/files/etc/config/freifunk-gwcheck
 +++ b/contrib/package/freifunk-gwcheck/files/etc/config/freifunk-gwcheck
 @@ -3,3 +3,8 @@ config 'gwcheck' 'hosts'
@@ -22,20 +22,20 @@ index b174dd6..ff2b224 100644
 +
 +# logging values err,info,debug
 +config 'gwcheck' 'script'
-+	option logging 'err'
++	option logging 'info'
 +
 diff --git a/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh b/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
-index 3965ea1..e2e5ddd 100755
+index 6bba7f0..6e65d1a 100755
 --- a/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
 +++ b/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
-@@ -1,37 +1,89 @@
+@@ -1,11 +1,35 @@
  #!/bin/sh
  # Copyright 2013 Manuel Munz <freifunk at somakoma dot de>
 +# Copyright 2013 Patrick Grimm <patrick at lunatiki dot de>
  # Licensed under the GNU General Public License (GPL) v3
  # This script monitors the local internet gateway
  
-+. /lib/functions.sh
+ . /lib/functions.sh
  . /lib/functions/network.sh
  
 +config_load freifunk-gwcheck
@@ -61,24 +61,24 @@ index 3965ea1..e2e5ddd 100755
 +	fi
 +}
 +
-+
- # exit if dyngw_plain is not installed or enabled
- dgwlib=`uci show olsrd |grep dyn_gw_plain |awk {' FS="."; print $1"."$2 '}`
- if [ -n "$dgwlib" ]; then
- 	if [ "$(uci -q get $dgwlib.ignore)" == 1 ]; then
-+		logging 2 "dyngw disable"
- 		exit 1
- 	fi
- else
-+	logging 2 "no config for dyngw"
- 	exit 1
- fi
+ # exit if dyngw_plain is not enabled or RtTable is not (254 or unset)
+ config_load olsrd
  
+@@ -24,25 +48,52 @@ check_dyngw_plain()
+ 
+ exit=1
+ config_foreach check_dyngw_plain LoadPlugin
+-[ "$exit" = "1" ] && exit 1
++if [ "$exit" = "1" ]; then
++	logging 2 "dyngw disable or no RtTable 254"
++	exit 1
++fi
++
 +local has_sgw
 +has_sgw="$(uci -q -P /var/state get olsrd.@olsrd[0].SmartGateway)"
 +local has_sgw_cnf
 +has_sgw_cnf="$(uci -q get olsrd.@olsrd[0].SmartGateway)"
-+
+ 
  #Exit if this script is already running
  pid="$(pidof ff_olsr_test_gw.sh)"
  if [ ${#pid} -gt 5 ]; then
@@ -122,7 +122,7 @@ index 3965ea1..e2e5ddd 100755
  
  testserver="$(for t in $testserver; do echo $t; done | awk 'BEGIN {
  	srand();
-@@ -48,21 +100,96 @@ END {
+@@ -59,21 +110,96 @@ END {
  	}
  }')"
  
@@ -230,7 +230,7 @@ index 3965ea1..e2e5ddd 100755
  }
  
  get_dnsservers() {
-@@ -72,49 +199,141 @@ get_dnsservers() {
+@@ -83,49 +209,141 @@ get_dnsservers() {
  	if [ ! -x /bin/ubus ]; then
  		# ubus not present (versions before Attitude): fallback to get these from /var/state/network.
  		# We always assume that wan is the default route interface here

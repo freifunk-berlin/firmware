@@ -229,7 +229,12 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 	mkdir -p $wwwdir/$verm/$ver
 	rm -f $ib_tmp/$board/*/*/openwrt-*-root*
 	rm -f $ib_tmp/$board/*/*/openwrt-*-vmlinuz*
-	rm -f $ib_tmp/$board/*/*/openwrt-*-vmlinux*
+	case $board in
+		au1000);;
+		*)
+			rm -f $ib_tmp/$board/*/*/openwrt-*-vmlinux*
+		;;
+	esac
 	rm -f $ib_tmp/$board/*/*/openwrt-*-uImage*
 	rm -f $ib_tmp/$board/*/*/openwrt-*-kernel*
 	rsync -a --delete $ib_tmp/$board $wwwdir/$verm/$ver
@@ -248,14 +253,15 @@ done
 	sleep 10
 	limit=1
 	p=$limit
+	echo $p
 	while [ $p -ge $limit ] ; do
 		sleep 10
-		p=$(inc_pids $limit)
+		p=$(cat pids)
 	done
 	echo "Rsync PIDS: $p rsync -av --delete "$DIR"/"$verm"/patches $ib_tmp"
 	rsync -a --delete "$DIR"/"$verm"/patches $wwwdir/$verm/$ver
-	rsync -av --delete "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
-	#rsync --bwlimit=60 -av --delete "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver" 
+	rsync -av --delete "$wwwdir/$verm/$ver/" "$user@$ssh_servername:$wwwdir/$verm/$ver"
+	#rsync --bwlimit=60 -av --delete "$wwwdir/$verm/$ver/" "$user@$ssh_servername:$wwwdir/$verm/$ver" 
 	p=$(dec_pids)
 ) >update-wib-$verm-rsync.log 2>&1 &
 

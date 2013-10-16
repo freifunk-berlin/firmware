@@ -25,10 +25,10 @@ index b174dd6..9d60ee2 100644
 +	option logging 'info'
 +
 diff --git a/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh b/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
-index 6bba7f0..6e65d1a 100755
+index 6bba7f0..bf323f1 100755
 --- a/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
 +++ b/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
-@@ -1,11 +1,35 @@
+@@ -1,17 +1,41 @@
  #!/bin/sh
  # Copyright 2013 Manuel Munz <freifunk at somakoma dot de>
 +# Copyright 2013 Patrick Grimm <patrick at lunatiki dot de>
@@ -64,7 +64,14 @@ index 6bba7f0..6e65d1a 100755
  # exit if dyngw_plain is not enabled or RtTable is not (254 or unset)
  config_load olsrd
  
-@@ -24,25 +48,52 @@ check_dyngw_plain()
+ check_dyngw_plain()
+ {
+-        local cfg="$1"
++	local cfg="$1"
+ 	config_get library "$cfg" library
+ 	if [ "${library#olsrd_dyn_gw_plain}" != "$library" ]; then
+ 		config_get ignore "$cfg" ignore
+@@ -24,25 +48,53 @@ check_dyngw_plain()
  
  exit=1
  config_foreach check_dyngw_plain LoadPlugin
@@ -113,6 +120,7 @@ index 6bba7f0..6e65d1a 100755
  	exit 1
  fi
  
++config_load freifunk-gwcheck
  # get and shuffle list of testservers
 -testserver="$(uci -q get freifunk-gwcheck.hosts.host)"
 -[ -z "$testserver" ] && echo "No testservers found, exit" && exit
@@ -122,7 +130,7 @@ index 6bba7f0..6e65d1a 100755
  
  testserver="$(for t in $testserver; do echo $t; done | awk 'BEGIN {
  	srand();
-@@ -59,21 +110,96 @@ END {
+@@ -59,21 +111,96 @@ END {
  	}
  }')"
  
@@ -230,7 +238,7 @@ index 6bba7f0..6e65d1a 100755
  }
  
  get_dnsservers() {
-@@ -83,49 +209,141 @@ get_dnsservers() {
+@@ -83,49 +210,141 @@ get_dnsservers() {
  	if [ ! -x /bin/ubus ]; then
  		# ubus not present (versions before Attitude): fallback to get these from /var/state/network.
  		# We always assume that wan is the default route interface here

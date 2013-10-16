@@ -1,28 +1,47 @@
 diff --git a/modules/admin-mini/luasrc/model/cbi/mini/index.lua b/modules/admin-mini/luasrc/model/cbi/mini/index.lua
-index 71b5daf..cc5816f 100644
+index 71b5daf..d3c674b 100644
 --- a/modules/admin-mini/luasrc/model/cbi/mini/index.lua
 +++ b/modules/admin-mini/luasrc/model/cbi/mini/index.lua
-@@ -11,4 +11,15 @@ You may obtain a copy of the License at
+@@ -11,4 +11,34 @@ You may obtain a copy of the License at
  
  $Id$
  ]]--
 +
 +if nixio.fs.access("/bin/opkg") then
-+	local ipkg = require("luci.model.ipkg")
-+	local update = luci.http.formvalue("update")
-+	if update then
++	local admin = luci.http.formvalue("admin")
++	local ssl = luci.http.formvalue("ssl")
++	if ssl or admin then
++		local ipkg = require("luci.model.ipkg")
 +		ipkg.update()
-+		ipkg.install("luci-mod-admin-full")
-+		nixio.fs.unlink("/tmp/luci-indexcache")
++		if admin then
++			if not ipkg.installed("luci-mod-admin-full") then
++				ipkg.install("luci-mod-admin-full")
++				nixio.fs.unlink("/tmp/luci-indexcache")
++			end
++		end
++		if ssl then
++			local restart
++			if not ipkg.installed("ssl-cert") then
++				ipkg.install("ssl-cert")
++				restart = 1
++			end
++			if not ipkg.installed("uhttpd-mod-tls") then
++				ipkg.install("uhttpd-mod-tls")
++				restart = 1
++			end
++			if restart then
++				luci.util.exec("/etc/init.d/uhttpd restart")
++			end
++		end
 +	end
 +end
 +
  return Template("mini/index")
 diff --git a/modules/admin-mini/luasrc/view/mini/index.htm b/modules/admin-mini/luasrc/view/mini/index.htm
-index c14d3b0..52dcf76 100644
+index c14d3b0..1bc3020 100644
 --- a/modules/admin-mini/luasrc/view/mini/index.htm
 +++ b/modules/admin-mini/luasrc/view/mini/index.htm
-@@ -12,7 +12,35 @@ You may obtain a copy of the License at
+@@ -12,7 +12,37 @@ You may obtain a copy of the License at
  $Id$
  
  -%>
@@ -51,7 +70,9 @@ index c14d3b0..52dcf76 100644
 +<p></p>
 +<p></p>
 +<%- if free_byte > 140000 then -%>
-+<p><em><strong><a href="<%=REQUEST_URI%>?update=1"><%:Install LUCI-MOD-ADMIN-FULL%></a></strong></em></p>
++<p><em><strong><a href="<%=REQUEST_URI%>?ssl=1"><%:Install HTTPS SSL%></a></strong></em></p>
++<p></p>
++<p><em><strong><a href="<%=REQUEST_URI%>?admin=1"><%:Install LUCI-MOD-ADMIN-FULL%></a></strong></em></p>
 +<p></p>
 +<p></p>
 +<%- end -%>

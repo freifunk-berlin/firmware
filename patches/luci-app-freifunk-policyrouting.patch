@@ -1,0 +1,10 @@
+diff --git a/applications/luci-freifunk-policyrouting/luasrc/controller/freifunk/policy-routing.lua b/applications/luci-freifunk-policyrouting/luasrc/controller/freifunk/policy-routing.lua
+index ec087d9..b327d5a 100644
+--- a/applications/luci-freifunk-policyrouting/luasrc/controller/freifunk/policy-routing.lua
++++ b/applications/luci-freifunk-policyrouting/luasrc/controller/freifunk/policy-routing.lua
+@@ -15,4 +15,5 @@ module "luci.controller.freifunk.policy-routing"
+ function index()
+ 	entry({"admin", "freifunk", "policyrouting"}, cbi("freifunk/policyrouting"),
+ 		_("Policy Routing"), 60)
++	assign({"mini", "freifunk", "policyrouting"}, {"admin", "freifunk", "policyrouting"}, _("Policy Routing"), 60)
+ end

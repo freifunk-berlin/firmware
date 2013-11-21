@@ -21,8 +21,8 @@ index 71b5daf..d3c674b 100644
 +		end
 +		if ssl then
 +			local restart
-+			if not ipkg.installed("ssl-cert") then
-+				ipkg.install("ssl-cert")
++			if not ipkg.installed("px5g") then
++				ipkg.install("px5g")
 +				restart = 1
 +			end
 +			if not ipkg.installed("uhttpd-mod-tls") then

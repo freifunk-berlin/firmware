@@ -44,9 +44,9 @@ for board in $boards ; do
 	scripts/feeds install -a
 	pkgpath=""
 	pkgpath=$(find package -maxdepth 1 | grep /$pkgname$)
-	echo "$pkgpath"
+	[ "$pkgpath" == "" ] && pkgpath=$(find package -maxdepth 2 | grep /$pkgname$)
 	[ "$pkgpath" == "" ] && pkgpath=$(find package/feeds -maxdepth 2 | grep /$pkgname$)
-	echo "$pkgpath"
+	[ "$pkgpath" == "" ] && echo "$pkgname not found" && rm update-build-$verm-$board.lock && break
 	cp ../../ff-control/configs/$verm-$board.config .config
 	make oldconfig
 	make $pkgpath/clean V=99 && \
@@ -55,10 +55,10 @@ for board in $boards ; do
 	make package/index && \
 	mkdir -p $wwwdir/$verm/$ver/$board/packages && \
 	rsync -lptgoDv bin/*/packages/* $wwwdir/$verm/$ver/$board/packages
+	rsync -av "$wwwdir/$verm/$ver/$board/packages/" "$user@$ssh_servername:$wwwdir/$verm/$ver/$board/packages/"
 	cd ../../
 	rm update-build-$verm-$board.lock
 	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1 &
-	#rsync -av "$wwwdir/$verm/$ver/" "$user@$servername:$wwwdir/$verm/$ver"
 	#&
 done
 

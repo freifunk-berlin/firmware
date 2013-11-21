@@ -109,6 +109,8 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 		ib_name=OpenWrt-ImageBuilder-"$board"-for-$target
 	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_au1500-for-$target.tar.bz2 ] ; then
 		ib_name=OpenWrt-ImageBuilder-"$board"_au1500-for-$target
+	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_9g20-for-$target.tar.bz2 ] ; then
+		ib_name=OpenWrt-ImageBuilder-"$board"_9g20-for-$target
 	else
 		echo "No IB tar for $board found"
 		exit 0
@@ -142,6 +144,9 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 			#profiles="TLWDR4300"
 			#profiles="TLMR3020"
 			#profiles="TLMR3020 TLWDR4300 TLWR1043"
+			;;
+		at91)
+			profiles="Generic"
 			;;
 		*)
 			profiles=$(make -C "$meshkit"/"$ib_name" info | grep :$ | tail -n +2 | cut -d ":" -f 1)
@@ -202,7 +207,7 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 			done
 
 			case $board in
-				brcm2708|x86|x86_alix2|x86_kvm_guest)
+				brcm2708|x86|x86_alix2|x86_kvm_guest|at91)
 					###Full###
 					for profile in $profiles; do
 						packages="$packages_board $packages_ff $packages_4MB $packages_8MB $packages_max"
@@ -259,8 +264,9 @@ done
 		p=$(cat pids)
 	done
 	echo "Rsync PIDS: $p rsync -av --delete "$DIR"/"$verm"/patches $ib_tmp"
+	cp -a "$DIR"/ff-control/Changelog $wwwdir/$verm/$ver
 	rsync -a --delete "$DIR"/"$verm"/patches $wwwdir/$verm/$ver
-	rsync -av --delete "$wwwdir/$verm/$ver/" "$user@$ssh_servername:$wwwdir/$verm/$ver"
+	#rsync -av --delete "$wwwdir/$verm/$ver/" "$user@$ssh_servername:$wwwdir/$verm/$ver"
 	#rsync --bwlimit=60 -av --delete "$wwwdir/$verm/$ver/" "$user@$ssh_servername:$wwwdir/$verm/$ver" 
 	p=$(dec_pids)
 ) >update-wib-$verm-rsync.log 2>&1 &

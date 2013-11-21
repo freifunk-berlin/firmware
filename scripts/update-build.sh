@@ -343,16 +343,18 @@ for board in $boards ; do
 			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
 			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 			PATCHES="$PATCHES package-cyassl-2.6.0.patch"
-			PATCHES="$PATCHES target-au1000-ib-support.patch"
+			PATCHES="$PATCHES target-ib-au1000-support.patch"
 			PATCHES="$PATCHES package-6relayd.patch"
 			PATCHES="$PATCHES target-ar71xx-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-au1000-add-usbserial-comgt-to-profile.patch"
+			PATCHES="$PATCHES target-au1000-sysupgrade.patch"
 			PATCHES="$PATCHES target-brcm47xx-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-brcm63xx-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-brcm2708-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-ixp4xx-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-x86-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-ar71xx-add-ATH79_MACH_RB_2011US.patch"
+			PATCHES="$PATCHES target-ar71xx-add-ath5k-rs.patch"
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 	esac

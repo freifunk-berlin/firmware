@@ -343,7 +343,7 @@ for board in $boards ; do
 			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
 			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
 			PATCHES="$PATCHES package-cyassl-2.6.0.patch"
-			PATCHES="$PATCHES target-ib-au1000-support.patch"
+			PATCHES="$PATCHES target-ib-au1000.patch"
 			PATCHES="$PATCHES package-6relayd.patch"
 			PATCHES="$PATCHES target-ar71xx-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-au1000-add-usbserial-comgt-to-profile.patch"

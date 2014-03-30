@@ -1,5 +1,5 @@
 diff --git a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
-index 67ccdb4..226add2 100644
+index 67ccdb4..122fd58 100644
 --- a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 +++ b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 @@ -169,6 +169,8 @@ else
@@ -11,23 +11,77 @@ index 67ccdb4..226add2 100644
  		end
  	end
  end
-@@ -247,6 +249,10 @@ if hwtype == "mac80211" then
+@@ -214,9 +216,17 @@ if hwtype == "mac80211" then
+ 		noscan:depends("htmode", "HT40-")
+ 		noscan.default = noscan.disabled
+ 
+-		--htcapab = s:taboption("advanced", DynamicList, "ht_capab", translate("HT capabilities"))
+-		--htcapab:depends("hwmode", "11na")
+-		--htcapab:depends("hwmode", "11ng")
++		htcapab = s:taboption("advanced", DynamicList, "ht_capab", translate("HT capabilities"))
++		htcapab:depends("hwmode", "11na")
++		htcapab:depends("hwmode", "11ng")
++
++		chanbw = s:taboption("advanced", ListValue, "chanbw", translate("Channel width"))
++		chanbw:depends("hwmode", "11na")
++		chanbw:depends("hwmode", "11ng")
++		chanbw:value("20", "20MHz")
++		chanbw:value("10", "10MHz")
++		chanbw:value("5", "5MHz")
++		chanbw.default = "20"
+ 	end
+ 
+ 	local cl = iw and iw.countrylist
+@@ -234,19 +244,33 @@ if hwtype == "mac80211" then
+ 		translate("Distance to farthest network member in meters."))
+ 
+ 	-- external antenna profiles
+-	local eal = iw and iw.extant
+-	if eal and #eal > 0 then
+-		ea = s:taboption("advanced", ListValue, "extant", translate("Antenna Configuration"))
+-		for _, eap in ipairs(eal) do
+-			ea:value(eap.id, "%s (%s)" %{ eap.name, eap.description })
+-			if eap.selected then
+-				ea.default = eap.id
+-			end
+-		end
+-	end
++	ant1 = s:taboption("advanced", ListValue, "txantenna", translate("Transmitter Antenna"))
++	ant1.widget = "radio"
++	ant1.orientation = "horizontal"
++	ant1:depends("diversity", "")
++	ant1:value("all", translate("all"))
++	ant1:value("1", translate("Antenna 1"))
++	ant1:value("2", translate("Antenna 2"))
++	ant1:value("3", translate("Antenna 3"))
++	ant1.default = "all"
++
++	ant2 = s:taboption("advanced", ListValue, "rxantenna", translate("Receiver Antenna"))
++	ant2.widget = "radio"
++	ant2.orientation = "horizontal"
++	ant2:depends("diversity", "")
++	ant2:value("all", translate("all"))
++	ant2:value("1", translate("Antenna 1"))
++	ant2:value("2", translate("Antenna 2"))
++	ant2:value("3", translate("Antenna 3"))
++	ant2.default = "all"
++
++	s:taboption("advanced", Value, "antenna_gain", translate("Antenna Gain"))
  
  	s:taboption("advanced", Value, "frag", translate("Fragmentation Threshold"))
  	s:taboption("advanced", Value, "rts", translate("RTS/CTS Threshold"))
 +	s:taboption("advanced", Value, "beacon_int", translate("Beacon Interval"))
-+	s:taboption("advanced", Value, "basic_rate", translate("Basic Rates"))
 +	s:taboption("advanced", Flag, "country_ie", "802.11d")
 +	s:taboption("advanced", Flag, "doth", "802.11h")
  end
  
  
-@@ -495,14 +501,24 @@ if hwtype == "mac80211" then
+@@ -495,14 +519,30 @@ if hwtype == "mac80211" then
  		end
  	end
  
 -	hidden = s:taboption("general", Flag, "hidden", translate("Hide <abbr title=\"Extended Service Set Identifier\">ESSID</abbr>"))
-+	hidden = s:taboption("advanced", Flag, "hidden", translate("Hide <abbr title=\"Extended Service Set Identifier\">ESSID</abbr>"))
++	hidden = s:taboption("advanced", Flag, "hidden", translate("Hide ESSID"))
  	hidden:depends({mode="ap"})
  	hidden:depends({mode="ap-wds"})
  
@@ -45,6 +99,12 @@ index 67ccdb4..226add2 100644
 +	dtim_period = s:taboption("advanced", Value, "dtim_period", translate("dtim period"))
 +	dtim_period:depends({mode="ap"})
 +	dtim_period:depends({mode="ap-wds"})
++
++	basic_rate = s:taboption("advanced", Value, "basic_rate", translate("Basic Rates"))
++	basic_rate:depends({mode="adhoc"})
++
++	mcast_rate = s:taboption("advanced", Value, "mcast_rate", translate("Multicast Rate"))
++	basic_rate:depends({mode="adhoc"})
 +
  end
  

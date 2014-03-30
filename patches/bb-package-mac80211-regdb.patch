@@ -1,8 +1,8 @@
 diff --git a/package/kernel/mac80211/files/regdb.txt b/package/kernel/mac80211/files/regdb.txt
-index fcab208..d657ec2 100644
+index fcab208..66c13a6 100644
 --- a/package/kernel/mac80211/files/regdb.txt
 +++ b/package/kernel/mac80211/files/regdb.txt
-@@ -226,11 +226,11 @@ country CZ: DFS-ETSI
+@@ -226,11 +226,19 @@ country CZ: DFS-ETSI
  
  country DE: DFS-ETSI
  	# entries 279004 and 280006
@@ -14,6 +14,14 @@ index fcab208..d657ec2 100644
  	# entries 308002, 309001 and 310003
 -	(5470 - 5725 @ 80), (500 mW), DFS
 +	(5470 - 5725 @ 80), (1000 mW)
++	# 60 gHz band channels 1-4, ref: Etsi En 302 567
++	(57240 - 65880 @ 2160), (40), NO-OUTDOOR
++
++country F1: DFS-ETSI
++	# entries 279004 and 280006
++	(2400 - 2483.5 @ 40), (200 mW)
++	# entries 308002, 309001 and 310003
++	(5470 - 5725 @ 80), (1000 mW), DFS
  	# 60 gHz band channels 1-4, ref: Etsi En 302 567
  	(57240 - 65880 @ 2160), (40), NO-OUTDOOR
  

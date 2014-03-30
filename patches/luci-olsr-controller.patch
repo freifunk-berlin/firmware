@@ -1,56 +1,24 @@
 diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
-index 4623f13..20b5725 100644
+index 44849df..c796dc2 100644
 --- a/applications/luci-olsr/luasrc/controller/olsr.lua
 +++ b/applications/luci-olsr/luasrc/controller/olsr.lua
-@@ -16,6 +16,7 @@ function index()
- 	page.target = template("status-olsr/overview")
- 	page.title  = _("OLSR")
- 	page.subindex = true
-+	assign({"mini", "status", "olsr"}, {"admin", "status", "olsr"}, "OLSR", 30)
+@@ -139,7 +139,7 @@ function action_neigh(json)
+ 	local devices  = ntm:get_wifidevs()
+ 	local sys = require "luci.sys"
+ 	local assoclist = {}
+-	local neightbl = require "neightbl"
++	--local neightbl = require "neightbl"
+ 	local ipc = require "luci.ip"
  
- 	local page  = node("admin", "status", "olsr", "json")
- 	page.target = call("action_json")
-@@ -65,26 +66,31 @@ function index()
- 		cbi("olsr/olsrd"), "OLSR"
- 	)
- 	ol.subindex = true
-+	assign({"mini", "services", "olsrd"}, {"admin", "services", "olsrd"}, _("olsr"))
- 
- 	entry(
- 		{"admin", "services", "olsrd", "iface"},
- 		cbi("olsr/olsrdiface")
- 	).leaf = true
-+	assign({"mini", "services", "olsrd", "iface"}, {"admin", "services", "olsrd", "iface"}, _("Interface"))
- 
- 	entry(
- 		{"admin", "services", "olsrd", "hna"},
- 		cbi("olsr/olsrdhna"), _("HNA Announcements")
- 	)
-+	assign({"mini", "services", "olsrd", "hna"}, {"admin", "services", "olsrd", "hna"}, _("HNA Announcements"))
- 
- 	oplg = entry(
- 		{"admin", "services", "olsrd", "plugins"},
- 		cbi("olsr/olsrdplugins"), _("Plugins")
- 	)
-+	assign({"mini", "services", "olsrd", "plugins"}, {"admin", "services", "olsrd", "plugins"}, _("Plugins"))
- 
- 	odsp = entry(
- 		{"admin", "services", "olsrd", "display"},
- 		cbi("olsr/olsrddisplay"), _("Display")
- 	)
-+	assign({"mini", "services", "olsrd", "display"}, {"admin", "services", "olsrd", "display"}, _("Display"))
- 
- 	oplg.leaf = true
- 	oplg.subindex = true
-@@ -98,6 +104,11 @@ function index()
- 				cbi("olsr/olsrdplugins"),
- 				nil --'Plugin "%s"' % lib:gsub("^olsrd_",""):gsub("%.so.+$","")
- 			)
-+			assign(
-+				{"mini", "services", "olsrd", "plugins", lib },
-+				{"admin", "services", "olsrd", "plugins", lib},
-+				lib
-+			)
- 		end
- 	)
- end
+ 	luci.sys.net.routes(function(r) 
+@@ -209,7 +209,9 @@ function action_neigh(json)
+ 						if not a:is6linklocal() then
+ 							if a:host() == locip:host() then
+ 								interface = name
+-								neihgt = neightbl.get(device.ifname) or {}
++								if neightbl then
++									neihgt = neightbl.get(device.ifname) or {}
++								end
+ 							end
+ 						end
+ 					end

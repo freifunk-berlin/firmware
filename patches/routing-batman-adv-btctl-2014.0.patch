@@ -1,0 +1,17 @@
+diff --git a/batman-adv/Makefile b/batman-adv/Makefile
+index d613e91..a73770a 100644
+--- a/batman-adv/Makefile
++++ b/batman-adv/Makefile
+@@ -11,10 +11,10 @@ include $(TOPDIR)/rules.mk
+ PKG_NAME:=batman-adv
+ 
+ PKG_VERSION:=2014.1.0
+-BATCTL_VERSION:=2014.1.0
++BATCTL_VERSION:=2014.0.0
+ PKG_RELEASE:=1
+ PKG_MD5SUM:=d55aabb2bc508194407187648c773c1b
+-BATCTL_MD5SUM:=92fd4cb60e38ec952fb5fdda4b2e6933
++BATCTL_MD5SUM:=b0bcf29fef80ddcc33769e13f5937d0a
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+ PKG_SOURCE_URL:=http://downloads.open-mesh.org/batman/releases/batman-adv-$(PKG_VERSION)

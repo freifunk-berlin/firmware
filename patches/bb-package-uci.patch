@@ -1,0 +1,119 @@
+diff --git a/package/system/uci/Makefile b/package/system/uci/Makefile
+index 376986c..90f2d29 100644
+--- a/package/system/uci/Makefile
++++ b/package/system/uci/Makefile
+@@ -12,7 +12,7 @@ UCI_RELEASE=1
+ 
+ PKG_NAME:=uci
+ PKG_VERSION:=$(UCI_VERSION)$(if $(UCI_RELEASE),.$(UCI_RELEASE))
+-PKG_RELEASE:=1
++PKG_RELEASE:=2
+ PKG_REV:=393bc2b908ef44cb8b417126a35d4915c4cdfbc9
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gzdiff --git a/package/system/uci/patches/uci-read-origfilemods-for-deltafile.patch b/package/system/uci/patches/uci-read-origfilemods-for-deltafile.patch
+new file mode 100644
+index 0000000..f0ea995
+--- /dev/null
++++ b/package/system/uci/patches/uci-read-origfilemods-for-deltafile.patch
+@@ -0,0 +1,101 @@
++diff --git a/delta.c b/delta.c
++index 73c2728..32628dc 100644
++--- a/delta.c
+++++ b/delta.c
++@@ -240,7 +240,7 @@ static int uci_load_delta_file(struct uci_context *ctx, struct uci_package *p, c
++ 	int changes = 0;
++ 
++ 	UCI_TRAP_SAVE(ctx, done);
++-	stream = uci_open_stream(ctx, filename, SEEK_SET, flush, false);
+++	stream = uci_open_stream(ctx, filename, NULL, SEEK_SET, flush, false);
++ 	if (p)
++ 		changes = uci_parse_delta(ctx, stream, p);
++ 	UCI_TRAP_RESTORE(ctx);
++@@ -305,7 +305,7 @@ static void uci_filter_delta(struct uci_context *ctx, const char *name, const ch
++ 		UCI_THROW(ctx, UCI_ERR_MEM);
++ 
++ 	UCI_TRAP_SAVE(ctx, done);
++-	f = uci_open_stream(ctx, filename, SEEK_SET, true, false);
+++	f = uci_open_stream(ctx, filename, NULL, SEEK_SET, true, false);
++ 	pctx->file = f;
++ 	while (!feof(f)) {
++ 		struct uci_element *e;
++@@ -435,7 +435,7 @@ int uci_save(struct uci_context *ctx, struct uci_package *p)
++ 
++ 	ctx->err = 0;
++ 	UCI_TRAP_SAVE(ctx, done);
++-	f = uci_open_stream(ctx, filename, SEEK_END, true, true);
+++	f = uci_open_stream(ctx, filename, NULL, SEEK_END, true, true);
++ 	UCI_TRAP_RESTORE(ctx);
++ 
++ 	uci_foreach_element_safe(&p->delta, tmp, e) {
++diff --git a/file.c b/file.c
++index 36bfdda..09603a8 100644
++--- a/file.c
+++++ b/file.c
++@@ -714,7 +714,7 @@ static void uci_file_commit(struct uci_context *ctx, struct uci_package **packag
++ 		UCI_THROW(ctx, UCI_ERR_IO);
++ 
++ 	/* open the config file for writing now, so that it is locked */
++-	f1 = uci_open_stream(ctx, p->path, SEEK_SET, false, false);
+++	f1 = uci_open_stream(ctx, p->path, NULL, SEEK_SET, false, false);
++ 
++ 	/* flush unsaved changes and reload from delta file */
++ 	UCI_TRAP_SAVE(ctx, done);
++@@ -747,7 +747,7 @@ static void uci_file_commit(struct uci_context *ctx, struct uci_package **packag
++ 			goto done;
++ 	}
++ 
++-	f2 = uci_open_stream(ctx, filename, SEEK_SET, true, true);
+++	f2 = uci_open_stream(ctx, filename, p->path, SEEK_SET, true, true);
++ 	uci_export(ctx, f2, p, false);
++ 
++ 	fflush(f2);
++@@ -864,7 +864,7 @@ static struct uci_package *uci_file_load(struct uci_context *ctx, const char *na
++ 	}
++ 
++ 	UCI_TRAP_SAVE(ctx, done);
++-	file = uci_open_stream(ctx, filename, SEEK_SET, false, false);
+++	file = uci_open_stream(ctx, filename, NULL, SEEK_SET, false, false);
++ 	ctx->err = 0;
++ 	UCI_INTERNAL(uci_import, ctx, file, name, &package, true);
++ 	UCI_TRAP_RESTORE(ctx);
++diff --git a/uci_internal.h b/uci_internal.h
++index 30d79a6..b4e62ff 100644
++--- a/uci_internal.h
+++++ b/uci_internal.h
++@@ -46,7 +46,7 @@ __private void uci_add_delta(struct uci_context *ctx, struct uci_list *list, int
++ __private void uci_free_delta(struct uci_delta *h);
++ __private struct uci_package *uci_alloc_package(struct uci_context *ctx, const char *name);
++ 
++-__private FILE *uci_open_stream(struct uci_context *ctx, const char *filename, int pos, bool write, bool create);
+++__private FILE *uci_open_stream(struct uci_context *ctx, const char *filename, const char *origfilename, int pos, bool write, bool create);
++ __private void uci_close_stream(FILE *stream);
++ __private void uci_getln(struct uci_context *ctx, int offset);
++ 
++diff --git a/util.c b/util.c
++index 15f311b..ce7d849 100644
++--- a/util.c
+++++ b/util.c
++@@ -178,7 +178,7 @@ __private void uci_parse_error(struct uci_context *ctx, char *pos, char *reason)
++  * note: when opening for write and seeking to the beginning of
++  * the stream, truncate the file
++  */
++-__private FILE *uci_open_stream(struct uci_context *ctx, const char *filename, int pos, bool write, bool create)
+++__private FILE *uci_open_stream(struct uci_context *ctx, const char *filename, const char *origfilename, int pos, bool write, bool create)
++ {
++ 	struct stat statbuf;
++ 	FILE *file = NULL;
++@@ -190,7 +190,11 @@ __private FILE *uci_open_stream(struct uci_context *ctx, const char *filename, i
++ 
++ 	if (create) {
++ 		flags |= O_CREAT;
++-		name = basename((char *) filename);
+++		if (origfilename) {
+++			name = basename((char *) origfilename);
+++		} else {
+++			name = basename((char *) filename);
+++		}
++ 		if ((asprintf(&filename2, "%s/%s", ctx->confdir, name) < 0) || !filename2) {
++ 			UCI_THROW(ctx, UCI_ERR_MEM);
++ 		} else {

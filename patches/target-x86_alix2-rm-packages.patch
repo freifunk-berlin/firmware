@@ -1,0 +1,23 @@
+diff --git a/target/linux/x86/alix2/target.mk b/target/linux/x86/alix2/target.mk
+index 35fad36..b4209b5 100644
+--- a/target/linux/x86/alix2/target.mk
++++ b/target/linux/x86/alix2/target.mk
+@@ -1,10 +1,6 @@
+ BOARDNAME:=PCEngines alix2
+ FEATURES:=squashfs jffs2 ext4 pci usb gpio
+ DEFAULT_PACKAGES += \
+-			kmod-crypto-hw-geode kmod-crypto-ocf kmod-crypto-aes kmod-crypto-cbc \
+-			kmod-gpio-cs5535-new kmod-gpio-nsc \
+-			kmod-wdt-geode kmod-cs5535-clockevt kmod-cs5535-mfgpt \
+-			kmod-cs5536 \
+ 			kmod-hwmon-core kmod-hwmon-lm90 \
+ 			kmod-via-rhine \
+ 			kmod-i2c-core kmod-i2c-gpio \
+@@ -12,7 +8,6 @@ DEFAULT_PACKAGES += \
+ 			kmod-i2c-scx200-acb \
+ 			kmod-usb-core kmod-usb2 kmod-usb-ohci \
+ 			kmod-cfg80211 kmod-mac80211 \
+-			kmod-mppe kmod-pppoe kmod-pppol2tp \
+ 			kmod-ath5k kmod-ath9k \
+ 			kmod-leds-gpio kmod-input-gpio-keys-polled \
+ 			kmod-button-hotplug \

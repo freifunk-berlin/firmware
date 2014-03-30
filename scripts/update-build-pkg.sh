@@ -43,10 +43,11 @@ for board in $boards ; do
 	echo "openwrt feeds install"
 	scripts/feeds install -a
 	pkgpath=""
-	pkgpath=$(find package -maxdepth 1 | grep /$pkgname$)
-	[ "$pkgpath" == "" ] && pkgpath=$(find package -maxdepth 2 | grep /$pkgname$)
-	[ "$pkgpath" == "" ] && pkgpath=$(find package/feeds -maxdepth 2 | grep /$pkgname$)
-	[ "$pkgpath" == "" ] && echo "$pkgname not found" && rm update-build-$verm-$board.lock && break
+	pkgpath="$(find package -maxdepth 1 | grep /$pkgname$)"
+	#[ -z "$pkgpath" ] && pkgpath=$(find package -maxdepth 2 | grep /$pkgname$)
+	[ -z "$pkgpath" ] && pkgpath=$(find package -maxdepth 3 | grep /$pkgname$)
+	[ -z "$pkgpath" ] && pkgpath=$(find package/feeds -maxdepth 2 | grep /$pkgname$)
+	[ -z "$pkgpath" ] && echo "$pkgname not found" && rm update-build-$verm-$board.lock && break
 	cp ../../ff-control/configs/$verm-$board.config .config
 	make oldconfig
 	make $pkgpath/clean V=99 && \
@@ -55,27 +56,32 @@ for board in $boards ; do
 	make package/index && \
 	mkdir -p $wwwdir/$verm/$ver/$board/packages && \
 	rsync -lptgoDv bin/*/packages/* $wwwdir/$verm/$ver/$board/packages
-	rsync -av "$wwwdir/$verm/$ver/$board/packages/" "$user@$ssh_servername:$wwwdir/$verm/$ver/$board/packages/"
+	case $verm in
+		attitude_adjustment) wibverm="Attitude-Adjustment" ;;
+		barrier_breaker) wibverm="Barrier-Breaker" ;;
+	esac
+	board_sub=""
+	case $board in
+		ar71xx) board_sub="_generic" ;;
+		at91) board_sub="_9g20" ;;
+		atheros) board_sub="" ;;
+		au1000) board_sub="_au1500" ;;
+		brcm2708) board_sub="" ;;
+		brcm47xx) board_sub="" ;;
+		brcm63xx) board_sub="" ;;
+		ixp4xx) board_sub="_generic" ;;
+		mpc85xx) board_sub="_generic" ;;
+		x86) board_sub="_generic" ;;
+		x86_alix2) board_sub="" ;;
+		x86_kvm_guest) board_sub="" ;;
+	esac
+	sudo rsync -av --delete bin/*/packages "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"/
+	sudo chown -R www-data "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"/packages
+	sudo chown -R www-data "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"/packages/*
+	sudo touch "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"/packages/Packages.gz
+	sudo rm -f ../www/web2py/applications/meshkit/static/package_lists/*
 	cd ../../
 	rm update-build-$verm-$board.lock
-	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1 &
-	#&
+	) >update-build-pkg-$verm-$board-$pkgname.log 2>&1
 done
-
-#for board in $boards ; do
-#	if [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_generic-for-suse-i586.tar.bz2 ] ; then
-#		ib_name=OpenWrt-ImageBuilder-"$board"_generic-for-suse-i586
-#	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"-for-suse-i586.tar.bz2 ] ; then
-#		ib_name=OpenWrt-ImageBuilder-"$board"-for-suse-i586
-#	elif [ -f "$DIR"/"$verm"/"$board"/bin/*/OpenWrt-ImageBuilder-"$board"_au1500-for-suse-i586.tar.bz2 ] ; then
-#		ib_name=OpenWrt-ImageBuilder-"$board"_au1500-for-suse-i586
-#	else
-#		echo "No IB tar for $board found"
-#		exit 0
-#	fi
-#	rsync -av --delete "$DIR"/"$verm"/"$board"/bin/*/packages/ "$DIR"/"$verm"/meshkit/$ib_name/packages
-#	make -C "$DIR"/"$verm"/meshkit/$ib_name package_index
-#	sed -i "$DIR"/"$verm"/meshkit/$ib_name/packages/Packages -e '/^MD5Sum.*/d'
-#	touch "$DIR"/"$verm"/meshkit/$ib_name/packages/Packages.gz
-#done
 

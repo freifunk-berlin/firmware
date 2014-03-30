@@ -1,0 +1,27 @@
+diff --git a/target/imagebuilder/Makefile b/target/imagebuilder/Makefile
+index a9480ef..d9d5857 100644
+--- a/target/imagebuilder/Makefile
++++ b/target/imagebuilder/Makefile
+@@ -25,7 +25,9 @@ all: compile
+ $(BIN_DIR)/$(IB_NAME).tar.bz2: clean
+ 	rm -rf $(PKG_BUILD_DIR)
+ 	mkdir -p $(IB_KDIR) $(IB_LDIR) $(PKG_BUILD_DIR)/staging_dir/host \
+-		$(PKG_BUILD_DIR)/target $(PKG_BUILD_DIR)/scripts
++		$(PKG_BUILD_DIR)/target $(PKG_BUILD_DIR)/scripts \
++		$(PKG_BUILD_DIR)/staging_dir/host/lib/grub/i386-pc \
++		$(PKG_BUILD_DIR)/staging_dir/toolchain-$(ARCH)$(ARCH_SUFFIX)_gcc-$(GCCV)$(DIR_SUFFIX)/bin
+ 	-cp $(TOPDIR)/.config $(PKG_BUILD_DIR)/.config
+ 	$(CP) \
+ 		$(INCLUDE_DIR) $(SCRIPT_DIR) \
+@@ -46,8 +48,11 @@ $(BIN_DIR)/$(IB_NAME).tar.bz2: clean
+ 	$(SED) 's,^# REVISION:=.*,REVISION:=$(REVISION),g' $(PKG_BUILD_DIR)/include/version.mk
+ 	find $(PKG_BUILD_DIR) -name CVS -o -name .git -o -name .svn \
+ 	  | $(XARGS) rm -rf
++	-cp $(STAGING_DIR_HOST)/lib/grub/i386-pc/* $(PKG_BUILD_DIR)/staging_dir/host/lib/grub/i386-pc
+ 	find $(STAGING_DIR_HOST)/bin -maxdepth 1 -type f -perm -u=x \
+ 	  | $(XARGS) $(SCRIPT_DIR)/bundle-libraries.sh $(PKG_BUILD_DIR)/staging_dir/host/bin
++	find $(TOOLCHAIN_DIR)/bin -maxdepth 1 -type f -perm -u=x \
++	  | $(XARGS) $(SCRIPT_DIR)/bundle-libraries.sh $(PKG_BUILD_DIR)/staging_dir/toolchain-$(ARCH)$(ARCH_SUFFIX)_gcc-$(GCCV)$(DIR_SUFFIX)/bin
+ 	$(TAR) c -C $(BUILD_DIR) $(IB_NAME) | bzip2 -c > $@
+ 
+ download:

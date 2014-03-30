@@ -1,0 +1,13 @@
+diff --git a/package/comgt/Makefile b/package/comgt/Makefile
+index 6cb802c..03e4112 100644
+--- a/package/comgt/Makefile
++++ b/package/comgt/Makefile
+@@ -23,7 +23,7 @@ define Package/comgt
+   SECTION:=utils
+   CATEGORY:=Utilities
+   TITLE:=Option/Vodafone 3G/GPRS control tool
+-  DEPENDS:=+chat
++  DEPENDS:=+chat +ppp
+   URL:=http://www.pharscape.org/comgt.html
+ endef
+ 

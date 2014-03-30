@@ -1,0 +1,41 @@
+diff --git a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
+index 67ccdb4..33e92c1 100644
+--- a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
++++ b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
+@@ -169,6 +169,8 @@ else
+ 	for _, f in ipairs(iw and iw.freqlist or { }) do
+ 		if not f.restricted then
+ 			ch:value(f.channel, "%i (%.3f GHz)" %{ f.channel, f.mhz / 1000 })
++		else
++			ch:value(f.channel, "%i (%.3f GHz restricted DFS)" %{ f.channel, f.mhz / 1000 })
+ 		end
+ 	end
+ end
+@@ -247,6 +249,10 @@ if hwtype == "mac80211" then
+ 
+ 	s:taboption("advanced", Value, "frag", translate("Fragmentation Threshold"))
+ 	s:taboption("advanced", Value, "rts", translate("RTS/CTS Threshold"))
++	s:taboption("advanced", Value, "beacon_int", translate("Beacon Interval"))
++	s:taboption("advanced", Value, "basic_rate", translate("Basic Rates"))
++	s:taboption("advanced", Flag, "country_ie", "802.11d")
++	s:taboption("advanced", Flag, "doth", "802.11h")
+ end
+ 
+ 
+@@ -503,6 +509,16 @@ if hwtype == "mac80211" then
+ 	wmm:depends({mode="ap"})
+ 	wmm:depends({mode="ap-wds"})
+ 	wmm.default = wmm.enabled
++	maxassoc = s:taboption("general", Value, "maxassoc", translate("Connection Limit"))
++	maxassoc:depends({mode="ap"})
++	maxassoc:depends({mode="ap-wds"})
++	max_listen_int = s:taboption("general", Value, "max_listen_int", translate("Max Listen Int"))
++	max_listen_int:depends({mode="ap"})
++	max_listen_int:depends({mode="ap-wds"})
++	dtim_period = s:taboption("general", Value, "dtim_period", translate("dtim period"))
++	dtim_period:depends({mode="ap"})
++	dtim_period:depends({mode="ap-wds"})
++
+ end
+ 
+ 

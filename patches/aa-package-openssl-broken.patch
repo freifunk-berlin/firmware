@@ -1,0 +1,13 @@
+diff --git a/package/openssl/Makefile b/package/openssl/Makefile
+index a8b3257..3b6601f 100644
+--- a/package/openssl/Makefile
++++ b/package/openssl/Makefile
+@@ -45,7 +45,7 @@ $(call Package/openssl/Default)
+   SECTION:=libs
+   SUBMENU:=SSL
+   CATEGORY:=Libraries
+-  DEPENDS:=+zlib
++  DEPENDS:=+zlib @BROKEN
+   TITLE+= (libraries)
+   MENU:=1
+ endef

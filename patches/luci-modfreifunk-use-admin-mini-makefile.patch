@@ -28,7 +28,7 @@ index 2542544..1cd94be 100644
  $(eval $(call module,failsafe,LuCI Fail-Safe - Fail-Safe sysupgrade module,+luci-mod-admin-core))
  $(eval $(call module,rpc,LuCI RPC - JSON-RPC API,+luci-lib-json))
 -$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall +freifunk-common))
-+$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-mini +luci-lib-json +freifunk-common))
++$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +freifunk-common))
  $(eval $(call module,niu,NIU - Next Generation Interface,+luci-mod-admin-core @BROKEN))
  
  

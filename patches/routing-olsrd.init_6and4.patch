@@ -1,31 +1,17 @@
 diff --git a/olsrd/files/olsrd.init b/olsrd/files/olsrd.init
-index f4641aa..80ff5a8 100644
+index 21e8215..77bd61c 100644
 --- a/olsrd/files/olsrd.init
 +++ b/olsrd/files/olsrd.init
-@@ -728,7 +728,6 @@ olsrd_setup_smartgw_rules() {
- 			else
- 				for IPT in $IP4T $IP6T; do
- 					$IPT -I forwarding_rule -o tnl_+ -j ACCEPT
--					$IPT -t nat -I postrouting_rule -o tnl_+ -j MASQUERADE
- 					if [ "$nowan"="0" ]; then
- 						for IFACE in $wanifnames; do
- 							$IPT -A forwarding_rule -i tunl0 -o $IFACE -j ACCEPT
-@@ -738,6 +737,7 @@ olsrd_setup_smartgw_rules() {
- 						$IPT -I input_rule -i $IFACE -p 4 -j ACCEPT
- 					done
- 				done
-+				$IP4T -t nat -I postrouting_rule -o tnl_+ -j MASQUERADE
- 			fi
- 		fi
- 	fi
-@@ -780,8 +780,8 @@ start() {
+@@ -786,9 +786,9 @@ start() {
  	if [ "$OLSRD_IPVERSION_6AND4" -ne 0 ]; then
  		bindv6only="$(sysctl -n net.ipv6.bindv6only)"
  		sysctl -w net.ipv6.bindv6only=1 > /dev/null
 -		sed -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
 -		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
+-		rm $OLSRD_CONFIG_FILE
 +		sed -e 's/0\.0\.0\.0/::/' -e 's/224\.0\.0\.251/ff02::fb/' -e '/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/d' -e 's/etx_ff/etx_ffeth/' -e '/NatThreshold/d' -e '/RtTable/d' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv6
++		sed -i /var/etc/olsrd.conf.ipv6 -e '/.*dyn_gw_plain.*/{N;N;N;d}'
 +		sed -e 's/^IpVersion[ ][ ]*6$/IpVersion 4/' -e 's/^MainIp.*//' -e 's/^\tPlParam \"[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:].*//' -e 's/^\t\t[A-Fa-f0-9.:]*[:][A-Fa-f0-9.:]*[ ][0-9]*$//' -e 's/ether/mesh/' < "$OLSRD_CONFIG_FILE" > /var/etc/olsrd.conf.ipv4
- 		rm $OLSRD_CONFIG_FILE
  
  		# some filenames should get the suffix .ipv6
+ 		for file in $latlon_file $hosts_file $services_file $resolv_file $macs_file $wd_file;do

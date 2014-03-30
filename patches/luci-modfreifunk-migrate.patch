@@ -6,7 +6,7 @@ index fe6586c..80f73ac 100644
  uci set uhttpd.main.rfc1918_filter=0
  uci commit uhttpd
 +
-+. /etc/functions.sh
++. /lib/functions.sh
 +
 +set_community() {
 +        local config="$1"

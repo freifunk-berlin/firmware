@@ -1,0 +1,69 @@
+diff --git a/package/network/services/hostapd/files/netifd.sh b/package/network/services/hostapd/files/netifd.sh
+index f06b2ac..24dc345 100644
+--- a/package/network/services/hostapd/files/netifd.sh
++++ b/package/network/services/hostapd/files/netifd.sh
+@@ -82,6 +82,12 @@ hostapd_prepare_device_config() {
+ 	[ -n "$brlist" ] && append base_cfg "basic_rates=$brlist" "$N"
+ 	[ -n "$beacon_int" ] && append base_cfg "beacon_int=$beacon_int" "$N"
+ 
++	json_get_vars doth
++	set_default doth 1
++	if [ "$doth" -gt 0 ]; then
++		append base_cfg "ieee80211h=1" "$N"
++	fi
++
+ 	cat > "$config" <<EOF
+ driver=$driver
+ $base_cfg
+diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
+index b55b63d..afce140 100644
+--- a/package/network/services/hostapd/files/hostapd.sh
++++ b/package/network/services/hostapd/files/hostapd.sh
+@@ -1,7 +1,7 @@
+ hostapd_set_bss_options() {
+ 	local var="$1"
+ 	local vif="$2"
+-	local enc wep_rekey wpa_group_rekey wpa_pair_rekey wpa_master_rekey wps_possible
++	local enc wep_rekey wpa_group_rekey wpa_pair_rekey wpa_master_rekey wps_possible doth
+ 
+ 	config_get enc "$vif" encryption "none"
+ 	config_get wep_rekey        "$vif" wep_rekey        # 300
+@@ -17,9 +17,13 @@ hostapd_set_bss_options() {
+ 	config_get device "$vif" device
+ 	config_get hwmode "$device" hwmode
+ 	config_get phy "$device" phy
++	config_get_bool doth "$doth" doth 1
+ 
+ 	append "$var" "ctrl_interface=/var/run/hostapd-$phy" "$N"
+ 
++	if [ "$doth" -gt 0 ]; then
++		append "$var" "ieee80211h=$doth" "$N"
++	fi
+ 	if [ "$ap_isolate" -gt 0 ]; then
+ 		append "$var" "ap_isolate=$ap_isolate" "$N"
+ 	fi
+@@ -327,7 +331,7 @@ hostapd_set_log_options() {
+ hostapd_setup_vif() {
+ 	local vif="$1"
+ 	local driver="$2"
+-	local ifname device channel hwmode
++	local ifname device channel hwmode doth
+ 
+ 	hostapd_cfg=
+ 
+@@ -335,6 +339,7 @@ hostapd_setup_vif() {
+ 	config_get device "$vif" device
+ 	config_get channel "$device" channel
+ 	config_get hwmode "$device" hwmode
++	config_get_bool doth "$doth" doth 1
+ 
+ 	hostapd_set_log_options hostapd_cfg "$device"
+ 	hostapd_set_bss_options hostapd_cfg "$vif"
+@@ -349,6 +354,7 @@ hostapd_setup_vif() {
+ driver=$driver
+ interface=$ifname
+ ${hwmode:+hw_mode=${hwmode#11}}
++${doth:+ieee80211h=$doth}
+ ${channel:+channel=$channel}
+ $hostapd_cfg
+ EOF

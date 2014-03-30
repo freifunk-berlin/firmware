@@ -82,10 +82,14 @@ cd feeds
 cd ..
 [ -d $verm/patches ] || mkdir -p $verm/patches
 rm -f $verm/patches/*.patch
-update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
-echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
-echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
+#update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
+#echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
+#update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
+#echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
+update_git "git://github.com/libremap/libremap-agent-openwrt.git" "libremap-agent-openwrt"
+echo "libremap-agent-openwrt Revision: $revision"  >>VERSION.txt
+update_git "git://github.com/mwarning/KadNode.git" "KadNode"
+echo "KadNode Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
 echo "packages-pberg Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
@@ -96,7 +100,10 @@ echo "routing packages Revision: $revision"  >>VERSION.txt
 PATCHES=""
 PATCHES="$PATCHES routing-olsrd.init_6and4.patch"
 PATCHES="$PATCHES routing-olsrd.config-rm-wlan.patch"
-PATCHES="$PATCHES routing-olsrd-rm-hotplug.patch"
+#PATCHES="$PATCHES routing-olsrd-rm-hotplug.patch"
+PATCHES="$PATCHES routing-olsrd.release.patch"
+PATCHES="$PATCHES routing-batman-adv-btctl-2014.0.patch"
+PATCHES="$PATCHES routing-alfred-hosts.patch"
 cd routing
 for i in $PATCHES ; do
 	pparm='-p1'
@@ -165,30 +172,32 @@ echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
 PATCHES=""
 PATCHES="$PATCHES luci-olsr-controller.patch"
-PATCHES="$PATCHES luci-olsr-model.patch"
-PATCHES="$PATCHES luci-modfreifunk-use-admin-mini.patch"
+#PATCHES="$PATCHES luci-olsr-model.patch"
+#PATCHES="$PATCHES luci-modfreifunk-use-admin-mini.patch"
 PATCHES="$PATCHES luci-modfreifunk-use-admin-mini-status.patch"
 PATCHES="$PATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
-PATCHES="$PATCHES luci-modfreifunk-basics-mini.patch"
+#PATCHES="$PATCHES luci-modfreifunk-basics-mini.patch"
 PATCHES="$PATCHES luci-admin-mini-sysupgrade.patch"
-PATCHES="$PATCHES luci-admin-mini-splash.patch"
+#PATCHES="$PATCHES luci-admin-mini-splash.patch"
 PATCHES="$PATCHES luci-admin-mini-index.patch"
 PATCHES="$PATCHES luci-admin-mini-backup-style.patch"
 PATCHES="$PATCHES luci-admin-mini-sshkeys.patch"
 PATCHES="$PATCHES luci-app-splash-css.patch"
-PATCHES="$PATCHES luci-modfreifunk-migrate.patch"
+#PATCHES="$PATCHES luci-modfreifunk-migrate.patch"
 PATCHES="$PATCHES luci-theme-bootstrap.patch"
-PATCHES="$PATCHES luci-theme-bootstrap-header.patch"
+#PATCHES="$PATCHES luci-theme-bootstrap-header.patch"
 PATCHES="$PATCHES luci-olsr-view.patch"
 PATCHES="$PATCHES luci-admin-mini-dhcp.patch"
 PATCHES="$PATCHES luci-freifunk-map.patch"
 PATCHES="$PATCHES luci-admin-mini-install-full.patch"
 PATCHES="$PATCHES luci-admin-mini-wifi.patch"
 PATCHES="$PATCHES luci-freifunk-policyrouting.patch"
-PATCHES="$PATCHES luci-app-freifunk-policyrouting.patch"
+#PATCHES="$PATCHES luci-app-freifunk-policyrouting.patch"
 PATCHES="$PATCHES luci-freifunk-gwcheck.patch"
 PATCHES="$PATCHES luci-po-only-en-de.patch"
 PATCHES="$PATCHES luci-freifunk-common-olsr-watchdog.patch"
+PATCHES="$PATCHES luci-community-profiles-berlin.patch"
+PATCHES="$PATCHES luci-mod-admin-dfs.patch"
 for i in $PATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
@@ -197,6 +206,7 @@ for i in $PATCHES ; do
 	cp ../ff-control/patches/$i ../$verm/patches  || exit 0
 done
 rm -rf $(find . | grep \.orig$)
+git rm contrib/package/freifunk-policyrouting/files/etc/rc.d/S15-freifunk-policyrouting
 cd ..
 
 genconfig() {
@@ -307,10 +317,8 @@ for board in $boards ; do
 	echo "src-link packagespberg $pwd/packages-pberg" >> feeds.conf
 	echo "src-link piratenluci $pwd/piratenfreifunk-packages" >> feeds.conf
 	echo "src-link luci $pwd/luci-master" >> feeds.conf
-	#echo "src-link wgaugsburg $pwd/wgaugsburg/packages" >> feeds.conf
-	echo "src-link yaffmapagent $pwd/yaffmap-agent" >> feeds.conf
-	echo "src-link bulletin $pwd/luci-app-bulletin-node" >> feeds.conf
-	#echo "src-link forkeddaapd $pwd/forked-daapd" >> feeds.conf
+	echo "src-link libremap $pwd/libremap-agent-openwrt" >> feeds.conf
+	echo "src-link kadnode $pwd/KadNode/openwrt" >> feeds.conf
 	echo "src-link fffeeds $pwd/feeds" >> feeds.conf
 	echo "openwrt feeds update"
 	scripts/feeds update
@@ -325,13 +333,21 @@ for board in $boards ; do
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		barrier_breaker)
-			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch"
-			PATCHES="$PATCHES target-mpc85xx-profile-wpad.patch"
-			PATCHES="$PATCHES target-ib-ppc.patch"
+			PATCHES="$PATCHES bb-package-uci.patch"
+			PATCHES="$PATCHES bb-package-mac80211-regdb.patch"
+			PATCHES="$PATCHES bb-package-mac80211-dfs.patch"
+			PATCHES="$PATCHES bb-package-hostapd-dfs.patch"
+			PATCHES="$PATCHES bb-target-atheros-whr-hp-ag108-sysupgrade.patch"
+			PATCHES="$PATCHES bb-target-mpc85xx-profile-wpad.patch"
+			PATCHES="$PATCHES bb-target-ib-ppc-dtc-dts.patch"
+			PATCHES="$PATCHES bb-comgt-dep-ppp.patch"
+			PATCHES="$PATCHES bb-package-openssl-broken.patch"
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		attitude_adjustment)
-			PATCHES="$PATCHES package-mac80211-regdb.patch"
+			PATCHES="$PATCHES aa-package-mac80211-dfs.patch"
+			PATCHES="$PATCHES aa-package-mac80211-regdb.patch"
+			PATCHES="$PATCHES aa-package-hostapd-dfs.patch"
 			PATCHES="$PATCHES target-brcm2708-gzip.patch"
 			PATCHES="$PATCHES target-brcm2708-kernel-config.patch"
 			PATCHES="$PATCHES target-brcm2708-spi-i2c.patch"
@@ -339,11 +355,13 @@ for board in $boards ; do
 			PATCHES="$PATCHES target-brcm2708-inittab.patch"
 			PATCHES="$PATCHES kvm-hotplug-pci-config.patch"
 			PATCHES="$PATCHES target-x86_kvm_guest-add-qcow.patch"
+			PATCHES="$PATCHES target-x86_kvm_guest-add-packages.patch"
+			PATCHES="$PATCHES target-x86_alix2-rm-packages.patch"
 			PATCHES="$PATCHES target-ixp4xx-avila-sysupgrade.patch"
 			PATCHES="$PATCHES target-atheros-disable-pci-usb.patch" #no trunk
-			PATCHES="$PATCHES whr-hp-ag108-sysupgrade.patch" #no trunk
+			PATCHES="$PATCHES aa-target-atheros-whr-hp-ag108-sysupgrade.patch"
 			PATCHES="$PATCHES package-cyassl-2.6.0.patch"
-			PATCHES="$PATCHES target-ib-au1000.patch"
+			PATCHES="$PATCHES target-ib.patch"
 			PATCHES="$PATCHES package-6relayd.patch"
 			PATCHES="$PATCHES target-ar71xx-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-au1000-add-usbserial-comgt-to-profile.patch"
@@ -355,10 +373,10 @@ for board in $boards ; do
 			PATCHES="$PATCHES target-x86-add-usbserial-comgt-to-profile.patch"
 			PATCHES="$PATCHES target-ar71xx-add-ATH79_MACH_RB_2011US.patch"
 			PATCHES="$PATCHES target-ar71xx-add-ath5k-rs.patch"
+			PATCHES="$PATCHES aa-comgt-dep-ppp.patch"
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 	esac
-	#PATCHES="$PATCHES busybox-iproute2.patch"
 	PATCHES="$PATCHES base-system.patch"
 	for i in $PATCHES ; do
 		pparm='-p1'
@@ -379,6 +397,7 @@ for board in $boards ; do
 		atheros)
 			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
 			cp $pwd/ff-control/configs/$verm-$board.config .config
+			rm staging_dir/host/bin/*-pc-linux-gnu-pkg-config
 			genconfig "$options_ver"
 			make oldconfig
 			#Disable Audio,PCI and USB#################################
@@ -389,8 +408,9 @@ for board in $boards ; do
 		;;
 		ar71xx_nand)
 			#make initramfs
-			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
+			echo "copy config $pwd/ff-control/configs/$verm-$board-initramfs.config .config"
 			cp $pwd/ff-control/configs/$verm-$board-initramfs.config .config
+			rm staging_dir/host/bin/*-pc-linux-gnu-pkg-config
 			echo "$options_ver"
 			genconfig "$options_ver"
 			make oldconfig
@@ -398,6 +418,7 @@ for board in $boards ; do
 			#make nand rootfs
 			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
 			cp $pwd/ff-control/configs/$verm-$board.config .config
+			rm staging_dir/host/bin/*-pc-linux-gnu-pkg-config
 			echo "$options_ver"
 			genconfig "$options_ver"
 			make oldconfig
@@ -406,6 +427,7 @@ for board in $boards ; do
 		*)
 			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
 			cp $pwd/ff-control/configs/$verm-$board.config .config
+			rm staging_dir/host/bin/*-pc-linux-gnu-pkg-config
 			echo "$options_ver"
 			genconfig "$options_ver"
 			make oldconfig

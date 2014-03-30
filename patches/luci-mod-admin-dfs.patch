@@ -1,5 +1,5 @@
 diff --git a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
-index 67ccdb4..33e92c1 100644
+index 67ccdb4..226add2 100644
 --- a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 +++ b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 @@ -169,6 +169,8 @@ else
@@ -22,17 +22,27 @@ index 67ccdb4..33e92c1 100644
  end
  
  
-@@ -503,6 +509,16 @@ if hwtype == "mac80211" then
+@@ -495,14 +501,24 @@ if hwtype == "mac80211" then
+ 		end
+ 	end
+ 
+-	hidden = s:taboption("general", Flag, "hidden", translate("Hide <abbr title=\"Extended Service Set Identifier\">ESSID</abbr>"))
++	hidden = s:taboption("advanced", Flag, "hidden", translate("Hide <abbr title=\"Extended Service Set Identifier\">ESSID</abbr>"))
+ 	hidden:depends({mode="ap"})
+ 	hidden:depends({mode="ap-wds"})
+ 
+-	wmm = s:taboption("general", Flag, "wmm", translate("WMM Mode"))
++	wmm = s:taboption("advanced", Flag, "wmm", translate("WMM Mode"))
  	wmm:depends({mode="ap"})
  	wmm:depends({mode="ap-wds"})
  	wmm.default = wmm.enabled
-+	maxassoc = s:taboption("general", Value, "maxassoc", translate("Connection Limit"))
++	maxassoc = s:taboption("advanced", Value, "maxassoc", translate("Connection Limit"))
 +	maxassoc:depends({mode="ap"})
 +	maxassoc:depends({mode="ap-wds"})
-+	max_listen_int = s:taboption("general", Value, "max_listen_int", translate("Max Listen Int"))
++	max_listen_int = s:taboption("advanced", Value, "max_listen_int", translate("Max Listen Int"))
 +	max_listen_int:depends({mode="ap"})
 +	max_listen_int:depends({mode="ap-wds"})
-+	dtim_period = s:taboption("general", Value, "dtim_period", translate("dtim period"))
++	dtim_period = s:taboption("advanced", Value, "dtim_period", translate("dtim period"))
 +	dtim_period:depends({mode="ap"})
 +	dtim_period:depends({mode="ap-wds"})
 +

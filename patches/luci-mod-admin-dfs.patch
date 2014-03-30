@@ -1,5 +1,5 @@
 diff --git a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
-index 67ccdb4..122fd58 100644
+index 67ccdb4..53efb36 100644
 --- a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 +++ b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 @@ -169,6 +169,8 @@ else
@@ -32,7 +32,7 @@ index 67ccdb4..122fd58 100644
  	end
  
  	local cl = iw and iw.countrylist
-@@ -234,19 +244,33 @@ if hwtype == "mac80211" then
+@@ -234,19 +244,34 @@ if hwtype == "mac80211" then
  		translate("Distance to farthest network member in meters."))
  
  	-- external antenna profiles
@@ -71,12 +71,13 @@ index 67ccdb4..122fd58 100644
  	s:taboption("advanced", Value, "frag", translate("Fragmentation Threshold"))
  	s:taboption("advanced", Value, "rts", translate("RTS/CTS Threshold"))
 +	s:taboption("advanced", Value, "beacon_int", translate("Beacon Interval"))
++	s:taboption("advanced", ListValue, "basic_rate", translate("Basic Rates"))
 +	s:taboption("advanced", Flag, "country_ie", "802.11d")
 +	s:taboption("advanced", Flag, "doth", "802.11h")
  end
  
  
-@@ -495,14 +519,30 @@ if hwtype == "mac80211" then
+@@ -495,14 +520,31 @@ if hwtype == "mac80211" then
  		end
  	end
  
@@ -86,6 +87,10 @@ index 67ccdb4..122fd58 100644
  	hidden:depends({mode="ap-wds"})
  
 -	wmm = s:taboption("general", Flag, "wmm", translate("WMM Mode"))
++	isolate = s:taboption("advanced", Flag, "isolate", translate("Separate Clients"),
++		translate("Prevents client-to-client communication"))
++	isolate:depends({mode="ap"})
++
 +	wmm = s:taboption("advanced", Flag, "wmm", translate("WMM Mode"))
  	wmm:depends({mode="ap"})
  	wmm:depends({mode="ap-wds"})
@@ -100,11 +105,8 @@ index 67ccdb4..122fd58 100644
 +	dtim_period:depends({mode="ap"})
 +	dtim_period:depends({mode="ap-wds"})
 +
-+	basic_rate = s:taboption("advanced", Value, "basic_rate", translate("Basic Rates"))
-+	basic_rate:depends({mode="adhoc"})
-+
 +	mcast_rate = s:taboption("advanced", Value, "mcast_rate", translate("Multicast Rate"))
-+	basic_rate:depends({mode="adhoc"})
++	mcast_rate:depends({mode="adhoc"})
 +
  end
  

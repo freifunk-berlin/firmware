@@ -1,5 +1,5 @@
 diff --git a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
-index 67ccdb4..53efb36 100644
+index 67ccdb4..97ea339 100644
 --- a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 +++ b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 @@ -169,6 +169,8 @@ else
@@ -71,7 +71,7 @@ index 67ccdb4..53efb36 100644
  	s:taboption("advanced", Value, "frag", translate("Fragmentation Threshold"))
  	s:taboption("advanced", Value, "rts", translate("RTS/CTS Threshold"))
 +	s:taboption("advanced", Value, "beacon_int", translate("Beacon Interval"))
-+	s:taboption("advanced", ListValue, "basic_rate", translate("Basic Rates"))
++	s:taboption("advanced", DynamicList, "basic_rate", translate("Basic Rates"))
 +	s:taboption("advanced", Flag, "country_ie", "802.11d")
 +	s:taboption("advanced", Flag, "doth", "802.11h")
  end

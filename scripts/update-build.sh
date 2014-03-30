@@ -82,18 +82,12 @@ cd feeds
 cd ..
 [ -d $verm/patches ] || mkdir -p $verm/patches
 rm -f $verm/patches/*.patch
-#update_git "git://github.com/freifunk/yaffmap-agent.git" "yaffmap-agent"
-#echo "yaffmap-agent Revision: $revision"  >>VERSION.txt
-#update_git "git://github.com/freifunk/luci-app-bulletin-node.git" "luci-app-bulletin-node"
-#echo "luci-app-bulletin-node Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/libremap/libremap-agent-openwrt.git" "libremap-agent-openwrt"
 echo "libremap-agent-openwrt Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/mwarning/KadNode.git" "KadNode"
 echo "KadNode Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/freifunk/packages-pberg.git" "packages-pberg"
-echo "packages-pberg Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/freifunk/piratenfreifunk-packages.git" "piratenfreifunk-packages"
-echo "piratenfreifunk-packages Revision: $revision"  >>VERSION.txt
+update_git "git://github.com/freifunk/packages_berlin.git" "packages_berlin"
+echo "packages_berlin Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/openwrt-routing/packages.git" "routing"
 echo "routing packages Revision: $revision"  >>VERSION.txt
 
@@ -107,9 +101,9 @@ PATCHES="$PATCHES routing-alfred-hosts.patch"
 cd routing
 for i in $PATCHES ; do
 	pparm='-p1'
-	patch $pparm < ../ff-control/patches/$i || exit 0
+	patch $pparm < ../firmware-berlin/patches/$i || exit 0
 	mkdir -p ../$verm/patches
-	cp ../ff-control/patches/$i ../$verm/patches || exit 0
+	cp ../firmware-berlin/patches/$i ../$verm/patches || exit 0
 done
 rm -rf $(find . | grep \.orig$)
 cd ..
@@ -159,9 +153,9 @@ esac
 cd $packages_dir
 for i in $PATCHES ; do
 	pparm='-p1'
-	patch $pparm < ../ff-control/patches/$i || exit 0
+	patch $pparm < ../firmware-berlin/patches/$i || exit 0
 	mkdir -p ../$verm/patches
-	cp ../ff-control/patches/$i ../$verm/patches || exit 0
+	cp ../firmware-berlin/patches/$i ../$verm/patches || exit 0
 done
 rm -rf $(find . | grep \.orig$)
 
@@ -201,9 +195,9 @@ PATCHES="$PATCHES luci-mod-admin-dfs.patch"
 for i in $PATCHES ; do
 	pparm='-p1'
 	echo "Patch: $i"
-	patch $pparm < ../ff-control/patches/$i || exit 0
+	patch $pparm < ../firmware-berlin/patches/$i || exit 0
 	mkdir -p ../$verm/patches
-	cp ../ff-control/patches/$i ../$verm/patches  || exit 0
+	cp ../firmware-berlin/patches/$i ../$verm/patches  || exit 0
 done
 rm -rf $(find . | grep \.orig$)
 git rm contrib/package/freifunk-policyrouting/files/etc/rc.d/S15-freifunk-policyrouting
@@ -304,7 +298,7 @@ for board in $boards ; do
 	echo "OpenWrt Branch: $verm" >> VERSION.txt
 	echo "OpenWrt Board: $board" >> VERSION.txt
 	echo "OpenWrt Build: $vername-$build_number" >> VERSION.txt
-	#cat $pwd/ff-control/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
+	#cat $pwd/firmware-berlin/patches/ascii_backfire.txt >> package/base-files/files/etc/banner
 	cp VERSION.txt package/base-files/files/etc
 	echo "timestamp: $timestamp url: http://$servername/$verm/$ver/$board host: $(hostname)">> package/base-files/files/etc/banner
 	options_ver=""
@@ -314,8 +308,7 @@ for board in $boards ; do
 	>feeds.conf
 	echo "src-link packages $pwd/$packages_dir" >> feeds.conf
 	echo "src-link routing $pwd/routing" >> feeds.conf
-	echo "src-link packagespberg $pwd/packages-pberg" >> feeds.conf
-	echo "src-link piratenluci $pwd/piratenfreifunk-packages" >> feeds.conf
+	echo "src-link packagesberlin $pwd/packages_berlin" >> feeds.conf
 	echo "src-link luci $pwd/luci-master" >> feeds.conf
 	echo "src-link libremap $pwd/libremap-agent-openwrt" >> feeds.conf
 	echo "src-link kadnode $pwd/KadNode/openwrt" >> feeds.conf
@@ -381,22 +374,22 @@ for board in $boards ; do
 	for i in $PATCHES ; do
 		pparm='-p1'
 		echo "Patch: $i"
-		patch $pparm < $pwd/ff-control/patches/$i || exit 0
+		patch $pparm < $pwd/firmware-berlin/patches/$i || exit 0
 		mkdir -p $pwd/$verm/patches
-		cp $pwd/ff-control/patches/$i $pwd/$verm/patches || exit 0
+		cp $pwd/firmware-berlin/patches/$i $pwd/$verm/patches || exit 0
 	done
 	rm -rf $(find package | grep \.orig$)
 	rm -rf $(find target | grep \.orig$)
 	
 	mkdir -p $pwd/dl
 	[ -h dl ] || ln -s $pwd/dl dl
-	cp -a $pwd/ff-control/patches/regulatory.bin dl/regulatory.bin
+	cp -a $pwd/firmware-berlin/patches/regulatory.bin dl/regulatory.bin
 	build_fail=0
 
 	case $board in
 		atheros)
-			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
-			cp $pwd/ff-control/configs/$verm-$board.config .config
+			echo "copy config $pwd/firmware-berlin/configs/$verm-$board.config .config"
+			cp $pwd/firmware-berlin/configs/$verm-$board.config .config
 			rm staging_dir/host/bin/*-pc-linux-gnu-pkg-config
 			genconfig "$options_ver"
 			make oldconfig
@@ -408,16 +401,16 @@ for board in $boards ; do
 		;;
 		ar71xx_nand)
 			#make initramfs
-			echo "copy config $pwd/ff-control/configs/$verm-$board-initramfs.config .config"
-			cp $pwd/ff-control/configs/$verm-$board-initramfs.config .config
+			echo "copy config $pwd/firmware-berlin/configs/$verm-$board-initramfs.config .config"
+			cp $pwd/firmware-berlin/configs/$verm-$board-initramfs.config .config
 			rm staging_dir/host/bin/*-pc-linux-gnu-pkg-config
 			echo "$options_ver"
 			genconfig "$options_ver"
 			make oldconfig
 			${MAKE} world || build_fail=1
 			#make nand rootfs
-			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
-			cp $pwd/ff-control/configs/$verm-$board.config .config
+			echo "copy config $pwd/firmware-berlin/configs/$verm-$board.config .config"
+			cp $pwd/firmware-berlin/configs/$verm-$board.config .config
 			rm staging_dir/host/bin/*-pc-linux-gnu-pkg-config
 			echo "$options_ver"
 			genconfig "$options_ver"
@@ -425,8 +418,8 @@ for board in $boards ; do
 			${MAKE} world || build_fail=1
 		;;
 		*)
-			echo "copy config $pwd/ff-control/configs/$verm-$board.config .config"
-			cp $pwd/ff-control/configs/$verm-$board.config .config
+			echo "copy config $pwd/firmware-berlin/configs/$verm-$board.config .config"
+			cp $pwd/firmware-berlin/configs/$verm-$board.config .config
 			rm staging_dir/host/bin/*-pc-linux-gnu-pkg-config
 			echo "$options_ver"
 			genconfig "$options_ver"

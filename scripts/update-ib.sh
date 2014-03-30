@@ -224,6 +224,6 @@ done
 
 
 echo "Rsync PIDS: $p rsync -av --delete "$DIR"/"$verm"/patches $ib_tmp"
-cp -a "$DIR"/ff-control/Changelog $wwwdir/$verm/$ver
+cp -a "$DIR"/firmware-berlin/Changelog $wwwdir/$verm/$ver
 rsync -a --delete "$DIR"/"$verm"/patches $wwwdir/$verm/$ver
 

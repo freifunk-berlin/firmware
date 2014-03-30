@@ -48,7 +48,7 @@ for board in $boards ; do
 	[ -z "$pkgpath" ] && pkgpath=$(find package -maxdepth 3 | grep /$pkgname$)
 	[ -z "$pkgpath" ] && pkgpath=$(find package/feeds -maxdepth 2 | grep /$pkgname$)
 	[ -z "$pkgpath" ] && echo "$pkgname not found" && rm update-build-$verm-$board.lock && break
-	cp ../../ff-control/configs/$verm-$board.config .config
+	cp ../../firmware-berlin/configs/$verm-$board.config .config
 	make oldconfig
 	make $pkgpath/clean V=99 && \
 	make $pkgpath/compile V=99 && \

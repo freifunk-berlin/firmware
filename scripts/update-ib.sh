@@ -217,8 +217,8 @@ rm -f $meshkit/update-ib-$verm-$board-first.lock
 	rsync -a --delete $ib_tmp/$board $wwwdir/$verm/$ver
 	rsync -a "$DIR"/"$verm"/"$board"/bin/*/$ib_name.tar.bz2 $wwwdir/$verm/$ver/
 	rm -rf $ib_tmp/$board
-	echo "update-wi-$verm-$board END PIDS: $p"
-	) >update-wi-$verm-$board.log 2>&1
+	echo "update-ib-$verm-$board END PIDS: $p"
+	) >update-ib-$verm-$board.log 2>&1
 done
 
 

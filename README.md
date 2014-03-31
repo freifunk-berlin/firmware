@@ -10,7 +10,7 @@ http://github.com/freifunk/packages-berlin.
 HowTo
 -----
 
-Build all images
+Create a firmware build directory
 ```
 $ mkdir firmware && cd firmware
 $ git clone git@github.com:freifunk/firmware-berlin.git
@@ -19,24 +19,26 @@ $ git clone git@github.com:freifunk/firmware-berlin.git
 Copy your config firmware
 ```
 $ cp firmware-berlin/default.config config
-  or
-$ cp firmware-berlin/configs/<target>.config config
 ```
 
-Build
+Build Kernel Packages and ImageBuilder for all targets
 ```
 $ firmware-berlin/scripts/update-build.sh   # this step will take ages...
 ```
 
-Build one packages
+Build one package and update the Meshkit ImageBuilders
 ```
 $ firmware-berlin/scripts/update-build-pkg.sh <packet-name>
 ```
 
-
-Build ImageBuilders (to use in meshkit)
+Update Meshkit ImageBuilders (to use in meshkit)
 ```
 $ firmware-berlin/scripts/update-wib.sh
+```
+
+Build Firmware for all Boards with OpenWRT ImageBuilder
+```
+$ firmware-berlin/scripts/update-ib.sh
 ```
 
 

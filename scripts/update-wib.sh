@@ -62,7 +62,7 @@ rm -f $meshkit/update-wib-$verm-$board-first.lock
 
 	sudo rm -rf "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"
 	sudo mkdir -p "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"/
-	sudo rsync -av --delete "$DIR"/"$verm"/meshkit/"OpenWrt-ImageBuilder-$board$board_sub-for-$target"/ "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"/
+	sudo rsync -av --delete $meshkit/$ib_name/ "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"/
 	sudo chown -R www-data "$wwwdir"/../www-data-build/"$wibverm"-"$board$board_sub"/
 	sudo rm -f ../www/web2py/applications/meshkit/static/package_lists/*
 

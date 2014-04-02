@@ -2,6 +2,66 @@
 
 . ./config
 
+ROUTING_PATCHES=""
+ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd.init_6and4.patch"
+ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd.config-rm-wlan.patch"
+#ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd-rm-hotplug.patch"
+ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd.release.patch"
+ROUTING_PATCHES="$ROUTING_PATCHES routing-batman-adv-btctl-2014.0.patch"
+ROUTING_PATCHES="$ROUTING_PATCHES routing-alfred-hosts.patch"
+
+PACKAGES_PATCHES=""
+case $verm in
+	trunk)
+		PACKAGES_PATCHES="$PACKAGES_PATCHES trunk-radvd-ifconfig.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-disable-eglibc-dep.patch"
+		;;
+	barrier_breaker)
+		PACKAGES_PATCHES="$PACKAGES_PATCHES trunk-radvd-ifconfig.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-disable-eglibc-dep.patch"
+		;;
+	attitude_adjustment)
+		PACKAGES_PATCHES="$PACKAGES_PATCHES trunk-radvd-ifconfig.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-openvpn-backport-2.3.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-openvpn-comp_lzo-value.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-disable-eglibc-dep.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-chk-linux-3.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-nagios-plugins.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-net-snmp.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-6scripts.patch"
+		PACKAGES_PATCHES="$PACKAGES_PATCHES package-argp-standalone.patch"
+		;;
+esac
+
+LUCI_PATCHES=""
+LUCI_PATCHES="$LUCI_PATCHES luci-olsr-controller.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-olsr-model.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-modfreifunk-use-admin-mini.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-modfreifunk-use-admin-mini-status.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-modfreifunk-basics-mini.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-admin-mini-sysupgrade.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-admin-mini-splash.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-admin-mini-index.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-admin-mini-backup-style.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-admin-mini-sshkeys.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-app-splash-css.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-modfreifunk-migrate.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-theme-bootstrap.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-theme-bootstrap-header.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-olsr-view.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-admin-mini-dhcp.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-freifunk-map.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-admin-mini-install-full.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-admin-mini-wifi.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-freifunk-policyrouting.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-app-freifunk-policyrouting.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-freifunk-gwcheck.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-po-only-en-de.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-freifunk-common-olsr-watchdog.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-community-profiles-berlin.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-mod-admin-dfs.patch"
+
 #MAKE=${MAKE:-nice -n 10 make}
 #MAKE=${MAKE:-make -j5}
 MAKE=${MAKE:-make V=s}
@@ -68,7 +128,7 @@ make_feeds() {
 }
 
 apply_patches() {
-	for i in $PATCHES ; do
+	for i in $1 ; do
 		pparm='-p1'
 		patch $pparm < ../firmware-berlin/patches/$i || exit 0
 		mkdir -p ../$verm/patches
@@ -119,15 +179,8 @@ echo "packages_berlin Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/openwrt-routing/packages.git" "routing"
 echo "routing packages Revision: $revision"  >>VERSION.txt
 
-PATCHES=""
-PATCHES="$PATCHES routing-olsrd.init_6and4.patch"
-PATCHES="$PATCHES routing-olsrd.config-rm-wlan.patch"
-#PATCHES="$PATCHES routing-olsrd-rm-hotplug.patch"
-PATCHES="$PATCHES routing-olsrd.release.patch"
-PATCHES="$PATCHES routing-batman-adv-btctl-2014.0.patch"
-PATCHES="$PATCHES routing-alfred-hosts.patch"
 cd routing
-apply_patches
+apply_patches $ROUTING_PATCHES
 rm -rf $(find . | grep \.orig$)
 cd ..
 
@@ -150,31 +203,9 @@ case $verm in
 	;;
 esac
 
-PATCHES=""
-case $verm in
-	trunk)
-		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
-		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
-		;;
-	barrier_breaker)
-		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
-		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
-		;;
-	attitude_adjustment)
-		PATCHES="$PATCHES trunk-radvd-ifconfig.patch"
-		PATCHES="$PATCHES package-openvpn-backport-2.3.patch"
-		PATCHES="$PATCHES package-openvpn-comp_lzo-value.patch"
-		PATCHES="$PATCHES package-pthsem-disable-eglibc-dep.patch"
-		PATCHES="$PATCHES package-pthsem-chk-linux-3.patch"
-		PATCHES="$PATCHES package-nagios-plugins.patch"
-		PATCHES="$PATCHES package-net-snmp.patch"
-		PATCHES="$PATCHES package-6scripts.patch"
-		PATCHES="$PATCHES package-argp-standalone.patch"
-		;;
-esac
 
 cd $packages_dir
-apply_patches
+apply_patches $PACKAGES_PATCHES
 rm -rf $(find . | grep \.orig$)
 
 cd ..
@@ -182,35 +213,7 @@ cd ..
 update_git "git://github.com/freifunk/luci.git" "luci-master"
 echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
-PATCHES=""
-PATCHES="$PATCHES luci-olsr-controller.patch"
-#PATCHES="$PATCHES luci-olsr-model.patch"
-#PATCHES="$PATCHES luci-modfreifunk-use-admin-mini.patch"
-PATCHES="$PATCHES luci-modfreifunk-use-admin-mini-status.patch"
-PATCHES="$PATCHES luci-modfreifunk-use-admin-mini-makefile.patch"
-#PATCHES="$PATCHES luci-modfreifunk-basics-mini.patch"
-PATCHES="$PATCHES luci-admin-mini-sysupgrade.patch"
-#PATCHES="$PATCHES luci-admin-mini-splash.patch"
-PATCHES="$PATCHES luci-admin-mini-index.patch"
-PATCHES="$PATCHES luci-admin-mini-backup-style.patch"
-PATCHES="$PATCHES luci-admin-mini-sshkeys.patch"
-PATCHES="$PATCHES luci-app-splash-css.patch"
-#PATCHES="$PATCHES luci-modfreifunk-migrate.patch"
-PATCHES="$PATCHES luci-theme-bootstrap.patch"
-#PATCHES="$PATCHES luci-theme-bootstrap-header.patch"
-PATCHES="$PATCHES luci-olsr-view.patch"
-PATCHES="$PATCHES luci-admin-mini-dhcp.patch"
-PATCHES="$PATCHES luci-freifunk-map.patch"
-PATCHES="$PATCHES luci-admin-mini-install-full.patch"
-PATCHES="$PATCHES luci-admin-mini-wifi.patch"
-PATCHES="$PATCHES luci-freifunk-policyrouting.patch"
-#PATCHES="$PATCHES luci-app-freifunk-policyrouting.patch"
-PATCHES="$PATCHES luci-freifunk-gwcheck.patch"
-PATCHES="$PATCHES luci-po-only-en-de.patch"
-PATCHES="$PATCHES luci-freifunk-common-olsr-watchdog.patch"
-PATCHES="$PATCHES luci-community-profiles-berlin.patch"
-PATCHES="$PATCHES luci-mod-admin-dfs.patch"
-apply_patches
+apply_patches $LUCI_PATCHES
 rm -rf $(find . | grep \.orig$)
 git rm contrib/package/freifunk-policyrouting/files/etc/rc.d/S15-freifunk-policyrouting
 cd ..

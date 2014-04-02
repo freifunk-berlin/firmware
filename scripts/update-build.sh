@@ -277,20 +277,6 @@ for board in $boards ; do
 	cd $pwd/$verm/$board
 	echo "clean up"
 	rm -f .config
-#	make distclean
-#	make clean V=s
-#	rm -rf tmp
-#	rm -rf feeds/*
-#	rm -rf package/feeds/*
-#	rm -rf bin
-#	rm -rf build_dir/*/luci*
-#	rm -rf build_dir/*/libiwinfo*
-#	rm -rf build_dir/*/collectd*
-#	rm -rf build_dir/*/root*
-#	rm -rf build_dir/*/compat-wireless*
-#	rm -rf build_dir/*/uhttp*
-#	rm -rf build_dir
-#	rm -rf staging_dir
 	rm -rf files
 	mkdir -p files
 	case $verm in

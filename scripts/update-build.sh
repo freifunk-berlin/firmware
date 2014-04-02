@@ -125,7 +125,7 @@ make_feeds() {
 }
 
 apply_patches() {
-	for i in $1 ; do
+	for i in $@ ; do
 		pparm='-p1'
 		patch $pparm < ../firmware-berlin/patches/$i || exit 0
 		mkdir -p ../$verm/patches

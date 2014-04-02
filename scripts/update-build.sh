@@ -62,10 +62,7 @@ LUCI_PATCHES="$LUCI_PATCHES luci-freifunk-common-olsr-watchdog.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-community-profiles-berlin.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-mod-admin-dfs.patch"
 
-#MAKE=${MAKE:-nice -n 10 make}
-#MAKE=${MAKE:-make -j5}
 MAKE=${MAKE:-make V=s}
-#MAKE=${MAKE:-echo}
 
 [ -z $verm ] && exit 0
 [ -z $ver ] && exit 0

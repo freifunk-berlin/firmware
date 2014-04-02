@@ -78,8 +78,7 @@ echo "Build Nr.: $build_number on $(hostname)" >>VERSION.txt
 echo "openwrt Revision: $revision" >>VERSION.txt
 
 [ -d feeds ] || mkdir feeds
-cd feeds
-cd ..
+
 [ -d $verm/patches ] || mkdir -p $verm/patches
 rm -f $verm/patches/*.patch
 update_git "git://github.com/libremap/libremap-agent-openwrt.git" "libremap-agent-openwrt"

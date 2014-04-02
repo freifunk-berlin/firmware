@@ -47,6 +47,26 @@ update_git() {
 	fi
 }
 
+make_feeds() {
+	echo "Generate feeds.conf"
+
+	>feeds.conf
+
+	echo "src-link packages $pwd/$packages_dir" >> feeds.conf
+	echo "src-link routing $pwd/routing" >> feeds.conf
+	echo "src-link packagesberlin $pwd/packages_berlin" >> feeds.conf
+	echo "src-link luci $pwd/luci-master" >> feeds.conf
+	echo "src-link libremap $pwd/libremap-agent-openwrt" >> feeds.conf
+	echo "src-link kadnode $pwd/KadNode/openwrt" >> feeds.conf
+	echo "src-link fffeeds $pwd/feeds" >> feeds.conf
+
+	echo "openwrt feeds update"
+	scripts/feeds update
+
+	echo "openwrt feeds install"
+	scripts/feeds install -a
+}
+
 revision=""
 case $verm in
 	trunk)
@@ -303,19 +323,8 @@ for board in $boards ; do
 	options_ver=""
 	options_ver=$options_ver" CONFIG_VERSION_NUMBER=\"$vername-$build_number\""
 
-	echo "Generate feeds.conf"
-	>feeds.conf
-	echo "src-link packages $pwd/$packages_dir" >> feeds.conf
-	echo "src-link routing $pwd/routing" >> feeds.conf
-	echo "src-link packagesberlin $pwd/packages_berlin" >> feeds.conf
-	echo "src-link luci $pwd/luci-master" >> feeds.conf
-	echo "src-link libremap $pwd/libremap-agent-openwrt" >> feeds.conf
-	echo "src-link kadnode $pwd/KadNode/openwrt" >> feeds.conf
-	echo "src-link fffeeds $pwd/feeds" >> feeds.conf
-	echo "openwrt feeds update"
-	scripts/feeds update
-	echo "openwrt feeds install"
-	scripts/feeds install -a
+	make_feeds
+
 	PATCHES=""
 	case $verm in
 		trunk)

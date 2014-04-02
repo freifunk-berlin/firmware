@@ -67,6 +67,15 @@ make_feeds() {
 	scripts/feeds install -a
 }
 
+apply_patches() {
+	for i in $PATCHES ; do
+		pparm='-p1'
+		patch $pparm < ../firmware-berlin/patches/$i || exit 0
+		mkdir -p ../$verm/patches
+		cp ../firmware-berlin/patches/$i ../$verm/patches || exit 0
+	done
+}
+
 revision=""
 case $verm in
 	trunk)
@@ -118,12 +127,7 @@ PATCHES="$PATCHES routing-olsrd.release.patch"
 PATCHES="$PATCHES routing-batman-adv-btctl-2014.0.patch"
 PATCHES="$PATCHES routing-alfred-hosts.patch"
 cd routing
-for i in $PATCHES ; do
-	pparm='-p1'
-	patch $pparm < ../firmware-berlin/patches/$i || exit 0
-	mkdir -p ../$verm/patches
-	cp ../firmware-berlin/patches/$i ../$verm/patches || exit 0
-done
+apply_patches
 rm -rf $(find . | grep \.orig$)
 cd ..
 
@@ -170,12 +174,7 @@ case $verm in
 esac
 
 cd $packages_dir
-for i in $PATCHES ; do
-	pparm='-p1'
-	patch $pparm < ../firmware-berlin/patches/$i || exit 0
-	mkdir -p ../$verm/patches
-	cp ../firmware-berlin/patches/$i ../$verm/patches || exit 0
-done
+apply_patches
 rm -rf $(find . | grep \.orig$)
 
 cd ..
@@ -211,13 +210,7 @@ PATCHES="$PATCHES luci-po-only-en-de.patch"
 PATCHES="$PATCHES luci-freifunk-common-olsr-watchdog.patch"
 PATCHES="$PATCHES luci-community-profiles-berlin.patch"
 PATCHES="$PATCHES luci-mod-admin-dfs.patch"
-for i in $PATCHES ; do
-	pparm='-p1'
-	echo "Patch: $i"
-	patch $pparm < ../firmware-berlin/patches/$i || exit 0
-	mkdir -p ../$verm/patches
-	cp ../firmware-berlin/patches/$i ../$verm/patches  || exit 0
-done
+apply_patches
 rm -rf $(find . | grep \.orig$)
 git rm contrib/package/freifunk-policyrouting/files/etc/rc.d/S15-freifunk-policyrouting
 cd ..
@@ -379,13 +372,7 @@ for board in $boards ; do
 			;;
 	esac
 	PATCHES="$PATCHES base-system.patch"
-	for i in $PATCHES ; do
-		pparm='-p1'
-		echo "Patch: $i"
-		patch $pparm < $pwd/firmware-berlin/patches/$i || exit 0
-		mkdir -p $pwd/$verm/patches
-		cp $pwd/firmware-berlin/patches/$i $pwd/$verm/patches || exit 0
-	done
+	apply_patches
 	rm -rf $(find package | grep \.orig$)
 	rm -rf $(find target | grep \.orig$)
 	

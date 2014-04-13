@@ -338,6 +338,8 @@ for board in $boards ; do
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		attitude_adjustment)
+			PATCHES="$PATCHES aa-package-iw-trunk.patch"
+			PATCHES="$PATCHES aa-package-iwinfo-trunk.patch"
 			PATCHES="$PATCHES aa-package-mac80211-dfs.patch"
 			PATCHES="$PATCHES aa-package-mac80211-regdb.patch"
 			PATCHES="$PATCHES aa-package-hostapd-dfs.patch"

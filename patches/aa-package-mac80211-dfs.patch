@@ -12,3 +12,32 @@ index b331751..fc9ee85 100644
  	ATH9K_HTC_DEBUGFS \
  	ATH10K_DEBUGFS \
  	CARL9170_DEBUGFS \
+diff --git a/package/mac80211/files/lib/wifi/mac80211.sh b/package/mac80211/files/lib/wifi/mac80211.sh
+index 1994ca3..7e3a2ca 100644
+--- a/package/mac80211/files/lib/wifi/mac80211.sh
++++ b/package/mac80211/files/lib/wifi/mac80211.sh
+@@ -11,9 +11,11 @@ mac80211_hostapd_setup_base() {
+ 	config_get country "$device" country
+ 	config_get hwmode "$device" hwmode
+ 	config_get channel "$device" channel
++	config_get dfs_chanlist "$device" dfs_chanlist
+ 	config_get beacon_int "$device" beacon_int
+ 	config_get basic_rate_list "$device" basic_rate
+ 	config_get_bool noscan "$device" noscan
++	config_get_bool doth "$device" doth 0
+ 
+ 	hostapd_set_log_options base_cfg "$device"
+ 
+@@ -95,10 +97,12 @@ tx_queue_data0_cwmax=7
+ tx_queue_data0_burst=1.5
+ ${hwmode:+hw_mode=$hwmode}
+ ${hostapd_channel:+channel=$hostapd_channel}
++${dfs_chanlist:+dfs_chanlist=$dfs_chanlist}
+ ${beacon_int:+beacon_int=$beacon_int}
+ ${country:+country_code=$country}
+ ${noscan:+noscan=$noscan}
+ ${brstr:+basic_rates=$brstr}
++${doth:+ieee80211h=$doth}
+ $base_cfg
+ 
+ EOF

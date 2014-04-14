@@ -1,5 +1,5 @@
 diff --git a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
-index 67ccdb4..97ea339 100644
+index 67ccdb4..51b19d9 100644
 --- a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 +++ b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 @@ -169,6 +169,8 @@ else
@@ -32,7 +32,7 @@ index 67ccdb4..97ea339 100644
  	end
  
  	local cl = iw and iw.countrylist
-@@ -234,19 +244,34 @@ if hwtype == "mac80211" then
+@@ -234,19 +244,35 @@ if hwtype == "mac80211" then
  		translate("Distance to farthest network member in meters."))
  
  	-- external antenna profiles
@@ -73,11 +73,12 @@ index 67ccdb4..97ea339 100644
 +	s:taboption("advanced", Value, "beacon_int", translate("Beacon Interval"))
 +	s:taboption("advanced", DynamicList, "basic_rate", translate("Basic Rates"))
 +	s:taboption("advanced", Flag, "country_ie", "802.11d")
-+	s:taboption("advanced", Flag, "doth", "802.11h")
++	s:taboption("advanced", Flag, "doth", "802.11h", translate("DFS (Dynamic Frequency Selection)/Radar Pulse detection"))
++	s:taboption("advanced", Value, "dfs_chanlist", translate("DFS Channel Liste"))
  end
  
  
-@@ -495,14 +520,31 @@ if hwtype == "mac80211" then
+@@ -495,14 +521,31 @@ if hwtype == "mac80211" then
  		end
  	end
  

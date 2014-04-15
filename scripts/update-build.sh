@@ -319,7 +319,6 @@ for board in $boards ; do
 			options_ver=$options_ver" CONFIG_VERSION_REPO=\"http://$servername/$verm/$ver/$board/packages\""
 			;;
 		barrier_breaker)
-			PATCHES="$PATCHES bb-package-uci.patch"
 			PATCHES="$PATCHES bb-package-mac80211-regdb.patch"
 			PATCHES="$PATCHES bb-package-mac80211-dfs.patch"
 			PATCHES="$PATCHES bb-package-hostapd-dfs.patch"

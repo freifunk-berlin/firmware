@@ -12,3 +12,17 @@ index b331751..fc9ee85 100644
  	ATH9K_HTC_DEBUGFS \
  	ATH10K_DEBUGFS \
  	CARL9170_DEBUGFS \
+diff --git a/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh b/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
+index c5d3482..fb712ff 100644
+--- a/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
++++ b/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
+@@ -233,7 +233,9 @@ mac80211_hostapd_setup_base() {
+ 	hostapd_prepare_device_config "$hostapd_conf_file" nl80211
+ 	cat >> "$hostapd_conf_file" <<EOF
+ ${channel:+channel=$channel}
++${dfs_chanlist:+dfs_chanlist=$dfs_chanlist}
+ ${noscan:+noscan=$noscan}
++${doth:+ieee80211h=$doth}
+ $base_cfg
+ 
+ EOF

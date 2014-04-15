@@ -1,69 +1,105 @@
-diff --git a/package/network/services/hostapd/files/netifd.sh b/package/network/services/hostapd/files/netifd.sh
-index f06b2ac..24dc345 100644
---- a/package/network/services/hostapd/files/netifd.sh
-+++ b/package/network/services/hostapd/files/netifd.sh
-@@ -82,6 +82,12 @@ hostapd_prepare_device_config() {
- 	[ -n "$brlist" ] && append base_cfg "basic_rates=$brlist" "$N"
- 	[ -n "$beacon_int" ] && append base_cfg "beacon_int=$beacon_int" "$N"
- 
-+	json_get_vars doth
-+	set_default doth 1
-+	if [ "$doth" -gt 0 ]; then
-+		append base_cfg "ieee80211h=1" "$N"
-+	fi
+diff --git a/package/network/services/hostapd/patches/0002-hostapd-Add-config-option-for-DFS-channels.patch b/package/network/services/hostapd/patches/0002-hostapd-Add-config-option-for-DFS-channels.patch
+new file mode 100644
+index 0000000..03b342c
+--- /dev/null
++++ b/package/network/services/hostapd/patches/0002-hostapd-Add-config-option-for-DFS-channels.patch
+@@ -0,0 +1,99 @@
++diff --git a/hostapd/config_file.c b/hostapd/config_file.c
++index 54e4af9..0df7edf 100644
++--- a/hostapd/config_file.c
+++++ b/hostapd/config_file.c
++@@ -2235,6 +2235,12 @@  static int hostapd_config_fill(struct hostapd_config *conf,
++ 				conf->channel = 0;
++ 			} else
++ 				conf->channel = atoi(pos);
+++		} else if (os_strcmp(buf, "dfs_chanlist") == 0) {
+++			if (hostapd_parse_intlist(&conf->dfs_chanlist, pos)) {
+++				wpa_printf(MSG_ERROR, "Line %d: invalid channel "
+++					   "list", line);
+++				errors++;
+++			}
++ 		} else if (os_strcmp(buf, "beacon_int") == 0) {
++ 			int val = atoi(pos);
++ 			/* MIB defines range as 1..65535, but very small values
++diff --git a/hostapd/hostapd.conf b/hostapd/hostapd.conf
++index da7817f..7591663 100644
++--- a/hostapd/hostapd.conf
+++++ b/hostapd/hostapd.conf
++@@ -140,6 +140,12 @@  channel=1
++ # Defaults:
++ #acs_num_scans=5
++ 
+++# DFS Channels. This option allows hostapd to select on of the provided
+++# DFS Channels when the current channels becomes unavailable due to
+++# radar interference. Only useful when ieee80211h=1 is set.
+++# Default: not set
+++#dfs_chanlist=100 104 108 112 116
+++
++ # Beacon interval in kus (1.024 ms) (default: 100; range 15..65535)
++ beacon_int=100
++ 
++diff --git a/src/ap/ap_config.c b/src/ap/ap_config.c
++index 368b202..c369cd6 100644
++--- a/src/ap/ap_config.c
+++++ b/src/ap/ap_config.c
++@@ -554,6 +554,7 @@  void hostapd_config_free(struct hostapd_config *conf)
++ 	os_free(conf->bss);
++ 	os_free(conf->supported_rates);
++ 	os_free(conf->basic_rates);
+++	os_free(conf->dfs_chanlist);
++ 
++ 	os_free(conf);
++ }
++diff --git a/src/ap/ap_config.h b/src/ap/ap_config.h
++index b4860a0..b29323f 100644
++--- a/src/ap/ap_config.h
+++++ b/src/ap/ap_config.h
++@@ -493,6 +493,7 @@  struct hostapd_config {
++ 	int fragm_threshold;
++ 	u8 send_probe_response;
++ 	u8 channel;
+++	int *dfs_chanlist;
++ 	enum hostapd_hw_mode hw_mode; /* HOSTAPD_MODE_IEEE80211A, .. */
++ 	enum {
++ 		LONG_PREAMBLE = 0,
++diff --git a/src/ap/dfs.c b/src/ap/dfs.c
++index e4c00f8..b2c6a7f 100644
++--- a/src/ap/dfs.c
+++++ b/src/ap/dfs.c
++@@ -130,6 +130,24 @@  static int dfs_chan_range_available(struct hostapd_hw_modes *mode,
++ }
++ 
++ 
+++static int is_in_dfs_chanlist(struct hostapd_iface *iface,
+++			      struct hostapd_channel_data *chan)
+++{
+++	int *chan_entry;
+++
+++	if (!iface->conf->dfs_chanlist)
+++		return 1;
+++
+++	for (chan_entry = iface->conf->dfs_chanlist;
+++	     *chan_entry != -1;
+++	     chan_entry++) {
+++		if (*chan_entry == chan->chan)
+++			return 1;
+++	}
+++	return 0;
+++}
+++
+++
++ /*
++  * The function assumes HT40+ operation.
++  * Make sure to adjust the following variables after calling this:
++@@ -162,6 +180,9 @@  static int dfs_find_channel(struct hostapd_iface *iface,
++ 		if (!dfs_chan_range_available(mode, i, n_chans, skip_radar))
++ 			continue;
++ 
+++		if (!is_in_dfs_chanlist(iface, chan))
+++			continue;
+++
++ 		if (ret_chan && idx == channel_idx) {
++ 			wpa_printf(MSG_DEBUG, "Selected ch. #%d", chan->chan);
++ 			*ret_chan = chan;
 +
- 	cat > "$config" <<EOF
- driver=$driver
- $base_cfg
-diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index b55b63d..afce140 100644
---- a/package/network/services/hostapd/files/hostapd.sh
-+++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -1,7 +1,7 @@
- hostapd_set_bss_options() {
- 	local var="$1"
- 	local vif="$2"
--	local enc wep_rekey wpa_group_rekey wpa_pair_rekey wpa_master_rekey wps_possible
-+	local enc wep_rekey wpa_group_rekey wpa_pair_rekey wpa_master_rekey wps_possible doth
- 
- 	config_get enc "$vif" encryption "none"
- 	config_get wep_rekey        "$vif" wep_rekey        # 300
-@@ -17,9 +17,13 @@ hostapd_set_bss_options() {
- 	config_get device "$vif" device
- 	config_get hwmode "$device" hwmode
- 	config_get phy "$device" phy
-+	config_get_bool doth "$doth" doth 1
- 
- 	append "$var" "ctrl_interface=/var/run/hostapd-$phy" "$N"
- 
-+	if [ "$doth" -gt 0 ]; then
-+		append "$var" "ieee80211h=$doth" "$N"
-+	fi
- 	if [ "$ap_isolate" -gt 0 ]; then
- 		append "$var" "ap_isolate=$ap_isolate" "$N"
- 	fi
-@@ -327,7 +331,7 @@ hostapd_set_log_options() {
- hostapd_setup_vif() {
- 	local vif="$1"
- 	local driver="$2"
--	local ifname device channel hwmode
-+	local ifname device channel hwmode doth
- 
- 	hostapd_cfg=
- 
-@@ -335,6 +339,7 @@ hostapd_setup_vif() {
- 	config_get device "$vif" device
- 	config_get channel "$device" channel
- 	config_get hwmode "$device" hwmode
-+	config_get_bool doth "$doth" doth 1
- 
- 	hostapd_set_log_options hostapd_cfg "$device"
- 	hostapd_set_bss_options hostapd_cfg "$vif"
-@@ -349,6 +354,7 @@ hostapd_setup_vif() {
- driver=$driver
- interface=$ifname
- ${hwmode:+hw_mode=${hwmode#11}}
-+${doth:+ieee80211h=$doth}
- ${channel:+channel=$channel}
- $hostapd_cfg
- EOF
++

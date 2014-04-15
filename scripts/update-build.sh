@@ -125,11 +125,17 @@ make_feeds() {
 }
 
 apply_patches() {
+	patches_dir=""
+	if [ -d ../firmware-berlin/patches ] ; then 
+		patches_dir="../firmware-berlin/patches";
+	elif [ -d ../../firmware-berlin/patches ] ; then
+		patches_dir="../../firmware-berlin/patches";
+	fi
 	for i in $@ ; do
 		pparm='-p1'
-		patch $pparm < ../firmware-berlin/patches/$i || exit 0
+		patch $pparm < $patches_dir/$i || exit 0
 		mkdir -p ../$verm/patches
-		cp ../firmware-berlin/patches/$i ../$verm/patches || exit 0
+		cp $patches_dir/$i ../$verm/patches || exit 0
 	done
 }
 
@@ -360,7 +366,7 @@ for board in $boards ; do
 			;;
 	esac
 	PATCHES="$PATCHES base-system.patch"
-	apply_patches
+	apply_patches $PATCHES
 	rm -rf $(find package | grep \.orig$)
 	rm -rf $(find target | grep \.orig$)
 	

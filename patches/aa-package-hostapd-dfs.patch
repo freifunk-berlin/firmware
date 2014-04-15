@@ -12,8 +12,8 @@ index 0000000..03b342c
 + 				conf->channel = 0;
 + 			} else
 + 				conf->channel = atoi(pos);
-++		} else if (os_strcmp(buf, "dfs_chanlist") == 0) {
-++			if (hostapd_parse_intlist(&conf->dfs_chanlist, pos)) {
+++		} else if (os_strcmp(buf, "chanlist") == 0) {
+++			if (hostapd_parse_intlist(&conf->chanlist, pos)) {
 ++				wpa_printf(MSG_ERROR, "Line %d: invalid channel "
 ++					   "list", line);
 ++				errors++;
@@ -33,7 +33,7 @@ index 0000000..03b342c
 ++# DFS Channels when the current channels becomes unavailable due to
 ++# radar interference. Only useful when ieee80211h=1 is set.
 ++# Default: not set
-++#dfs_chanlist=100 104 108 112 116
+++#chanlist=100 104 108 112 116
 ++
 + # Beacon interval in kus (1.024 ms) (default: 100; range 15..65535)
 + beacon_int=100
@@ -46,7 +46,7 @@ index 0000000..03b342c
 + 	os_free(conf->bss);
 + 	os_free(conf->supported_rates);
 + 	os_free(conf->basic_rates);
-++	os_free(conf->dfs_chanlist);
+++	os_free(conf->chanlist);
 + 
 + 	os_free(conf);
 + }
@@ -58,7 +58,7 @@ index 0000000..03b342c
 + 	int fragm_threshold;
 + 	u8 send_probe_response;
 + 	u8 channel;
-++	int *dfs_chanlist;
+++	int *chanlist;
 + 	enum hostapd_hw_mode hw_mode; /* HOSTAPD_MODE_IEEE80211A, .. */
 + 	enum {
 + 		LONG_PREAMBLE = 0,
@@ -70,15 +70,15 @@ index 0000000..03b342c
 + }
 + 
 + 
-++static int is_in_dfs_chanlist(struct hostapd_iface *iface,
+++static int is_in_chanlist(struct hostapd_iface *iface,
 ++			      struct hostapd_channel_data *chan)
 ++{
 ++	int *chan_entry;
 ++
-++	if (!iface->conf->dfs_chanlist)
+++	if (!iface->conf->chanlist)
 ++		return 1;
 ++
-++	for (chan_entry = iface->conf->dfs_chanlist;
+++	for (chan_entry = iface->conf->chanlist;
 ++	     *chan_entry != -1;
 ++	     chan_entry++) {
 ++		if (*chan_entry == chan->chan)
@@ -95,7 +95,7 @@ index 0000000..03b342c
 + 		if (!dfs_chan_range_available(mode, i, n_chans, skip_radar))
 + 			continue;
 + 
-++		if (!is_in_dfs_chanlist(iface, chan))
+++		if (!is_in_chanlist(iface, chan))
 ++			continue;
 ++
 + 		if (ret_chan && idx == channel_idx) {

@@ -74,7 +74,7 @@ index 67ccdb4..51b19d9 100644
 +	s:taboption("advanced", DynamicList, "basic_rate", translate("Basic Rates"))
 +	s:taboption("advanced", Flag, "country_ie", "802.11d")
 +	s:taboption("advanced", Flag, "doth", "802.11h", translate("DFS (Dynamic Frequency Selection)/Radar Pulse detection"))
-+	s:taboption("advanced", Value, "dfs_chanlist", translate("DFS Channel Liste"))
++	s:taboption("advanced", Value, "chanlist", translate("DFS Channel Liste"))
  end
  
  

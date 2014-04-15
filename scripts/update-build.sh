@@ -321,7 +321,6 @@ for board in $boards ; do
 		barrier_breaker)
 			PATCHES="$PATCHES bb-package-mac80211-regdb.patch"
 			PATCHES="$PATCHES bb-package-mac80211-dfs.patch"
-			PATCHES="$PATCHES bb-package-hostapd-dfs.patch"
 			PATCHES="$PATCHES bb-target-atheros-whr-hp-ag108-sysupgrade.patch"
 			PATCHES="$PATCHES bb-target-mpc85xx-profile-wpad.patch"
 			PATCHES="$PATCHES bb-target-ib-ppc-dtc-dts.patch"

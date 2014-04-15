@@ -20,7 +20,7 @@ index 1994ca3..7e3a2ca 100644
  	config_get country "$device" country
  	config_get hwmode "$device" hwmode
  	config_get channel "$device" channel
-+	config_get dfs_chanlist "$device" dfs_chanlist
++	config_get chanlist "$device" chanlist
  	config_get beacon_int "$device" beacon_int
  	config_get basic_rate_list "$device" basic_rate
  	config_get_bool noscan "$device" noscan
@@ -32,7 +32,7 @@ index 1994ca3..7e3a2ca 100644
  tx_queue_data0_burst=1.5
  ${hwmode:+hw_mode=$hwmode}
  ${hostapd_channel:+channel=$hostapd_channel}
-+${dfs_chanlist:+dfs_chanlist=$dfs_chanlist}
++${chanlist:+chanlist=$chanlist}
  ${beacon_int:+beacon_int=$beacon_int}
  ${country:+country_code=$country}
  ${noscan:+noscan=$noscan}

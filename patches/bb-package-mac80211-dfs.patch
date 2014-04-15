@@ -20,7 +20,7 @@ index c5d3482..fb712ff 100644
  	hostapd_prepare_device_config "$hostapd_conf_file" nl80211
  	cat >> "$hostapd_conf_file" <<EOF
  ${channel:+channel=$channel}
-+${dfs_chanlist:+dfs_chanlist=$dfs_chanlist}
++${chanlist:+chanlist=$chanlist}
  ${noscan:+noscan=$noscan}
 +${doth:+ieee80211h=$doth}
  $base_cfg

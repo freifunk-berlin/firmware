@@ -142,15 +142,15 @@ apply_patches() {
 revision=""
 case $verm in
 	trunk)
-		update_git "git://github.com/freifunk/openwrt.git" "openwrt-trunk" "$openwrt_revision"
+		update_git "git://git.openwrt.org/openwrt.git" "openwrt-trunk" "$openwrt_revision"
 		echo "openwrt Revision: $revision"  >>VERSION.txt
 	;;
 	barrier_breaker)
-		update_git "git://github.com/freifunk/openwrt.git" "openwrt-$verm" "$openwrt_revision"
+		update_git "git://git.openwrt.org/openwrt.git" "openwrt-$verm" "$openwrt_revision"
 		echo "openwrt Revision: $revision"  >>VERSION.txt
 	;;
 	*)
-		update_git "git://github.com/freifunk/$verm.git" "openwrt-$verm" "$openwrt_revision"
+		update_git "git://git.openwrt.org/$ver/openwrt.git" "openwrt-$verm" "$openwrt_revision"
 		echo "openwrt Revision: $revision"  >>VERSION.txt
 	;;
 esac
@@ -190,7 +190,7 @@ cd ..
 
 case $verm in
 	trunk)
-		update_git  "git://github.com/freifunk/packages.git" "packages"
+		update_git  "git://git.openwrt.org/packages.git" "packages"
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages"
 	;;
@@ -200,7 +200,7 @@ case $verm in
 		packages_dir="packages"
 	;;
 	*)
-		update_git  "git://github.com/freifunk/packages_$ver" "packages_$ver" >>VERSION.txt
+		update_git  "git://git.openwrt.org/$ver/packages.git" "packages_$ver"
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages_$ver"
 	;;

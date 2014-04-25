@@ -213,7 +213,7 @@ rm -rf $(find . | grep \.orig$)
 
 cd ..
 
-update_git "git://github.com/freifunk/luci.git" "luci-master"
+update_git "git://git.openwrt.org/project/luci.git" "luci-master"
 echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
 apply_patches $LUCI_PATCHES

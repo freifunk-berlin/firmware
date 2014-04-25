@@ -61,6 +61,7 @@ LUCI_PATCHES="$LUCI_PATCHES luci-po-only-en-de.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-freifunk-common-olsr-watchdog.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-community-profiles-berlin.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-mod-admin-dfs.patch"
+LUCI_PATCHES="$LUCI_PATCHES luci-admin-core-sysauth-https.patch"
 
 MAKE=${MAKE:-make V=s}
 

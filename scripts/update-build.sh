@@ -117,6 +117,7 @@ make_feeds() {
 	echo "src-link libremap $pwd/libremap-agent-openwrt" >> feeds.conf
 	echo "src-link kadnode $pwd/KadNode/openwrt" >> feeds.conf
 	echo "src-link fffeeds $pwd/feeds" >> feeds.conf
+	echo "src-link luci2ui $pwd/luci2_ui" >> feeds.conf
 
 	echo "openwrt feeds update"
 	scripts/feeds update
@@ -182,6 +183,8 @@ update_git "git://github.com/freifunk/packages_berlin.git" "packages_berlin"
 echo "packages_berlin Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/openwrt-routing/packages.git" "routing"
 echo "routing packages Revision: $revision"  >>VERSION.txt
+update_git "git://git.openwrt.org/project/luci2/ui.git" "luci2_ui"
+echo "LuCI2 UI modules Revision: $revision"  >>VERSION.txt
 
 cd routing
 apply_patches $ROUTING_PATCHES

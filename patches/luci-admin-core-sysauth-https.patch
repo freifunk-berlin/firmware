@@ -1,8 +1,8 @@
 diff --git a/modules/admin-core/luasrc/view/sysauth.htm b/modules/admin-core/luasrc/view/sysauth.htm
-index 7c39f0d..a270699 100644
+index 7c39f0d..7f6bd28 100644
 --- a/modules/admin-core/luasrc/view/sysauth.htm
 +++ b/modules/admin-core/luasrc/view/sysauth.htm
-@@ -13,7 +13,39 @@ You may obtain a copy of the License at
+@@ -13,7 +13,40 @@ You may obtain a copy of the License at
  
  <%+header%>
  
@@ -18,8 +18,9 @@ index 7c39f0d..a270699 100644
 +
 +local action_uri
 +local action_w
++local server_port = luci.http.getenv('SERVER_PORT')
 +
-+if https_port and fs.access(https_key) and not luci.http.getenv('HTTPS') then
++if https_port and fs.access(https_key) and server_port and server_port ~= https_port then
 +	https_port = https_port:match("(%d+)$")
 +	local protocol = "https://"
 +	local host = luci.http.getenv('HTTP_HOST') or luci.http.getenv('SERVER_ADDR')
@@ -33,7 +34,7 @@ index 7c39f0d..a270699 100644
 +	action_uri = protocol .. host .. https_port .. url
 +else
 +	action_uri = luci.http.getenv("REQUEST_URI")
-+	if not luci.http.getenv('HTTPS') then
++	if server_port ~= https_port then
 +		action_w = "Warning no Encryption"
 +	end
 +end
@@ -43,7 +44,7 @@ index 7c39f0d..a270699 100644
  	<div class="cbi-map">
  		<h2><a id="content" name="content"><%:Authorization Required%></a></h2>
  		<div class="cbi-map-descr">
-@@ -22,6 +54,11 @@ You may obtain a copy of the License at
+@@ -22,6 +55,11 @@ You may obtain a copy of the License at
  			<div class="error"><%:Invalid username and/or password! Please try again.%></div>
  			<br />
  			<% end -%>
@@ -55,7 +56,7 @@ index 7c39f0d..a270699 100644
  		</div>
  		<fieldset class="cbi-section"><fieldset class="cbi-section-node">
  			<div class="cbi-value">
-@@ -51,15 +88,7 @@ You may obtain a copy of the License at
+@@ -51,15 +89,7 @@ You may obtain a copy of the License at
  //]]></script>
  
  <%

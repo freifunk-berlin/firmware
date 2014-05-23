@@ -7,8 +7,8 @@ ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd.init_6and4.patch"
 ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd.config-rm-wlan.patch"
 #ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd-rm-hotplug.patch"
 ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd.release.patch"
-ROUTING_PATCHES="$ROUTING_PATCHES routing-batman-adv-btctl-2014.0.patch"
-ROUTING_PATCHES="$ROUTING_PATCHES routing-alfred-hosts.patch"
+#ROUTING_PATCHES="$ROUTING_PATCHES routing-batman-adv-btctl-2014.0.patch"
+#ROUTING_PATCHES="$ROUTING_PATCHES routing-alfred-hosts.patch"
 
 PACKAGES_PATCHES=""
 case $verm in
@@ -175,15 +175,15 @@ echo "openwrt Revision: $revision" >>VERSION.txt
 
 [ -d $verm/patches ] || mkdir -p $verm/patches
 rm -f $verm/patches/*.patch
-update_git "git://github.com/libremap/libremap-agent-openwrt.git" "libremap-agent-openwrt"
+update_git "git://github.com/libremap/libremap-agent-openwrt.git" "libremap-agent-openwrt" "$libremap_revision"
 echo "libremap-agent-openwrt Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/mwarning/KadNode.git" "KadNode"
+update_git "git://github.com/mwarning/KadNode.git" "KadNode" "$kadnode_revision"
 echo "KadNode Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/freifunk/packages_berlin.git" "packages_berlin"
+update_git "git://github.com/freifunk/packages_berlin.git" "packages_berlin" "$packages_berlin_revision"
 echo "packages_berlin Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/openwrt-routing/packages.git" "routing"
+update_git "git://github.com/openwrt-routing/packages.git" "routing" "$routing_revision"
 echo "routing packages Revision: $revision"  >>VERSION.txt
-update_git "git://git.openwrt.org/project/luci2/ui.git" "luci2_ui"
+update_git "git://git.openwrt.org/project/luci2/ui.git" "luci2_ui" "$luci2_ui_revision"
 echo "LuCI2 UI modules Revision: $revision"  >>VERSION.txt
 
 cd routing
@@ -194,17 +194,17 @@ cd ..
 
 case $verm in
 	trunk)
-		update_git  "git://git.openwrt.org/packages.git" "packages"
+		update_git  "git://git.openwrt.org/packages.git" "packages" "$packages_revision"
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages"
 	;;
 	barrier_breaker)
-		update_git  "git://git.openwrt.org/packages.git" "packages"
+		update_git  "git://git.openwrt.org/packages.git" "packages" "$packages_revision"
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages"
 	;;
 	*)
-		update_git  "git://git.openwrt.org/$ver/packages.git" "packages_$ver"
+		update_git  "git://git.openwrt.org/$ver/packages.git" "packages_$ver" "$packages_revision"
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages_$ver"
 	;;
@@ -324,7 +324,7 @@ for board in $boards ; do
 			;;
 		barrier_breaker)
 			PATCHES="$PATCHES bb-package-mac80211-regdb.patch"
-			PATCHES="$PATCHES bb-package-mac80211-dfs.patch"
+			#PATCHES="$PATCHES bb-package-mac80211-dfs.patch"
 			PATCHES="$PATCHES bb-target-atheros-whr-hp-ag108-sysupgrade.patch"
 			PATCHES="$PATCHES bb-target-mpc85xx-profile-wpad.patch"
 			PATCHES="$PATCHES bb-target-ib-ppc-dtc-dts.patch"

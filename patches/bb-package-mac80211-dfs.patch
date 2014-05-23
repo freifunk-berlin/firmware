@@ -1,17 +1,3 @@
-diff --git a/package/kernel/mac80211/Makefile b/package/kernel/mac80211/Makefile
-index b331751..fc9ee85 100644
---- a/package/kernel/mac80211/Makefile
-+++ b/package/kernel/mac80211/Makefile
-@@ -1348,6 +1348,9 @@ ifdef CONFIG_PACKAGE_MAC80211_DEBUGFS
- 	CFG80211_DEBUGFS \
- 	MAC80211_DEBUGFS \
- 	ATH9K_DEBUGFS \
-+	CFG80211_CERTIFICATION_ONUS \
-+	ATH9K_DFS_CERTIFIED \
-+	ATH9K_DFS_DEBUGFS \
- 	ATH9K_HTC_DEBUGFS \
- 	ATH10K_DEBUGFS \
- 	CARL9170_DEBUGFS \
 diff --git a/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh b/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
 index c5d3482..fb712ff 100644
 --- a/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh

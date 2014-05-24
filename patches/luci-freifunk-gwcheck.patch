@@ -25,7 +25,7 @@ index b174dd6..9d60ee2 100644
 +	option logging 'info'
 +
 diff --git a/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh b/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
-index 6bba7f0..bf323f1 100755
+index 6bba7f0..dfe0c96 100755
 --- a/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
 +++ b/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
 @@ -1,17 +1,41 @@
@@ -71,29 +71,32 @@ index 6bba7f0..bf323f1 100755
  	config_get library "$cfg" library
  	if [ "${library#olsrd_dyn_gw_plain}" != "$library" ]; then
  		config_get ignore "$cfg" ignore
-@@ -24,25 +48,53 @@ check_dyngw_plain()
+@@ -24,25 +48,52 @@ check_dyngw_plain()
  
  exit=1
  config_foreach check_dyngw_plain LoadPlugin
 -[ "$exit" = "1" ] && exit 1
+-
+-#Exit if this script is already running
+-pid="$(pidof ff_olsr_test_gw.sh)"
+-if [ ${#pid} -gt 5 ]; then
+-	logger -p debug -t gwcheck "Gateway check script is already running, exit now"
 +if [ "$exit" = "1" ]; then
 +	logging 2 "dyngw disable or no RtTable 254"
-+	exit 1
-+fi
-+
+ 	exit 1
+ fi
+ 
 +local has_sgw
 +has_sgw="$(uci -q -P /var/state get olsrd.@olsrd[0].SmartGateway)"
 +local has_sgw_cnf
 +has_sgw_cnf="$(uci -q get olsrd.@olsrd[0].SmartGateway)"
- 
- #Exit if this script is already running
- pid="$(pidof ff_olsr_test_gw.sh)"
- if [ ${#pid} -gt 5 ]; then
--	logger -p debug -t gwcheck "Gateway check script is already running, exit now"
++
++# exit if this script is already running
++case $(pidof ${0##*/}) in $$);;*)
 +	logging 3 "Gateway check script is already running, exit now"
- 	exit 1
- fi
- 
++	exit 1
++;;esac
++
  # exit if there is no defaultroute with metric=0 in main or gw-check table.
  defroutemain="$(ip route show |grep default |grep -v metric)"
 +logging 3 "defroutemain: $defroutemain"
@@ -130,7 +133,7 @@ index 6bba7f0..bf323f1 100755
  
  testserver="$(for t in $testserver; do echo $t; done | awk 'BEGIN {
  	srand();
-@@ -59,21 +111,96 @@ END {
+@@ -59,21 +110,96 @@ END {
  	}
  }')"
  
@@ -164,7 +167,7 @@ index 6bba7f0..bf323f1 100755
 +		testserver="${testserver:+$testserver }$server"
 +	done
 +	get_dnsservers
-+	for ip in $dns; do
++	for ip in $(echo ${dns} | awk '{for (i=1; i <= NF; i++) {if (!($i in used)) printf "%s ",$i;used[$i]++}}'); do
 +		ip="$(echo $ip | egrep '^[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}$')"
 +		if [ -n "$ip" ]; then
 +			logging 3 "add name server rule for $ip table $table"
@@ -238,7 +241,7 @@ index 6bba7f0..bf323f1 100755
  }
  
  get_dnsservers() {
-@@ -83,49 +210,141 @@ get_dnsservers() {
+@@ -83,49 +209,141 @@ get_dnsservers() {
  	if [ ! -x /bin/ubus ]; then
  		# ubus not present (versions before Attitude): fallback to get these from /var/state/network.
  		# We always assume that wan is the default route interface here
@@ -326,7 +329,7 @@ index 6bba7f0..bf323f1 100755
 +			logging 3 "default route found in default table"
 +		fi
 +		ip route del $defroutegwcheck table gw-check 2>/dev/null
-+		logging 2 "Internet is available again, default route restored ( $defroutegwcheck)"
++		logging 2 "Internet is available again, default route restored ($defroutegwcheck)"
  	fi
 +	
 +	if [ -n "$RtTableDefault" ]; then

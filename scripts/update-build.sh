@@ -77,15 +77,14 @@ done
 update_git() {
 	url="$1"
 	repodir="$2"
-	revision="$3"
+	revision_c="$3"
+	revision_o=""
 	if [ -d $repodir ] ; then
 		if [ -d $repodir/.svn ] ; then
 			echo "please remove the svn repo: $repodir"
 			echo "mv $repodir $repodir.bak"
 			exit 0
 		fi
-		echo "update $repodir git pull"
-		[ -z $revision ] || echo "git checkout $revision"
 		cd $repodir
 		git add .
 		git reset --hard
@@ -93,14 +92,29 @@ update_git() {
 		git remote rm origin
 		git remote add origin $url
 		git pull -u origin master || exit 0
-		[ -z $revision ] || git checkout $revision || exit 0
+		revision_o="$(git rev-parse HEAD)"
+		echo "update $repodir git pull $revision_c $revision_o"
+		[ -z $revision_c ] || case "$revision_c" in
+				"$revision_o");;
+				*)
+					echo "git checkout $revision_c"
+					git checkout $revision_c || exit 0
+				;;
+		esac
 		revision=$(git rev-parse HEAD)
 		cd ../
 	else
-		echo "create $repodir git clone"
 		git clone $url $repodir || exit 0
 		cd $repodir
-		[ -z $revision ] || git checkout $revision || exit 0
+		revision_o="$(git rev-parse HEAD)"
+		echo "create $repodir git clone $revision_c $revision_o"
+		[ -z $revision_c ] || case "$revision_c" in
+				"$revision_o");;
+				*)
+					echo "git checkout $revision_c"
+					git checkout $revision_c || exit 0
+				;;
+		esac
 		revision=$(git rev-parse HEAD)
 		cd ../
 	fi
@@ -136,7 +150,10 @@ apply_patches() {
 	fi
 	for i in $@ ; do
 		pparm='-p1'
-		patch $pparm < $patches_dir/$i || exit 0
+		patch $pparm < $patches_dir/$i || {
+			echo "Patch $i fail"
+			exit 0
+		}
 		mkdir -p ../$verm/patches
 		cp $patches_dir/$i ../$verm/patches || exit 0
 	done
@@ -218,7 +235,7 @@ rm -rf $(find . | grep \.orig$)
 
 cd ..
 
-update_git "git://git.openwrt.org/project/luci.git" "luci-master"
+update_git "git://git.openwrt.org/project/luci.git" "luci-master" "$luci_revision"
 echo "luci Revision: $revision"  >>VERSION.txt
 cd luci-master
 apply_patches $LUCI_PATCHES

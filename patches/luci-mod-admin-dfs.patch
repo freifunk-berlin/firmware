@@ -1,8 +1,8 @@
 diff --git a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
-index 67ccdb4..51b19d9 100644
+index 4ae2f77..799a159 100644
 --- a/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
 +++ b/modules/admin-full/luasrc/model/cbi/admin_network/wifi.lua
-@@ -169,6 +169,8 @@ else
+@@ -168,6 +168,8 @@ else
  	for _, f in ipairs(iw and iw.freqlist or { }) do
  		if not f.restricted then
  			ch:value(f.channel, "%i (%.3f GHz)" %{ f.channel, f.mhz / 1000 })
@@ -11,28 +11,20 @@ index 67ccdb4..51b19d9 100644
  		end
  	end
  end
-@@ -214,9 +216,17 @@ if hwtype == "mac80211" then
- 		noscan:depends("htmode", "HT40-")
+@@ -215,6 +217,12 @@ if hwtype == "mac80211" then
+ 			translate("Always use 40MHz channels even if the secondary channel overlaps. Using this option does not comply with IEEE 802.11n-2009!"))
+ 		noscan:depends("htmode", "HT40")
  		noscan.default = noscan.disabled
- 
--		--htcapab = s:taboption("advanced", DynamicList, "ht_capab", translate("HT capabilities"))
--		--htcapab:depends("hwmode", "11na")
--		--htcapab:depends("hwmode", "11ng")
 +		htcapab = s:taboption("advanced", DynamicList, "ht_capab", translate("HT capabilities"))
-+		htcapab:depends("hwmode", "11na")
-+		htcapab:depends("hwmode", "11ng")
-+
 +		chanbw = s:taboption("advanced", ListValue, "chanbw", translate("Channel width"))
-+		chanbw:depends("hwmode", "11na")
-+		chanbw:depends("hwmode", "11ng")
 +		chanbw:value("20", "20MHz")
 +		chanbw:value("10", "10MHz")
 +		chanbw:value("5", "5MHz")
 +		chanbw.default = "20"
- 	end
- 
- 	local cl = iw and iw.countrylist
-@@ -234,19 +244,35 @@ if hwtype == "mac80211" then
+ 	else
+ 		if hw_modes.g then mode:value("11g", "2.4GHz (802.11g)") end
+ 		if hw_modes.a then mode:value("11a", "5GHz (802.11a)") end
+@@ -235,19 +243,35 @@ if hwtype == "mac80211" then
  		translate("Distance to farthest network member in meters."))
  
  	-- external antenna profiles
@@ -78,7 +70,7 @@ index 67ccdb4..51b19d9 100644
  end
  
  
-@@ -495,14 +521,31 @@ if hwtype == "mac80211" then
+@@ -496,14 +520,31 @@ if hwtype == "mac80211" then
  		end
  	end
  

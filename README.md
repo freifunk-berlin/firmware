@@ -65,3 +65,11 @@ Build your images
 ```
 $ firmware-berlin/scripts/update-build.sh
 ```
+
+
+## Required packages
+### Ubuntu/Debian
+```
+apt-get install git subversion build-essential libncurses5-dev zlib1g-dev gawk \
+  unzip libxml-perl
+```

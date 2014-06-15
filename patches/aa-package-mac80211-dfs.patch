@@ -1,17 +1,3 @@
-diff --git a/package/mac80211/Makefile b/package/mac80211/Makefile
-index b331751..fc9ee85 100644
---- a/package/mac80211/Makefile
-+++ b/package/mac80211/Makefile
-@@ -1348,6 +1348,9 @@ ifdef CONFIG_PACKAGE_MAC80211_DEBUGFS
- 	CFG80211_DEBUGFS \
- 	MAC80211_DEBUGFS \
- 	ATH9K_DEBUGFS \
-+	CFG80211_CERTIFICATION_ONUS \
-+	ATH9K_DFS_CERTIFIED \
-+	ATH9K_DFS_DEBUGFS \
- 	ATH9K_HTC_DEBUGFS \
- 	ATH10K_DEBUGFS \
- 	CARL9170_DEBUGFS \
 diff --git a/package/mac80211/files/lib/wifi/mac80211.sh b/package/mac80211/files/lib/wifi/mac80211.sh
 index 1994ca3..7e3a2ca 100644
 --- a/package/mac80211/files/lib/wifi/mac80211.sh

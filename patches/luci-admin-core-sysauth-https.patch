@@ -1,7 +1,7 @@
-diff --git a/modules/admin-core/luasrc/view/sysauth.htm b/modules/admin-core/luasrc/view/sysauth.htm
+diff --git a/modules/base/luasrc/view/sysauth.htm b/modules/base/luasrc/view/sysauth.htm
 index 7c39f0d..7f6bd28 100644
---- a/modules/admin-core/luasrc/view/sysauth.htm
-+++ b/modules/admin-core/luasrc/view/sysauth.htm
+--- a/modules/base/luasrc/view/sysauth.htm
++++ b/modules/base/luasrc/view/sysauth.htm
 @@ -13,7 +13,40 @@ You may obtain a copy of the License at
  
  <%+header%>

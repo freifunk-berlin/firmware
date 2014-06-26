@@ -92,26 +92,6 @@ index 44849df..955a409 100644
  	http.prepare_content("application/json")
  	if not jsonreq4 or jsonreq4 == "" then
  		jsonreq4 = "{}"
-@@ -139,7 +106,7 @@ function action_neigh(json)
- 	local devices  = ntm:get_wifidevs()
- 	local sys = require "luci.sys"
- 	local assoclist = {}
--	local neightbl = require "neightbl"
-+	--local neightbl = require "neightbl"
- 	local ipc = require "luci.ip"
- 
- 	luci.sys.net.routes(function(r) 
-@@ -209,7 +176,9 @@ function action_neigh(json)
- 						if not a:is6linklocal() then
- 							if a:host() == locip:host() then
- 								interface = name
--								neihgt = neightbl.get(device.ifname) or {}
-+								if neightbl then
-+									neihgt = neightbl.get(device.ifname) or {}
-+								end
- 							end
- 						end
- 					end
 @@ -394,12 +363,8 @@ function fetch_jsoninfo(otable)
  	local IpVersion = uci:get_first("olsrd", "olsrd","IpVersion")
  	local jsonreq4 = ""

@@ -178,7 +178,7 @@ index 0000000..7d3d272
 +
 +	local ol = entry(
 +		{"admin", "services", "olsrd6"},
-+		cbi("olsr/olsrd6"), "OLSR IPv4"
++		cbi("olsr/olsrd6"), "OLSR IPv6"
 +	)
 +	ol.subindex = true
 +

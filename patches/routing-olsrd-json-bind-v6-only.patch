@@ -1,0 +1,13 @@
+diff --git a/olsrd/files/olsrd6.init b/olsrd/files/olsrd6.init
+index 1dcc4a0..2b6efeb 100644
+--- a/olsrd/files/olsrd6.init
++++ b/olsrd/files/olsrd6.init
+@@ -3,6 +3,8 @@
+ 
+ . $IPKG_INSTROOT/lib/functions/olsrd.sh
+ 
++sysctl -w net.ipv6.bindv6only=1 > /dev/null
++
+ START=65
+ 
+ SERVICE_DAEMONIZE=1

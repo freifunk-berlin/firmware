@@ -27,7 +27,6 @@ case $verm in
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-chk-linux-3.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-nagios-plugins.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-net-snmp.patch"
-		PACKAGES_PATCHES="$PACKAGES_PATCHES package-6scripts.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-argp-standalone.patch"
 		;;
 esac

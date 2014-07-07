@@ -1,13 +1,31 @@
-diff --git a/olsrd/files/olsrd6.init b/olsrd/files/olsrd6.init
-index 1dcc4a0..2b6efeb 100644
---- a/olsrd/files/olsrd6.init
-+++ b/olsrd/files/olsrd6.init
-@@ -3,6 +3,8 @@
+commit 7b643aa68a99064f7a4b6bc419d6b4159d679cb7
+Author: Patrick Grimm <patrick@lunatiki.de>
+Date:   Mon Jul 7 22:15:54 2014 +0200
+
+    olsrd: fix jsoninfo does not listen on ::0 9090
+    
+    issues 40
+    set bindv6only and restore the orig value
+
+diff --git a/olsrd/files/olsrd.init b/olsrd/files/olsrd.init
+index 887a4a2..f8d457d 100644
+--- a/olsrd/files/olsrd.init
++++ b/olsrd/files/olsrd.init
+@@ -833,11 +833,17 @@ start() {
+ 			error "there is already an instance of $UCI_CONF_NAME running (pid: '$(cat $PID)'), not starting."
+ 			return 1
+ 		else
++			if [ "$UCI_CONF_NAME" == "olsrd6" ]; then
++				sysctl -w net.ipv6.bindv6only=1 > /dev/null
++			fi
+ 			service_start /usr/sbin/olsrd -f "$OLSRD_CONFIG_FILE" -nofork
+ 			sleep 1
+ 			service_check /usr/sbin/olsrd || {
+ 				log "startup-error: check via: '/usr/sbin/olsrd -f \"$OLSRD_CONFIG_FILE\" -nofork'"
+ 			}
++			if [ "$UCI_CONF_NAME" == "olsrd6" ]; then
++				sysctl -w net.ipv6.bindv6only="$bindv6only" > /dev/null
++			fi
+ 		fi
+ 	fi
  
- . $IPKG_INSTROOT/lib/functions/olsrd.sh
- 
-+sysctl -w net.ipv6.bindv6only=1 > /dev/null
-+
- START=65
- 
- SERVICE_DAEMONIZE=1

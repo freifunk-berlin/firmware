@@ -1,0 +1,13 @@
+diff --git a/contrib/package/luci-addons/Makefile b/contrib/package/luci-addons/Makefile
+index 0838ed0..7239c3e 100644
+--- a/contrib/package/luci-addons/Makefile
++++ b/contrib/package/luci-addons/Makefile
+@@ -95,7 +95,7 @@ define module
+ endef
+ 
+ 
+-$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +PACKAGE_luci-mod-freifunk:freifunk-firewall +freifunk-common))
++$(eval $(call module,freifunk,LuCI Freifunk module,+luci-mod-admin-full +luci-lib-json +freifunk-common))
+ 
+ 
+ ### Applications ###

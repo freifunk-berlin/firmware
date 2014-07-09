@@ -1,31 +1,50 @@
-commit 7b643aa68a99064f7a4b6bc419d6b4159d679cb7
-Author: Patrick Grimm <patrick@lunatiki.de>
-Date:   Mon Jul 7 22:15:54 2014 +0200
-
-    olsrd: fix jsoninfo does not listen on ::0 9090
-    
-    issues 40
-    set bindv6only and restore the orig value
-
-diff --git a/olsrd/files/olsrd.init b/olsrd/files/olsrd.init
-index 887a4a2..f8d457d 100644
---- a/olsrd/files/olsrd.init
-+++ b/olsrd/files/olsrd.init
-@@ -833,11 +833,17 @@ start() {
- 			error "there is already an instance of $UCI_CONF_NAME running (pid: '$(cat $PID)'), not starting."
- 			return 1
- 		else
-+			if [ "$UCI_CONF_NAME" == "olsrd6" ]; then
-+				sysctl -w net.ipv6.bindv6only=1 > /dev/null
-+			fi
- 			service_start /usr/sbin/olsrd -f "$OLSRD_CONFIG_FILE" -nofork
- 			sleep 1
- 			service_check /usr/sbin/olsrd || {
- 				log "startup-error: check via: '/usr/sbin/olsrd -f \"$OLSRD_CONFIG_FILE\" -nofork'"
- 			}
-+			if [ "$UCI_CONF_NAME" == "olsrd6" ]; then
-+				sysctl -w net.ipv6.bindv6only="$bindv6only" > /dev/null
-+			fi
- 		fi
- 	fi
- 
+diff --git a/olsrd/patches/olsrd-json-ipv6-only.patch b/olsrd/patches/olsrd-json-ipv6-only.patch
+new file mode 100644
+index 0000000..b5a43c2
+--- /dev/null
++++ b/olsrd/patches/olsrd-json-ipv6-only.patch
+@@ -0,0 +1,19 @@
++diff --git a/lib/jsoninfo/src/olsrd_jsoninfo.c b/lib/jsoninfo/src/olsrd_jsoninfo.c
++index d86fa88..0db7609 100644
++--- a/lib/jsoninfo/src/olsrd_jsoninfo.c
+++++ b/lib/jsoninfo/src/olsrd_jsoninfo.c
++@@ -385,6 +385,14 @@ plugin_ipc_init(void)
++       return 0;
++     }
++ #endif /* (defined __FreeBSD__ || defined __FreeBSD_kernel__) && defined SO_NOSIGPIPE */
+++#if defined linux
+++    if (olsr_cnf->ip_version == AF_INET6) {
+++      if (setsockopt(ipc_socket, IPPROTO_IPV6, IPV6_V6ONLY, (char *)&yes, sizeof(yes)) < 0) {
+++        perror("IPV6_V6ONLY failed");
+++        return 0;
+++      }
+++    }
+++#endif /* defined linux */
++     /* Bind the socket */
++ 
++     /* complete the socket structure */
+diff --git a/olsrd/patches/olsrd-txt-ipv6-only.patch b/olsrd/patches/olsrd-txt-ipv6-only.patch
+new file mode 100644
+index 0000000..79aa549
+--- /dev/null
++++ b/olsrd/patches/olsrd-txt-ipv6-only.patch
+@@ -0,0 +1,19 @@
++diff --git a/lib/txtinfo/src/olsrd_txtinfo.c b/lib/txtinfo/src/olsrd_txtinfo.c
++index 66937fa..0ca6b11 100644
++--- a/lib/txtinfo/src/olsrd_txtinfo.c
+++++ b/lib/txtinfo/src/olsrd_txtinfo.c
++@@ -198,6 +198,14 @@ plugin_ipc_init(void)
++       return 0;
++     }
++ #endif /* (defined __FreeBSD__ || defined __FreeBSD_kernel__) && defined SO_NOSIGPIPE */
+++#if defined linux
+++    if (olsr_cnf->ip_version == AF_INET6) {
+++      if (setsockopt(ipc_socket, IPPROTO_IPV6, IPV6_V6ONLY, (char *)&yes, sizeof(yes)) < 0) {
+++        perror("IPV6_V6ONLY failed");
+++        return 0;
+++      }
+++    }
+++#endif /* defined linux */
++     /* Bind the socket */
++ 
++     /* complete the socket structure */

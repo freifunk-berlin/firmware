@@ -108,7 +108,7 @@ make_feeds() {
 	>feeds.conf
 
 	echo "src-link packages $pwd/$packages_dir" >> feeds.conf
-	echo "src-link packagesgithub $pwd/packages_github_dir" >> feeds.conf
+	echo "src-link packagesgithub $pwd/packages_github" >> feeds.conf
 	echo "src-link routing $pwd/routing" >> feeds.conf
 	echo "src-link packagesberlin $pwd/packages_berlin" >> feeds.conf
 	echo "src-link luci $pwd/luci-master" >> feeds.conf

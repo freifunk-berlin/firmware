@@ -108,6 +108,7 @@ make_feeds() {
 	>feeds.conf
 
 	echo "src-link packages $pwd/$packages_dir" >> feeds.conf
+	echo "src-link packagesgithub $pwd/packages_github_dir" >> feeds.conf
 	echo "src-link routing $pwd/routing" >> feeds.conf
 	echo "src-link packagesberlin $pwd/packages_berlin" >> feeds.conf
 	echo "src-link luci $pwd/luci-master" >> feeds.conf
@@ -185,6 +186,8 @@ update_git "git://github.com/openwrt-routing/packages.git" "routing" "$routing_r
 echo "routing packages Revision: $revision"  >>VERSION.txt
 update_git "git://git.openwrt.org/project/luci2/ui.git" "luci2_ui" "$luci2_ui_revision"
 echo "LuCI2 UI modules Revision: $revision"  >>VERSION.txt
+update_git "git://github.com/openwrt/packages.git" "packages_github" "$packages_github_revision"
+echo "openwrt packages GitHub Revision: $revision"  >>VERSION.txt
 
 cd routing
 apply_patches $ROUTING_PATCHES

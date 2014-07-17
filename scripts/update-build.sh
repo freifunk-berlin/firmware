@@ -5,7 +5,7 @@
 ROUTING_PATCHES=""
 ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd-json-bind-v6-only.patch"
 #This Patch btctl-2014.0 is not needed for BB
-ROUTING_PATCHES="$ROUTING_PATCHES routing-batman-adv-btctl-2014.0.patch"
+#ROUTING_PATCHES="$ROUTING_PATCHES routing-batman-adv-btctl-2014.0.patch"
 ROUTING_PATCHES="$ROUTING_PATCHES routing-alfred-copy-gpsd.patch"
 #ROUTING_PATCHES="$ROUTING_PATCHES routing-alfred-hosts.patch"
 ROUTING_PATCHES="$ROUTING_PATCHES routing-nat46-gz.patch"
@@ -108,7 +108,7 @@ make_feeds() {
 	>feeds.conf
 
 	echo "src-link packages $pwd/$packages_dir" >> feeds.conf
-	echo "src-link packagesgithub $pwd/packages_github" >> feeds.conf
+	echo "src-link packagesgithub $pwd/$packages_github_dir" >> feeds.conf
 	echo "src-link routing $pwd/routing" >> feeds.conf
 	echo "src-link packagesberlin $pwd/packages_berlin" >> feeds.conf
 	echo "src-link luci $pwd/luci-master" >> feeds.conf
@@ -186,8 +186,6 @@ update_git "git://github.com/openwrt-routing/packages.git" "routing" "$routing_r
 echo "routing packages Revision: $revision"  >>VERSION.txt
 update_git "git://git.openwrt.org/project/luci2/ui.git" "luci2_ui" "$luci2_ui_revision"
 echo "LuCI2 UI modules Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/openwrt/packages.git" "packages_github" "$packages_github_revision"
-echo "openwrt packages GitHub Revision: $revision"  >>VERSION.txt
 
 cd routing
 apply_patches $ROUTING_PATCHES
@@ -200,11 +198,17 @@ case $verm in
 		update_git  "git://git.openwrt.org/packages.git" "packages" "$packages_revision"
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages"
+		update_git "git://github.com/openwrt/packages.git" "packages_github" "$packages_github_revision"
+		echo "openwrt packages GitHub Revision: $revision"  >>VERSION.txt
+		packages_github_dir="packages_github"
 	;;
 	barrier_breaker)
 		update_git  "git://git.openwrt.org/packages.git" "packages" "$packages_revision"
 		echo "packages Revision: $revision" >>VERSION.txt
 		packages_dir="packages"
+		update_git "git://github.com/openwrt/packages.git" "packages_github" "$packages_github_revision"
+		echo "openwrt packages GitHub Revision: $revision"  >>VERSION.txt
+		packages_github_dir="packages_github"
 	;;
 	*)
 		update_git  "git://git.openwrt.org/$ver/packages.git" "packages_$ver" "$packages_revision"

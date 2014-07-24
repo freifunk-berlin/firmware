@@ -48,11 +48,11 @@ LUCI_PATCHES="$LUCI_PATCHES luci-addons-rm-firewall-dep.patch"
 
 MAKE=${MAKE:-make V=s}
 
-[ -z $verm ] && exit 0
-[ -z $ver ] && exit 0
+[ -z $verm ] && exit 1
+[ -z $ver ] && exit 1
 
 for board in $boards ; do
-	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
+	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 1
 done
 
 
@@ -65,7 +65,7 @@ update_git() {
 		if [ -d $repodir/.svn ] ; then
 			echo "please remove the svn repo: $repodir"
 			echo "mv $repodir $repodir.bak"
-			exit 0
+			exit 1
 		fi
 		cd $repodir
 		git add .
@@ -73,20 +73,20 @@ update_git() {
 		git checkout origin/master .
 		git remote rm origin
 		git remote add origin $url
-		git pull -u origin master || exit 0
+		git pull -u origin master || exit 1
 		revision_o="$(git rev-parse HEAD)"
 		echo "update $repodir git pull $revision_c $revision_o"
 		[ -z $revision_c ] || case "$revision_c" in
 				"$revision_o");;
 				*)
 					echo "git checkout $revision_c"
-					git checkout $revision_c || exit 0
+					git checkout $revision_c || exit 1
 				;;
 		esac
 		revision=$(git rev-parse HEAD)
 		cd ../
 	else
-		git clone $url $repodir || exit 0
+		git clone $url $repodir || exit 1
 		cd $repodir
 		revision_o="$(git rev-parse HEAD)"
 		echo "create $repodir git clone $revision_c $revision_o"
@@ -94,7 +94,7 @@ update_git() {
 				"$revision_o");;
 				*)
 					echo "git checkout $revision_c"
-					git checkout $revision_c || exit 0
+					git checkout $revision_c || exit 1
 				;;
 		esac
 		revision=$(git rev-parse HEAD)
@@ -135,10 +135,10 @@ apply_patches() {
 		pparm='-p1'
 		patch $pparm < $patches_dir/$i || {
 			echo "Patch $i fail"
-			exit 0
+			exit 1
 		}
 		mkdir -p ../$verm/patches
-		cp $patches_dir/$i ../$verm/patches || exit 0
+		cp $patches_dir/$i ../$verm/patches || exit 1
 	done
 }
 

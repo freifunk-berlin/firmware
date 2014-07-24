@@ -28,14 +28,14 @@ pkgname="$1"
 DIR=$PWD
 
 for board in $boards ; do
-	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
+	[ -f "update-build-$verm-$board.lock" ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 1
 done
 
 for board in $boards ; do
 	echo "to see the log just type:"
 	echo "tail -f update-build-pkg-$verm-$board-$pkgname.log"
 	(
-	[ -f update-build-$verm-$board.lock ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
+	[ -f update-build-$verm-$board.lock ] && echo "build $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 1
 	touch update-build-$verm-$board.lock
 	cd $verm/$board/
 	echo "openwrt feeds update"

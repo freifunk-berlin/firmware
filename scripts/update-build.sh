@@ -108,14 +108,22 @@ make_feeds() {
 	>feeds.conf
 
 	echo "src-link packages $pwd/$packages_dir" >> feeds.conf
-	echo "src-link packagesgithub $pwd/$packages_github_dir" >> feeds.conf
+	case $verm in
+		trunk)
+			echo "src-link packagesgithub $pwd/$packages_github_dir" >> feeds.conf
+			echo "src-link luci2ui $pwd/luci2_ui" >> feeds.conf
+		;;
+		barrier_breaker)
+			echo "src-link packagesgithub $pwd/$packages_github_dir" >> feeds.conf
+			echo "src-link luci2ui $pwd/luci2_ui" >> feeds.conf
+		;;
+	esac
 	echo "src-link routing $pwd/routing" >> feeds.conf
 	echo "src-link packagesberlin $pwd/packages_berlin" >> feeds.conf
 	echo "src-link luci $pwd/luci-master" >> feeds.conf
 	echo "src-link libremap $pwd/libremap-agent-openwrt" >> feeds.conf
 	echo "src-link kadnode $pwd/KadNode/openwrt" >> feeds.conf
 	echo "src-link fffeeds $pwd/feeds" >> feeds.conf
-	echo "src-link luci2ui $pwd/luci2_ui" >> feeds.conf
 
 	echo "openwrt feeds update"
 	scripts/feeds update

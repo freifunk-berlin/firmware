@@ -5,7 +5,7 @@
 DIR=$PWD
 
 for board in $boards ; do
-	[ -f "update-build-$verm-$board.lock" ] && echo "build update $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 0
+	[ -f "update-build-$verm-$board.lock" ] && echo "build update $verm-$board are running. if not do rm update-build-$verm-$board.lock" && exit 1
 done
 
 ib_tmp="$DIR"/"$verm"/meshkit/ib_tmp
@@ -92,7 +92,7 @@ rm -f $meshkit/update-ib-$verm-$board-first.lock
 		echo "Find $ib_name.tar.bz2"
 	else
 		echo "IB not found $ib_name.tar.bz2"
-		exit 0
+		exit 1
 	fi
 
 	rm -rf "$DIR"/"$verm"/meshkit/$ib_name

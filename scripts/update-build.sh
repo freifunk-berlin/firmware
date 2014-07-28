@@ -4,8 +4,6 @@
 
 ROUTING_PATCHES=""
 ROUTING_PATCHES="$ROUTING_PATCHES routing-olsrd-json-bind-v6-only.patch"
-#This Patch btctl-2014.0 is not needed for BB
-#ROUTING_PATCHES="$ROUTING_PATCHES routing-batman-adv-btctl-2014.0.patch"
 ROUTING_PATCHES="$ROUTING_PATCHES routing-alfred-copy-gpsd.patch"
 #ROUTING_PATCHES="$ROUTING_PATCHES routing-alfred-hosts.patch"
 ROUTING_PATCHES="$ROUTING_PATCHES routing-nat46-gz.patch"
@@ -21,6 +19,8 @@ case $verm in
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-disable-eglibc-dep.patch"
 		;;
 	attitude_adjustment)
+		#This Patch btctl-2014.0 is not needed for BB
+		ROUTING_PATCHES="$ROUTING_PATCHES routing-batman-adv-btctl-2014.0.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES trunk-radvd-ifconfig.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-openvpn-backport-2.3.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-openvpn-comp_lzo-value.patch"

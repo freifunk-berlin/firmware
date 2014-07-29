@@ -157,7 +157,7 @@ case $verm in
 		echo "openwrt Revision: $revision"  >>VERSION.txt
 	;;
 	barrier_breaker)
-		update_git "git://git.openwrt.org/openwrt.git" "openwrt-$verm" "$openwrt_revision"
+		update_git "git://git.openwrt.org/$ver/openwrt.git" "openwrt-$verm" "$openwrt_revision"
 		echo "openwrt Revision: $revision"  >>VERSION.txt
 	;;
 	*)

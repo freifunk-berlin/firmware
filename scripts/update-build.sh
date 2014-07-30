@@ -11,7 +11,6 @@ ROUTING_PATCHES="$ROUTING_PATCHES routing-nat46-gz.patch"
 PACKAGES_PATCHES=""
 case $verm in
 	trunk)
-		PACKAGES_PATCHES="$PACKAGES_PATCHES trunk-radvd-ifconfig.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-disable-eglibc-dep.patch"
 		;;
 	barrier_breaker)
@@ -20,7 +19,6 @@ case $verm in
 	attitude_adjustment)
 		#This Patch btctl-2014.0 is not needed for BB
 		ROUTING_PATCHES="$ROUTING_PATCHES routing-batman-adv-btctl-2014.0.patch"
-		PACKAGES_PATCHES="$PACKAGES_PATCHES trunk-radvd-ifconfig.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-openvpn-backport-2.3.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-openvpn-comp_lzo-value.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-disable-eglibc-dep.patch"

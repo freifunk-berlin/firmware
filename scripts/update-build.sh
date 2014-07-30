@@ -15,7 +15,6 @@ case $verm in
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-disable-eglibc-dep.patch"
 		;;
 	barrier_breaker)
-		PACKAGES_PATCHES="$PACKAGES_PATCHES trunk-radvd-ifconfig.patch"
 		PACKAGES_PATCHES="$PACKAGES_PATCHES package-pthsem-disable-eglibc-dep.patch"
 		;;
 	attitude_adjustment)

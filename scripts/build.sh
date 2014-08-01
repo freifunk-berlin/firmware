@@ -15,7 +15,7 @@ rm -f ${FIRMWARE_DIR}/bin
 if [ -d ${OPENWRT_DIR} ]; then
     cd ${OPENWRT_DIR}
     git clean -dff && git fetch && git reset --hard HEAD || exit 1
-    rm -rf .config patches feeds.conf
+    rm -rf .config patches feeds.conf bin
 else
     git clone ${OPENWRT_SRC} openwrt || exit 1
     cd ${OPENWRT_DIR}

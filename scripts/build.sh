@@ -18,7 +18,7 @@ else
 fi
 
 # checkout specified commit
-git checkout --detach ${OPENWRT_COMMIT}
+git checkout --detach ${OPENWRT_COMMIT} || exit 1
 
 # link and apply patches
 ln -s ../patches .

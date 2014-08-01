@@ -5,6 +5,7 @@ ARCH=${ARCH:-ar71xx}
 OPENWRT_SRC=${OPENWRT_SRC:-git://git.openwrt.org/openwrt.git}
 OPENWRT_COMMIT=${OPENWRT_COMMIT:-65f9fd0dc881f5759a79dddee5d689e320626609}
 NCPU=${NCPU:-$(cat /proc/cpuinfo | grep ^processor | wc -l)}
+MAKE_CMD=${MAKE_CMD:-make -j${NCPU} IGNORE_ERRORS=m}
 
 FIRMWARE_DIR=$(pwd)
 OPENWRT_DIR=${FIRMWARE_DIR}/openwrt
@@ -36,6 +37,6 @@ cp ${FIRMWARE_DIR}/configs/${ARCH}.config ${OPENWRT_DIR}/.config
 yes | make oldconfig || exit 1
 
 # build!
-make -j${NCPU} IGNORE_ERRORS=m || exit 1
+${MAKE_CMD} || exit 1
 
 ln -s ${OPENWRT_DIR}/bin ${FIRMWARE_DIR}/bin

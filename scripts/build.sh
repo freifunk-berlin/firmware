@@ -30,7 +30,7 @@ quilt push -a || exit 1
 
 # activate feeds
 ln -s ${FIRMWARE_DIR}/feeds.conf ${OPENWRT_DIR}
-./scripts/feeds update && ./scripts/feeds install -a || exit 1
+./scripts/feeds uninstall -a && ./scripts/feeds update && ./scripts/feeds install -a || exit 1
 
 # copy and update (if necessary) .config
 cp ${FIRMWARE_DIR}/configs/${ARCH}.config ${OPENWRT_DIR}/.config

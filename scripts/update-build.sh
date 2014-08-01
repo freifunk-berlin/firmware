@@ -25,11 +25,11 @@ LUCI_PATCHES="$LUCI_PATCHES luci-olsr-controller.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-modfreifunk-use-admin-mini-status.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-theme-bootstrap.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-olsr-view.patch"
-LUCI_PATCHES="$LUCI_PATCHES luci-olsr6.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-olsr6.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-freifunk-map.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-freifunk-gwcheck.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-po-only-en-de.patch"
-LUCI_PATCHES="$LUCI_PATCHES luci-community-profiles-berlin.patch"
+#LUCI_PATCHES="$LUCI_PATCHES luci-community-profiles-berlin.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-mod-admin-dfs.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-admin-core-sysauth-https.patch"
 LUCI_PATCHES="$LUCI_PATCHES luci-addons-rm-firewall-dep.patch"
@@ -90,6 +90,55 @@ update_git() {
 	fi
 }
 
+update_branch() {
+	url="$1"
+	repodir="$2"
+	revision_c="$3"
+	ver_c="$ver"
+	branch_c="for-$ver"
+	revision_o=""
+	if [ -d $repodir ] ; then
+		if [ -d $repodir/.svn ] ; then
+			echo "please remove the svn repo: $repodir"
+			echo "mv $repodir $repodir.bak"
+			exit 1
+		fi
+		cd $repodir
+		git add .
+		git reset --hard
+		git checkout origin/$branch_c .
+		git remote rm origin
+		git remote add origin $url
+		git pull -u origin $branch_c || exit 1
+		revision_o="$(git rev-parse $branch_c)"
+		echo "update $repodir git pull $revision_c $revision_o"
+		[ -z $revision_c ] || case "$revision_c" in
+				"$revision_o");;
+				*)
+					echo "git checkout $revision_c"
+					git checkout $revision_c || exit 1
+				;;
+		esac
+		revision=$(git rev-parse $branch_c)
+		cd ../
+	else
+		git clone $url $repodir || exit 1
+		cd $repodir
+		git checkout -t -b "$branch_c origin/$branch_c"
+		revision_o="$(git rev-parse $branch_c)"
+		echo "create $repodir $branch_c git clone $revision_c $revision_o"
+		[ -z $revision_c ] || case "$revision_c" in
+				"$revision_o");;
+				*)
+					echo "git checkout $revision_c"
+					git checkout $revision_c || exit 1
+				;;
+		esac
+		revision=$(git rev-parse $branch_c)
+		cd ../
+	fi
+}
+
 make_feeds() {
 	echo "Generate feeds.conf"
 
@@ -106,7 +155,7 @@ make_feeds() {
 			echo "src-link luci2ui $pwd/luci2_ui" >> feeds.conf
 		;;
 	esac
-	echo "src-link routing $pwd/routing" >> feeds.conf
+	echo "src-link routing $pwd/$routing_dir" >> feeds.conf
 	echo "src-link packagesberlin $pwd/packages_berlin" >> feeds.conf
 	echo "src-link luci $pwd/luci-master" >> feeds.conf
 	echo "src-link libremap $pwd/libremap-agent-openwrt" >> feeds.conf
@@ -178,12 +227,13 @@ update_git "git://github.com/mwarning/KadNode.git" "KadNode" "$kadnode_revision"
 echo "KadNode Revision: $revision"  >>VERSION.txt
 update_git "git://github.com/freifunk/packages_berlin.git" "packages_berlin" "$packages_berlin_revision"
 echo "packages_berlin Revision: $revision"  >>VERSION.txt
-update_git "git://github.com/openwrt-routing/packages.git" "routing" "$routing_revision"
+update_branch "git://github.com/openwrt-routing/packages.git" "routing_$ver" "$routing_revision" "$ver"
 echo "routing packages Revision: $revision"  >>VERSION.txt
+routing_dir="routing_$ver"
 update_git "git://git.openwrt.org/project/luci2/ui.git" "luci2_ui" "$luci2_ui_revision"
 echo "LuCI2 UI modules Revision: $revision"  >>VERSION.txt
 
-cd routing
+cd "$routing_dir"
 apply_patches $ROUTING_PATCHES
 rm -rf $(find . | grep \.orig$)
 cd ..
@@ -199,10 +249,10 @@ case $verm in
 		packages_github_dir="packages_github"
 	;;
 	barrier_breaker)
-		update_git  "git://git.openwrt.org/packages.git" "packages" "$packages_revision"
+		update_git  "git://git.openwrt.org/packages.git" "packages_$ver" "$packages_revision"
 		echo "packages Revision: $revision" >>VERSION.txt
-		packages_dir="packages"
-		update_git "git://github.com/openwrt/packages.git" "packages_github" "$packages_github_revision"
+		packages_dir="packages_$ver"
+		update_branch "git://github.com/openwrt/packages.git" "packages_github_$ver" "$packages_github_revision"
 		echo "openwrt packages GitHub Revision: $revision"  >>VERSION.txt
 		packages_github_dir="packages_github"
 	;;

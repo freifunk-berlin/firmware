@@ -2,7 +2,7 @@
 
 ARCH=ar71xx
 OPENWRT_SRC=git://git.openwrt.org/openwrt.git
-OPENWRT_COMMIT=f5018fd2183cd92fd67255c220314cae813cce63
+OPENWRT_COMMIT=65f9fd0dc881f5759a79dddee5d689e320626609
 
 # cleanup openwrt dir
 if [ -d openwrt ]; then
@@ -17,16 +17,18 @@ fi
 # checkout specified commit
 git checkout --detach ${OPENWRT_COMMIT}
 
-# link patches, feeds and config
+# link patches
 ln -s ../patches .
-ln -s ../feeds.conf .
-cp ../configs/${ARCH}.config .config
 
 # activate feeds
+ln -s ../feeds.conf .
 ./scripts/feeds update && ./scripts/feeds install -a || exit 1
 
+# copy config
+cp ../configs/${ARCH}.config .config
+
 # update .config if necessary
-yes | make oldconfig || exit 1
+#yes | make oldconfig || exit 1
 
 # build!
 make -j$(cat /proc/cpuinfo | grep ^processor | wc -l) IGNORE_ERRORS=m || exit 1

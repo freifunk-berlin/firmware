@@ -13,7 +13,7 @@ HowTo
 Create a firmware build directory
 ```
 $ mkdir firmware && cd firmware
-$ git clone git@github.com:freifunk/firmware-berlin.git
+$ git clone https://github.com/freifunk/firmware-berlin.git
 ```
 
 Copy your config firmware

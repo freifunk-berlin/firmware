@@ -10,7 +10,7 @@ NCPU=${NCPU:-$(cat /proc/cpuinfo | grep ^processor | wc -l)}
 rm -f bin
 if [ -d openwrt ]; then
     cd openwrt
-    git clean -df && git fetch || exit 1
+    git clean -dff && git fetch || exit 1
     rm -rf .config patches feeds.conf
 else
     git clone ${OPENWRT_SRC} openwrt || exit 1

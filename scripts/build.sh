@@ -7,16 +7,20 @@ OPENWRT_COMMIT=f5018fd2183cd92fd67255c220314cae813cce63
 # cleanup openwrt dir
 if [ -d openwrt ]; then
     cd openwrt
-    git clean -d && git pull || exit 1
+    git clean -df && git fetch || exit 1
+    rm -rf .config patches feeds.conf
 else
     git clone ${OPENWRT_SRC} openwrt || exit 1
     cd openwrt
 fi
 
+# checkout specified commit
+git checkout --detach ${OPENWRT_COMMIT}
+
 # link patches, feeds and config
 ln -s ../patches .
 ln -s ../feeds.conf .
-ln -s ../configs/${ARCH}.config .config
+cp ../configs/${ARCH}.config .config
 
 # activate feeds
 ./scripts/feeds update && ./scripts/feeds install -a || exit 1

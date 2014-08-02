@@ -30,7 +30,7 @@ $(OPENWRT_DIR)/patches: $(OPENWRT_DIR)
 
 # patch openwrt working copy
 apply_patches: $(OPENWRT_DIR)/patches $(wildcard $(FW_DIR)/patches/*)
-	cd $(OPENWRT_DIR); quilt push -a
+	+cd $(OPENWRT_DIR); quilt push -a
 
 # feeds
 $(OPENWRT_DIR)/feeds.conf: $(OPENWRT_DIR) $(FW_DIR)/feeds.conf
@@ -38,7 +38,7 @@ $(OPENWRT_DIR)/feeds.conf: $(OPENWRT_DIR) $(FW_DIR)/feeds.conf
 
 # update feeds
 update_feeds: $(OPENWRT_DIR)/feeds.conf
-	cd $(OPENWRT_DIR); \
+	+cd $(OPENWRT_DIR); \
 	  ./scripts/feeds uninstall -a && \
 	  ./scripts/feeds update && \
 	  ./scripts/feeds install -a
@@ -62,5 +62,9 @@ compile: prepare $(FW_DIR)/bin
 $(FW_DIR)/bin:
 	rm -f $(FW_DIR)/bin
 	ln -s $(OPENWRT_DIR)/bin $(FW_DIR)/bin
+
+clean: clean_openwrt
 	
-.PHONY: update_openwrt apply_patches update_feeds config update_config compile
+.PHONY: update_openwrt clean apply_patches update_feeds config update_config prepare compile
+
+.NOTPARALLEL:

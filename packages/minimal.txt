@@ -19,7 +19,7 @@ firewall
 libiwinfo-lua
 
 # GUI
-#community-profiles"
+community-profiles
 luci-theme-bootstrap
 luci-i18n-german
 kmod-ipt-nat

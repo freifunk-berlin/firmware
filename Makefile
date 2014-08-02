@@ -16,7 +16,7 @@ PACKAGES=$(shell grep -v '^\#' $(FW_DIR)/packages/minimal.txt | tr -t '\n' ' ')
 # profiles to be built (router models)
 PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
 
-default: compile
+default: compile firmwares
 
 # clone openwrt
 $(OPENWRT_DIR):

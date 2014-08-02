@@ -77,8 +77,8 @@ images:
 	$(eval IB_FILE := $(shell ls $(FW_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	cd $(TARGET_IB); tar xf $(IB_FILE)
 	cd $(TARGET_IB)/$(shell basename $(IB_FILE) .tar.bz2); \
-	  for PROFILE in $(PROFILES); do \
-	    make image PROFILE="$(PROFILE)" PACKAGES="$(PACKAGES)" \
+	  for PROFILE in "$(PROFILES)"; do \
+	    make image PROFILE="$(PROFILE)" PACKAGES="$(PACKAGES)"; \
 	  done
 
 clean: clean_openwrt

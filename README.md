@@ -11,7 +11,7 @@ http://github.com/freifunk/packages-berlin.
 ```
 git clone https://github.com/freifunk/firmware-berlin.git -b firmware-ng
 cd firmware-berlin
-./scripts/build.sh
+make
 ```
 
 Then the ImageBuilder files end up in the directory `bin`.

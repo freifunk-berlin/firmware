@@ -12,6 +12,9 @@ TARGET_IB=$(FW_DIR)/imagebuilder/$(TARGET)
 
 # packages to include in the images
 PACKAGES=$(shell grep -v '^\#' $(FW_DIR)/packages/minimal.txt | tr -t '\n' ' ')
+# profiles to be built (router models)
+PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
+
 default: compile
 
 # clone openwrt
@@ -74,7 +77,9 @@ images:
 	$(eval IB_FILE := $(shell ls $(FW_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	cd $(TARGET_IB); tar xf $(IB_FILE)
 	cd $(TARGET_IB)/$(shell basename $(IB_FILE) .tar.bz2); \
-	  make image PROFILE="UBNT" PACKAGES="$(PACKAGES)"
+	  for PROFILE in $(PROFILES); do \
+	    make image PROFILE="$(PROFILE)" PACKAGES="$(PACKAGES)" \
+	  done
 
 clean: clean_openwrt
 	

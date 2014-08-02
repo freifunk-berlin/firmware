@@ -52,7 +52,6 @@ kmod-batman-adv
 
 # IPv6
 kmod-ipv6
-6relayd
 6in4
 6to4
 

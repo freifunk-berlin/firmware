@@ -8,7 +8,10 @@ MAKE_ARGS="IGNORE_ERRORS=m"
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
+TARGET_IB=$(FW_DIR)/imagebuilder/$(TARGET)
 
+# packages to include in the images
+PACKAGES=$(shell grep -v '^\#' $(FW_DIR)/packages/minimal.txt | tr -t '\n' ' ')
 default: compile
 
 # clone openwrt
@@ -65,8 +68,16 @@ $(FW_DIR)/bin:
 	rm -f $(FW_DIR)/bin
 	ln -s $(OPENWRT_DIR)/bin $(FW_DIR)/bin
 
-clean: clean_openwrt
+# images
+images:
+	mkdir -p $(TARGET_IB)
+	$(eval IB_FILE := $(shell ls $(FW_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
+	cd $(TARGET_IB); tar xf $(IB_FILE)
+	cd $(TARGET_IB)/$(shell basename $(IB_FILE) .tar.bz2); \
+	  make image PROFILE="UBNT" PACKAGES="$(PACKAGES)"
 
-.PHONY: update_openwrt clean apply_patches update_feeds config update_config prepare compile
+clean: clean_openwrt
+	
+.PHONY: update_openwrt clean apply_patches update_feeds config update_config prepare compile images
 
 .NOTPARALLEL:

@@ -8,7 +8,8 @@ MAKE_ARGS="IGNORE_ERRORS=m"
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
-TARGET_IB=$(FW_DIR)/imagebuilder/$(TARGET)
+IB_TARGET_DIR=$(FW_DIR)/imagebuilder
+IB_BUILD_DIR=$(FW_DIR)/imagebuilder_tmp
 
 # packages to include in the images
 PACKAGES=$(shell grep -v '^\#' $(FW_DIR)/packages/minimal.txt | tr -t '\n' ' ')
@@ -71,15 +72,19 @@ $(FW_DIR)/bin:
 	rm -f $(FW_DIR)/bin
 	ln -s $(OPENWRT_DIR)/bin $(FW_DIR)/bin
 
-# images
+# build images for given profiles with imagebuilder
 images:
-	mkdir -p $(TARGET_IB)
+	mkdir -p $(IB_BUILD_DIR)
 	$(eval IB_FILE := $(shell ls $(FW_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
-	cd $(TARGET_IB); tar xf $(IB_FILE)
-	cd $(TARGET_IB)/$(shell basename $(IB_FILE) .tar.bz2); \
-	  for PROFILE in "$(PROFILES)"; do \
-	    make image PROFILE="$(PROFILE)" PACKAGES="$(PACKAGES)"; \
+	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
+	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
+	cd $(IB_BUILD_DIR)/$(IB_DIR); \
+	  for PROFILE in $(PROFILES); do \
+	    make image PROFILE="$$PROFILE" PACKAGES="$(PACKAGES)"; \
 	  done
+	mkdir -p $(IB_TARGET_DIR)
+	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(TARGET) $(IB_TARGET_DIR)
+	rm -rf $(IB_BUILD_DIR)
 
 clean: clean_openwrt
 	

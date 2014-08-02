@@ -31,7 +31,8 @@ $(OPENWRT_DIR)/patches: $(OPENWRT_DIR)
 
 # patch openwrt working copy
 apply_patches: $(OPENWRT_DIR)/patches $(wildcard $(FW_DIR)/patches/*)
-	+cd $(OPENWRT_DIR); quilt push -a
+	$(MAKE) -C openwrt tools/quilt/install
+	cd $(OPENWRT_DIR); $(OPENWRT_DIR)/staging_dir/host/bin/quilt push -a
 
 # feeds
 $(OPENWRT_DIR)/feeds.conf: $(OPENWRT_DIR) $(FW_DIR)/feeds.conf
@@ -54,7 +55,7 @@ update_config: prepare
 	cp $(OPENWRT_DIR)/.config $(TARGET_CONFIG)
 
 # prepare openwrt working copy
-prepare: update_openwrt apply_patches update_feeds config
+prepare: update_openwrt update_feeds config apply_patches
 
 # compile
 compile: prepare $(FW_DIR)/bin
@@ -65,7 +66,7 @@ $(FW_DIR)/bin:
 	ln -s $(OPENWRT_DIR)/bin $(FW_DIR)/bin
 
 clean: clean_openwrt
-	
+
 .PHONY: update_openwrt clean apply_patches update_feeds config update_config prepare compile
 
 .NOTPARALLEL:

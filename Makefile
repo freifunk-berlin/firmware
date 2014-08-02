@@ -26,7 +26,7 @@ clean_openwrt: $(OPENWRT_DIR)
 
 # patches require updated openwrt working copy
 $(OPENWRT_DIR)/patches: $(OPENWRT_DIR)
-	ln -s $(FW_DIR)/patches $(OPENWRT_DIR)/patches
+	ln -s $(FW_DIR)/patches $(OPENWRT_DIR)
 
 # patch openwrt working copy
 apply_patches: $(OPENWRT_DIR)/patches $(wildcard $(FW_DIR)/patches/*)

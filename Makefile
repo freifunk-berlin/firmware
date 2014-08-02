@@ -8,8 +8,8 @@ MAKE_ARGS="IGNORE_ERRORS=m"
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
-IB_TARGET_DIR=$(FW_DIR)/imagebuilder
 IB_BUILD_DIR=$(FW_DIR)/imagebuilder_tmp
+FW_TARGET_DIR=$(FW_DIR)/firmwares
 
 # packages to include in the images
 PACKAGES=$(shell grep -v '^\#' $(FW_DIR)/packages/minimal.txt | tr -t '\n' ' ')
@@ -72,8 +72,11 @@ $(FW_DIR)/bin:
 	rm -f $(FW_DIR)/bin
 	ln -s $(OPENWRT_DIR)/bin $(FW_DIR)/bin
 
-# build images for given profiles with imagebuilder
-images:
+# fill firmwares-directory with:
+#  * firmwares built with imagebuilder
+#  * imagebuilder file
+#  * packages directory
+firmwares:
 	mkdir -p $(IB_BUILD_DIR)
 	$(eval IB_FILE := $(shell ls $(FW_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
@@ -82,12 +85,15 @@ images:
 	  for PROFILE in $(PROFILES); do \
 	    make image PROFILE="$$PROFILE" PACKAGES="$(PACKAGES)"; \
 	  done
-	mkdir -p $(IB_TARGET_DIR)
-	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(TARGET) $(IB_TARGET_DIR)
+	mkdir -p $(FW_TARGET_DIR)
+	rm -rf $(FW_TARGET_DIR)/$(TARGET)
+	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(TARGET) $(FW_TARGET_DIR)
+	cp $(IB_FILE) $(FW_TARGET_DIR)/$(TARGET)
+	cp -a $(FW_DIR)/bin/$(TARGET)/packages $(FW_TARGET_DIR)/$(TARGET)
 	rm -rf $(IB_BUILD_DIR)
 
 clean: clean_openwrt
 	
-.PHONY: update_openwrt clean apply_patches update_feeds config update_config prepare compile images
+.PHONY: update_openwrt clean apply_patches update_feeds config update_config prepare compile firmwares
 
 .NOTPARALLEL:

@@ -2,6 +2,7 @@
 TARGET=ar71xx
 OPENWRT_SRC=git://git.openwrt.org/openwrt.git
 OPENWRT_COMMIT=65f9fd0dc881f5759a79dddee5d689e320626609
+MAKE_ARGS="IGNORE_ERRORS=m"
 
 # set variables
 FW_DIR=$(shell pwd)
@@ -57,7 +58,7 @@ prepare: update_openwrt apply_patches update_feeds config
 
 # compile
 compile: prepare $(FW_DIR)/bin
-	$(MAKE) -C openwrt
+	$(MAKE) -C openwrt $(MAKE_ARGS)
 
 $(FW_DIR)/bin:
 	rm -f $(FW_DIR)/bin

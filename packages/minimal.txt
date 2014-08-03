@@ -8,6 +8,7 @@
 -chat
 -ppp
 -kmod-ppp
+-wpad
 
 # Common
 ip

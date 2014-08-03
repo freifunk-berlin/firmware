@@ -81,6 +81,7 @@ $(FW_DIR)/bin:
 #  * imagebuilder file
 #  * packages directory
 firmwares:
+	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
 	$(eval IB_FILE := $(shell ls $(FW_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))

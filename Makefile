@@ -1,8 +1,4 @@
-# default parameters
-TARGET=ar71xx
-OPENWRT_SRC=git://git.openwrt.org/14.07/openwrt.git
-OPENWRT_COMMIT=77f0a1b2a845382d3c3a907020bf1a9eca1fae35
-MAKE_ARGS="IGNORE_ERRORS=m"
+include config.mk
 
 # set variables
 FW_DIR=$(shell pwd)
@@ -19,71 +15,75 @@ PACKAGES=$(shell grep -v '^\#' $(FW_DIR)/packages/minimal.txt | tr -t '\n' ' ')
 # profiles to be built (router models)
 PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
 
-default: compile firmwares
+default: firmwares
 
 # clone openwrt
 $(OPENWRT_DIR):
 	git clone $(OPENWRT_SRC) $(OPENWRT_DIR)
 
-# update openwrt and checkout specified commit
-update_openwrt: $(OPENWRT_DIR) clean_openwrt
-	cd $(OPENWRT_DIR); git checkout --detach $(OPENWRT_COMMIT)
-
 # clean up openwrt working copy
-clean_openwrt: $(OPENWRT_DIR)
+openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
+.stamp-openwrt-cleaned: config.mk | $(OPENWRT_DIR)
 	cd $(OPENWRT_DIR); \
 	  git clean -dff && git fetch && git reset --hard HEAD && \
 	  rm -rf bin .config feeds.conf
+	touch $@
+
+# update openwrt and checkout specified commit
+openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated 
+.stamp-openwrt-updated: .stamp-openwrt-cleaned
+	cd $(OPENWRT_DIR); git checkout --detach $(OPENWRT_COMMIT)
+	touch $@
 
 # patches require updated openwrt working copy
-$(OPENWRT_DIR)/patches: $(OPENWRT_DIR)
+$(OPENWRT_DIR)/patches: | .stamp-openwrt-updated
 	ln -s $(FW_DIR)/patches $(OPENWRT_DIR)
 
-# patch openwrt working copy
-apply_patches: $(OPENWRT_DIR)/patches $(wildcard $(FW_DIR)/patches/*)
-	$(MAKE) -C openwrt tools/quilt/install
-	cd $(OPENWRT_DIR); $(OPENWRT_DIR)/staging_dir/host/bin/quilt push -a
-
 # feeds
-$(OPENWRT_DIR)/feeds.conf: $(OPENWRT_DIR) $(FW_DIR)/feeds.conf
-	ln -s $(FW_DIR)/feeds.conf $(OPENWRT_DIR)/feeds.conf
+$(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated
+	cp $(FW_DIR)/feeds.conf $(OPENWRT_DIR)/feeds.conf
 
 # update feeds
-update_feeds: $(OPENWRT_DIR)/feeds.conf
+feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
+.stamp-feeds-updated: $(OPENWRT_DIR)/feeds.conf
 	+cd $(OPENWRT_DIR); \
 	  ./scripts/feeds uninstall -a && \
 	  ./scripts/feeds update && \
 	  ./scripts/feeds install -a
+	touch $@
 
 # openwrt config
-config: $(OPENWRT_DIR)
+$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG)
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
 	cd $(OPENWRT_DIR); make defconfig
 
-# update config for new openwrt/feed versions
-update_config: prepare
-	cd $(OPENWRT_DIR); make oldconfig
-	cp $(OPENWRT_DIR)/.config $(TARGET_CONFIG)
+# patch openwrt working copy
+patch: stamp-clean-patched .stamp-patched
+.stamp-patched: $(OPENWRT_DIR)/.config $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
+	$(MAKE) -C openwrt tools/quilt/install
+	cd $(OPENWRT_DIR); $(OPENWRT_DIR)/staging_dir/host/bin/quilt push -a
+	touch $@
 
 # prepare openwrt working copy
-prepare: update_openwrt update_feeds config apply_patches
+prepare: stamp-clean-prepared .stamp-prepared
+.stamp-prepared: .stamp-patched
+	touch $@
 
 # compile
-compile: prepare $(FW_DIR)/bin
+compile: stamp-clean-compiled .stamp-compiled
+.stamp-compiled: .stamp-prepared
 	$(MAKE) -C openwrt $(MAKE_ARGS)
-
-$(FW_DIR)/bin:
-	rm -f $(FW_DIR)/bin
-	ln -s $(OPENWRT_DIR)/bin $(FW_DIR)/bin
+	touch $@
 
 # fill firmwares-directory with:
 #  * firmwares built with imagebuilder
 #  * imagebuilder file
 #  * packages directory
-firmwares:
+firmwares: stamp-clean-firmwares .stamp-firmwares
+.stamp-firmwares: .stamp-compiled
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
-	$(eval IB_FILE := $(shell ls $(FW_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
+	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	cd $(IB_BUILD_DIR)/$(IB_DIR); \
@@ -94,11 +94,17 @@ firmwares:
 	rm -rf $(FW_TARGET_DIR)/$(TARGET)
 	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(TARGET) $(FW_TARGET_DIR)
 	cp $(IB_FILE) $(FW_TARGET_DIR)/$(TARGET)
-	cp -a $(FW_DIR)/bin/$(TARGET)/packages $(FW_TARGET_DIR)/$(TARGET)
+	cp -a $(OPENWRT_DIR)/bin/$(TARGET)/packages $(FW_TARGET_DIR)/$(TARGET)
 	rm -rf $(IB_BUILD_DIR)
+	touch $@
 
-clean: clean_openwrt
+stamp-clean-%:
+	rm -f .stamp-$*
 
-.PHONY: update_openwrt clean apply_patches update_feeds config update_config prepare compile firmwares
+stamp-clean:
+	rm -f .stamp-*
 
+clean: stamp-clean .stamp-openwrt-cleaned
+
+.PHONY: openwrt-clean openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:

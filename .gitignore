@@ -1,4 +1,5 @@
 .*.swp
+.stamp*
 bin
 openwrt
 firmwares

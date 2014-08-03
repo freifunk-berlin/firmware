@@ -11,6 +11,9 @@ TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imagebuilder_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares
 
+# if any of the following files have been changed: clean up openwrt dir
+DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
+
 # packages to include in the images
 PACKAGES=$(shell grep -v '^\#' $(FW_DIR)/packages/minimal.txt | tr -t '\n' ' ')
 # profiles to be built (router models)
@@ -55,6 +58,7 @@ update_feeds: $(OPENWRT_DIR)/feeds.conf
 # openwrt config
 config: $(OPENWRT_DIR)
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
+	cd $(OPENWRT_DIR); make defconfig
 
 # update config for new openwrt/feed versions
 update_config: prepare
@@ -93,7 +97,7 @@ firmwares:
 	rm -rf $(IB_BUILD_DIR)
 
 clean: clean_openwrt
-	
+
 .PHONY: update_openwrt clean apply_patches update_feeds config update_config prepare compile firmwares
 
 .NOTPARALLEL:

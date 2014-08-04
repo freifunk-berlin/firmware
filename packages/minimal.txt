@@ -1,0 +1,76 @@
+-kmod-usb-core
+-kmod-usb-ohci
+-kmod-usb2
+-kmod-ledtrig-usbdev
+-kmod-usb-serial
+-kmod-usb-serial-option
+-comgt
+-chat
+-ppp
+-kmod-ppp
+-wpad
+
+# Common
+ip
+dnsmasq
+kmod-ipip
+kmod-iptunnel4
+qos-scripts
+firewall
+libiwinfo-lua
+
+# GUI
+community-profiles
+luci-theme-bootstrap
+luci-i18n-german
+kmod-ipt-nat
+uhttpd
+uhttpd-mod-ubus
+#luci-app-ffwizard-pberg
+luci-app-ffwizard-berlin
+luci-mod-freifunk
+luci-app-olsr
+luci-app-olsr-services
+luci-app-owm
+luci-app-owm-ant
+luci-app-owm-cmd
+luci-app-owm-gui
+
+# OLSR
+olsrd
+olsrd-mod-arprefresh
+olsrd-mod-dyn-gw-plain
+olsrd-mod-jsoninfo
+olsrd-mod-nameservice
+olsrd-mod-jsoninfo
+olsrd-mod-watchdog
+freifunk-watchdog
+freifunk-gwcheck
+freifunk-common
+
+# BATMAN
+kmod-batman-adv
+
+# IPv6
+kmod-ipv6
+6in4
+6to4
+
+# VPN
+uhttpd-mod-tls
+px5g
+kmod-tun
+liblzo
+libpolarssl
+openvpn-polarssl
+
+# Statistics
+luci-app-statistics
+collectd
+collectd-mod-exec
+collectd-mod-interface
+collectd-mod-iwinfo
+collectd-mod-network
+collectd-mod-olsrd
+collectd-mod-rrdtool
+collectd-mod-ping

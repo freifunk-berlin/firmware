@@ -1,0 +1,5 @@
+001-package-mac80211-regdb.patch
+002-target-atheros-whr-hp-ag108-sysupgrade.patch
+003-comgt-dep-ppp.patch
+004-package-openssl-broken.patch
+005-package-mac80211-dfs.patch

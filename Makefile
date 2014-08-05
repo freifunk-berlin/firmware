@@ -63,14 +63,13 @@ $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG)
 
 # patch openwrt working copy
 patch: stamp-clean-patched .stamp-patched
-.stamp-patched: $(OPENWRT_DIR)/.config $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
-	$(MAKE) -C openwrt tools/quilt/install
+.stamp-patched: $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
 	cd $(OPENWRT_DIR); $(OPENWRT_DIR)/staging_dir/host/bin/quilt push -a
 	touch $@
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-patched
+.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
 	touch $@
 
 # compile

@@ -77,8 +77,6 @@ prepare: stamp-clean-prepared .stamp-prepared
 compile: stamp-clean-compiled .stamp-compiled
 .stamp-compiled: .stamp-prepared
 	$(MAKE) -C openwrt $(MAKE_ARGS)
-	# the imagebuilder does not run in certain cases (ar71xx_mikrotik)
-	$(MAKE) -C openwrt target/imagebuilder/{clean,compile}
 	touch $@
 
 # fill firmwares-directory with:

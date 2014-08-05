@@ -3,3 +3,4 @@
 003-comgt-dep-ppp.patch
 004-package-openssl-broken.patch
 005-package-mac80211-dfs.patch
+006-target-imagebuilder-remove-initramfs-dep.patch

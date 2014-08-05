@@ -1,0 +1,9 @@
+--- a/target/imagebuilder/Config.in
++++ b/target/imagebuilder/Config.in
+@@ -1,6 +1,5 @@
+ config IB
+ 	bool "Build the OpenWrt Image Builder"
+-	depends on !TARGET_ROOTFS_INITRAMFS
+ 	depends on !PROFILE_KCONFIG
+ 	depends on !EXTERNAL_TOOLCHAIN
+ 	help

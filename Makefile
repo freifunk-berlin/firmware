@@ -56,16 +56,21 @@ feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 	  ./scripts/feeds install -a
 	touch $@
 
+# prepare patch
+pre-patch: stamp-clean-pre-patch .stamp-pre-patch
+.stamp-pre-patch: .stamp-feeds-updated $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
+	touch $@
+
+# patch openwrt working copy
+patch: stamp-clean-patched .stamp-patched
+.stamp-patched: .stamp-pre-patch
+	cd $(OPENWRT_DIR); $(OPENWRT_DIR)/staging_dir/host/bin/quilt push -a
+	touch $@
+
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG)
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
 	cd $(OPENWRT_DIR); make defconfig
-
-# patch openwrt working copy
-patch: stamp-clean-patched .stamp-patched
-.stamp-patched: $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
-	cd $(OPENWRT_DIR); $(OPENWRT_DIR)/staging_dir/host/bin/quilt push -a
-	touch $@
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared

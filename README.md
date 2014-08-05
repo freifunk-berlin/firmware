@@ -25,3 +25,30 @@ apt-get install git subversion build-essential libncurses5-dev zlib1g-dev gawk \
 ## Builds & continuous integration
 
 The firmware is [built automatically](http://firmware.berlin.freifunk.net:8010/one_line_per_build) by our [buildbot farm](http://firmware.berlin.freifunk.net:8010/buildslaves). If you have a bit of CPU+RAM+storage capacity on one of your servers, you can provide a buildbot slave (see [berlin-buildbot](https://github.com/freifunk/berlin-buildbot)).
+
+## Patches with quilt
+
+**Important:** all patches should be pushed upstream!
+
+If a patch is not yet included upstream, it can be placed in the `patches` directory with the `quilt` tool. Please configure `quilt` as described in the [openwrt wiki](http://wiki.openwrt.org/doc/devel/patches) (which also provides a documentation of `quilt`).
+
+### Add, modify or delete a patch
+
+In order to add, modify or delete a patch run:
+```bash
+make clean pre-patch
+```
+Then switch to the openwrt directory:
+```bash
+cd openwrt
+```
+Now you can use the `quilt` commands as described in the [openwrt wiki](http://wiki.openwrt.org/doc/devel/patches).
+
+#### Example: add a patch
+```bash
+quilt push -a                 # apply all patches
+quilt new 008-awesome.patch   # tell quilt to create a new patch
+quilt edit somedir/somefile1  # edit files
+quilt edit somedir/somefile2
+quilt refresh                 # creates/updates the patch file
+```

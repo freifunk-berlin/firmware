@@ -64,7 +64,7 @@ pre-patch: stamp-clean-pre-patch .stamp-pre-patch
 # patch openwrt working copy
 patch: stamp-clean-patched .stamp-patched
 .stamp-patched: .stamp-pre-patch
-	cd $(OPENWRT_DIR); $(OPENWRT_DIR)/staging_dir/host/bin/quilt push -a
+	cd $(OPENWRT_DIR); quilt push -a
 	touch $@
 
 # openwrt config

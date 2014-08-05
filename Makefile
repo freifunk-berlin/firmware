@@ -1,6 +1,10 @@
 include config.mk
 
-# set variables
+# get main- and subtarget name from TARGET
+MAINTARGET=$(word 1, $(subst _, ,$(TARGET)))
+SUBTARGET=$(word 2, $(subst _, ,$(TARGET)))
+
+# set dir and file names
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
@@ -30,7 +34,7 @@ openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
 	touch $@
 
 # update openwrt and checkout specified commit
-openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated 
+openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
 .stamp-openwrt-updated: .stamp-openwrt-cleaned
 	cd $(OPENWRT_DIR); git checkout --detach $(OPENWRT_COMMIT)
 	touch $@
@@ -73,6 +77,8 @@ prepare: stamp-clean-prepared .stamp-prepared
 compile: stamp-clean-compiled .stamp-compiled
 .stamp-compiled: .stamp-prepared
 	$(MAKE) -C openwrt $(MAKE_ARGS)
+	# the imagebuilder does not run in certain cases (ar71xx_mikrotik)
+	$(MAKE) -C openwrt target/imagebuilder/{clean,compile}
 	touch $@
 
 # fill firmwares-directory with:
@@ -83,7 +89,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 .stamp-firmwares: .stamp-compiled
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
-	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(TARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
+	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	cd $(IB_BUILD_DIR)/$(IB_DIR); \
@@ -91,10 +97,10 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	    make image PROFILE="$$PROFILE" PACKAGES="$(PACKAGES)"; \
 	  done
 	mkdir -p $(FW_TARGET_DIR)
-	rm -rf $(FW_TARGET_DIR)/$(TARGET)
-	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(TARGET) $(FW_TARGET_DIR)
-	cp $(IB_FILE) $(FW_TARGET_DIR)/$(TARGET)
-	cp -a $(OPENWRT_DIR)/bin/$(TARGET)/packages $(FW_TARGET_DIR)/$(TARGET)
+	rm -rf $(FW_TARGET_DIR)/$(MAINTARGET)
+	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(MAINTARGET) $(FW_TARGET_DIR)
+	cp $(IB_FILE) $(FW_TARGET_DIR)/$(MAINTARGET)
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(FW_TARGET_DIR)/$(MAINTARGET)
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
 

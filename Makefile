@@ -99,10 +99,10 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	    make image PROFILE="$$PROFILE" PACKAGES="$(PACKAGES)"; \
 	  done
 	mkdir -p $(FW_TARGET_DIR)
-	rm -rf $(FW_TARGET_DIR)/$(MAINTARGET)
-	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(MAINTARGET) $(FW_TARGET_DIR)
-	cp $(IB_FILE) $(FW_TARGET_DIR)/$(MAINTARGET)
-	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(FW_TARGET_DIR)/$(MAINTARGET)
+	rm -rf $(FW_TARGET_DIR)/$(TARGET)
+	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(MAINTARGET) $(FW_TARGET_DIR)/$(TARGET)
+	cp $(IB_FILE) $(FW_TARGET_DIR)/$(TARGET)
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(FW_TARGET_DIR)/$(TARGET)
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
 

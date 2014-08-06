@@ -52,3 +52,27 @@ quilt edit somedir/somefile1  # edit files
 quilt edit somedir/somefile2
 quilt refresh                 # creates/updates the patch file
 ```
+
+## Submitting patches
+
+### openwrt
+
+Create a commit in the openwrt directory that contains your change. Use `git
+format-patch` to create a patch:
+
+```
+git format-patch origin
+```
+
+Send a patch to the openwrt mailing list with `git send-email`:
+
+```
+git send-email \
+  --to=openwrt-devel@lists.openwrt.org \
+  --smtp-server=mail.foo.bar \
+  --smtp-user=foo \
+  --smtp-encryption=tls \
+  0001-a-fancy-change.patch
+```
+
+Additional information: https://dev.openwrt.org/wiki/SubmittingPatches

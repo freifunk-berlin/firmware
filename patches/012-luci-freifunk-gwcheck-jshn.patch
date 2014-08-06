@@ -1,0 +1,12 @@
+Index: firmware-berlin/openwrt/feeds/luci/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
+===================================================================
+--- firmware-berlin.orig/openwrt/feeds/luci/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
++++ firmware-berlin/openwrt/feeds/luci/contrib/package/freifunk-gwcheck/files/usr/sbin/ff_olsr_test_gw.sh
+@@ -5,6 +5,7 @@
+ 
+ . /lib/functions.sh
+ . /lib/functions/network.sh
++. /usr/share/libubox/jshn.sh
+ 
+ # exit if dyngw_plain is not enabled or RtTable is not (254 or unset)
+ config_load olsrd

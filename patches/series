@@ -4,3 +4,7 @@
 004-package-openssl-broken.patch
 005-package-mac80211-dfs.patch
 006-target-imagebuilder-remove-initramfs-dep.patch
+007-routing-olsrd-ipv6-bind-only.patch
+008-luci-freifunk-gwcheck.patch
+009-luci-freifunk-map.patch
+010-luci-mod-admin-dfs.patch

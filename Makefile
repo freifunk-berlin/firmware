@@ -29,6 +29,7 @@ $(OPENWRT_DIR):
 openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
 .stamp-openwrt-cleaned: config.mk | $(OPENWRT_DIR)
 	cd $(OPENWRT_DIR); \
+	  ./scripts/feeds clean && \
 	  git clean -dff && git fetch && git reset --hard HEAD && \
 	  rm -rf bin .config feeds.conf
 	touch $@

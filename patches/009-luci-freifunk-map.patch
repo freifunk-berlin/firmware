@@ -1,0 +1,11 @@
+--- a/feeds/luci/modules/freifunk/luasrc/view/freifunk-map/map.htm
++++ b/feeds/luci/modules/freifunk/luasrc/view/freifunk-map/map.htm
+@@ -5,7 +5,7 @@
+ 	</head>
+ 
+ 	<body style="margin:0">
+-		<script src="http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.1" type="text/javascript"></script>
++		<script src='<%=luci.http.getenv("HTTPS") and "https://" or "http://"%>dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.1' type="text/javascript"></script>
+ 		<script type="text/javascript">
+ 			var alias = new Array;
+ 			var points = new Array;

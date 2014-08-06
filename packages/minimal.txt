@@ -12,6 +12,7 @@
 
 # Common
 ip
+mtr
 dnsmasq
 kmod-ipip
 kmod-iptunnel4

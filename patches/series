@@ -6,3 +6,4 @@
 006-target-imagebuilder-remove-initramfs-dep.patch
 007-routing-olsrd-ipv6-bind-only.patch
 008-luci-freifunk-gwcheck.patch
+009-luci-freifunk-map.patch

@@ -10,3 +10,4 @@
 011-luci-freifunk-policyrouting-berlin.patch
 012-luci-freifunk-gwcheck-jshn.patch
 013-luci-olsr-controller.patch
+014-ffwizard-redirect-on-firstboot.patch

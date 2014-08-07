@@ -1,0 +1,24 @@
+--- a/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
++++ b/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
+@@ -19,6 +19,21 @@ local tpl = require "luci.template"
+ local fs = require "luci.fs"
+ local ff = {}
+ local ff = uci:get_all("freifunk")
++local http = require "luci.http"
++local disp = require "luci.dispatcher"
++
++--only redirect if assistent is installed
++if fs.isfile("/usr/lib/lua/luci/controller/assistent/assistent.lua") and http.getenv("PATH_INFO") == nil then
++	 if not uci.get("freifunk","wizard","runbefore") then
++	 --http.redirect prints 302 found :( js can do this
++	 --http.redirect(luci.dispatcher.build_url("admin/freifunk/assistent"))
++%>
++		 <script type="text/javascript">
++			 window.location = "<%=luci.dispatcher.build_url("admin/freifunk/assistent")%>"
++		 </script>
++<%
++	 end
++end
+ 
+ if not ff or not ff.community.name then
+ 	community = "Freifunk"

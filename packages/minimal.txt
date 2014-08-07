@@ -28,6 +28,7 @@ kmod-ipt-nat
 uhttpd
 uhttpd-mod-ubus
 #luci-app-ffwizard-pberg
+luci-app-firewall
 luci-app-ffwizard-berlin
 luci-mod-freifunk
 luci-app-olsr

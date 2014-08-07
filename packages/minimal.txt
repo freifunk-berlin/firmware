@@ -51,6 +51,7 @@ freifunk-common
 
 # BATMAN
 kmod-batman-adv
+alfred
 
 # IPv6
 kmod-ipv6

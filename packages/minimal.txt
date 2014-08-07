@@ -10,6 +10,9 @@
 -kmod-ppp
 -wpad
 
+# freifunk berlin
+freifunk-berlin-uhttpd-defaults
+
 # Common
 ip
 mtr

@@ -9,7 +9,7 @@ http://github.com/freifunk/packages-berlin.
 ## HowTo
 
 ```
-git clone https://github.com/freifunk/firmware-berlin.git -b firmware-ng
+git clone https://github.com/freifunk-berlin/firmware.git
 cd firmware-berlin
 make
 ```

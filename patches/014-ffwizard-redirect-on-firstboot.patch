@@ -14,7 +14,7 @@
 +	 --http.redirect(luci.dispatcher.build_url("admin/freifunk/assistent"))
 +%>
 +		 <script type="text/javascript">
-+			 window.location = "<%=luci.dispatcher.build_url("admin/freifunk/assistent")%>"
++			 window.location = "<%=luci.dispatcher.build_url("admin/freifunk/assistent")%>?username=root&password="
 +		 </script>
 +<%
 +	 end

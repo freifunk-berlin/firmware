@@ -10,7 +10,7 @@ http://github.com/freifunk/packages-berlin.
 
 ```
 git clone https://github.com/freifunk-berlin/firmware.git
-cd firmware-berlin
+cd firmware
 make
 ```
 

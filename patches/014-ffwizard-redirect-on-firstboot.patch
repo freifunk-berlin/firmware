@@ -1,14 +1,17 @@
---- a/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
-+++ b/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
-@@ -19,6 +19,21 @@ local tpl = require "luci.template"
+Index: openwrt/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
+===================================================================
+--- openwrt.orig/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
++++ openwrt/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
+@@ -19,6 +19,22 @@ local tpl = require "luci.template"
  local fs = require "luci.fs"
  local ff = {}
  local ff = uci:get_all("freifunk")
 +local http = require "luci.http"
 +local disp = require "luci.dispatcher"
++local ipkg = require "luci.model.ipkg"
 +
 +--only redirect if assistent is installed
-+if fs.isfile("/usr/lib/lua/luci/controller/assistent/assistent.lua") and http.getenv("PATH_INFO") == nil then
++if ipkg.installed("luci-app-ffwizard-berlin") == True and http.getenv("PATH_INFO") == nil then
 +	 if not uci.get("ffwizard","settings","runbefore") then
 +	 --http.redirect prints 302 found :( js can do this
 +	 --http.redirect(luci.dispatcher.build_url("admin/freifunk/assistent"))

@@ -9,7 +9,7 @@
 +
 +--only redirect if assistent is installed
 +if fs.isfile("/usr/lib/lua/luci/controller/assistent/assistent.lua") and http.getenv("PATH_INFO") == nil then
-+	 if not uci.get("freifunk","wizard","runbefore") then
++	 if not uci.get("ffwizard","settings","runbefore") then
 +	 --http.redirect prints 302 found :( js can do this
 +	 --http.redirect(luci.dispatcher.build_url("admin/freifunk/assistent"))
 +%>

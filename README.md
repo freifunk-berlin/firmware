@@ -1,8 +1,8 @@
 # Freifunk Firmware Berlin
 
 For the Berlin Freifunk firmware we use vanilla OpenWRT with additional patches
-and packages. The *scripts* dir has some util scripts to automate firmware
-creation and apply patches / integrate custom freifunk packages. All custom
+and packages. The Makefile automates firmware
+creation and apply patches / integrates custom freifunk packages. All custom
 patches are located in *patches/* and all additional packages can be found at
 http://github.com/freifunk/packages-berlin.
 

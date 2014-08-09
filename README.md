@@ -24,7 +24,8 @@ apt-get install git subversion build-essential libncurses5-dev zlib1g-dev gawk \
 ```
 ## Builds & continuous integration
 
-The firmware is [built automatically](http://firmware.berlin.freifunk.net:8010/one_line_per_build) by our [buildbot farm](http://firmware.berlin.freifunk.net:8010/buildslaves). If you have a bit of CPU+RAM+storage capacity on one of your servers, you can provide a buildbot slave (see [berlin-buildbot](https://github.com/freifunk/berlin-buildbot)).
+The firmware is [built
+automatically](http://ubildbot.berlin.freifunk.net/one_line_per_build) by our [buildbot farm](http://buildbot.berlin.freifunk.net/buildslaves). If you have a bit of CPU+RAM+storage capacity on one of your servers, you can provide a buildbot slave (see [berlin-buildbot](https://github.com/freifunk/berlin-buildbot)).
 
 ## Patches with quilt
 

@@ -58,3 +58,8 @@ kmod-tun
 liblzo
 libpolarssl
 openvpn-polarssl
+
+# Halle
+freifunk-halle-botinfo
+freifunk-halle-vpn-prepare
+freifunk-halle-dhcp

@@ -21,20 +21,13 @@ libiwinfo-lua
 
 # GUI
 community-profiles
-luci-theme-bootstrap
 luci-i18n-german
 kmod-ipt-nat
 uhttpd
 uhttpd-mod-ubus
-#luci-app-ffwizard-pberg
-luci-app-ffwizard-berlin
 luci-mod-freifunk
 luci-app-olsr
 luci-app-olsr-services
-luci-app-owm
-luci-app-owm-ant
-luci-app-owm-cmd
-luci-app-owm-gui
 
 # OLSR
 olsrd
@@ -50,6 +43,8 @@ freifunk-common
 
 # BATMAN
 kmod-batman-adv
+batctl
+batmand
 
 # IPv6
 kmod-ipv6
@@ -63,14 +58,3 @@ kmod-tun
 liblzo
 libpolarssl
 openvpn-polarssl
-
-# Statistics
-luci-app-statistics
-collectd
-collectd-mod-exec
-collectd-mod-interface
-collectd-mod-iwinfo
-collectd-mod-network
-collectd-mod-olsrd
-collectd-mod-rrdtool
-collectd-mod-ping

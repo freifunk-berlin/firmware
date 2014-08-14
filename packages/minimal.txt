@@ -4,8 +4,6 @@
 -kmod-ledtrig-usbdev
 -kmod-usb-serial
 -kmod-usb-serial-option
--comgt
--chat
 -ppp
 -kmod-ppp
 -wpad
@@ -25,6 +23,9 @@ luci-i18n-german
 kmod-ipt-nat
 uhttpd
 uhttpd-mod-ubus
+uhttpd-mod-tls
+px5g
+luci-ssl
 luci-mod-freifunk
 luci-app-olsr
 luci-app-olsr-services
@@ -44,7 +45,6 @@ freifunk-common
 # BATMAN
 kmod-batman-adv
 batctl
-batmand
 
 # IPv6
 kmod-ipv6
@@ -52,8 +52,6 @@ kmod-ipv6
 6to4
 
 # VPN
-uhttpd-mod-tls
-px5g
 kmod-tun
 liblzo
 libpolarssl

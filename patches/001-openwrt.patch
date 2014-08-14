@@ -1,0 +1,152 @@
+diff --git a/include/target.mk b/include/target.mk
+index e36cdd6..78b2185 100644
+--- a/include/target.mk
++++ b/include/target.mk
+@@ -14,7 +14,7 @@ DEVICE_TYPE?=router
+ # Default packages - the really basic set
+ DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools
+ # For router targets
+-DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables ppp ppp-mod-pppoe kmod-ipt-nathelper firewall odhcpd odhcp6c
++DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables kmod-ipt-nathelper firewall
+ DEFAULT_PACKAGES.bootloader:=
+ 
+ ifneq ($(DUMP),)
+diff --git a/include/version.mk b/include/version.mk
+index c4747f2..585ed6c 100644
+--- a/include/version.mk
++++ b/include/version.mk
+@@ -29,8 +29,8 @@ VERSION_CODE:=$(if $(VERSION_CODE),$(VERSION_CODE),Bleeding Edge)
+ VERSION_NICK:=$(call qstrip_escape,$(CONFIG_VERSION_NICK))
+ VERSION_NICK:=$(if $(VERSION_NICK),$(VERSION_NICK),$(RELEASE))
+ 
+-VERSION_REPO:=$(call qstrip_escape,$(CONFIG_VERSION_REPO))
+-VERSION_REPO:=$(if $(VERSION_REPO),$(VERSION_REPO),http://downloads.openwrt.org/snapshots/trunk/%T/packages)
++VERSION_REPO:=$(call qstrip,$(CONFIG_VERSION_REPO))
++VERSION_REPO:=$(if $(VERSION_REPO),$(VERSION_REPO),http://meshkit.freifunk-halle.org/static/%T-%R/packages)
+ 
+ VERSION_DIST:=$(call qstrip_escape,$(CONFIG_VERSION_DIST))
+ VERSION_DIST:=$(if $(VERSION_DIST),$(VERSION_DIST),OpenWrt)
+diff --git a/package/base-files/image-config.in b/package/base-files/image-config.in
+index 67604cd..a7b0a49 100644
+--- a/package/base-files/image-config.in
++++ b/package/base-files/image-config.in
+@@ -169,8 +169,8 @@ if VERSIONOPT
+ 
+ 	config VERSION_REPO
+ 		string
+-		prompt "Release repository"
+-		default "http://downloads.openwrt.org/snapshots/trunk/%T/packages"
++		prompt "Release repository" if VERSIONOPT
++		default "http://meshkit.freifunk-halle.org/static/%T-%R/packages" if VERSIONOPT
+ 		help
+ 			This is the repository address embedded in the image, it defaults
+ 			to the trunk snapshot repo; the url may contain the following placeholders:
+diff --git a/target/linux/ar71xx/generic/profiles/tp-link.mk b/target/linux/ar71xx/generic/profiles/tp-link.mk
+index 78333be..53933ee 100644
+--- a/target/linux/ar71xx/generic/profiles/tp-link.mk
++++ b/target/linux/ar71xx/generic/profiles/tp-link.mk
+@@ -224,16 +224,36 @@ endef
+ $(eval $(call Profile,TLWA901))
+ 
+ 
++define Profile/TLWDR3600
++	NAME:=TP-LINK TL-WDR3600
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
++endef
++
++define Profile/TLWDR3600/Description
++	Package set optimized for the TP-LINK TL-WDR3600.
++endef
++$(eval $(call Profile,TLWDR3600))
++
+ define Profile/TLWDR4300
+-	NAME:=TP-LINK TL-WDR3500/3600/4300/4310/MW4350R
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	NAME:=TP-LINK TL-WDR4300
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
+ endef
+ 
+ define Profile/TLWDR4300/Description
+-	Package set optimized for the TP-LINK TL-WDR3500/3600/4300/4310/MW4350R.
++	Package set optimized for the TP-LINK TL-WDR4310.
+ endef
+ $(eval $(call Profile,TLWDR4300))
+ 
++define Profile/TLWDR4310
++	NAME:=TP-LINK TL-WDR4310
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
++endef
++
++define Profile/TLWDR4310/Description
++	Package set optimized for the TP-LINK TL-WDR4310.
++endef
++$(eval $(call Profile,TLWDR4310))
++
+ 
+ define Profile/TLWDR4900V2
+ 	NAME:=TP-LINK TL-WDR4900v2
+@@ -292,7 +312,7 @@ $(eval $(call Profile,TLWR841))
+ 
+ define Profile/TLWR842
+ 	NAME:=TP-LINK TL-WR842N/ND
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
+ endef
+ 
+ define Profile/TLWR842/Description
+@@ -325,7 +345,7 @@ $(eval $(call Profile,TLWR1041))
+ 
+ define Profile/TLWR1043
+ 	NAME:=TP-LINK TL-WR1043N/ND
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
+ endef
+ 
+ define Profile/TLWR1043/Description
+diff --git a/target/linux/ar71xx/generic/profiles/ubnt.mk b/target/linux/ar71xx/generic/profiles/ubnt.mk
+index d8e24d0..094196f 100644
+--- a/target/linux/ar71xx/generic/profiles/ubnt.mk
++++ b/target/linux/ar71xx/generic/profiles/ubnt.mk
+@@ -7,7 +7,7 @@
+ 
+ define Profile/UBNTRS
+ 	NAME:=Ubiquiti RouterStation
+-	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ip6tables ppp ppp-mod-pppoe 6relayd odhcp6c
+ endef
+ 
+ define Profile/UBNTRS/Description
+@@ -18,7 +18,7 @@ $(eval $(call Profile,UBNTRS))
+ 
+ define Profile/UBNTRSPRO
+ 	NAME:=Ubiquiti RouterStation Pro
+-	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ip6tables ppp ppp-mod-pppoe 6relayd odhcp6c
+ endef
+ 
+ define Profile/UBNTRSPRO/Description
+@@ -63,7 +63,7 @@ $(eval $(call Profile,UAPPRO))
+ 
+ define Profile/UBNT
+ 	NAME:=Ubiquiti Products
+-	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ip6tables ppp ppp-mod-pppoe 6relayd odhcp6c
+ endef
+ 
+ define Profile/UBNT/Description
+diff --git a/target/linux/ar71xx/image/Makefile b/target/linux/ar71xx/image/Makefile
+index ec69b0b..86ae401 100644
+--- a/target/linux/ar71xx/image/Makefile
++++ b/target/linux/ar71xx/image/Makefile
+@@ -1266,7 +1266,10 @@ $(eval $(call MultiProfile,TLWR841,TLWR841NV15 TLWR841NV3 TLWR841NV5 TLWR841NV7
+ $(eval $(call MultiProfile,TLWR842,TLWR842V1 TLWR842V2))
+ $(eval $(call MultiProfile,TLWR941,TLWR941NV2 TLWR941NV3 TLWR941NV4 TLWR941NV6))
+ $(eval $(call MultiProfile,TLWR1043,TLWR1043V1 TLWR1043V2))
+-$(eval $(call MultiProfile,TLWDR4300,TLWDR3500V1 TLWDR3600V1 TLWDR4300V1 TLWDR4300V1IL TLWDR4310V1 MW4530RV1))
++$(#eval $(call MultiProfile,TLWDR4300,TLWDR3500V1 TLWDR3600V1 TLWDR4300V1 TLWDR4300V1IL TLWDR4310V1 MW4530RV1))
++$(eval $(call MultiProfile,TLWDR3600,TLWDR3600V1))
++$(eval $(call MultiProfile,TLWDR4300,TLWDR4300V1))
++$(eval $(call MultiProfile,TLWDR4310,TLWDR4310V1 TLWDR4300V1IL))
+ $(eval $(call MultiProfile,TUBE2H,TUBE2H8M TUBE2H16M))
+ $(eval $(call MultiProfile,UBNT,UBNTAIRROUTER UBNTRS UBNTRSPRO UBNTLSSR71 UBNTBULLETM UBNTROCKETM UBNTNANOM UBNTNANOMXW UBNTUNIFI UBNTUNIFIOUTDOOR UAPPRO UBNTAIRGW))
+ $(eval $(call MultiProfile,WNDR3700,WNDR3700V1 WNDR3700V2 WNDR3800 WNDR3800CH WNDRMAC WNDRMACV2))

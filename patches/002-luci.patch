@@ -1,0 +1,281 @@
+diff --git a/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm b/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
+index 08fc550..a82a883 100644
+--- a/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
++++ b/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
+@@ -55,7 +55,7 @@ cachefile = "/tmp/" .. name .. ".cache"
+ 						local link = item:match("<link>(.-)</link>")
+ 						local desc = item:match("<description>(.-)</description>") or ""
+ 						if title and link then
+-							table.insert(output, { title = utl.pcdata(title), link = utl.pcdata(link) })
++							table.insert(output, { title = title, link = link })
+ 						end
+ 						count = count + 1
+ 					end
+diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
+index 4573f69..4a80d58 100644
+--- a/applications/luci-olsr/luasrc/controller/olsr.lua
++++ b/applications/luci-olsr/luasrc/controller/olsr.lua
+@@ -35,7 +35,7 @@ function index()
+ 	page.subindex = true
+ 	page.order  = 5
+ 
+-	local page  = node("admin", "status", "olsr", "routes")
++	--[[local page  = node("admin", "status", "olsr", "routes")
+ 	page.target = call("action_routes")
+ 	page.title  = _("Routes")
+ 	page.order  = 10
+@@ -43,7 +43,7 @@ function index()
+ 	local page  = node("admin", "status", "olsr", "topology")
+ 	page.target = call("action_topology")
+ 	page.title  = _("Topology")
+-	page.order  = 20
++	page.order  = 20]]--
+ 
+ 	local page  = node("admin", "status", "olsr", "hna")
+ 	page.target = call("action_hna")
+diff --git a/applications/luci-olsr/luasrc/view/status-olsr/overview.htm b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
+index 6d8eca8..3bd2aef 100644
+--- a/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
++++ b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
+@@ -176,9 +176,9 @@ XHR.poll(10, '<%=REQUEST_URI%>/json', { },
+ 			</a>
+ 		</td></tr>
+                 <tr><td width="33%"><%:Nodes%></td><td>
+-			<a href="<%=REQUEST_URI%>/topology">
++			
+ 				<span id="nr_nodes">-</span>
+-			</a>
++			
+ 		</td></tr>
+                 <tr><td width="33%"><%:HNA%></td><td>
+ 			<a href="<%=REQUEST_URI%>/hna">
+@@ -186,9 +186,9 @@ XHR.poll(10, '<%=REQUEST_URI%>/json', { },
+ 			</a>
+ 		</td></tr>
+                 <tr><td width="33%"><%:Links total%></td><td>
+-			<a href="<%=REQUEST_URI%>/topology">
++			
+ 				<span id="nr_topo">-</span>
+-			</a>
++			
+ 		</td></tr>
+                 <tr><td width="33%"><%:Links per node (average)%></td><td>
+ 			<span id="meshfactor">-</span>
+diff --git a/contrib/package/community-profiles/files/etc/config/profile_halle b/contrib/package/community-profiles/files/etc/config/profile_halle
+index 0e8e43f..c015480 100644
+--- a/contrib/package/community-profiles/files/etc/config/profile_halle
++++ b/contrib/package/community-profiles/files/etc/config/profile_halle
+@@ -2,11 +2,14 @@ config 'community' 'profile'
+ 	option 'name' 'Freifunk Halle'
+ 	option 'homepage' 'http://freifunk-halle.net'
+ 	option 'ssid' 'halle.freifunk.net'
+-	option 'mesh_network' '104.62.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
++	option 'mesh_network' '104.62.0.0/8'
++	option 'splash_network' '6.0.0.0/8'
+ 	option 'splash_prefix' '27'
+ 	option 'latitude' '51.47911'
+ 	option 'longitude' '11.96901'
++	option 'adhoc_dhcp_when_vap' '0'
++	option 'suffix' 'olsr'
++	option 'vap' '1'
+ 
+ config 'defaults' 'wifi_device'
+ 	option 'channel' '13'
+@@ -15,9 +18,15 @@ config 'defaults' 'wifi_device'
+ config 'defaults' 'bssidscheme'
+ 	option 'all' '02:CA:FF:EE:BA:BE'
+ 
++config 'defaults' 'luci_splash'
++	option 'redirect_url' 'http://freifunk-halle.net/willkommen.php'
++
+ config 'defaults' 'interface'
+ 	option 'netmask' '255.0.0.0'
+ 
++config 'defaults' 'wifi_iface'
++	option 'mcast_rate' '6000'
++
+ config 'defaults' 'olsrd'
+ 	option 'AllowNoInt' 'yes'
+ 	option 'FIBMetric' 'flat'
+@@ -38,3 +47,21 @@ config 'defaults' 'olsr_interface'
+ 	option 'MidValidityTime'  '375.0'
+ 	option 'HnaInterval' '25.0'
+ 	option 'HnaValidityTime' '375.0'
++
++config widget 'rsshalle'
++	option cache '3600'
++	option width '50%'
++	option title 'neuste Foreneinträge in Halle'
++	option template 'rssfeed'
++	option enabled '1'
++	option max '5'
++	option url 'http://www.freifunk-halle.net/rss.php'
++
++config widget 'rssbundesweit'
++	option cache '3600'
++	option width '50%'
++	option title 'bundesweiter Freifunk Blog'
++	option template 'rssfeed'
++	option enabled '1'
++	option max '10'
++	option url 'http://blog.freifunk.net/rss.xml'
+diff --git a/contrib/package/luci-addons/Makefile b/contrib/package/luci-addons/Makefile
+index 0838ed0..fb35772 100644
+--- a/contrib/package/luci-addons/Makefile
++++ b/contrib/package/luci-addons/Makefile
+@@ -190,6 +190,7 @@ $(eval $(call application,radvd,LuCI Support for Radvd,radvd))
+ $(eval $(call application,ahcp,LuCI Support for AHCPd,ahcpd))
+ $(eval $(call application,wshaper,LuCI Support for wshaper,wshaper))
+ 
++
+ $(eval $(call application,pbx,LuCI PBX Administration,\
+ 	asterisk18 \
+ 	asterisk18-app-authenticate \
+diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
+index 8f21893..886c627 100755
+--- a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
++++ b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
+@@ -73,4 +73,4 @@ for proto in $protocols; do
+ 		fi
+ 	fi
+ 
+-done
+\ No newline at end of file
++done
+diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh
+new file mode 100755
+index 0000000..1aef781
+--- /dev/null
++++ b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh
+@@ -0,0 +1,24 @@
++#!/bin/sh
++# Setup dhcp interface settings for wan. This is the OpenWrt default,
++# so all we need to do here is to delete wan from meshwizard after setup.
++# Also disallow ra on wan if ipv6 is enabled
++
++[ ! "$(uci -q get network.wan)" == "interface" ] && exit
++
++. /lib/functions.sh
++. $dir/functions.sh
++
++uci batch << EOF
++set network.wan.proto='$wan_proto'
++EOF
++
++uci_commitverbose "Setup static ip settings for wan" network
++
++if [ "$ipv6_enabled" = "1" ]; then
++	uci set network.wan.accept_ra='0'
++	uci_commitverbose "Do not accept ra on wan interface" network
++fi
++
++
++uci delete meshwizard.wan && uci commit meshwizard
++
+diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
+index df58ad7..46790cc 100755
+--- a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
++++ b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
+@@ -17,7 +17,7 @@ if [ "$supports_vap" == 1 -a "$vap" == 1 ]; then
+ 		set wireless.$net\_iface_dhcp.mode="ap"
+ 		set wireless.$net\_iface_dhcp.encryption="none"
+ 		set wireless.$net\_iface_dhcp.network="${netrenamed}dhcp"
+-		set wireless.$net\_iface_dhcp.ssid="Freifunk-$ip4addr"
++		set wireless.$net\_iface_dhcp.ssid="Freifunk-Hotspot"
+ 	EOF
+ 	uci_commitverbose "Setup VAP interface for $netrenamed" wireless
+ fi
+diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
+index 77c6cd9..467b368 100755
+--- a/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
++++ b/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
+@@ -71,6 +71,10 @@ if [ "$wan_proto" == "dhcp" ]; then
+ 	$dir/helpers/setup_wan_dhcp.sh
+ fi
+ 
++if [ "$wan_proto" == "halledhcp" ]; then
++	$dir/helpers/setup_wan_halledhcp.sh
++fi
++
+ if [ -n "$wan_down" -a -n "$wan_up" ]; then
+ 	$dir/helpers/setup_qos.sh
+ fi
+@@ -134,6 +138,51 @@ done
+ [ -f /etc/rc.local.meshkitpostinstall ] && /etc/rc.local.meshkitpostinstall
+ 
+ 
++uci set network.tap0=interface
++uci set network.tap0.proto=none
++uci set network.tap0.ifname=tap0
++uci set network.tap1=interface
++uci set network.tap1.proto=none
++uci set network.tap1.ifname=tap1
++
++ntp=$(uci get system.ntp.server)
++bool=0
++for i in $ntp ; do if [[ "$i" == "192.53.103.108" ]] ; then bool=1 ; fi ; done
++if [[ $bool -eq 0 ]] ; then uci  add_list system.ntp.server=192.53.103.108; fi
++bool=0
++for i in $ntp ; do if [[ "$i" == "192.53.103.104" ]] ; then bool=1 ; fi ; done
++if [[ $bool -eq 0 ]] ; then uci  add_list system.ntp.server=192.53.103.104; fi
++bool=0
++for i in $ntp ; do if [[ "$i" == "128.138.140.44" ]] ; then bool=1 ; fi ; done
++if [[ $bool -eq 0 ]] ; then uci  add_list system.ntp.server=128.138.140.44; fi
++
++fw=$(uci get firewall.zone_freifunk.network)
++bool=0
++for i in $fw ; do if [[ "$i" == "tap0" ]] ; then bool=1 ; fi ; done
++if [[ $bool -eq 0 ]] ; then uci set firewall.zone_freifunk.network="$(uci get firewall.zone_freifunk.network) tap0"; fi
++bool=0
++for i in $fw ; do if [[ "$i" == "tap1" ]] ; then bool=1 ; fi ; done
++if [[ $bool -eq 0 ]] ; then uci set firewall.zone_freifunk.network="$(uci get firewall.zone_freifunk.network) tap1"; fi
++
++uci set olsrd.tap0=Interface
++uci set olsrd.tap0.ignore=0
++uci set olsrd.tap0.interface=tap0
++uci set olsrd.tap0.Mode=mesh
++uci set olsrd.tap1=Interface
++uci set olsrd.tap1.ignore=0
++uci set olsrd.tap1.interface=tap1
++uci set olsrd.tap1.Mode=mesh
++lqm=$(uci get olsrd.tap0.LinkQualityMult)
++bool=0
++for i in $lqm ; do if [[ "$i" == "104.62.1.1" ]] ; then bool=1 ; fi ; done
++if [[ $bool -eq 0 ]] ; then uci add_list olsrd.tap0.LinkQualityMult='104.62.1.1 0.6'; fi
++lqm=$(uci get olsrd.tap1.LinkQualityMult)
++bool=0
++for i in $lqm ; do if [[ "$i" == "104.62.4.1" ]] ; then bool=1 ; fi ; done
++if [[ $bool -eq 0 ]] ; then uci add_list olsrd.tap1.LinkQualityMult='104.62.4.1 0.3'; fi
++uci commit
++
++
+ ##### Reboot the router (because simply restarting services gave errors)
+ 
+ echo "+ The wizard has finished and the router will reboot now."
+diff --git a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
+index d4606e7..94b142d 100644
+--- a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
++++ b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
+@@ -29,8 +29,8 @@ function index()
+ 	page.title    = _("Freifunk")
+ 	page.target   = alias("freifunk", "index")
+ 	page.order    = 5
+-	page.setuser  = "nobody"
+-	page.setgroup = "nogroup"
++	-- page.setuser  = "nobody"
++	-- page.setgroup = "nogroup"
+ 	page.i18n     = "freifunk"
+ 	page.index    = true
+ 
+@@ -50,8 +50,8 @@ function index()
+ 	page.title    = _("Status")
+ 	page.order    = 20
+ 	page.i18n     = "base"
+-	page.setuser  = false
+-	page.setgroup = false
++	-- page.setuser  = false
++	-- page.setgroup = false
+ 
+ 	entry({"freifunk", "status.json"}, call("jsonstatus"))
+ 	entry({"freifunk", "status", "zeroes"}, call("zeroes"), "Testdownload")

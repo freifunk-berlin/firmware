@@ -61,7 +61,6 @@ batctl
 # IPv6
 kmod-ipv6
 6in4
-6to4
 
 # VPN
 uhttpd-mod-tls

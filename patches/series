@@ -11,4 +11,4 @@
 012-luci-freifunk-gwcheck-jshn.patch
 013-luci-olsr-controller.patch
 014-ffwizard-redirect-on-firstboot.patch
-015-luci-freifunk-plicyrouting-hotplug-device.patch
+015-luci-freifunk-policyrouting-hotplug-device.patch

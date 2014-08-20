@@ -10,6 +10,7 @@ OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imagebuilder_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares
+UMASK=umask 022
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
@@ -71,7 +72,8 @@ patch: stamp-clean-patched .stamp-patched
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG)
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
-	cd $(OPENWRT_DIR); make defconfig
+	$(UMASK); \
+	  $(MAKE) -C openwrt defconfig
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
@@ -81,7 +83,8 @@ prepare: stamp-clean-prepared .stamp-prepared
 # compile
 compile: stamp-clean-compiled .stamp-compiled
 .stamp-compiled: .stamp-prepared
-	$(MAKE) -C openwrt $(MAKE_ARGS)
+	$(UMASK); \
+	  $(MAKE) -C openwrt $(MAKE_ARGS)
 	touch $@
 
 # fill firmwares-directory with:
@@ -95,14 +98,14 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
-	cd $(IB_BUILD_DIR)/$(IB_DIR); \
-	  for PROFILE in $(PROFILES); do \
-	    make image PROFILE="$$PROFILE" PACKAGES="$(PACKAGES)"; \
-	  done
+	for PROFILE in $(PROFILES); do \
+	  $(UMASK); \
+	    $(MAKE) -C $(IB_BUILD_DIR)/$(IB_DIR) image PROFILE="$$PROFILE" PACKAGES="$(PACKAGES)"; \
+	done
 	mkdir -p $(FW_TARGET_DIR)
 	rm -rf $(FW_TARGET_DIR)/$(TARGET)
 	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(MAINTARGET) $(FW_TARGET_DIR)/$(TARGET)
-	cp $(IB_FILE) $(FW_TARGET_DIR)/$(TARGET)
+	cp -a $(IB_FILE) $(FW_TARGET_DIR)/$(TARGET)
 	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(FW_TARGET_DIR)/$(TARGET)
 	rm -rf $(IB_BUILD_DIR)
 	touch $@

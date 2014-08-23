@@ -6,6 +6,10 @@ creation and apply patches / integrates custom freifunk packages. All custom
 patches are located in *patches/* and all additional packages can be found at
 http://github.com/freifunk-berlin/packages_berlin.
 
+After flashing the firmware your router has the IP 192.168.42.1 and distributes IPs on lan switch. You can also access web ui via http://frei.funk
+
+By default this firmware is shipped with [ffwizard-berlin](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin) that may help you to configure your router. If you use the wizard the router's IP is changed to the first IP of the address range you entered during setup. Anyway http://frei.funk should still work.
+
 ## HowTo
 
 ```

@@ -1,5 +1,7 @@
---- a/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
-+++ b/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
+Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
+===================================================================
+--- openwrt.orig/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
++++ openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
 @@ -1,7 +1,6 @@
 -
  config 'settings' 'pr'
@@ -10,8 +12,10 @@
 +	option 'fallback' '1'
 +	option 'zones' 'freifunk'
  
---- a/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
-+++ b/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+===================================================================
+--- openwrt.orig/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
++++ openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
 @@ -4,7 +4,7 @@
  . /lib/functions/network.sh
  
@@ -124,18 +128,20 @@
 -		done
 -	fi
 -fi
---- a/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
-+++ b/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
+Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
+===================================================================
+--- openwrt.orig/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
++++ openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 @@ -5,7 +5,7 @@ START=15
  . /lib/functions.sh
  
  proto="4"
 -[ -f /proc/net/ipv6_route ] && proto="4 6"
 +#[ -f /proc/net/ipv6_route ] && proto="4 6"
+ [ -f /etc/config/olsrd ] && cfgs="olsrd"
+ [ -f /etc/config/olsrd6 ] && cfgs="$cfgs olsrd6"
  
- config_load freifunk-policyrouting
- config_get enable pr enable
-@@ -81,6 +81,8 @@ add_lookup_rule() {
+@@ -92,6 +92,8 @@ add_lookup_rule() {
  	name=${1/-/_}
  	lookup=$2
  	prio=$3
@@ -144,7 +150,7 @@
  
  	if [ -z "$name" -o -z "$lookup" -o -z "$prio" ]; then
  		logger -s -t policyrouting "Missing parameters for add_rule!"
-@@ -91,21 +93,57 @@ add_lookup_rule() {
+@@ -102,21 +104,57 @@ add_lookup_rule() {
  			else
  				rule="rule"
  			fi
@@ -208,7 +214,7 @@
  }
  
  start() {
-@@ -113,7 +151,7 @@ start() {
+@@ -124,7 +162,7 @@ start() {
  		logger -s -t policyrouting "Starting policy routing."
  		rt_tables
  		olsrd_intalltables
@@ -217,7 +223,7 @@
  
  		add_lookup_rule olsr olsr 1000
  		add_lookup_rule localnets localnets 2000
-@@ -121,6 +159,20 @@ start() {
+@@ -132,6 +170,20 @@ start() {
  		if [ "$fallback" = 1 ]; then
  			add_lookup_rule olsr-default olsr-default 100000
  		fi
@@ -238,7 +244,7 @@
  	fi
  	uci commit network
  	if [ ! "$1" = "noservicerestart" ]; then
-@@ -131,20 +183,28 @@ start() {
+@@ -142,20 +194,28 @@ start() {
  stop() {
  	logger -s -t policyrouting "Stopping policy routing"
  	olsrd_rmtables
@@ -276,8 +282,10 @@
 -	uci commit network
  	start
  }
---- a/feeds/luci/contrib/package/freifunk-policyrouting/Makefile
-+++ b/feeds/luci/contrib/package/freifunk-policyrouting/Makefile
+Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/Makefile
+===================================================================
+--- openwrt.orig/feeds/luci/contrib/package/freifunk-policyrouting/Makefile
++++ openwrt/feeds/luci/contrib/package/freifunk-policyrouting/Makefile
 @@ -4,7 +4,7 @@
  include $(TOPDIR)/rules.mk
  

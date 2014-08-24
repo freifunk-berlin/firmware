@@ -1,5 +1,5 @@
 # default parameters for Makefile
 TARGET=ar71xx
 OPENWRT_SRC=git://git.openwrt.org/14.07/openwrt.git
-OPENWRT_COMMIT=394af9ce72f20095fd637eed45d0e84869917f20
+OPENWRT_COMMIT=fef411a8e349146406031b39acc0ac15edf72d83
 MAKE_ARGS=

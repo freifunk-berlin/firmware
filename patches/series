@@ -9,7 +9,6 @@
 010-luci-mod-admin-dfs.patch
 011-luci-freifunk-policyrouting-berlin.patch
 012-luci-freifunk-gwcheck-jshn.patch
-013-luci-olsr-controller.patch
 014-ffwizard-redirect-on-firstboot.patch
 015-luci-freifunk-policyrouting-hotplug-device.patch
 016-profile-berlin-ssid.patch

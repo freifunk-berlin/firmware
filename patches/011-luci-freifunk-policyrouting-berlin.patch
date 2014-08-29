@@ -25,13 +25,13 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
  
  config_load freifunk-policyrouting
  config_get enable pr enable
-@@ -13,15 +13,30 @@ config_get strict pr strict
+@@ -13,15 +13,29 @@ config_get strict pr strict
  config_get zones pr zones
  
  if [ "$ACTION" = "ifup" ] && [ "$enable" = "1" ]; then
 -	network_get_subnet net $INTERFACE
 -	network_get_subnet6 net6 $INTERFACE
- 	network_get_physdev dev $INTERFACE
+-	network_get_physdev dev $INTERFACE
 +	case $(uci get network.${INTERFACE}.proto) in none)
 +		# ubus status/netifd does not output ip4addr if proto=none
 +		net=$(ip -4 addr show dev ${DEVICE} scope global|sed -n '2s,^[[:space:]]\+inet \([^[:space:]]\+\).*,\1,p')
@@ -61,7 +61,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
  				$cmd
  				if [ "$?" = 0 ]; then
  					logger -s -t policyrouting "Add route: $cmd"
-@@ -33,7 +48,7 @@ if [ "$ACTION" = "ifup" ] && [ "$enable"
+@@ -33,7 +47,7 @@ if [ "$ACTION" = "ifup" ] && [ "$enable"
  		fi
  
  		if [ -n "$net6" ]; then
@@ -70,7 +70,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
  			$cmd 2>&1 > /dev/null
  			if [ "$?" = 0 ]; then
  				logger -s -t policyrouting "Add route: $cmd (IPv6)"
-@@ -52,53 +67,20 @@ if [ "$ACTION" = "ifup" ] && [ "$enable"
+@@ -52,53 +66,20 @@ if [ "$ACTION" = "ifup" ] && [ "$enable"
  		for n in $networks; do
  			if [ "$INTERFACE" = "$n" ]; then
  				for p in $proto; do

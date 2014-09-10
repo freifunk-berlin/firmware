@@ -307,4 +307,3 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/Makefile
 +PKG_RELEASE:=7
  
  PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
- 

@@ -21,6 +21,7 @@ kmod-ipip
 kmod-iptunnel4
 qos-scripts
 firewall
+iwinfo
 libiwinfo-lua
 
 # GUI

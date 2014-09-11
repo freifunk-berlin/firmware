@@ -1,4 +1,30 @@
-# Freifunk Firmware Berlin
+# Freifunk Firmware Berlin - codename kathleen
+
+*[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*
+
+The purpose for this release was not to start a revolution but to have a stable
+firmware for our mesh in Berlin. New features like network concepts will be part
+of a next release. The firmware itself is based on vanilla OpenWRT with
+some modifications (about broken stuff in OpenWRT or luci) and additional
+default packages.
+
+## Features
+
+* Based on OpenWRT Barrier Breaker RC4 (new: netifd, procd,...)
+* new wizard to configure your router (should start after first boot)
+* Support for OLSR 0.6.6.2
+* Support for batman-adv 2014.2.0
+* Support for VPN03 (OpenVPN setup of Freifunk Berlin)
+* Support for collectd monitoring scripts
+* `frei.funk` as local DNS entry for your router (you do not have to remember your IP to get access)
+* IBSS interface for each frequency
+* OLSR on ipv4/6 for each IBSS interface
+* one lan segment for APs and lan (dhcpv4 enabled)
+* openwifimap integrated
+
+For questions write a mail to berlin@berlin.freifunk.net or come to our weekly
+meetings in the [cbase/wikimedia](http://berlin.freifunk.net/contact/) in Berlin.
+If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
 
 For the Berlin Freifunk firmware we use vanilla OpenWRT with additional patches
 and packages. The Makefile automates firmware

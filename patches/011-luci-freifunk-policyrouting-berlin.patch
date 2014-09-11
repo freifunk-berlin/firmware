@@ -2,16 +2,16 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/confi
 ===================================================================
 --- openwrt.orig/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
 +++ openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
-@@ -1,7 +1,6 @@
+@@ -1,7 +1,5 @@
 -
  config 'settings' 'pr'
  	option 'enable' '0'
  	option 'strict' '1'
 -        option 'fallback' '1'
 -	option 'zones' ''
-+	option 'fallback' '1'
+-
++	option 'fallback' '0'
 +	option 'zones' 'freifunk'
- 
 Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
 ===================================================================
 --- openwrt.orig/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
@@ -70,7 +70,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
  			$cmd 2>&1 > /dev/null
  			if [ "$?" = 0 ]; then
  				logger -s -t policyrouting "Add route: $cmd (IPv6)"
-@@ -52,50 +66,20 @@ if [ "$ACTION" = "ifup" ] && [ "$enable"
+@@ -52,51 +66,29 @@ if [ "$ACTION" = "ifup" ] && [ "$enable"
  		for n in $networks; do
  			if [ "$INTERFACE" = "$n" ]; then
  				for p in $proto; do
@@ -81,28 +81,30 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
 -						fi
 -						if [ "$?" = 0 ]; then
 -							logger -s -t policyrouting "Use mesh gateway for interface $dev (IPv$p)"
-+					# only add rules if smartgateway is not enabled otherwise
-+					# olsr will create them anyway (be aware of correct RtTableDefaultOlsrPriority config)
-+					if [ "$(uci get olsrd.@olsrd[0].SmartGateway)" = "no" ]; then
-+						if [ ! "$(ip -$p rule show | grep "from all iif ${DEVICE} lookup olsr-default")" ]; then
-+							logger -s -t policyrouting "Use mesh gateway for interface ${DEVICE} (IPv$p)"
-+							ip -$p rule add dev "${DEVICE}" lookup olsr-default prio 20000
- 							if [ -z "$(uci -P /var/state get freifunk-policyrouting.${INTERFACE})" ]; then
- 								uci -P /var/state set freifunk-policyrouting.${INTERFACE}="state"
- 							fi
+-							if [ -z "$(uci -P /var/state get freifunk-policyrouting.${INTERFACE})" ]; then
+-								uci -P /var/state set freifunk-policyrouting.${INTERFACE}="state"
+-							fi
 -							uci -P /var/state set freifunk-policyrouting.${INTERFACE}.device="$dev"
 -						else
 -							logger -s -t policyrouting "Error: Could not add rule: dev "$dev" lookup olsr-default prio 20000 (IPv$p)"
-+							uci -P /var/state set freifunk-policyrouting.${INTERFACE}.device="${DEVICE}"
- 						fi
+-						fi
++					logger -s -t policyrouting "Use mesh gateway for interface ${DEVICE} (IPv$p)"
++
++					# add olsr-tunnel rule (SmartGateway tunnel) if not present
++					if [ ! "$(ip -$p rule show | grep "from all iif ${DEVICE} lookup olsr-tunnel")" ]; then
++						ip -$p rule add dev "${DEVICE}" lookup olsr-tunnel prio 19999
  					fi
 -				done
 -			fi
 -		done
 -	fi
--
+ 
 -fi
--
++					# add olsr-default rule (Default route from mesh) if not present
++					if [ ! "$(ip -$p rule show | grep "from all iif ${DEVICE} lookup olsr-default")" ]; then
++						ip -$p rule add dev "${DEVICE}" lookup olsr-default prio 20000
++					fi
+ 
 -if [ "$ACTION" = "ifdown" ]; then
 -	dev="$(uci -q -P /var/state get freifunk-policyrouting.${INTERFACE}.device)"
 -	if [ -n "$dev" ]; then
@@ -125,11 +127,20 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
 -						else
 -							logger -s -t policyrouting "Error! Could not remove rule: dev "$dev" lookup olsr-default prio 20000 (IPv$p)"
 -						fi
-+          				if [ "$strict" != 0 ] && [ ! "$(ip -$p rule show | grep "from all iif ${DEVICE} unreachable")"]; then
-+					  ip -$p rule add dev "${DEVICE}" unreachable prio 20001
++					# add unreachable rules (prevents using router's default route (without VPN))
++					if [ "$strict" != 0 ] && [ ! "$(ip -$p rule show | grep "from all iif ${DEVICE} unreachable")" ]; then
++						ip -$p rule add dev "${DEVICE}" unreachable prio 20001
  					fi
++
++					# uci stuff
++					if [ -z "$(uci -P /var/state get freifunk-policyrouting.${INTERFACE})" ]; then
++						uci -P /var/state set freifunk-policyrouting.${INTERFACE}="state"
++					fi
++					uci -P /var/state set freifunk-policyrouting.${INTERFACE}.device="${DEVICE}"
++
  				done
  			fi
+ 		done
 Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 ===================================================================
 --- openwrt.orig/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting

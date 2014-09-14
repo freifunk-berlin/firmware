@@ -2,7 +2,7 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
 ===================================================================
 --- openwrt.orig/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
 +++ openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
-@@ -52,3 +52,17 @@ config 'defaults' 'olsrd'
+@@ -52,3 +52,15 @@ config 'defaults' 'olsrd'
  	option RtTableTunnel '113'
  	option RtTable '111'
  	option SmartGateway 'yes'
@@ -16,7 +16,5 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
 +	option FIBMetric 'flat'
 +	option RtTable '111'
 +	option RtTableDefault '112'
-+	option RtTableTunnel '113'
 +	option RtTablePriority '1000'
 +	option RtTableDefaultOlsrPriority '20000'
-+	option RtTableTunnelPriority '100000'

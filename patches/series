@@ -11,3 +11,4 @@
 014-ffwizard-redirect-on-firstboot.patch
 015-profile_berlin_olsrd.patch
 016-profile-berlin-ssid.patch
+017-profile-berlin-netmask.patch

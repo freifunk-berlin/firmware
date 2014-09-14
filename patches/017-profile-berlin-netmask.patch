@@ -1,0 +1,13 @@
+Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
+===================================================================
+--- openwrt.orig/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
++++ openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
+@@ -25,7 +25,7 @@ config 'defaults' 'ssidscheme'
+ 	option '36'	'ch36.freifunk.net'
+ 
+ config 'defaults' 'interface'
+-	option 'netmask' '255.0.0.0'
++	option 'netmask' '255.255.255.255'
+ 	option 'dns' '85.214.20.141 213.73.91.35 194.150.168.168'
+ 
+ config 'defaults' 'olsr_interface'

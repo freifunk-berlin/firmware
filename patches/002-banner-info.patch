@@ -1,0 +1,36 @@
+Index: openwrt/package/base-files/files/etc/banner
+===================================================================
+--- openwrt.orig/package/base-files/files/etc/banner
++++ openwrt/package/base-files/files/etc/banner
+@@ -1,13 +1,20 @@
+-  _______                     ________        __
+- |       |.-----.-----.-----.|  |  |  |.----.|  |_
+- |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
+- |_______||   __|_____|__|__||________||__|  |____|
+-          |__| W I R E L E S S   F R E E D O M
++  ______        _  __             _
++ |  ___|      (_)/ _|           | |
++ | |_ _ __ ___ _| |_ _   _ _ __ | |__
++ |  _| '__/ _ \ |  _| | | | '_ \| |/ /
++ | | | | |  __/ | | | |_| | | | |   <
++ \_| |_|  \___|_|_|  \__,_|_| |_|_|\_\
++
+  -----------------------------------------------------
+- BARRIER BREAKER (%C, %R)
+- -----------------------------------------------------
+-  * 1/2 oz Galliano         Pour all ingredients into
+-  * 4 oz cold Coffee        an irish coffee mug filled
+-  * 1 1/2 oz Dark Rum       with crushed ice. Stir.
+-  * 2 tsp. Creme de Cacao
++ Firmware Berlin (%N %C, based OpenWRT %R)
++ %P - %S
++ http://github.com/freifunk-berlin
+  -----------------------------------------------------
++
++ If you find bugs please report them at:
++
++   https://github.com/freifunk-berlin/firmware/issues
++
++ For questions write a mail to <berlin@berlin.freifunk.net>
++ or come to our weekly meetings at cbase/wikimedia in Berlin.
++

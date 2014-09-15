@@ -12,6 +12,8 @@
 
 # freifunk berlin
 freifunk-berlin-uhttpd-defaults
+freifunk-berlin-network-defaults
+freifunk-berlin-olsrd-defaults
 
 # Common
 ip

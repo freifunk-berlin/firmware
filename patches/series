@@ -9,7 +9,4 @@
 011-luci-freifunk-policyrouting-berlin.patch
 012-luci-freifunk-gwcheck-jshn.patch
 014-ffwizard-redirect-on-firstboot.patch
-015-profile_berlin_olsrd.patch
-016-profile-berlin-ssid.patch
-017-profile-berlin-netmask.patch
-018-profile-berlin-olsr.patch
+015-profile_berlin.patch

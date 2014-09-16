@@ -1,0 +1,45 @@
+Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
+===================================================================
+--- openwrt.orig/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
++++ openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
+@@ -1,7 +1,7 @@
+ config 'community' 'profile'
+ 	option 'name' 'Freifunk Berlin'
+ 	option 'homepage' 'http://berlin.freifunk.net'
+-	option 'ssid' 'freifunk.net'
++	option 'ssid' 'berlin.freifunk.net'
+ 	option 'ssid_scheme' 'addchannelbefore'
+ 	option 'mesh_network' '104.0.0.0/8'
+ 	option 'splash_network' '10.104.0.0/16'
+@@ -25,7 +25,7 @@ config 'defaults' 'ssidscheme'
+ 	option '36'	'ch36.freifunk.net'
+ 
+ config 'defaults' 'interface'
+-	option 'netmask' '255.0.0.0'
++	option 'netmask' '255.255.255.255'
+ 	option 'dns' '85.214.20.141 213.73.91.35 194.150.168.168'
+ 
+ config 'defaults' 'olsr_interface'
+@@ -48,3 +48,22 @@ config 'defaults' 'olsrd'
+ 	option 'LinkQualityAlgorithm' 'etx_ff'
+ 	option 'RtTableDefaultOlsrPriority' '20000'
+ 	option 'RtTableTunnelPriority' '100000'
++	option RtTableDefault '112'
++	option RtTableTunnel '113'
++	option RtTable '111'
++	option SmartGateway 'yes'
++	option IpVersion '4'
++
++config 'defaults' 'olsrd6'
++	option AllowNoInt 'yes'
++	option TcRedundancy '2'
++	option LinkQualityAlgorithm 'etx_ffeth'
++	option Pollrate '0.025'
++	option FIBMetric 'flat'
++	option RtTable '111'
++	option RtTableDefault '112'
++	option RtTableTunnel '113'
++	option RtTablePriority '1000'
++	option RtTableDefaultOlsrPriority '20000'
++	option RtTableTunnelPriority '100000'
++	option SmartGateway 'yes'

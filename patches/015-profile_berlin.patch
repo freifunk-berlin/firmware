@@ -11,8 +11,14 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
  	option 'ssid_scheme' 'addchannelbefore'
  	option 'mesh_network' '104.0.0.0/8'
  	option 'splash_network' '10.104.0.0/16'
-@@ -25,26 +25,5 @@ config 'defaults' 'ssidscheme'
- 	option '36'	'ch36.freifunk.net'
+@@ -21,30 +21,9 @@ config 'defaults' 'bssidscheme'
+ 	option '36'	'02:36:CA:FF:EE:EE'
+ 
+ config 'defaults' 'ssidscheme'
+-	option '13'	'ch13.freifunk.net'
+-	option '36'	'ch36.freifunk.net'
++	option '13'	'intern-ch13.freifunk.net'
++	option '36'	'intern-ch36.freifunk.net'
  
  config 'defaults' 'interface'
 -	option 'netmask' '255.0.0.0'

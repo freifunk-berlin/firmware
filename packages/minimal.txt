@@ -50,7 +50,6 @@ olsrd-mod-arprefresh
 olsrd-mod-dyn-gw-plain
 olsrd-mod-jsoninfo
 olsrd-mod-nameservice
-olsrd-mod-jsoninfo
 olsrd-mod-watchdog
 freifunk-watchdog
 freifunk-gwcheck

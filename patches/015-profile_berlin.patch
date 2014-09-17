@@ -11,18 +11,25 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
  	option 'ssid_scheme' 'addchannelbefore'
  	option 'mesh_network' '104.0.0.0/8'
  	option 'splash_network' '10.104.0.0/16'
-@@ -14,6 +14,10 @@ config 'community' 'profile'
+@@ -14,6 +14,17 @@ config 'community' 'profile'
  
  config 'defaults' 'wifi_device'
  	option 'channel' '13'
 +	option 'country' 'DE'
 +
++config 'defaults' 'wifi_device_5'
++	option 'channel' '36'
++	option 'country' 'DE'
++
 +config 'defaults' 'wifi_iface'
 +	option 'mcast_rate' '6000'
++
++config 'defaults' 'wifi_iface_5'
++	option 'mcast_rate' '12000'
  
  config 'defaults' 'bssidscheme'
  	option '10'	'02:CA:FF:EE:BA:BE'
-@@ -21,30 +25,9 @@ config 'defaults' 'bssidscheme'
+@@ -21,30 +32,9 @@ config 'defaults' 'bssidscheme'
  	option '36'	'02:36:CA:FF:EE:EE'
  
  config 'defaults' 'ssidscheme'

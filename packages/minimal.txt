@@ -14,6 +14,8 @@
 freifunk-berlin-uhttpd-defaults
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
+freifunk-berlin-dhcp-defaults
+freifunk-berlin-freifunk-defaults
 
 # Common
 ip
@@ -53,7 +55,6 @@ olsrd-mod-nameservice
 olsrd-mod-watchdog
 freifunk-watchdog
 freifunk-gwcheck
-freifunk-common
 
 # BATMAN
 kmod-batman-adv

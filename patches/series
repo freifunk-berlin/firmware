@@ -1,7 +1,6 @@
 001-package-mac80211-regdb.patch
 002-target-atheros-whr-hp-ag108-sysupgrade.patch
 004-package-openssl-broken.patch
-006-target-imagebuilder-remove-initramfs-dep.patch
 007-routing-olsrd-ipv6-bind-only.patch
 008-luci-freifunk-gwcheck.patch
 009-luci-freifunk-map.patch

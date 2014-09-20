@@ -49,12 +49,12 @@ luci-app-owm-gui
 # OLSR
 olsrd
 olsrd-mod-arprefresh
-olsrd-mod-dyn-gw-plain
+olsrd-mod-dyn-gw
 olsrd-mod-jsoninfo
 olsrd-mod-nameservice
 olsrd-mod-watchdog
+olsrd-mod-txtinfo
 freifunk-watchdog
-freifunk-gwcheck
 
 # BATMAN
 kmod-batman-adv

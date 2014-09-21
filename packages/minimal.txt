@@ -16,6 +16,7 @@ freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-dhcp-defaults
 freifunk-berlin-freifunk-defaults
+freifunk-berlin-firewall-defaults
 
 # Common
 ip

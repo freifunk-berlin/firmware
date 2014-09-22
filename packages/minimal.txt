@@ -10,13 +10,14 @@
 -kmod-ppp
 -wpad
 
-# freifunk berlin
-freifunk-berlin-uhttpd-defaults
+# Defaults
+freifunk-berlin-dhcp-defaults
+freifunk-berlin-firewall-defaults
+freifunk-berlin-freifunk-defaults
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
-freifunk-berlin-dhcp-defaults
-freifunk-berlin-freifunk-defaults
-freifunk-berlin-firewall-defaults
+freifunk-berlin-statistics-defaults
+freifunk-berlin-uhttpd-defaults
 
 # Common
 ip

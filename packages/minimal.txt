@@ -24,21 +24,17 @@ ip
 mtr
 dnsmasq
 kmod-ipip
-kmod-iptunnel4
 qos-scripts
 firewall
 iwinfo
 libiwinfo-lua
+community-profiles
 
 # GUI
-community-profiles
 luci-theme-bootstrap
 luci-i18n-german
-kmod-ipt-nat
 uhttpd
 uhttpd-mod-ubus
-#luci-app-ffwizard-pberg
-luci-app-firewall
 luci-app-ffwizard-berlin
 luci-mod-freifunk
 luci-app-olsr
@@ -64,7 +60,6 @@ batctl
 
 # IPv6
 kmod-ipv6
-6in4
 
 # VPN
 uhttpd-mod-tls

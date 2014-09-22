@@ -1,14 +1,5 @@
--kmod-usb-core
--kmod-usb-ohci
--kmod-usb2
--kmod-ledtrig-usbdev
--kmod-usb-serial
--kmod-usb-serial-option
--comgt
--chat
 -ppp
--kmod-ppp
--wpad
+-ppp-mod-pppoe
 
 # Defaults
 freifunk-berlin-dhcp-defaults
@@ -18,23 +9,26 @@ freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-statistics-defaults
 freifunk-berlin-uhttpd-defaults
+community-profiles
 
 # Common
-ip
 mtr
+iperf
+tmux
+vnstat
+ethtool
 dnsmasq
-kmod-ipip
 qos-scripts
 firewall
 iwinfo
 libiwinfo-lua
-community-profiles
 
 # GUI
 luci-theme-bootstrap
 luci-i18n-german
 uhttpd
 uhttpd-mod-ubus
+uhttpd-mod-tls
 luci-app-ffwizard-berlin
 luci-mod-freifunk
 luci-app-olsr
@@ -53,6 +47,7 @@ olsrd-mod-txtinfo
 olsrd-mod-nameservice
 olsrd-mod-watchdog
 freifunk-watchdog
+kmod-ipip
 
 # BATMAN
 kmod-batman-adv
@@ -63,11 +58,6 @@ batctl
 kmod-ipv6
 
 # VPN
-uhttpd-mod-tls
-px5g
-kmod-tun
-liblzo
-libpolarssl
 openvpn-polarssl
 
 # Statistics

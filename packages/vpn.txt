@@ -1,5 +1,6 @@
 -ppp
 -ppp-mod-pppoe
+-wpad
 
 # Defaults
 freifunk-berlin-dhcp-defaults

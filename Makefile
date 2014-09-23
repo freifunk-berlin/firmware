@@ -15,8 +15,6 @@ UMASK=umask 022
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
 
-# packages to include in the images
-PACKAGES=$(shell grep -v '^\#' $(FW_DIR)/packages/minimal.txt | tr -t '\n' ' ')
 # profiles to be built (router models)
 PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
 
@@ -99,8 +97,15 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	for PROFILE in $(PROFILES); do \
-	  $(UMASK); \
-	    $(MAKE) -C $(IB_BUILD_DIR)/$(IB_DIR) image PROFILE="$$PROFILE" PACKAGES="$(PACKAGES)"; \
+	  PACKAGES_LIST="$(PACKAGES_LIST_DEFAULT)"; \
+	  if [[ $$PROFILE == *:* ]]; then \
+	    PACKAGES_LIST+="_$$(echo $$PROFILE | cut -d':' -f 2)"; \
+	    PROFILE=$$(echo $$PROFILE | cut -d':' -f 1); \
+	  fi; \
+	  PACKAGES_FILE="$(FW_DIR)/packages/$$PACKAGES_LIST.txt"; \
+	  PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE | tr -t '\n' ' '); \
+	  $(UMASK);\
+	  $(MAKE) -C $(IB_BUILD_DIR)/$(IB_DIR) image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST"; \
 	done
 	mkdir -p $(FW_TARGET_DIR)
 	rm -rf $(FW_TARGET_DIR)/$(TARGET)

@@ -98,7 +98,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	for PROFILE in $(PROFILES); do \
 	  PACKAGES_LIST="$(PACKAGES_LIST_DEFAULT)"; \
-	  if [[ $$PROFILE == *:* ]]; then \
+	  if [[ $$PROFILE =~ ":" ]]; then \
 	    PACKAGES_LIST+="_$$(echo $$PROFILE | cut -d':' -f 2)"; \
 	    PROFILE=$$(echo $$PROFILE | cut -d':' -f 1); \
 	  fi; \

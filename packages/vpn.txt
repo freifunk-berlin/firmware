@@ -30,6 +30,7 @@ luci-i18n-german
 uhttpd
 uhttpd-mod-ubus
 uhttpd-mod-tls
+px5g
 luci-app-ffwizard-berlin
 luci-mod-freifunk
 luci-app-olsr

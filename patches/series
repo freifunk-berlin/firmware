@@ -4,7 +4,6 @@
 004-routing-olsrd-dyn_gw-ping_cmd.patch
 006-target-imagebuilder-remove-initramfs-dep.patch
 008-luci-freifunk-gwcheck.patch
-009-luci-freifunk-map.patch
 010-luci-mod-admin-dfs.patch
 011-luci-freifunk-policyrouting-berlin.patch
 012-luci-freifunk-gwcheck-jshn.patch

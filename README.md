@@ -36,6 +36,17 @@ After flashing the firmware your router has the IP 192.168.42.1 and distributes 
 
 By default this firmware is shipped with [ffwizard-berlin](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin) that may help you to configure your router. If you use the wizard the router's IP is changed to the first IP of the address range you entered during setup. Anyway http://frei.funk should still work.
 
+## Releases
+
+Every release has a [semantic version number](http://semver.org) and a codename.
+We name our releases after important female computer scientists, hackers, etc.
+For inspiration please take a look at the related
+[ticket](https://github.com/freifunk-berlin/firmware/issues/24).
+
+Stable releases are hosted on the buildbot master instance:
+
+[http://buildbot.berlin.freifunk.net/buildbot/stable/](http://buildbot.berlin.freifunk.net/buildbot/stable/)
+
 ## Development
 
 To get the source and build the firmware locally use:
@@ -121,3 +132,12 @@ git send-email \
 ```
 
 Additional information: https://dev.openwrt.org/wiki/SubmittingPatches
+
+### Creating a release
+
+For a new release create a new branch. The branch name must be a semantic version
+number. Make sure you change the codename and semantic version number in the
+README and config files (./configs/*)
+
+The buildbot will build the release and place the files in the stable direcotry
+once you pushed the new branch to github.

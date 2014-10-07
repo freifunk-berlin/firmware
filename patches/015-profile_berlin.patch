@@ -2,7 +2,7 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
 ===================================================================
 --- openwrt.orig/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
 +++ openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
-@@ -1,7 +1,7 @@
+@@ -1,50 +1,35 @@
  config 'community' 'profile'
  	option 'name' 'Freifunk Berlin'
  	option 'homepage' 'http://berlin.freifunk.net'
@@ -11,7 +11,13 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
  	option 'ssid_scheme' 'addchannelbefore'
  	option 'mesh_network' '104.0.0.0/8'
  	option 'splash_network' '10.104.0.0/16'
-@@ -15,36 +15,24 @@ config 'community' 'profile'
+ 	option 'splash_prefix' '27'
+ 	option 'latitude' '52.52075'
+ 	option 'longitude' '13.40948'
+-	list 'owm_api' 'http://api.openwifimap.net'
+-	list 'owm_api' 'http://owmapi.pberg.freifunk.net'
+-	option 'mapserver' 'http://map.pberg.freifunk.net/'
+ 
  config 'defaults' 'wifi_device'
  	option 'channel' '13'
  

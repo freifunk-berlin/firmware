@@ -2,7 +2,7 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 ===================================================================
 --- /dev/null
 +++ openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
-@@ -0,0 +1,153 @@
+@@ -0,0 +1,147 @@
 +From ee6d8c9ec0e5dd834d0d42ae07597148357e917b Mon Sep 17 00:00:00 2001
 +From: Nico Geyso <nico.geyso@fu-berlin.de>
 +Date: Sat, 20 Sep 2014 12:25:50 +0200
@@ -17,10 +17,10 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 + lib/dyn_gw/src/olsrd_dyn_gw.h |  2 ++
 + 3 files changed, 38 insertions(+), 11 deletions(-)
 +
-+diff --git a/lib/dyn_gw/README_DYN_GW b/lib/dyn_gw/README_DYN_GW
-+index 0aea1f9..ffc1c5c 100644
-+--- a/lib/dyn_gw/README_DYN_GW
-++++ b/lib/dyn_gw/README_DYN_GW
++Index: olsrd-0.6.6.2/lib/dyn_gw/README_DYN_GW
++===================================================================
++--- olsrd-0.6.6.2.orig/lib/dyn_gw/README_DYN_GW
+++++ olsrd-0.6.6.2/lib/dyn_gw/README_DYN_GW
 +@@ -83,10 +83,13 @@ LoadPlugin "olsrd_dyn_gw.so.0.5"
 +     PlParam "Ping"   "192.168.100.10"
 +     PlParam "Ping"   "192.168.101.10"
@@ -36,20 +36,20 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 + }
 + 
 + --------------------------------------------------------------------------------
-+diff --git a/lib/dyn_gw/src/olsrd_dyn_gw.c b/lib/dyn_gw/src/olsrd_dyn_gw.c
-+index 027863c..493a885 100644
-+--- a/lib/dyn_gw/src/olsrd_dyn_gw.c
-++++ b/lib/dyn_gw/src/olsrd_dyn_gw.c
-+@@ -128,6 +128,8 @@ static bool check_gw(union olsr_ip_addr *, uint8_t, struct ping_list *);
++Index: olsrd-0.6.6.2/lib/dyn_gw/src/olsrd_dyn_gw.c
++===================================================================
++--- olsrd-0.6.6.2.orig/lib/dyn_gw/src/olsrd_dyn_gw.c
+++++ olsrd-0.6.6.2/lib/dyn_gw/src/olsrd_dyn_gw.c
++@@ -128,6 +128,8 @@ static bool check_gw(union olsr_ip_addr
 + 
 + static int ping_is_possible(struct ping_list *);
 + 
-++static char ping_cmd[PING_CMD_MAX_LEN] = { DEFAULT_PING_CHECK_INTERVAL };
+++static char ping_cmd[PING_CMD_MAX_LEN] = { DEFAULT_PING_CMD };
 ++
 + /* Event function to register with the scheduler */
 + static void olsr_event_doing_hna(void *);
 + 
-+@@ -205,12 +207,29 @@ set_plugin_hna(const char *value, void *data __attribute__ ((unused)), set_plugi
++@@ -205,12 +207,26 @@ set_plugin_hna(const char *value, void *
 +   return 0;
 + }
 + 
@@ -59,12 +59,9 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 ++  size_t len = strlen(value);
 ++
 ++  if (len < PING_CMD_MAX_LEN) {
-++    memcpy(ping_cmd, value, len);
-++    OLSR_PRINTF(2, "Set ping command to: %s\n", ping_cmd);
+++    strncpy(ping_cmd, value, sizeof(ping_cmd));
 ++    return 0;
 ++  }
-++
-++  OLSR_PRINTF(0, "Ping command exceed max length: %d > %zu", PING_CMD_MAX_LEN, len);
 ++
 ++  return 1;
 ++}
@@ -79,7 +76,7 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 + };
 + 
 + void
-+@@ -272,13 +291,13 @@ olsrd_plugin_init(void)
++@@ -272,13 +288,13 @@ olsrd_plugin_init(void)
 +       struct hna_list *lst;
 +       struct ping_list *png;
 + 	    
@@ -96,7 +93,7 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 +       }
 +     }
 +   }
-+@@ -300,18 +319,21 @@ olsr_event_doing_hna(void *foo __attribute__ ((unused)))
++@@ -300,18 +316,21 @@ olsr_event_doing_hna(void *foo __attribu
 + 
 +   update_routing();
 +   
@@ -120,14 +117,14 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 +           }
 +           li->hna_added = false;
 +         }
-+@@ -536,14 +558,14 @@ ping_is_possible(struct ping_list *the_ping_list)
++@@ -536,14 +555,14 @@ ping_is_possible(struct ping_list *the_p
 + {
 +   struct ping_list *list;
 +   for (list = the_ping_list; list; list = list->next) {
 +-    char ping_command[50];
 +-    snprintf(ping_command, sizeof(ping_command), "ping -c 1 -q %s", list->ping_address);
 +-    olsr_printf(1, "\nDo ping on %s ...\n", list->ping_address);
-++    char ping_command[96];
+++    char ping_command[sizeof(ping_cmd) + INET6_ADDRSTRLEN];
 ++    snprintf(ping_command, sizeof(ping_command), ping_cmd, list->ping_address);
 ++    olsr_printf(0, "\nDo ping on (%s) %s ...\n", ping_cmd, list->ping_address);
 +     if (system(ping_command) == 0) {
@@ -140,30 +137,26 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 +   }
 +   return 0;
 + }
-+diff --git a/lib/dyn_gw/src/olsrd_dyn_gw.h b/lib/dyn_gw/src/olsrd_dyn_gw.h
-+index 4db0838..bdca978 100644
-+--- a/lib/dyn_gw/src/olsrd_dyn_gw.h
-++++ b/lib/dyn_gw/src/olsrd_dyn_gw.h
++Index: olsrd-0.6.6.2/lib/dyn_gw/src/olsrd_dyn_gw.h
++===================================================================
++--- olsrd-0.6.6.2.orig/lib/dyn_gw/src/olsrd_dyn_gw.h
+++++ olsrd-0.6.6.2/lib/dyn_gw/src/olsrd_dyn_gw.h
 +@@ -54,6 +54,8 @@
 + 
 + #define DEFAULT_HNA_CHECK_INTERVAL	1000
 + #define DEFAULT_PING_CHECK_INTERVAL	5
-++#define DEFAULT_PING_CMD                "ping -c 1 -q %s"
-++#define PING_CMD_MAX_LEN                64
+++#define DEFAULT_PING_CMD            "ping -c 1 -q %s"
+++#define PING_CMD_MAX_LEN            64
 + 
 + int olsrd_plugin_init(void);
 + 
-+-- 
-+2.1.0
-+
 Index: openwrt/feeds/routing/olsrd/patches/series
 ===================================================================
 --- openwrt.orig/feeds/routing/olsrd/patches/series
-+++ openwrt/feeds/routing/olsrd/patches/series
-@@ -1,2 +1,3 @@
- 001-olsrd-json-ipv6-only.patch
- 002-olsrd-txt-ipv6-only.patch
-+003-dyn-gw-add-ping_cmd_param.patch
++++ /dev/null
+@@ -1,2 +0,0 @@
+-001-olsrd-json-ipv6-only.patch
+-002-olsrd-txt-ipv6-only.patch
 Index: openwrt/feeds/routing/olsrd/files/olsrd.init
 ===================================================================
 --- openwrt.orig/feeds/routing/olsrd/files/olsrd.init

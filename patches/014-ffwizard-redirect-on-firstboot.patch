@@ -2,7 +2,7 @@ Index: openwrt/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
 ===================================================================
 --- openwrt.orig/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
 +++ openwrt/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
-@@ -12,13 +12,29 @@ You may obtain a copy of the License at
+@@ -12,13 +12,33 @@ You may obtain a copy of the License at
  $Id$
  
  -%>
@@ -21,9 +21,13 @@ Index: openwrt/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
 +
 +-- only redirect if assistent is installed and no root password is set
 +if ipkg.installed("luci-app-ffwizard-berlin") == True and http.getenv("PATH_INFO") == nil then
-+	local runbefore = not uci.get("ffwizard","settings","runbefore")
-+	if runbefore and sys.user.checkpasswd("root", "") then
-+		http.redirect(luci.dispatcher.build_url("admin/freifunk/assistent") .. "?username=root&password=")
++	local runbefore = uci.get("ffwizard","settings","runbefore")
++	if not runbefore then
++		local url = luci.dispatcher.build_url("admin/freifunk/assistent")
++		if sys.user.checkpasswd("root", "") then
++			url = url .. "?username=root&password="
++		end
++		http.redirect(url)
 +	end
 +end
 +%>

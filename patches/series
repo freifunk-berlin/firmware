@@ -1,4 +1,3 @@
-001-package-mac80211-regdb.patch
 002-banner-info.patch
 004-routing-olsrd-dyn_gw-ping_cmd.patch
 006-target-imagebuilder-remove-initramfs-dep.patch

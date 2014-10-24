@@ -6,7 +6,6 @@
 008-luci-freifunk-gwcheck.patch
 010-luci-mod-admin-dfs.patch
 011-luci-freifunk-policyrouting-berlin.patch
-012-luci-freifunk-gwcheck-jshn.patch
 013-delete_non_existing_profiles.patch
 014-ffwizard-redirect-on-firstboot.patch
 015-profile_berlin.patch

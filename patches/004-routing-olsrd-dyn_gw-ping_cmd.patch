@@ -1,46 +1,41 @@
-Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
+Index: openwrt/feeds/routing/olsrd/patches/001-dyn-gw-add-ping_cmd_param.patch
 ===================================================================
 --- /dev/null
-+++ openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
-@@ -0,0 +1,147 @@
-+From ee6d8c9ec0e5dd834d0d42ae07597148357e917b Mon Sep 17 00:00:00 2001
++++ openwrt/feeds/routing/olsrd/patches/001-dyn-gw-add-ping_cmd_param.patch
+@@ -0,0 +1,94 @@
++From d0e46ec52e83ecc2811072e9bf6d553e48163704 Mon Sep 17 00:00:00 2001
 +From: Nico Geyso <nico.geyso@fu-berlin.de>
-+Date: Sat, 20 Sep 2014 12:25:50 +0200
-+Subject: [PATCH] dyn gw: add PingCmd parameter
++Date: Fri, 24 Oct 2014 11:13:47 +0200
++Subject: [PATCH] dyn gw plugin - add PingCmd parameter
 +
-+You now can configure the ping command with PingCmd. This is useful for instance
-+if you do want to set an interface or execute an own script. See README_DYN_GW
-+for an example.
++Add possibilty to set PingCmd by config. This is useful for instance
++if you do want to set an interface or execute your own script. See
++README_DYN_GW for an example.
 +---
-+ lib/dyn_gw/README_DYN_GW      |  5 ++++-
-+ lib/dyn_gw/src/olsrd_dyn_gw.c | 42 ++++++++++++++++++++++++++++++++----------
++ lib/dyn_gw/README_DYN_GW      |  3 +++
++ lib/dyn_gw/src/olsrd_dyn_gw.c | 22 +++++++++++++++++++---
 + lib/dyn_gw/src/olsrd_dyn_gw.h |  2 ++
-+ 3 files changed, 38 insertions(+), 11 deletions(-)
++ 3 files changed, 24 insertions(+), 3 deletions(-)
 +
-+Index: olsrd-0.6.6.2/lib/dyn_gw/README_DYN_GW
-+===================================================================
-+--- olsrd-0.6.6.2.orig/lib/dyn_gw/README_DYN_GW
-++++ olsrd-0.6.6.2/lib/dyn_gw/README_DYN_GW
-+@@ -83,10 +83,13 @@ LoadPlugin "olsrd_dyn_gw.so.0.5"
-+     PlParam "Ping"   "192.168.100.10"
-+     PlParam "Ping"   "192.168.101.10"
-+     
-+-    #   Third HNA group without ping check
-++    # Third HNA group without ping check
++diff --git a/lib/dyn_gw/README_DYN_GW b/lib/dyn_gw/README_DYN_GW
++index 0aea1f9..8f3e02d 100644
++--- a/lib/dyn_gw/README_DYN_GW
+++++ b/lib/dyn_gw/README_DYN_GW
++@@ -87,6 +87,9 @@ LoadPlugin "olsrd_dyn_gw.so.0.5"
 +     PlParam "HNA"    "192.168.200.0 255.255.255.0"
 +     PlParam "HNA"    "192.168.201.0 255.255.255.0"
 +     PlParam "HNA"    "192.168.202.0 255.255.255.0"
 ++
-++    # Set custom ping command - %s will be replaced with IP to ping
+++    #   Set custom ping command - %s will be replaced with IP to ping
 ++    PlParam "PingCmd" "ping -c 1 -q -I vpn %s"
 + }
 + 
 + --------------------------------------------------------------------------------
-+Index: olsrd-0.6.6.2/lib/dyn_gw/src/olsrd_dyn_gw.c
-+===================================================================
-+--- olsrd-0.6.6.2.orig/lib/dyn_gw/src/olsrd_dyn_gw.c
-++++ olsrd-0.6.6.2/lib/dyn_gw/src/olsrd_dyn_gw.c
-+@@ -128,6 +128,8 @@ static bool check_gw(union olsr_ip_addr
++diff --git a/lib/dyn_gw/src/olsrd_dyn_gw.c b/lib/dyn_gw/src/olsrd_dyn_gw.c
++index 074e4d3..d5883d9 100644
++--- a/lib/dyn_gw/src/olsrd_dyn_gw.c
+++++ b/lib/dyn_gw/src/olsrd_dyn_gw.c
++@@ -129,6 +129,8 @@ static bool check_gw(union olsr_ip_addr *, uint8_t, struct ping_list *);
 + 
 + static int ping_is_possible(struct ping_list *);
 + 
@@ -49,7 +44,7 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 + /* Event function to register with the scheduler */
 + static void olsr_event_doing_hna(void *);
 + 
-+@@ -205,12 +207,26 @@ set_plugin_hna(const char *value, void *
++@@ -206,12 +208,26 @@ set_plugin_hna(const char *value, void *data __attribute__ ((unused)), set_plugi
 +   return 0;
 + }
 + 
@@ -76,48 +71,7 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 + };
 + 
 + void
-+@@ -272,13 +288,13 @@ olsrd_plugin_init(void)
-+       struct hna_list *lst;
-+       struct ping_list *png;
-+ 	    
-+-      olsr_printf(1, "Group %d:\n", i);
-++      olsr_printf(0, "Group %d:\n", i);
-+       for (lst = grp->hna_list; lst; lst = lst->next) {
-+         char addr[INET_ADDRSTRLEN];
-+-        olsr_printf(1, "  HNA %s\n", get_ip_str(lst->hna_addr.v4.s_addr, addr, INET_ADDRSTRLEN));
-++        olsr_printf(0, "  HNA %s\n", get_ip_str(lst->hna_addr.v4.s_addr, addr, INET_ADDRSTRLEN));
-+       }
-+       for (png = grp->ping_hosts; png; png = png->next) {
-+-        olsr_printf(1, "  PING %s\n", png->ping_address);
-++        olsr_printf(0, "  PING %s\n", png->ping_address);
-+       }
-+     }
-+   }
-+@@ -300,18 +316,21 @@ olsr_event_doing_hna(void *foo __attribu
-+ 
-+   update_routing();
-+   
-++  olsr_printf(0, "olsr_event_dooing_hna() got called\n");
-+   for (grp = hna_groups; grp; grp = grp->next) {
-+     for (li = grp->hna_list; li; li = li->next) {
-+       if (!li->hna_added) {
-+         if (grp->probe_ok && li->active) {
-+-          olsr_printf(1, "Adding OLSR local HNA entry\n");
-++          char addr[INET_ADDRSTRLEN];
-++          olsr_printf(0, "  HNA %s\n", get_ip_str(li->hna_addr.v4.s_addr, addr, INET_ADDRSTRLEN));
-++          olsr_printf(0, "Adding OLSR local HNA entry - new\n");
-+           ip_prefix_list_add(&olsr_cnf->hna_entries, &li->hna_addr, li->hna_prefixlen);
-+           li->hna_added = true;
-+         }
-+       } else {
-+         if (!grp->probe_ok || !li->active) {
-+           while (ip_prefix_list_remove(&olsr_cnf->hna_entries, &li->hna_addr, li->hna_prefixlen)) {
-+-            olsr_printf(1, "Removing OLSR local HNA entry\n");
-++            olsr_printf(0, "Removing OLSR local HNA entry\n");
-+           }
-+           li->hna_added = false;
-+         }
-+@@ -536,14 +555,14 @@ ping_is_possible(struct ping_list *the_p
++@@ -537,9 +553,9 @@ ping_is_possible(struct ping_list *the_ping_list)
 + {
 +   struct ping_list *list;
 +   for (list = the_ping_list; list; list = list->next) {
@@ -126,21 +80,14 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 +-    olsr_printf(1, "\nDo ping on %s ...\n", list->ping_address);
 ++    char ping_command[sizeof(ping_cmd) + INET6_ADDRSTRLEN];
 ++    snprintf(ping_command, sizeof(ping_command), ping_cmd, list->ping_address);
-++    olsr_printf(0, "\nDo ping on (%s) %s ...\n", ping_cmd, list->ping_address);
+++    olsr_printf(1, "\nDo ping on (%s) %s ...\n", ping_cmd, list->ping_address);
 +     if (system(ping_command) == 0) {
-+-      olsr_printf(1, "...OK\n\n");
-++      olsr_printf(0, "...OK\n\n");
++       olsr_printf(1, "...OK\n\n");
 +       return 1;
-+     }
-+-    olsr_printf(1, "...FAILED\n\n");
-++    olsr_printf(0, "...FAILED\n\n");
-+   }
-+   return 0;
-+ }
-+Index: olsrd-0.6.6.2/lib/dyn_gw/src/olsrd_dyn_gw.h
-+===================================================================
-+--- olsrd-0.6.6.2.orig/lib/dyn_gw/src/olsrd_dyn_gw.h
-++++ olsrd-0.6.6.2/lib/dyn_gw/src/olsrd_dyn_gw.h
++diff --git a/lib/dyn_gw/src/olsrd_dyn_gw.h b/lib/dyn_gw/src/olsrd_dyn_gw.h
++index 4db0838..5174c63 100644
++--- a/lib/dyn_gw/src/olsrd_dyn_gw.h
+++++ b/lib/dyn_gw/src/olsrd_dyn_gw.h
 +@@ -54,6 +54,8 @@
 + 
 + #define DEFAULT_HNA_CHECK_INTERVAL	1000
@@ -153,10 +100,9 @@ Index: openwrt/feeds/routing/olsrd/patches/003-dyn-gw-add-ping_cmd_param.patch
 Index: openwrt/feeds/routing/olsrd/patches/series
 ===================================================================
 --- openwrt.orig/feeds/routing/olsrd/patches/series
-+++ /dev/null
-@@ -1,2 +0,0 @@
--001-olsrd-json-ipv6-only.patch
--002-olsrd-txt-ipv6-only.patch
++++ openwrt/feeds/routing/olsrd/patches/series
+@@ -0,0 +1,1 @@
++001-dyn-gw-add-ping_cmd_param.patch
 Index: openwrt/feeds/routing/olsrd/files/olsrd.init
 ===================================================================
 --- openwrt.orig/feeds/routing/olsrd/files/olsrd.init

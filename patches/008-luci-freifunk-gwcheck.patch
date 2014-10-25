@@ -20,6 +20,7 @@
  
  . /lib/functions.sh
  . /lib/functions/network.sh
+ . /usr/share/libubox/jshn.sh
  
 +config_load freifunk-gwcheck
 +local log

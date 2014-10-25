@@ -236,7 +236,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
  
  		add_lookup_rule olsr olsr 1000
  		add_lookup_rule localnets localnets 2000
-@@ -132,6 +170,20 @@ start() {
+@@ -132,6 +170,26 @@ start() {
  		if [ "$fallback" = 1 ]; then
  			add_lookup_rule olsr-default olsr-default 100000
  		fi
@@ -248,7 +248,13 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
 +			fi
 +			networks="$networks $network_zone"
 +		done
++
++		sgw="$(uci -q get olsrd.@olsrd[0].SmartGateway)"
 +		for n in $networks; do
++			# only add route for tunnel if smart gateway is enabled
++			if [ "$sgw" = "yes" ]; then
++				add_lookup_rule olsr-tunnel olsr-tunnel 19999 $n
++			fi
 +			add_lookup_rule olsr-default olsr-default 20000 $n
 +			if [ "$strict" != 0 ]; then
 +				add_action_rule olsr-default_unreachable unreachable 20001 $n
@@ -257,7 +263,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
  	fi
  	uci commit network
  	if [ ! "$1" = "noservicerestart" ]; then
-@@ -142,20 +194,28 @@ start() {
+@@ -142,20 +200,33 @@ start() {
  stop() {
  	logger -s -t policyrouting "Stopping policy routing"
  	olsrd_rmtables
@@ -276,7 +282,12 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
 +		fi
 +		networks="$networks $network_zone"
 +	done
++
++	sgw=$(uci -q get olsrd.@olsrd[0].SmartGateway)
 +	for n in $networks; do
++		if [ "$sgw" = "yes" ]; then
++			del_rule olsr-tunnel $n
++		fi
 +		del_rule olsr-default $n
 +		if [ "$strict" != 0 ]; then
 +			del_rule olsr-default_unreachable $n

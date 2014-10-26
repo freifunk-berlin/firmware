@@ -4,6 +4,7 @@
 
 ### Packages
 
+[packages] added luci-app-openvpn (092822a)
 [packages] Add batctl to list (86de22f)
 [packages] add collectd-mod-uptime and -mod-memory (32962c8)
 [packages] added alfred to package list (337c54c)
@@ -70,6 +71,13 @@
 
 ### Feeds
 
+[feeds] packages_berlin ffwizard added qos script (fb78ccd)
+[feeds] packages_berlin ffwizard set mac addr if present (4e3f5e9)
+[feeds] packages_berlin firewalldefaults Add unreachable rules for tunl0 (f7fb9a0)
+[feeds] update routing feeds (9877987)
+[feeds] packages_berlin olsrddefauls ipv6 stuff (15e7724)
+[feeds] update olsrd to 0.6.7.1 (66dfd72)
+[feeds] update luci feed (3b4e592)
 [feeds] adapt feeds for freifunk (e4ef5a6)
 [feeds] add support for statistics (e1d5f4b)
 [feeds] bugfixes for ffwizard and freifunk-defaults * freifunk-defaults - add missing firewall rules * ffwizard-berlin - set wan type to bridge for private APs (63d7cdf)
@@ -104,6 +112,11 @@
 
 ### Patches
 
+[patches] update olsrd dynamic gw ping cmd patch (8f90f36)
+[patches] remove olsrd ipv6 bind only patch (366ea66)
+[patches] add fix for mac address issues for wdr4900 (4fd9c3f)
+[patches] firstboot - fix auth parameters (734e95e)
+[patches] pr - add rule for tunl0 to olsr-tunnel (b0901b9)
 [patches] #18 redirect to ffwizard without login (5732ad5)
 [patches] #18 redirect to freifunk wizard on first boot (3085cc6)
 [patches] #41 change ssid to berlin.freifunk.net (5d4f9e1)

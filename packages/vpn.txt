@@ -60,6 +60,7 @@ batctl
 kmod-ipv6
 
 # VPN
+luci-app-openvpn
 openvpn-polarssl
 
 # Statistics

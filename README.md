@@ -1,40 +1,44 @@
-# Freifunk Firmware Berlin - codename kathleen
+# Freifunk Firmware Berlin
+
+## Release Note 0.0.1 - codename kathleen
 
 *[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*
 
-The purpose for this release was not to start a revolution but to have a stable
-firmware for our mesh in Berlin. New features like network concepts will be part
-of a next release. The firmware itself is based on vanilla OpenWRT with
-some modifications (about broken stuff in OpenWRT or luci) and additional
-default packages.
+The purpose for this release is to have a stable firmware for beginners for the Freifunk mesh in Berlin.
+The firmware itself is based on vanilla OpenWRT Barrier Breaker with some modifications (to fix
+broken stuff in OpenWRT itself or for example luci) and additional default packages/configuration settings.
+New features like a new network concept will be part of future releases.
 
-## Features
+**Features**
+* based on OpenWRT Barrier Breaker release
+* update OLSRD to v0.6.7.1
+* new OLSR setup and configuration:
+  * SmartGateway for gateway selection (e.g. honors uplink speed)
+  * dynamic gateway plugin for uplink connectivity tests (gwcheck script removed)
+  * freifunk-policyrouting fixed/patched for VPN03 setup
+* new configuration [wizard](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin)
+  * starts after first boot and guides new users through the configuration of the router
+* monitoring of nodes through collectd
+* new ipam (ip address management system): http://config.berlin.freifunk.net
+* frei.funk as local DNS entry for your router
+  * you do not have to remember your IP to get access
+* change default lan ip address to 192.168.42.1/24
+  * avoids network collisions
+* one dhcp network for APs and lan (bridged)
+* remove of autoipv6 and use of ULA ipv6 prefixes
+* new primary router target: TP-Link WDR 3500/3600/4300
 
-* Based on OpenWRT Barrier Breaker RC4 (new: netifd, procd,...)
-* new wizard to configure your router (should start after first boot)
-* Support for OLSR 0.6.6.2
-* Support for batman-adv 2014.2.0
-* Support for VPN03 (OpenVPN setup of Freifunk Berlin)
-* Support for collectd monitoring scripts
-* `frei.funk` as local DNS entry for your router (you do not have to remember your IP to get access)
-* IBSS interface for each frequency
-* OLSR on ipv4/6 for each IBSS interface
-* one lan segment for APs and lan (dhcpv4 enabled)
-* openwifimap integrated
-
-For questions write a mail to berlin@berlin.freifunk.net or come to our weekly
-meetings in the [cbase/wikimedia](http://berlin.freifunk.net/contact/) in Berlin.
+For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
+
+
+## Info
 
 For the Berlin Freifunk firmware we use vanilla OpenWRT with additional patches
 and packages. The Makefile automates firmware
 creation and apply patches / integrates custom freifunk packages. All custom
 patches are located in *patches/* and all additional packages can be found at
 http://github.com/freifunk-berlin/packages_berlin.
-
-After flashing the firmware your router has the IP 192.168.42.1 and distributes IPs on lan switch. You can also access web ui via http://frei.funk
-
-By default this firmware is shipped with [ffwizard-berlin](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin) that may help you to configure your router. If you use the wizard the router's IP is changed to the first IP of the address range you entered during setup. Anyway http://frei.funk should still work.
 
 ## Releases
 

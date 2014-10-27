@@ -2,7 +2,7 @@
 
 ## Release Note 0.0.1 - codename kathleen
 
-*[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*
+*[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*.
 
 The purpose for this release is to have a stable firmware for beginners for the Freifunk mesh in Berlin.
 The firmware itself is based on vanilla OpenWRT Barrier Breaker with some modifications (to fix
@@ -19,7 +19,6 @@ New features like a new network concept will be part of future releases.
 * new configuration [wizard](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin)
   * starts after first boot and guides new users through the configuration of the router
 * monitoring of nodes through collectd
-* new ipam (ip address management system): http://config.berlin.freifunk.net
 * frei.funk as local DNS entry for your router
   * you do not have to remember your IP to get access
 * change default lan ip address to 192.168.42.1/24
@@ -27,10 +26,17 @@ New features like a new network concept will be part of future releases.
 * one dhcp network for APs and lan (bridged)
 * remove of autoipv6 and use of ULA ipv6 prefixes
 * new primary router target: TP-Link WDR 3500/3600/4300
+* default dns servers:
+  * 85.214.20.141 (FoeBud / Digital Courage)
+  * 213.73.91.35 (CCC Berlin)
+  * 194.150.168.168 (dns.as250.net)
 
 For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
 
+A tutorial on router configuration is available at
+http://berlin.freifunk.net/participate/howto/. Currently only in German. We are
+working on a translation.
 
 ## Info
 

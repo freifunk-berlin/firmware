@@ -4,6 +4,7 @@
 
 ### Packages
 
+```
 [packages] added luci-app-openvpn (092822a)
 [packages] Add batctl to list (86de22f)
 [packages] add collectd-mod-uptime and -mod-memory (32962c8)
@@ -31,9 +32,11 @@
 [packages] Added freifunk-berlin-openvpn-files and freifunk-policyrouting (77fcddc)
 [packages] Added package tmux to configs (0efc3ca)
 [packages] Adding python to the list of missing pakages. (Missing for docker ubuntu images) (15cd128)
+```
 
 ### Config
 
+```
 [configs] Added rudimentary packages list (024cafb)
 [configs] #7 added luci-app-firewall package (c4db051)
 [configs] do not use IGNOE_ERRORS=m (ced9337)
@@ -68,9 +71,11 @@
 [configs] update ar71xx.config to current openwrt revision (92a310e)
 [configs] update luci feed and remove obsolete map patch (d0d4284)
 [configs] Update OpenWRT version (e5737d7)
+```
 
 ### Feeds
 
+```
 [feeds] packages_berlin ffwizard added qos script (fb78ccd)
 [feeds] packages_berlin ffwizard set mac addr if present (4e3f5e9)
 [feeds] packages_berlin firewalldefaults Add unreachable rules for tunl0 (f7fb9a0)
@@ -109,9 +114,11 @@
 [feeds] update packages_berlin toggle stats in wizard (c9d419f)
 [feeds] use dyngw instead of dyngw_plain+ff_olsr_gwcheck (ec593c6)
 [feeds] use ffwizard-berlin (1580033)
+```
 
 ### Patches
 
+```
 [patches] update olsrd dynamic gw ping cmd patch (8f90f36)
 [patches] remove olsrd ipv6 bind only patch (366ea66)
 [patches] add fix for mac address issues for wdr4900 (4fd9c3f)
@@ -159,9 +166,11 @@
 [patches] set netmask for interfaces to 255.255.255.255 (c0d736b)
 [patches] use intern-chXX.freifunk.net as ssid scheme for adhoc (6ce8f59)
 [patches] use luci.model.ipkg instead of luci.fs to check if wizard is installed (4a0e6a7)
+```
 
 ### Build
 
+```
 [Makefile] add images target (1ea1da7)
 [makefile] add MAKE_ARGS (8aaf7ce)
 [Makefile] add pre-patch target (3f4fe00)
@@ -193,3 +202,5 @@
 [makefile] uninstall feeds (126190a)
 [makefile] use absolute paths (bfc499d)
 [makefile] use git branches. Disable AA, enable BB by default (671ee3e)
+```
+

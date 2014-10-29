@@ -1,6 +1,6 @@
 # Freifunk Firmware Berlin
 
-## Release Note 0.0.1 - codename kathleen
+## Release Note 0.0.0 - codename kathleen
 
 *[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*.
 

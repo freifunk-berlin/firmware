@@ -91,7 +91,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
 +					logger -s -t policyrouting "Use mesh gateway for interface ${DEVICE} (IPv$p)"
 +
 +					# add olsr-tunnel rule (SmartGateway tunnel) if not present
-+					if [ ! "$(ip -$p rule show | grep "from all iif ${DEVICE} lookup olsr-tunnel")" ]; then
++					if [ ! "$(ip -$p rule show | egrep "from all iif ${DEVICE} (\[detached\] )?lookup olsr-tunnel")" ]; then
 +						ip -$p rule add dev "${DEVICE}" lookup olsr-tunnel prio 19999
  					fi
 -				done
@@ -101,7 +101,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
  
 -fi
 +					# add olsr-default rule (Default route from mesh) if not present
-+					if [ ! "$(ip -$p rule show | grep "from all iif ${DEVICE} lookup olsr-default")" ]; then
++					if [ ! "$(ip -$p rule show | egrep "from all iif ${DEVICE} (\[detached\] )?lookup olsr-default")" ]; then
 +						ip -$p rule add dev "${DEVICE}" lookup olsr-default prio 20000
 +					fi
  
@@ -128,7 +128,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
 -							logger -s -t policyrouting "Error! Could not remove rule: dev "$dev" lookup olsr-default prio 20000 (IPv$p)"
 -						fi
 +					# add unreachable rules (prevents using router's default route (without VPN))
-+					if [ "$strict" != 0 ] && [ ! "$(ip -$p rule show | grep "from all iif ${DEVICE} unreachable")" ]; then
++					if [ "$strict" != 0 ] && [ ! "$(ip -$p rule show | egrep "from all iif ${DEVICE} (\[detached\] )?unreachable")" ]; then
 +						ip -$p rule add dev "${DEVICE}" unreachable prio 20001
  					fi
 +

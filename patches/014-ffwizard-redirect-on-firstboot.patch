@@ -24,7 +24,7 @@ Index: openwrt/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
 +	local runbefore = uci.get("ffwizard","settings","runbefore")
 +	if not runbefore then
 +		local url = luci.dispatcher.build_url("admin/freifunk/assistent")
-+		if sys.user.checkpasswd("root", "") then
++		if (sys.user.checkpasswd("root", "") == True) then
 +			url = url .. "?luci_username=root&luci_password="
 +		end
 +		http.redirect(url)

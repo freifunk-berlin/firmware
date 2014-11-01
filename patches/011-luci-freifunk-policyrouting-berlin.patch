@@ -101,7 +101,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
  
 -fi
 +					# add olsr-default rule (Default route from mesh) if not present
-+					if [ ! "$(ip -$p rule show | egrep "from all iif ${DEVICE} (\[detached\] )?olsr-default")" ]; then
++					if [ ! "$(ip -$p rule show | egrep "from all iif ${DEVICE} (\[detached\] )?lookup olsr-default")" ]; then
 +						ip -$p rule add dev "${DEVICE}" lookup olsr-default prio 20000
 +					fi
  

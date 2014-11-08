@@ -2,7 +2,7 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
 ===================================================================
 --- openwrt.orig/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
 +++ openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
-@@ -1,50 +1,35 @@
+@@ -1,50 +1,38 @@
  config 'community' 'profile'
  	option 'name' 'Freifunk Berlin'
  	option 'homepage' 'http://berlin.freifunk.net'
@@ -44,7 +44,9 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
  config 'defaults' 'interface'
 -	option 'netmask' '255.0.0.0'
 -	option 'dns' '85.214.20.141 213.73.91.35 194.150.168.168'
--
++	option 'netmask' '255.255.255.255'
++	option 'dns' '85.214.20.141 213.73.91.35 194.150.168.168 2001:4ce8::53 2001:910:800::12'
+ 
 -config 'defaults' 'olsr_interface'
 -	option 'Ip4Broadcast' '255.255.255.255'
 -	option 'HelloInterval' '3.0'
@@ -65,5 +67,5 @@ Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/pr
 -	option 'LinkQualityAlgorithm' 'etx_ff'
 -	option 'RtTableDefaultOlsrPriority' '20000'
 -	option 'RtTableTunnelPriority' '100000'
-+	option 'netmask' '255.255.255.255'
-+	option 'dns' '85.214.20.141 213.73.91.35 194.150.168.168 2001:4ce8::53 2001:910:800::12'
++config 'dhcp' 'dhcp'
++	option leasetime '5m'

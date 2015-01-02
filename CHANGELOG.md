@@ -1,5 +1,28 @@
 # Changelog
 
+## Version 0.1.0
+
+```
+Fix markdown for CHANGELOG.md
+README: add ipv6 resolvers to feature list
+Update OpenWRT revision to r43077
+[configs] build tcpdump as optional package
+[feeds] change url for packages berlin to new repo url
+[feeds] update packages_berlin feed
+[makefile]remove 4MB constraint from mikrotik profile
+[packages]: build and integrate freifunk-berlin-migration package into firmware
+[packages]: build ath{5,9,10}k wifi drivers as modules for x86 target
+[patches] add two ipv6 nameservers
+[patches] backport support for ubnt loco xw
+[patches] fix firstboot checkpasswd condition
+[patches] remove unused regdb.txt patch
+[patches]: change default dhcp leasetime to 5 minutes
+[patches]: fix ascii art in /etc/banner
+fix multiple policy-routing rules in the hotplug.d scripts
+fix version number in CHANGELOG.md
+update openwrt/packages
+```
+
 ## Version 0.0.0
 
 ### Packages

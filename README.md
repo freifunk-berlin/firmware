@@ -30,6 +30,8 @@ New features like a new network concept will be part of future releases.
   * 85.214.20.141 (FoeBud / Digital Courage)
   * 213.73.91.35 (CCC Berlin)
   * 194.150.168.168 (dns.as250.net)
+  * 2001:4ce8::53 (as250)
+  * 2001:910:800::12 (french data network - http://www.fdn.fr/)
 
 For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues

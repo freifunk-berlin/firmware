@@ -1,6 +1,8 @@
---- a/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
-+++ b/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
-@@ -12,13 +12,38 @@ You may obtain a copy of the License at
+Index: openwrt/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
+===================================================================
+--- openwrt.orig/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
++++ openwrt/feeds/luci/modules/freifunk/luasrc/view/freifunk/index.htm
+@@ -12,13 +12,33 @@ You may obtain a copy of the License at
  $Id$
  
  -%>
@@ -18,16 +20,11 @@
 +local ipkg = require "luci.model.ipkg"
 +
 +-- only redirect if assistent is installed and no root password is set
++-- we use isfile because the view is run as root and we can't use e.g.
++-- ipkg.installed or checkpasswd
 +local webAppRoot = http.getenv("PATH_INFO") == nil
-+local notRunBefore = not uci.get("ffwizard","settings","runbefore")
-+--local rootPwNotSet = luci.sys.user.getuser("root") and not luci.sys.user.getpasswd("root")
-+--ipkg.installed() needs root that's why we cannot use it here
-+--local wizardInstalled = ipkg.installed("luci-app-ffwizard-berlin")
++local notRunBefore = not uci.get("ffwizard", "settings", "runbefore")
 +local wizardInstalled = fs.isfile("/usr/lib/lua/luci/controller/assistent/assistent.lua")
-+--sys.exec("logger -t ffwizard -p 5 '"..tostring(webAppRoot).."'")
-+--sys.exec("logger -t ffwizard -p 5 '"..tostring(notRunBefore).."'")
-+--sys.exec("logger -t ffwizard -p 5 '"..tostring(rootPwNotSet).."'")
-+--sys.exec("logger -t ffwizard -p 5 '"..tostring(wizardInstalled).."'")
 +if (webAppRoot and notRunBefore and wizardInstalled) then
 +	local url = luci.dispatcher.build_url("admin/freifunk/assistent")
 +	url = url .. "?luci_username=root&luci_password="

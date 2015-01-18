@@ -7,6 +7,7 @@
 -ppp
 -ppp-mod-pppoe
 -wpad
+-iwinfo
 
 # Defaults
 freifunk-berlin-dhcp-defaults
@@ -21,7 +22,6 @@ community-profiles
 dnsmasq
 qos-scripts
 firewall
-iwinfo
 libiwinfo-lua
 
 # GUI
@@ -35,7 +35,6 @@ luci-app-olsr-services
 luci-app-owm
 luci-app-owm-ant
 luci-app-owm-cmd
-luci-app-owm-gui
 
 # OLSR
 olsrd

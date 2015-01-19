@@ -35,6 +35,7 @@ px5g
 luci-app-ffwizard-berlin
 luci-mod-freifunk
 luci-app-olsr
+luci-app-firewall
 luci-app-olsr-services
 luci-app-owm
 luci-app-owm-ant

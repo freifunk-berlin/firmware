@@ -12,14 +12,16 @@ freifunk-berlin-statistics-defaults
 freifunk-berlin-uhttpd-defaults
 
 # Common
+dnsmasq
+
+# Utils
+tcpdump
 mtr
 iperf
 tmux
 vnstat
 ethtool
-dnsmasq
 iwinfo
-libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap

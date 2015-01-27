@@ -1,13 +1,16 @@
+-kmod-ledtrig-usbdev
+-kmod-nls-base
 -kmod-usb-core
+-kmod-usb-ohci
 -kmod-usb2
 -kmod-ledtrig-usbdev
--kmod-usb-ohci
 -kmod-ppp
 -kmod-usb-serial
 -ppp
 -ppp-mod-pppoe
 -wpad
 -iwinfo
+-luci-app-owm-gui
 
 # Defaults
 freifunk-berlin-dhcp-defaults

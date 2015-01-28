@@ -1,0 +1,105 @@
+From 0c6e889face61ecb7b257ca5210dd9ad1bfb69e3 Mon Sep 17 00:00:00 2001
+From: Lars Gierth <larsg@systemli.org>
+Date: Wed, 28 Jan 2015 01:29:50 +0100
+Subject: [PATCH] opkg: replace wget with uclient-fetch, and allow https
+
+---
+ package/system/opkg/Makefile                       |  1 +
+ .../120-Replace-wget-with-uclient-fetch.patch      | 41 ++++++++++++++++++++++
+ .../system/opkg/patches/121-Allow-https-URIs.patch | 24 +++++++++++++
+ 3 files changed, 66 insertions(+)
+ create mode 100644 package/system/opkg/patches/120-Replace-wget-with-uclient-fetch.patch
+ create mode 100644 package/system/opkg/patches/121-Allow-https-URIs.patch
+
+diff --git a/package/system/opkg/Makefile b/package/system/opkg/Makefile
+index 391adfa..a89be55 100644
+--- a/package/system/opkg/Makefile
++++ b/package/system/opkg/Makefile
+@@ -39,6 +39,7 @@ define Package/opkg/Default
+   TITLE:=opkg package manager
+   MAINTAINER:=Jo-Philipp Wich <xm@subsignal.org>
+   URL:=http://wiki.openmoko.org/wiki/Opkg
++  DEPENDS:=+uclient-fetch
+ endef
+ 
+ define Package/opkg/Default/description
+diff --git a/package/system/opkg/patches/120-Replace-wget-with-uclient-fetch.patch b/package/system/opkg/patches/120-Replace-wget-with-uclient-fetch.patch
+new file mode 100644
+index 0000000..916fe7a
+--- /dev/null
++++ b/package/system/opkg/patches/120-Replace-wget-with-uclient-fetch.patch
+@@ -0,0 +1,41 @@
++From 87a61a8c14d675b91042e75bf5bd1277631a557d Mon Sep 17 00:00:00 2001
++From: Lars Gierth <larsg@systemli.org>
++Date: Wed, 28 Jan 2015 01:21:56 +0100
++Subject: [PATCH 1/2] Replace wget with uclient-fetch
++
++Which unfortunately doesn't have HTTP proxy support,
++but is easier to integrate with libustream-(polarssl|openssl|cyassl).
++---
++ libopkg/opkg_download.c | 8 ++------
++ 1 file changed, 2 insertions(+), 6 deletions(-)
++
++diff --git a/libopkg/opkg_download.c b/libopkg/opkg_download.c
++index 4a8b2a2..5202223 100644
++--- a/libopkg/opkg_download.c
+++++ b/libopkg/opkg_download.c
++@@ -160,12 +160,8 @@ opkg_download(const char *src, const char *dest_file_name,
++       const char *argv[8];
++       int i = 0;
++ 
++-      argv[i++] = "wget";
+++      argv[i++] = "uclient-fetch";
++       argv[i++] = "-q";
++-      if (conf->http_proxy || conf->ftp_proxy) {
++-	argv[i++] = "-Y";
++-	argv[i++] = "on";
++-      }
++       argv[i++] = "-O";
++       argv[i++] = tmp_file_location;
++       argv[i++] = src;
++@@ -173,7 +169,7 @@ opkg_download(const char *src, const char *dest_file_name,
++       res = xsystem(argv);
++ 
++       if (res) {
++-	opkg_msg(ERROR, "Failed to download %s, wget returned %d.\n", src, res);
+++	opkg_msg(ERROR, "Failed to download %s, uclient-fetch returned %d.\n", src, res);
++ 	free(tmp_file_location);
++ 	return -1;
++       }
++-- 
++2.1.0
++
+diff --git a/package/system/opkg/patches/121-Allow-https-URIs.patch b/package/system/opkg/patches/121-Allow-https-URIs.patch
+new file mode 100644
+index 0000000..7db6782
+--- /dev/null
++++ b/package/system/opkg/patches/121-Allow-https-URIs.patch
+@@ -0,0 +1,24 @@
++From 906184de456c51d86bc46eb3dbac2b6917657f5a Mon Sep 17 00:00:00 2001
++From: Lars Gierth <larsg@systemli.org>
++Date: Wed, 28 Jan 2015 01:22:15 +0100
++Subject: [PATCH 2/2] Allow https: URIs
++
++---
++ libopkg/opkg_download.c | 1 +
++ 1 file changed, 1 insertion(+)
++
++diff --git a/libopkg/opkg_download.c b/libopkg/opkg_download.c
++index 5202223..c52cfc0 100644
++--- a/libopkg/opkg_download.c
+++++ b/libopkg/opkg_download.c
++@@ -290,6 +290,7 @@ opkg_prepare_url_for_install(const char *url, char **namep)
++      pkg = pkg_new();
++ 
++      if (str_starts_with(url, "http://")
+++     || str_starts_with(url, "https://")
++ 	 || str_starts_with(url, "ftp://")) {
++ 	  char *tmp_file;
++ 	  char *file_basec = xstrdup(url);
++-- 
++2.1.0
++
+-- 
+2.1.0
+

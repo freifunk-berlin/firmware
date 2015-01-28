@@ -1,0 +1,43 @@
+From a899f927c576fcc1c4bd7c67b3e7e9084b0c375a Mon Sep 17 00:00:00 2001
+From: Lars Gierth <larsg@systemli.org>
+Date: Wed, 28 Jan 2015 23:28:57 +0100
+Subject: [PATCH 2/2] opkg: hardcode the StartSSL CA certificate, for now
+
+---
+ .../122-Hardcode-StartSSL-CA-certificate.patch     | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 package/system/opkg/patches/122-Hardcode-StartSSL-CA-certificate.patch
+
+diff --git a/package/system/opkg/patches/122-Hardcode-StartSSL-CA-certificate.patch b/package/system/opkg/patches/122-Hardcode-StartSSL-CA-certificate.patch
+new file mode 100644
+index 0000000..043f0b7
+--- /dev/null
++++ b/package/system/opkg/patches/122-Hardcode-StartSSL-CA-certificate.patch
+@@ -0,0 +1,24 @@
++From b9c019693d00da4f8960e849050f40eac6506177 Mon Sep 17 00:00:00 2001
++From: Lars Gierth <larsg@systemli.org>
++Date: Wed, 28 Jan 2015 23:16:02 +0100
++Subject: [PATCH] Hardcode the StartSSL CA certificate, for now
++
++---
++ libopkg/opkg_download.c | 1 +
++ 1 file changed, 1 insertion(+)
++
++diff --git a/libopkg/opkg_download.c b/libopkg/opkg_download.c
++index c52cfc0..6614c49 100644
++--- a/libopkg/opkg_download.c
+++++ b/libopkg/opkg_download.c
++@@ -162,6 +162,7 @@ opkg_download(const char *src, const char *dest_file_name,
++ 
++       argv[i++] = "uclient-fetch";
++       argv[i++] = "-q";
+++      argv[i++] = "--ca-certificate=/etc/ssl/certs/startssl.pem";
++       argv[i++] = "-O";
++       argv[i++] = tmp_file_location;
++       argv[i++] = src;
++-- 
++2.1.0
++
+-- 
+2.1.0
+

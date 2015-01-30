@@ -5,12 +5,12 @@
 *[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*.
 
 The purpose for this release is to have a stable firmware for beginners for the Freifunk mesh in Berlin.
-The firmware itself is based on vanilla OpenWRT Barrier Breaker with some modifications (to fix
+The firmware itself is based on vanilla [OpenWRT](https://wiki.openwrt.org/start) Barrier Breaker with some modifications (to fix
 broken stuff in OpenWRT itself or for example luci) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
 **Features**
-* based on OpenWRT Barrier Breaker release
+* based on [OpenWRT](https://wiki.openwrt.org/start) Barrier Breaker release
 * update OLSRD to v0.6.7.1
 * new OLSR setup and configuration:
   * SmartGateway for gateway selection (e.g. honors uplink speed)
@@ -61,8 +61,20 @@ Stable releases are hosted on the buildbot master instance:
 
 ## Development
 
-To get the source and build the firmware locally use:
+### Prerequisites
 
+The build will take some time. You can improve the build time with
+[build options](http://wiki.openwrt.org/doc/howto/build#make_options) such as
+`-j <number of cores>`.
+
+An internet connection is required during the build process. A good internet
+connection can improve the build time.
+
+You need approximately 10GB of space for the build.
+
+### Building all firmwares
+
+To get the source and build the firmware locally use:
 
 ```
 git clone https://github.com/freifunk-berlin/firmware.git

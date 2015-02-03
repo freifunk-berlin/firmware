@@ -119,8 +119,9 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
-	  cp -a $(IB_FILE) $(FW_TARGET_DIR)/; \
 	done;
+	# copy imagebuilder
+	cp -a $(IB_FILE) $(FW_TARGET_DIR)/; \
 	# copy packages
 	$(eval PACKAGES_DIR := "$(FW_TARGET_DIR)/packages")
 	rm -rf $(PACKAGES_DIR)

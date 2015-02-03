@@ -122,8 +122,9 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  cp -a $(IB_FILE) $(FW_TARGET_DIR)/; \
 	done;
 	# copy packages
-	mkdir -p $(FW_TARGET_DIR)/packages
-	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(FW_TARGET_DIR)/packages/$(TARGET)
+	$(eval PACKAGES_DIR := "$(FW_TARGET_DIR)/packages")
+	rm -rf $(PACKAGES_DIR)
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(PACKAGES_DIR)
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
 

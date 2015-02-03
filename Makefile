@@ -9,7 +9,7 @@ FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imagebuilder_tmp
-FW_TARGET_DIR=$(FW_DIR)/firmwares
+FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
 UMASK=umask 022
 
 # if any of the following files have been changed: clean up openwrt dir
@@ -117,10 +117,9 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# copy different firmwares (like vpn, minimal) including imagebuilder
 	for DIR_ABS in $(IB_BUILD_DIR)/$(IB_DIR)/bin/*; do \
 	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \
-	  mkdir -p $$TARGET_DIR; \
-	  rm -rf $$TARGET_DIR/$(TARGET); \
-	  mv $$DIR_ABS $$TARGET_DIR/$(TARGET); \
-	  cp -a $(IB_FILE) $$TARGET_DIR/$(TARGET)/; \
+	  rm -rf $$TARGET_DIR; \
+	  mv $$DIR_ABS $$TARGET_DIR; \
+	  cp -a $(IB_FILE) $(FW_TARGET_DIR)/; \
 	done;
 	# copy packages
 	mkdir -p $(FW_TARGET_DIR)/packages

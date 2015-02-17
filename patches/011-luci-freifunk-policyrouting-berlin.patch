@@ -179,19 +179,19 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
 +		done
 +	fi
 +}
-+
-+add_action_rule() {
-+	name=${1/-/_}
-+	action=$2
-+	prio=$3
-+	in=$4
-+	name=$name"_"${in:-allif}"_"
  
 -			uci batch <<- EOF
 -				set network.${name}ipv${p}="$rule"
 -				set network.${name}ipv${p}.lookup="$lookup"
 -				set network.${name}ipv${p}.priority="$prio"
 -			EOF
++add_action_rule() {
++	name=${1/-/_}
++	action=$2
++	prio=$3
++	in=$4
++	name=$name"_"${in:-allif}"_"
++
 +	if [ -z "$name" -o -z "$action" -o -z "$prio" ]; then
 +		logger -s -t policyrouting "Missing parameters for add_action!"
 +	else
@@ -236,7 +236,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
  
  		add_lookup_rule olsr olsr 1000
  		add_lookup_rule localnets localnets 2000
-@@ -132,6 +170,26 @@ start() {
+@@ -132,6 +170,31 @@ start() {
  		if [ "$fallback" = 1 ]; then
  			add_lookup_rule olsr-default olsr-default 100000
  		fi
@@ -251,6 +251,11 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
 +
 +		sgw="$(uci -q get olsrd.@olsrd[0].SmartGateway)"
 +		for n in $networks; do
++			# only use existing networks
++			uci get "network.$n"
++			if [ $? != 0 ]; then
++				continue
++			fi
 +			# only add route for tunnel if smart gateway is enabled
 +			if [ "$sgw" = "yes" ]; then
 +				add_lookup_rule olsr-tunnel olsr-tunnel 19999 $n
@@ -263,7 +268,7 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
  	fi
  	uci commit network
  	if [ ! "$1" = "noservicerestart" ]; then
-@@ -142,20 +200,33 @@ start() {
+@@ -142,20 +205,38 @@ start() {
  stop() {
  	logger -s -t policyrouting "Stopping policy routing"
  	olsrd_rmtables
@@ -285,6 +290,11 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.
 +
 +	sgw=$(uci -q get olsrd.@olsrd[0].SmartGateway)
 +	for n in $networks; do
++		# only use existing networks
++		uci get "network.$n"
++		if [ $? != 0 ]; then
++			continue
++		fi
 +		if [ "$sgw" = "yes" ]; then
 +			del_rule olsr-tunnel $n
 +		fi
@@ -318,3 +328,4 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/Makefile
 +PKG_RELEASE:=7
  
  PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
+ 

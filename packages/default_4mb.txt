@@ -1,12 +1,21 @@
+-kmod-ledtrig-usbdev
+-kmod-nls-base
 -kmod-usb-core
+-kmod-usb-ohci
 -kmod-usb2
 -kmod-ledtrig-usbdev
--kmod-usb-ohci
 -kmod-ppp
 -kmod-usb-serial
 -ppp
 -ppp-mod-pppoe
 -wpad
+-iwinfo
+-luci-app-owm-gui
+-luci-mod-admin-full
+-iptables
+-ip6tables
+-community-profiles
+-ip
 
 # Defaults
 freifunk-berlin-dhcp-defaults
@@ -15,13 +24,12 @@ freifunk-berlin-freifunk-defaults
 freifunk-berlin-migration
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
-community-profiles
+community-profile-berlin
 
 # Common
 dnsmasq
-qos-scripts
+#qos-scripts
 firewall
-iwinfo
 libiwinfo-lua
 
 # GUI
@@ -35,7 +43,6 @@ luci-app-olsr-services
 luci-app-owm
 luci-app-owm-ant
 luci-app-owm-cmd
-luci-app-owm-gui
 
 # OLSR
 olsrd

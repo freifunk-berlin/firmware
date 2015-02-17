@@ -9,7 +9,7 @@ FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imagebuilder_tmp
-FW_TARGET_DIR=$(FW_DIR)/firmwares
+FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
 UMASK=umask 022
 
 # if any of the following files have been changed: clean up openwrt dir
@@ -96,22 +96,36 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
+	PACKAGES_PATH="$(FW_DIR)/packages"; \
 	for PROFILE in $(PROFILES); do \
-	  PACKAGES_LIST="$(PACKAGES_LIST_DEFAULT)"; \
-	  if [[ $$PROFILE =~ ":" ]]; then \
-	    PACKAGES_LIST+="_$$(echo $$PROFILE | cut -d':' -f 2)"; \
-	    PROFILE=$$(echo $$PROFILE | cut -d':' -f 1); \
-	  fi; \
-	  PACKAGES_FILE="$(FW_DIR)/packages/$$PACKAGES_LIST.txt"; \
-	  PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE | tr -t '\n' ' '); \
-	  $(UMASK);\
-	  $(MAKE) -C $(IB_BUILD_DIR)/$(IB_DIR) image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST"; \
+	  for PACKAGES_FILE in $(PACKAGES_LIST_DEFAULT); do \
+	    if [[ $$PROFILE =~ ":" ]]; then \
+	      SUFFIX="$$(echo $$PROFILE | cut -d':' -f 2)"; \
+	      PACKAGES_SUFFIXED="$$(PACKAGES_FILE)_$$(SUFFIX)"; \
+	      if [[ -f "$$PACKAGES_PATH/$$PACKAGES_SUFFIXED.txt" ]]; then \
+	        PACKAGES_FILE="$$PACKAGES_SUFFIXED"; \
+	        PROFILE=$$(echo $$PROFILE | cut -d':' -f 1); \
+	      fi; \
+	    fi; \
+	    PACKAGES_FILE_ABS="$$PACKAGES_PATH/$$PACKAGES_FILE.txt"; \
+	    PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE_ABS | tr -t '\n' ' '); \
+	    $(UMASK);\
+	    $(MAKE) -C $(IB_BUILD_DIR)/$(IB_DIR) image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/$(IB_DIR)/bin/$$PACKAGES_FILE"; \
+	  done; \
 	done
 	mkdir -p $(FW_TARGET_DIR)
-	rm -rf $(FW_TARGET_DIR)/$(TARGET)
-	mv $(IB_BUILD_DIR)/$(IB_DIR)/bin/$(MAINTARGET) $(FW_TARGET_DIR)/$(TARGET)
-	cp -a $(IB_FILE) $(FW_TARGET_DIR)/$(TARGET)
-	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(FW_TARGET_DIR)/$(TARGET)
+	# copy different firmwares (like vpn, minimal) including imagebuilder
+	for DIR_ABS in $(IB_BUILD_DIR)/$(IB_DIR)/bin/*; do \
+	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \
+	  rm -rf $$TARGET_DIR; \
+	  mv $$DIR_ABS $$TARGET_DIR; \
+	done;
+	# copy imagebuilder
+	cp -a $(IB_FILE) $(FW_TARGET_DIR)/; \
+	# copy packages
+	$(eval PACKAGES_DIR := "$(FW_TARGET_DIR)/packages")
+	rm -rf $(PACKAGES_DIR)
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(PACKAGES_DIR)
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
 

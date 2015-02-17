@@ -93,7 +93,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 .stamp-firmwares: .stamp-compiled
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
-	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
+	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-$(MAINTARGET)*.tar.bz2))
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	PACKAGES_PATH="$(FW_DIR)/packages"; \

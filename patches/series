@@ -8,3 +8,4 @@
 015-profile_berlin.patch
 016-imagebuilder-custom-postinst-script.patch
 017-luci-bootstrap-input-css.patch
+018-backport-openwrt-r43974-736-MIPS-ath79-chained-irq-disable.patch

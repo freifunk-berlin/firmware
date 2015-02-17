@@ -11,6 +11,7 @@
 -wpad
 -iwinfo
 -luci-app-owm-gui
+-iptables
 
 # Defaults
 freifunk-berlin-dhcp-defaults

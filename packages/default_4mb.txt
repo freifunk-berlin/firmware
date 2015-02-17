@@ -11,9 +11,11 @@
 -wpad
 -iwinfo
 -luci-app-owm-gui
+-luci-mod-admin-full
 -iptables
 -ip6tables
 -community-profiles
+-ip
 
 # Defaults
 freifunk-berlin-dhcp-defaults
@@ -26,7 +28,7 @@ community-profile-berlin
 
 # Common
 dnsmasq
-qos-scripts
+#qos-scripts
 firewall
 libiwinfo-lua
 

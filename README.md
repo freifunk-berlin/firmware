@@ -9,6 +9,8 @@ New features like a new network concept will be part of future releases.
 
 ## Release Note 0.1.0 "Kathleen" - 2015-02-19
 * OpenWrt update
+* use DNS for VPN configuration
+* set DHCP lease time to five minutes
 * TL-WR710N support
 * fixed policyrouting (#147)
 * support for loco xw

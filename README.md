@@ -7,11 +7,9 @@ The firmware itself is based on vanilla [OpenWRT](https://wiki.openwrt.org/start
 broken stuff in OpenWRT itself or for example luci) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 0.1.0 "Kathleen" - 2015-02-18
+## Release Note 0.1.0 "Kathleen" - 2015-02-19
 * OpenWrt update
 * TL-WR710N support
-* fixed 4MB Flash routers (TL-WR841 etc.)
-* fixes for the TL-WR1043
 * fixed policyrouting (#147)
 * support for loco xw
 * added luci-app-firewall

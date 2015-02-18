@@ -1,5 +1,87 @@
 # Changelog
 
+## Version 0.1.0
+
+### packages
+
+```
+[packages] add basic packages list for backbone nodes (83c5fb3)
+[packages] add luci-app-firewall (d6d26f6)
+[packages] bbb - add tcpdump (89e14bd)
+[packages] build and integrate freifunk-berlin-migration package into firmware (55b9fe5)
+[packages] rename lists to 'default' and 'minimal' (8bf3979)
+```
+
+### config
+
+```
+config.mk: Update OpenWrt revision to 44162 (4fb186f)
+[configs] build ath{5,9,10}k wifi drivers as modules for x86 target (5dab54c)
+[configs] build tcpdump as optional package (5d6b47a)
+[configs] increase VERSION_NUMBER to 0.1.0 (baeed92)
+[configs] update default packages list (848bc23)
+
+```
+
+### feeds
+
+```
+[feeds] change url for packages berlin to new repo url (dbf79a8)
+[feeds] update feeds to include vpn03-firewall fix (a72f5de)
+[feeds] update packages berlin (0e62c8f)
+[feeds] update packages_berlin (8b524d0)
+[feeds] update packages_berlin feed (363e526)
+[feeds] update packages_berlin feed (fc2e535)
+[feeds] update routing feed (5a46b41)
+[feeds] update routing feed (a1018bb)
+[feeds] update routing feed (b98f5f2)
+```
+
+### patches
+
+```
+[patches] add two ipv6 nameservers (83df6ab)
+[patches] backport support for ubnt loco xw (7142d00)
+[patches] change default dhcp leasetime to 5 minutes (b38af12)
+[patches] fix ascii art in /etc/banner (99a4382)
+[patches] fix ascii art in /etc/banner (9c8394c)
+[patches] fix firstboot checkpasswd condition (6c943d9)
+[patches] fix redirect on firstboot (8dc3728)
+[patches] fix regression introduced by openvpn update in openwrt release (08762ad)
+[patches] remove 008-luci-freifunk-gwcheck.patch (5328184)
+[patches] remove dead code and add a comment (afaef84)
+[patches] remove olsrd PingCmd patch (now in upstream release) (1cfb3e6)
+[patches] remove the PingCmd patch from series file (3f66f8c)
+[patches] remove unused regdb.txt patch (ec39bf0)
+```
+
+### build
+
+```
+[profiles] add support for TL-WR710N (6ac7e57)
+[Makefile] fix wrong directory for packages (613875b)
+[Makefile] new firmware directory layout (e40935f)
+[Makefile] only copy imagebuilder once for each target (1260cda)
+[Makefile/Packages] rename minimal to backbone (c2413e2)
+[Makefile] Support for different packages lists (066e80e)
+remove 4MB constraint from mikrotik profile (74e8316)
+update openwrt/packages to head of branch for-14.07 (9b2c15c)
+```
+
+### misc
+
+```
+CHANGELOG.md: fix version number (a309bbf)
+CHANGELOG.md: Fix markdown for CHANGELOG.md (9b0693b)
+fix multiple policyrouting rules (9a72280)
+fix policyrouting typo (208aada)
+[README] add firmware directory layout (9ca1762)
+[README] add ipv6 resolvers to feature list (811566d)
+[README] fix imagebuilder location (847302e)
+[README] mention some prerequisites for the build process and add some links (cba0a89)
+[README] some restructuring; buildbot/branch notes; news part I (06abf0f)
+```
+
 ## Version 0.0.0
 
 ### Packages

@@ -30,7 +30,7 @@ openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
 	cd $(OPENWRT_DIR); \
 	  ./scripts/feeds clean && \
 	  git clean -dff && git fetch && git reset --hard HEAD && \
-	  rm -rf bin .config feeds.conf
+	  rm -rf bin .config feeds.conf build_dir/target-*
 	touch $@
 
 # update openwrt and checkout specified commit

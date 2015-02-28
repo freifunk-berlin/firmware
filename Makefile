@@ -122,8 +122,8 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
 	done;
-	# copy imagebuilder
-	cp -a $(IB_FILE) $(FW_TARGET_DIR)/; \
+	# copy imagebuilder, sdk and toolchain (if existing)
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.tar.bz2 $(FW_TARGET_DIR)/
 	# copy packages
 	$(eval PACKAGES_DIR := "$(FW_TARGET_DIR)/packages")
 	rm -rf $(PACKAGES_DIR)

@@ -93,9 +93,11 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 .stamp-firmwares: .stamp-compiled
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
+	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(OPENWRT_DIR)/staging_dir/toolchain-*/bin))
 	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-$(TARGET)*.tar.bz2))
 	$(eval IB_DIR := $(shell basename $(IB_FILE) .tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
+	export PATH=$(PATH):$(TOOLCHAIN_PATH); \
 	PACKAGES_PATH="$(FW_DIR)/packages"; \
 	for PROFILE in $(PROFILES); do \
 	  for PACKAGES_FILE in $(PACKAGES_LIST_DEFAULT); do \
@@ -120,12 +122,12 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
 	done;
-	# copy imagebuilder
-	cp -a $(IB_FILE) $(FW_TARGET_DIR)/; \
+	# copy imagebuilder, sdk and toolchain (if existing)
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.tar.bz2 $(FW_TARGET_DIR)/
 	# copy packages
-	$(eval PACKAGES_DIR := "$(FW_TARGET_DIR)/packages")
-	rm -rf $(PACKAGES_DIR)
-	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $(PACKAGES_DIR)
+	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
+	rm -rf $$PACKAGES_DIR; \
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $$PACKAGES_DIR
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
 

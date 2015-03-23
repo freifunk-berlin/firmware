@@ -22,6 +22,7 @@ tmux
 vnstat
 ethtool
 iwinfo
+libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap

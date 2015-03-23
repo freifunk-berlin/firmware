@@ -15,6 +15,7 @@ community-profiles
 
 # Common
 mtr
+ip
 iperf
 tmux
 vnstat

@@ -16,6 +16,7 @@ dnsmasq
 # Utils
 tcpdump
 mtr
+ip
 iperf
 tmux
 vnstat

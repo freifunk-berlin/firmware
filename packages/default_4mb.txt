@@ -44,7 +44,6 @@ olsrd-mod-dyn-gw
 olsrd-mod-jsoninfo
 olsrd-mod-nameservice
 olsrd-mod-watchdog
-freifunk-watchdog
 kmod-ipip
 
 # IPv6

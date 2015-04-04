@@ -71,7 +71,7 @@ patch: stamp-clean-patched .stamp-patched
 $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG)
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
 	$(UMASK); \
-	  $(MAKE) -C openwrt defconfig
+	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
@@ -82,7 +82,7 @@ prepare: stamp-clean-prepared .stamp-prepared
 compile: stamp-clean-compiled .stamp-compiled
 .stamp-compiled: .stamp-prepared
 	$(UMASK); \
-	  $(MAKE) -C openwrt $(MAKE_ARGS)
+	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 	touch $@
 
 # fill firmwares-directory with:

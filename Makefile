@@ -103,7 +103,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  for PACKAGES_FILE in $(PACKAGES_LIST_DEFAULT); do \
 	    if [[ $$PROFILE =~ ":" ]]; then \
 	      SUFFIX="$$(echo $$PROFILE | cut -d':' -f 2)"; \
-	      PACKAGES_SUFFIXED="$$(PACKAGES_FILE)_$$(SUFFIX)"; \
+	      PACKAGES_SUFFIXED="$${PACKAGES_FILE}_$${SUFFIX}"; \
 	      if [[ -f "$$PACKAGES_PATH/$$PACKAGES_SUFFIXED.txt" ]]; then \
 	        PACKAGES_FILE="$$PACKAGES_SUFFIXED"; \
 	        PROFILE=$$(echo $$PROFILE | cut -d':' -f 1); \
@@ -112,6 +112,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	    PACKAGES_FILE_ABS="$$PACKAGES_PATH/$$PACKAGES_FILE.txt"; \
 	    PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE_ABS | tr -t '\n' ' '); \
 	    $(UMASK);\
+	    echo -e "\n *** Building Kathleen image file for profile $${PROFILE} with packages list from $${PACKAGES_FILE}.\n"; \
 	    $(MAKE) -C $(IB_BUILD_DIR)/$(IB_DIR) image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/$(IB_DIR)/bin/$$PACKAGES_FILE" || exit 1; \
 	  done; \
 	done

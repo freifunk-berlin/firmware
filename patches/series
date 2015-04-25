@@ -7,3 +7,4 @@
 014-ffwizard-redirect-on-firstboot.patch
 015-profile_berlin.patch
 016-imagebuilder-custom-postinst-script.patch
+017-luci-bootstrap-input-css.patch

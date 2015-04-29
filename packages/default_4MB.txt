@@ -26,16 +26,17 @@ libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap
+# Bug in LuCI (missing nixio dependency)
+luci-lib-nixio
 uhttpd
 uhttpd-mod-ubus
 luci-app-ffwizard-berlin
-luci-mod-freifunk
 luci-app-olsr
 luci-app-olsr-services
 luci-app-owm
-luci-app-owm-ant
 luci-app-owm-cmd
-luci-app-owm-gui
+# Bug in luci-app-olsr (missing luci-lib-json dependency)
+luci-lib-json
 
 # OLSR
 olsrd
@@ -43,8 +44,6 @@ olsrd-mod-arprefresh
 olsrd-mod-dyn-gw
 olsrd-mod-jsoninfo
 olsrd-mod-nameservice
-olsrd-mod-watchdog
-freifunk-watchdog
 kmod-ipip
 
 # IPv6

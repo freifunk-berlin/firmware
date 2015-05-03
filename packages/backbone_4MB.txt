@@ -1,0 +1,65 @@
+-kmod-usb-core
+-kmod-usb2
+-kmod-ledtrig-usbdev
+-kmod-usb-ohci
+-kmod-ppp
+-kmod-usb-serial
+-ppp
+-ppp-mod-pppoe
+-wpad
+
+# Defaults
+freifunk-berlin-dhcp-defaults
+freifunk-berlin-freifunk-defaults
+freifunk-berlin-network-defaults
+freifunk-berlin-olsrd-defaults
+freifunk-berlin-statistics-defaults
+freifunk-berlin-uhttpd-defaults
+
+# Common
+dnsmasq
+
+# Utils
+#tcpdump
+mtr
+ip
+#iperf
+#tmux
+#vnstat
+#ethtool
+iwinfo
+libiwinfo-lua
+
+# GUI
+luci-theme-bootstrap
+# Bug in LuCI (missing nixio dependency)
+luci-lib-nixio
+uhttpd
+uhttpd-mod-ubus
+#px5g
+#luci-mod-freifunk
+luci-mod-admin-full
+luci-app-olsr
+luci-app-olsr-services
+luci-app-owm
+luci-app-owm-cmd
+# Bug in luci-app-olsr (missing luci-lib-json dependency)
+luci-lib-json
+
+# OLSR
+olsrd
+olsrd-mod-arprefresh
+olsrd-mod-dyn-gw
+olsrd-mod-jsoninfo
+olsrd-mod-nameservice
+kmod-ipip
+
+# BATMAN
+kmod-batman-adv
+alfred
+batctl
+
+# IPv6
+kmod-ipv6
+
+# Statistics/collectd not included in 4MB image

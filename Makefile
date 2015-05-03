@@ -99,8 +99,9 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	export PATH=$(PATH):$(TOOLCHAIN_PATH); \
 	PACKAGES_PATH="$(FW_DIR)/packages"; \
-	for PROFILE in $(PROFILES); do \
+	for PROFILE_ITER in $(PROFILES); do \
 	  for PACKAGES_FILE in $(PACKAGES_LIST_DEFAULT); do \
+	    PROFILE=$$PROFILE_ITER \
 	    CUSTOM_POSTINST_PARAM=""; \
 	    if [[ $$PROFILE =~ ":" ]]; then \
 	      SUFFIX="$$(echo $$PROFILE | cut -d':' -f 2)"; \
@@ -116,7 +117,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	    PACKAGES_FILE_ABS="$$PACKAGES_PATH/$$PACKAGES_FILE.txt"; \
 	    PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE_ABS | tr -t '\n' ' '); \
 	    $(UMASK);\
-	    echo -e "\n *** Building Kathleen image file for profile $${PROFILE} with packages list from $${PACKAGES_FILE}.\n"; \
+	    echo -e "\n *** Building Kathleen image file for profile \"$${PROFILE}\" with packages list \"$${PACKAGES_FILE}\".\n"; \
 	    $(MAKE) -C $(IB_BUILD_DIR)/$(IB_DIR) image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/$(IB_DIR)/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
 	  done; \
 	done

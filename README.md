@@ -61,7 +61,7 @@ sure the list contains `quilt`. We use it for patch management.
 On Ubuntu/Debian:
 ```
 apt-get install git subversion build-essential libncurses5-dev zlib1g-dev gawk \
-  unzip libxml-perl flex wget gawk libncurses5-dev gettext quilt python
+  unzip libxml-perl flex wget gawk libncurses5-dev gettext quilt python libssl-dev
 ```
 
 ### Building all firmwares

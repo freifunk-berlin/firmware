@@ -1,17 +1,32 @@
 # Freifunk Firmware Berlin "Kathleen"
+https://wiki.freifunk.net/Berlin:Firmware
 
 *[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*.
 
 The purpose for this release is to have a stable firmware for beginners for the Freifunk mesh in Berlin.
-The firmware itself is based on vanilla [OpenWRT](https://wiki.openwrt.org/start) Barrier Breaker with some modifications (to fix
-broken stuff in OpenWRT itself or for example luci) and additional default packages/configuration settings.
+The firmware is based on vanilla [OpenWrt](https://wiki.openwrt.org/start) 14.07 "Barrier Breaker" with some modifications (to fix
+broken stuff in OpenWrt itself or for example luci) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
 ## Release Note 0.1.1 "Kathleen" - 2015-xx-xx
-* ...
+* support for TP-LINK CPE210/220/510/520
+* support for 4MB flash routers (TP-LINK WR740/741/743/841)
+  * no monitoring (collectd not included)
+  * no public statistics directly in router UI (luci-mod-freifunk not included)
+  * backbone_4MB variant lacks ffwizard and openvpn
+* less memory pressure for 32MB RAM routers: fewer reboots
+  * only remote statistics for monitoring
+* ffwizard improvements
+* update OpenWrt
 
 ## Features
-* based on [OpenWRT](https://wiki.openwrt.org/start) Barrier Breaker release
+* based on [OpenWrt](https://wiki.openwrt.org/start) Barrier Breaker release
+* primary router target: TP-Link WDR 3500/3600/4300
+* custom package lists for different settings
+  * "default" variant includes ffwizard, openvpn, BATMAN
+  * "backbone" variant excludes ffwizard and openvpn, includes more debugging tools
+  * "default_4MB" variant excludes public router statistics page (luci-mod-freifunk), monitoring (collectd), BATMAN
+  * "backbone_4MB" variant excludes ffwizard, luci-mod-freifunk, openvpn, collectd, includes BATMAN and more debugging tools
 * includes updated OLSRD and BATMAN
 * new OLSR setup and configuration:
   * SmartGateway for gateway selection (e.g. honors uplink speed)
@@ -26,7 +41,6 @@ New features like a new network concept will be part of future releases.
   * avoids network collisions
 * one dhcp network for APs and lan (bridged)
 * remove of autoipv6 and use of ULA ipv6 prefixes
-* new primary router target: TP-Link WDR 3500/3600/4300
 * default dns servers:
   * 85.214.20.141 (FoeBud / Digital Courage)
   * 213.73.91.35 (CCC Berlin)
@@ -35,6 +49,8 @@ New features like a new network concept will be part of future releases.
   * 2001:910:800::12 (french data network - http://www.fdn.fr/)
 
 ## Contact / More information
+
+The firmware wiki page is at: https://wiki.freifunk.net/Berlin:Firmware
 
 For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
@@ -46,7 +62,7 @@ http://berlin.freifunk.net/participate/howto/
 
 ### Info
 
-For the Berlin Freifunk firmware we use vanilla OpenWRT with additional patches
+For the Berlin Freifunk firmware we use vanilla OpenWrt with additional patches
 and packages. The Makefile automates firmware
 creation and apply patches / integrates custom freifunk packages. All custom
 patches are located in *patches/* and all additional packages can be found at
@@ -54,7 +70,7 @@ http://github.com/freifunk-berlin/packages_berlin.
 
 ### Build Prerequisites
 
-Please take a look at the [openWrt documentation](http://wiki.openwrt.org/doc/howto/buildroot.exigence#examples.of.package.installations)
+Please take a look at the [OpenWrt documentation](http://wiki.openwrt.org/doc/howto/buildroot.exigence#examples.of.package.installations)
 for a complete and uptodate list of packages for your operating system. Make
 sure the list contains `quilt`. We use it for patch management.
 
@@ -96,6 +112,7 @@ firmwares/
            images..
         default/
            images..
+        ...
         packages/
            base/
            luci/
@@ -104,12 +121,9 @@ firmwares/
            routing/
 ```
 
-As you notice there are two different versions:
-
-* `default`: berlin freifunk firmware
-* `backbone`: like default but without wizard and with some additional debug programs
-
+As you notice there are several different image variants ("backbone", "default", etc.).
 These different *packages lists* are defined in `packages/`.
+See the "Features" section above for a description of the purpose of each package list.
 
 `make` will use by default `TARGET` and `PACKAGES_LIST_DEFAULT` defined in
 `config.mk`. You can customize this by overriding them:
@@ -157,7 +171,7 @@ once you pushed the new branch to github.
 
 **Important:** all patches should be pushed upstream!
 
-If a patch is not yet included upstream, it can be placed in the `patches` directory with the `quilt` tool. Please configure `quilt` as described in the [openwrt wiki](http://wiki.openwrt.org/doc/devel/patches) (which also provides a documentation of `quilt`).
+If a patch is not yet included upstream, it can be placed in the `patches` directory with the `quilt` tool. Please configure `quilt` as described in the [OpenWrt wiki](http://wiki.openwrt.org/doc/devel/patches) (which also provides a documentation of `quilt`).
 
 #### Add, modify or delete a patch
 
@@ -171,7 +185,7 @@ Then switch to the openwrt directory:
 ```bash
 cd openwrt
 ```
-Now you can use the `quilt` commands as described in the [openwrt wiki](http://wiki.openwrt.org/doc/devel/patches).
+Now you can use the `quilt` commands as described in the [OpenWrt wiki](http://wiki.openwrt.org/doc/devel/patches).
 
 ##### Example: add a patch
 
@@ -190,7 +204,7 @@ quilt refresh                 # creates/updates the patch file
 Please create a pull request for the project you want to submit a patch.
 If you are already member of the Freifunk Berlin team, please delete branches once they have been merged.
 
-#### openwrt
+#### OpenWrt
 
 Create a commit in the openwrt directory that contains your change. Use `git
 format-patch` to create a patch:
@@ -199,7 +213,7 @@ format-patch` to create a patch:
 git format-patch origin
 ```
 
-Send a patch to the openwrt mailing list with `git send-email`:
+Send a patch to the OpenWrt mailing list with `git send-email`:
 
 ```
 git send-email \

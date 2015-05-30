@@ -8,16 +8,8 @@ The firmware is based on vanilla [OpenWrt](https://wiki.openwrt.org/start) 14.07
 broken stuff in OpenWrt itself or for example luci) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 0.1.1 "Kathleen" - 2015-xx-xx
-* support for TP-LINK CPE210/220/510/520
-* support for 4MB flash routers (TP-LINK WR740/741/743/841)
-  * no monitoring (collectd not included)
-  * no public statistics directly in router UI (luci-mod-freifunk not included)
-  * backbone_4MB variant lacks ffwizard and openvpn
-* less memory pressure for 32MB RAM routers: fewer reboots
-  * only remote statistics for monitoring
-* ffwizard improvements
-* update OpenWrt
+## Release Note 0.2.0 "Kathleen" - 2015-xx-xx
+...
 
 ## Features
 * based on [OpenWrt](https://wiki.openwrt.org/start) Barrier Breaker release

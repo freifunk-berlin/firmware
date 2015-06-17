@@ -1,0 +1,16 @@
+Index: openwrt/package/libs/openssl/Makefile
+===================================================================
+--- openwrt.orig/package/libs/openssl/Makefile	2015-06-17 21:01:16.971819482 +0200
++++ openwrt/package/libs/openssl/Makefile	2015-06-17 21:11:09.688368025 +0200
+@@ -15,9 +15,8 @@
+ PKG_BUILD_PARALLEL:=1
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+-PKG_SOURCE_URL:=http://www.openssl.org/source/ \
+-	ftp://ftp.funet.fi/pub/crypt/mirrors/ftp.openssl.org/source \
+-	ftp://ftp.sunet.se/pub/security/tools/net/openssl/source/
++PKG_SOURCE_URL:=http://www.openssl.org/source/old/1.0.2/ \
++	ftp://ftp.pca.dfn.de/pub/tools/net/openssl/source/old/1.0.2/
+ PKG_MD5SUM:=a06c547dac9044161a477211049f60ef
+ 
+ PKG_LICENSE:=SSLEAY OPENSSL

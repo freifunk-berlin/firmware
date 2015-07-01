@@ -8,6 +8,10 @@ The firmware is based on vanilla [OpenWrt](https://wiki.openwrt.org/start) 14.07
 broken stuff in OpenWrt itself or for example luci) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
+## Release Note 0.1.2 "Kathleen" - 2015-xx-xx
+* update OLSRd to v0.9.0.2
+* set OpenVPN default mssfix to 1300
+
 ## Release Note 0.1.1 "Kathleen" - 2015-05-30
 * support for TP-LINK CPE210/220/510/520
 * support for 4MB flash routers (TP-LINK WR740/741/743/841)

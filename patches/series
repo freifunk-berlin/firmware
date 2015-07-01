@@ -9,3 +9,5 @@
 016-imagebuilder-custom-postinst-script.patch
 017-luci-bootstrap-input-css.patch
 018-backport-openwrt-r43974-736-MIPS-ath79-chained-irq-disable.patch
+019-openssl-102a-download-path.patch
+020-update-olsrd.patch

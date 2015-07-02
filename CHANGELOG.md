@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.1.2
+
+* https://github.com/freifunk-berlin/firmware/commits/v0.1.2
+* https://github.com/freifunk-berlin/firmware-packages/commits/v0.1.2
+
 ## Version 0.1.1
 
 * https://github.com/freifunk-berlin/firmware/commits/v0.1.1

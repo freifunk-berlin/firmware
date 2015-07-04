@@ -5,3 +5,4 @@
 015-profile_berlin.patch
 016-imagebuilder-custom-postinst-script.patch
 017-luci-bootstrap-input-css.patch
+021-fix-mt7620-failsafe.patch

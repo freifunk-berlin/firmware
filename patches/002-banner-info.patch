@@ -2,7 +2,7 @@ Index: openwrt/package/base-files/files/etc/banner
 ===================================================================
 --- openwrt.orig/package/base-files/files/etc/banner
 +++ openwrt/package/base-files/files/etc/banner
-@@ -1,13 +1,20 @@
+@@ -1,14 +1,21 @@
 -  _______                     ________        __
 - |       |.-----.-----.-----.|  |  |  |.----.|  |_
 - |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
@@ -16,15 +16,17 @@ Index: openwrt/package/base-files/files/etc/banner
 + \_| |_|  \___|_|_|  \__,_|_| |_|_|\_\
 +
   -----------------------------------------------------
-- BARRIER BREAKER (%C, %R)
+- CHAOS CALMER (%C, %R)
 - -----------------------------------------------------
--  * 1/2 oz Galliano         Pour all ingredients into
--  * 4 oz cold Coffee        an irish coffee mug filled
--  * 1 1/2 oz Dark Rum       with crushed ice. Stir.
--  * 2 tsp. Creme de Cacao
-+ Firmware Berlin (%N %C, based OpenWRT %R)
+-  * 1 1/2 oz Gin            Shake with a glassful
+-  * 1/4 oz Triple Sec       of broken ice and pour
+-  * 3/4 oz Lime Juice       unstrained into a goblet.
+-  * 1 1/2 oz Orange Juice
+-  * 1 tsp. Grenadine Syrup
++ Firmware Berlin (%N %C, based OpenWrt %R)
 + %P - %S
-+ http://github.com/freifunk-berlin
++ https://wiki.freifunk.net/Berlin:Firmware
++ https://github.com/freifunk-berlin
   -----------------------------------------------------
 +
 + If you find bugs please report them at:

@@ -29,7 +29,7 @@ libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap
-luci-i18n-german
+#luci-i18n-german
 uhttpd
 uhttpd-mod-ubus
 uhttpd-mod-tls

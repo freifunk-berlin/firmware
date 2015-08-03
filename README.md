@@ -4,15 +4,15 @@ https://wiki.freifunk.net/Berlin:Firmware
 *[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*.
 
 The purpose for this release is to have a stable firmware for beginners for the Freifunk mesh in Berlin.
-The firmware is based on vanilla [OpenWrt](https://wiki.openwrt.org/start) 14.07 "Barrier Breaker" with some modifications (to fix
-broken stuff in OpenWrt itself or for example luci) and additional default packages/configuration settings.
+The firmware is based on vanilla [OpenWrt](https://wiki.openwrt.org/start) "Chaos Calmer" with some modifications (to fix
+broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
 ## Release Note 0.2.0 "Kathleen" - 2015-xx-xx
 ...
 
 ## Features
-* based on [OpenWrt](https://wiki.openwrt.org/start) Barrier Breaker release
+* based on [OpenWrt](https://wiki.openwrt.org/start) Chaos Calmer
 * primary router target: TP-Link WDR 3500/3600/4300
 * custom package lists for different settings
   * "default" variant includes ffwizard, openvpn, BATMAN

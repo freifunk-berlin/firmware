@@ -128,6 +128,14 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
+	  for FILE in $$TARGET_DIR/*-factory.bin $$TARGET_DIR/*-sysupgrade.bin; do \
+	    [ -e "$$FILE" ] || continue; \
+	    NEWNAME="$${FILE/openwrt-/kathleen-}"; \
+	    NEWNAME="$${NEWNAME/ar71xx-generic-/}"; \
+	    NEWNAME="$${NEWNAME/mpc85xx-generic-/}"; \
+	    NEWNAME="$${NEWNAME/squashfs-/}"; \
+	    mv "$$FILE" "$$NEWNAME"; \
+	  done; \
 	done;
 	# copy imagebuilder, sdk and toolchain (if existing)
 	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.tar.bz2 $(FW_TARGET_DIR)/

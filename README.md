@@ -72,6 +72,13 @@ apt-get install git subversion build-essential libncurses5-dev zlib1g-dev gawk \
   unzip libxml-perl flex wget gawk libncurses5-dev gettext quilt python libssl-dev
 ```
 
+On openSUSE:
+```
+zypper install --type pattern devel_basis
+zypper install git subversion ncurses-devel zlib-devel gawk \
+  unzip perl-libxml-perl flex wget gawk gettext-runtime quilt python libopenssl-devel
+```
+
 ### Building all firmwares
 
 To get the source and build the firmware locally use:

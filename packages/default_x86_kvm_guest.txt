@@ -1,0 +1,85 @@
+# KVM and VMware Network Driver
+kmod-pcnet32
+kmod-vmxnet3
+kmod-e1000
+
+-ppp
+-ppp-mod-pppoe
+-wpad-mini
+wpad
+
+# Defaults
+freifunk-berlin-dhcp-defaults
+freifunk-berlin-firewall-defaults
+freifunk-berlin-freifunk-defaults
+freifunk-berlin-migration
+freifunk-berlin-network-defaults
+freifunk-berlin-olsrd-defaults
+freifunk-berlin-statistics-defaults
+freifunk-berlin-uhttpd-defaults
+community-profiles
+
+# Common
+mtr
+ip
+iperf
+tmux
+vnstat
+ethtool
+dnsmasq
+qos-scripts
+firewall
+iwinfo
+libiwinfo-lua
+
+# GUI
+luci-theme-bootstrap
+#luci-i18n-german
+uhttpd
+uhttpd-mod-ubus
+uhttpd-mod-tls
+px5g
+luci-app-ffwizard-berlin
+luci-mod-freifunk
+luci-app-olsr
+luci-app-firewall
+luci-app-olsr-services
+luci-app-owm
+luci-app-owm-ant
+luci-app-owm-cmd
+luci-app-owm-gui
+
+# OLSR
+olsrd
+olsrd-mod-arprefresh
+olsrd-mod-dyn-gw
+olsrd-mod-jsoninfo
+olsrd-mod-txtinfo
+olsrd-mod-nameservice
+olsrd-mod-watchdog
+freifunk-watchdog
+kmod-ipip
+
+# BATMAN
+kmod-batman-adv
+alfred
+batctl
+
+# IPv6
+kmod-ipv6
+
+# VPN
+luci-app-openvpn
+openvpn-polarssl
+
+# Statistics
+luci-app-statistics
+collectd
+collectd-mod-interface
+collectd-mod-iwinfo
+collectd-mod-network
+collectd-mod-olsrd
+collectd-mod-rrdtool
+collectd-mod-ping
+collectd-mod-uptime
+collectd-mod-memory

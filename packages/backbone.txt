@@ -2,6 +2,9 @@
 -ppp-mod-pppoe
 -wpad-mini
 wpad
+-firewall
+-ip6tables
+-iptables
 
 # Defaults
 freifunk-berlin-dhcp-defaults
@@ -27,13 +30,18 @@ libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap
-#luci-i18n-german
+luci-base
+luci-i18n-base-de
+luci-mod-admin-full
+luci-i18n-admin-full-de
 uhttpd
 uhttpd-mod-ubus
 uhttpd-mod-tls
 px5g
 luci-mod-freifunk
+luci-i18n-freifunk-de
 luci-app-olsr
+luci-i18n-olsr-de
 luci-app-olsr-services
 luci-app-owm
 luci-app-owm-ant
@@ -61,6 +69,7 @@ kmod-ipv6
 
 # Statistics
 luci-app-statistics
+luci-i18n-statistics-de
 collectd
 collectd-mod-interface
 collectd-mod-iwinfo

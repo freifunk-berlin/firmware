@@ -11,6 +11,10 @@
 # Defaults
 freifunk-berlin-dhcp-defaults
 freifunk-berlin-firewall-defaults
+#Add deepends to freifunk-berlin-firewall-defaults
+luci-app-firewall
+luci-i18n-firewall-de
+freifunk-firewall
 freifunk-berlin-freifunk-defaults
 freifunk-berlin-migration
 freifunk-berlin-network-defaults
@@ -26,13 +30,18 @@ libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap
+luci-base
+luci-i18n-base-de
 # Bug in LuCI (missing nixio dependency)
 luci-lib-nixio
 uhttpd
 uhttpd-mod-ubus
 luci-app-ffwizard-berlin
+#luci-i18n-ffwizard-berlin-de?
 luci-app-olsr
+luci-i18n-olsr-de
 luci-app-olsr-services
+luci-i18n-olsr-services-de
 luci-app-owm
 luci-app-owm-cmd
 # Bug in luci-app-olsr (missing luci-lib-json dependency)

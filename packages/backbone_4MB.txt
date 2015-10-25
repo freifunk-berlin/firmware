@@ -7,6 +7,9 @@
 -ppp
 -ppp-mod-pppoe
 -wpad
+-firewall
+-ip6tables
+-iptables
 
 # Defaults
 freifunk-berlin-dhcp-defaults
@@ -32,14 +35,19 @@ libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap
+luci-base
+luci-i18n-base-de
 # Bug in LuCI (missing nixio dependency)
 luci-lib-nixio
 uhttpd
 uhttpd-mod-ubus
-#px5g
+uhttpd-mod-tls
+px5g
 #luci-mod-freifunk
+#luci-i18n-freifunk-de
 luci-mod-admin-full
 luci-app-olsr
+luci-i18n-olsr-de
 luci-app-olsr-services
 luci-app-owm
 luci-app-owm-cmd

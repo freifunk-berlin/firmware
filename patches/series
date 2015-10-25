@@ -8,3 +8,5 @@
 021-fix-mt7620-failsafe.patch
 022-rt2x00_allow_adhoc_and_ap.patch
 023-mac80211-regdb.patch
+024-target-ath25-whr-hp-ag108-sysupgrade.patch
+025-target-ath25-whr-hp-ag108-disable-pci.patch

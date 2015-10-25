@@ -1,0 +1,16 @@
+diff --git a/target/linux/ath25/image/Makefile b/target/linux/ath25/image/Makefile
+index 86f2d44..cf82248 100644
+--- a/target/linux/ath25/image/Makefile
++++ b/target/linux/ath25/image/Makefile
+@@ -55,6 +55,11 @@ define Image/Build
+ 		"$(BIN_DIR)/$(IMG_PREFIX)-vmlinux.lzma" \
+ 		"$(BIN_DIR)/$(IMG_PREFIX)-root.$(1)" \
+ 		"$(BIN_DIR)/$(IMG_PREFIX)-combined.$(1).img"
++
++	-sh $(TOPDIR)/scripts/combined-image.sh \
++		"$(BIN_DIR)/$(IMG_PREFIX)-vmlinux.gz" \
++		"$(BIN_DIR)/$(IMG_PREFIX)-root.$(1)" \
++		"$(BIN_DIR)/$(IMG_PREFIX)-whr-hp-ag108.$(1).img"
+ endef
+ 
+ $(eval $(call BuildImage))

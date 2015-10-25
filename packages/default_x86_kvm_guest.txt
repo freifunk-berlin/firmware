@@ -1,3 +1,8 @@
+# KVM and VMware Network Driver
+kmod-pcnet32
+kmod-vmxnet3
+kmod-e1000
+
 -ppp
 -ppp-mod-pppoe
 -wpad-mini

@@ -19,7 +19,7 @@ UMASK=umask 022
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
 
 # profiles to be built (router models)
-PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
+PROFILES:=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles || echo noprofile)
 
 default: firmwares
 
@@ -123,8 +123,13 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	    PACKAGES_FILE_ABS="$$PACKAGES_PATH/$$PACKAGES_FILE.txt"; \
 	    PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE_ABS | tr -t '\n' ' '); \
 	    $(UMASK);\
-	    echo -e "\n *** Building Kathleen image file for profile \"$${PROFILE}\" with packages list \"$${PACKAGES_FILE}\".\n"; \
-	    $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
+	    if [[ "$$PROFILE" != "noprofile" ]]; then \
+	      echo -e "\n *** Building Kathleen image file for profile \"$${PROFILE}\" with packages list \"$${PACKAGES_FILE}\".\n"; \
+	      $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
+	    else \
+	      echo -e "\n *** Building Kathleen image file without profile and packages list \"$${PACKAGES_FILE}\".\n"; \
+	      $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
+	    fi; \
 	  done; \
 	done
 	mkdir -p $(FW_TARGET_DIR)

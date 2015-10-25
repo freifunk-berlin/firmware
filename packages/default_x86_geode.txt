@@ -1,6 +1,13 @@
+#Disable watchdog and clock driver. Boot failure.
+-kmod-wdt-geode
+-kmod-cs5535-clockevt
+-kmod-cs5535-mfgpt
+-kmod-cs5535-mfd
 -ppp
 -ppp-mod-pppoe
--wpad-mini
+
+kmod-ath5k
+kmod-ath9k
 wpad
 
 # Defaults
@@ -31,8 +38,6 @@ libiwinfo-lua
 luci-theme-bootstrap
 luci-base
 luci-i18n-base-de
-luci-mod-admin-full
-luci-i18n-admin-full-de
 uhttpd
 uhttpd-mod-ubus
 uhttpd-mod-tls

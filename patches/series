@@ -11,3 +11,4 @@
 024-target-ath25-whr-hp-ag108-sysupgrade.patch
 025-target-ath25-whr-hp-ag108-disable-pci.patch
 026-luci_for-15.05-addons-rm-firewall-dep.patch
+027-luci_for-15.05-community-profiles-berlin.patch

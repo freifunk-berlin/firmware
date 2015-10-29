@@ -1,0 +1,15 @@
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
+index b4694c0..d141ff3 100644
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
++++ b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
+@@ -3,8 +3,8 @@ config 'community' 'profile'
+ 	option 'homepage' 'http://berlin.freifunk.net'
+ 	option 'ssid' 'freifunk.net'
+ 	option 'ssid_scheme' 'addchannelbefore'
+-	option 'mesh_network' '104.0.0.0/8'
+-	option 'splash_network' '10.104.0.0/16'
++	option 'mesh_network' '10.0.0.0/8'
++	option 'splash_network' '10.10.0.0/16'
+ 	option 'splash_prefix' '27'
+ 	option 'latitude' '52.52075'
+ 	option 'longitude' '13.40948'

@@ -21,6 +21,7 @@ freifunk-berlin-uhttpd-defaults
 
 # Common
 dnsmasq
+kadnode
 
 # Utils
 #tcpdump

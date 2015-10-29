@@ -1,0 +1,84 @@
+# KVM and VMware Network Driver
+kmod-pcnet32
+kmod-vmxnet3
+kmod-e1000
+kmod-e1000e
+kmod-rt2800-usb
+kmod-ath9k-htc
+kmod-rtl8180
+kmod-rtl8187
+kmod-rtl8192ce
+kmod-rtl8192cu
+kmod-rtl8192de
+kmod-rtl8192se
+kmod-usb2
+kmod-usb2-pci
+kmod-usb3
+
+-ppp
+-ppp-mod-pppoe
+-wpad-mini
+wpad
+
+# Defaults
+freifunk-common
+community-profiles
+freifunk-watchdog
+
+# Common
+mtr
+ip
+iperf
+tmux
+vnstat
+ethtool
+dnsmasq
+qos-scripts
+firewall
+iwinfo
+rpcd-mod-file
+rpcd-mod-iwinfo
+rpcd-mod-rpcsys
+usbutils
+kadnode
+
+# GUI
+uhttpd
+uhttpd-mod-ubus
+uhttpd-mod-tls
+px5g
+luci2
+luci2-ffwizard
+
+# OLSR
+olsrd
+olsrd-mod-arprefresh
+olsrd-mod-dyn-gw
+olsrd-mod-jsoninfo
+olsrd-mod-txtinfo
+olsrd-mod-nameservice
+olsrd-mod-watchdog
+freifunk-watchdog
+kmod-ipip
+
+# BATMAN
+kmod-batman-adv
+alfred
+batctl
+
+# IPv6
+kmod-ipv6
+
+# VPN
+openvpn-polarssl
+
+# Statistics
+collectd
+collectd-mod-interface
+collectd-mod-iwinfo
+collectd-mod-network
+collectd-mod-olsrd
+collectd-mod-rrdtool
+collectd-mod-ping
+collectd-mod-uptime
+collectd-mod-memory

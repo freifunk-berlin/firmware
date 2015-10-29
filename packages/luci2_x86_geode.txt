@@ -1,0 +1,70 @@
+#Disable watchdog and clock driver. Boot failure.
+-kmod-wdt-geode
+-kmod-cs5535-clockevt
+-kmod-cs5535-mfgpt
+-kmod-cs5535-mfd
+-ppp
+-ppp-mod-pppoe
+
+kmod-ath5k
+kmod-ath9k
+wpad
+
+# Defaults
+freifunk-common
+community-profiles
+freifunk-watchdog
+
+# Common
+mtr
+ip
+iperf
+tmux
+vnstat
+ethtool
+dnsmasq
+qos-scripts
+firewall
+iwinfo
+kadnode
+
+# GUI
+uhttpd
+uhttpd-mod-ubus
+uhttpd-mod-tls
+px5g
+luci2
+luci2-ffwizard
+
+# OLSR
+olsrd
+olsrd-mod-arprefresh
+olsrd-mod-dyn-gw
+olsrd-mod-jsoninfo
+olsrd-mod-txtinfo
+olsrd-mod-nameservice
+olsrd-mod-watchdog
+freifunk-watchdog
+kmod-ipip
+
+# BATMAN
+kmod-batman-adv
+alfred
+batctl
+
+# IPv6
+kmod-ipv6
+
+# VPN
+openvpn-polarssl
+
+# Statistics
+collectd
+collectd-mod-interface
+collectd-mod-iwinfo
+collectd-mod-network
+collectd-mod-olsrd
+collectd-mod-rrdtool
+collectd-mod-ping
+collectd-mod-uptime
+collectd-mod-memory

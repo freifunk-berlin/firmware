@@ -1,0 +1,13 @@
+diff --git a/feeds/luci/modules/luci-mod-freifunk/Makefile b/feeds/luci/modules/luci-mod-freifunk/Makefile
+index 550db1d..2f9b37d 100644
+--- a/feeds/luci/modules/luci-mod-freifunk/Makefile
++++ b/feeds/luci/modules/luci-mod-freifunk/Makefile
+@@ -7,7 +7,7 @@
+ include $(TOPDIR)/rules.mk
+ 
+ LUCI_TITLE:=LuCI Freifunk module
+-LUCI_DEPENDS:=+luci-mod-admin-full +luci-lib-json +freifunk-firewall +freifunk-common
++LUCI_DEPENDS:=+luci-mod-admin-full +luci-lib-json +freifunk-common
+ 
+ include ../../luci.mk
+ 

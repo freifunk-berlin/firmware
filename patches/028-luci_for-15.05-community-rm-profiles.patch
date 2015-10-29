@@ -1,0 +1,1224 @@
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_31c3 b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_31c3
+deleted file mode 100644
+index 469e0b5..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_31c3
++++ /dev/null
+@@ -1,45 +0,0 @@
+-config 'community' 'profile'
+-  option 'name' 'Freifunk 31c3'
+-  option 'homepage' 'http://31c3.freifunk.net'
+-  option 'ssid' '02:CA:FF:EE:BA:BE'
+-  option 'mesh_network' '10.197.0.0/16'
+-  option 'latitude' '53.56176'
+-  option 'longitude' '9.9833'
+-  option 'suffix' 'olsr.31c3.freifunk.net'
+-  option 'vap' '0'
+-  option 'adhoc_dhcp_when_vap' '0'
+-
+-config 'defaults' 'interface'
+-  option 'netmask' '255.255.255.255'
+-
+-config 'defaults' 'bssidscheme'
+-  option '1' '02:CA:FF:EE:BA:BE'
+-  option '36' '02:36:CA:FF:EE:EE'
+-
+-config 'defaults' 'wifi_device'
+-  option 'country' 'DE'
+-
+-config 'defaults' 'wifi_iface'
+-  option 'mcast_rate' '12000'
+-
+-config 'defaults' 'olsrd'
+-  option 'LinkQualityAlgorithm' 'etx_ff'
+-
+-config widget 'customindex'
+-  option enabled '1'
+-  option width '50%'
+-  option paddingright '5%'
+-  option template 'html'
+-
+-config widget 'rssbundesweit'
+-  option cache '3600'
+-  option width '50%'
+-  option title 'bundesweiter Freifunk Blog'
+-  option template 'rssfeed'
+-  option enabled '1'
+-  option max '10'
+-  option url 'http://blog.freifunk.net/rss.xml'
+-
+-config widget 'clear1'
+-  option template 'clear'
+-  option enabled '1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_Freifunk b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_Freifunk
+deleted file mode 100644
+index b8f445a..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_Freifunk
++++ /dev/null
+@@ -1,10 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk'
+-	option 'homepage' 'http://freifunk.net'
+-	option 'ssid' 'www.freifunk.net'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'latitude' '52.000'
+-	option 'longitude' '10.000'
+-	option 'splash_prefix' '28'
+-	option 'mesh_network' '10.0.0.0/8'
+-
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_altmark b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_altmark
+deleted file mode 100644
+index 20d51b2..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_altmark
++++ /dev/null
+@@ -1,56 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Altmark'
+-	option 'homepage' 'http://altmark.freifunk.net'
+-	option 'ssid' 'altmark.freifunk.net'
+-	option 'mesh_network' '10.59.0.0/16'
+-	option 'latitude' '52.885'
+-	option 'longitude' '11.15'
+-	option 'suffix' 'olsr.altmark.freifunk.net'
+-	option 'vap' '1'
+-	option 'adhoc_dhcp_when_vap' '0'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.255.255'
+-
+-
+-config 'defaults' 'bssidscheme'
+-        option '1' '02:CA:FF:EE:BA:BE'
+-        option '40' '02:40:CA:FF:EE:EE'
+-
+-config 'defaults' 'wifi_device'
+-    option 'country' 'DE'
+-
+-config 'defaults' 'wifi_iface'
+-    option 'mcast_rate' '6000'
+-
+-config 'defaults' 'olsrd'
+-    option 'LinkQualityAlgorithm' 'etx_ff'
+-
+-
+-config widget 'customindex'
+-    option enabled '1'
+-    option width '50%'
+-    option paddingright '5%'
+-    option template 'html'
+-
+-config widget 'rssffl'
+-    option enabled '1'
+-    option max '10'
+-    option cache '3600'
+-    option width '100%'
+-    option title 'Freifunk Blog'
+-    option template 'iframe'
+-    option url 'http://freifunk.net'
+-
+-config widget 'rssbundesweit'
+-    option cache '3600'
+-    option width '50%'
+-    option title 'bundesweiter Freifunk Blog'
+-    option template 'rssfeed'
+-    option enabled '1'
+-    option max '10'
+-    option url 'http://blog.freifunk.net/rss.xml'
+-
+-config widget 'clear1'
+-    option template 'clear'
+-    option enabled '1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_arad b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_arad
+deleted file mode 100644
+index 55d012f..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_arad
++++ /dev/null
+@@ -1,22 +0,0 @@
+-config 'community' 'profile'
+-        option 'name' 'arig Arad'
+-        option 'homepage' 'http://arig.org.il'
+-        option 'ssid' 'arig.org.il'
+-        option 'latitude' '31.26'
+-        option 'longitude' '35.21'
+-        option 'splash_prefix' '28'
+-        option 'suffix' 'arig'
+-        option 'mesh_network' '10.81.8.0/22'
+-
+-config 'defaults' 'bssidscheme'
+-        option '1' '02:CA:FF:EE:BA:BE'
+-        option '13' '13:CA:FF:EE:BA:BE'
+-
+-config 'defaults' 'wifi_device'
+-        option 'channel' '13'
+-        option 'country' 'IL'
+-        option 'beacon_int' '5000'
+-        option 'distance' '1500'
+-
+-config 'defaults' 'wifi_iface'
+-        option 'mcast_rate' '6000'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_neot_semadar b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_neot_semadar
+deleted file mode 100644
+index 062b18e..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_neot_semadar
++++ /dev/null
+@@ -1,22 +0,0 @@
+-config 'community' 'profile'
+-        option 'name' 'arig Neot Semadar'
+-        option 'homepage' 'http://www.neot-semadar.com'
+-        option 'ssid' 'arig.org.il'
+-        option 'latitude' '30.05'
+-        option 'longitude' '35.02'
+-        option 'splash_prefix' '272'
+-        option 'suffix' 'arig'
+-        option 'mesh_network' '10.81.12.0/22'
+-
+-config 'defaults' 'bssidscheme'
+-        option '1' '02:CA:FF:EE:BA:BE'
+-        option '13' '13:CA:FF:EE:BA:BE'
+-
+-config 'defaults' 'wifi_device'
+-        option 'channel' '13'
+-        option 'country' 'IL'
+-        option 'beacon_int' '5000'
+-        option 'distance' '1500'
+-
+-config 'defaults' 'wifi_iface'
+-        option 'mcast_rate' '6000'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_tel-aviv b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_tel-aviv
+deleted file mode 100644
+index fe7df22..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_arig_tel-aviv
++++ /dev/null
+@@ -1,22 +0,0 @@
+-config 'community' 'profile'
+-        option 'name' 'arig Tel Aviv'
+-        option 'homepage' 'http://arig.org.il'
+-        option 'ssid' 'arig.org.il'
+-        option 'latitude' '32.056'
+-        option 'longitude' '34.772'
+-        option 'splash_prefix' '28'
+-        option 'suffix' 'arig'
+-        option 'mesh_network' '10.81.0.0/21'
+-
+-config 'defaults' 'bssidscheme'
+-        option '1' '02:CA:FF:EE:BA:BE'
+-        option '13' '13:CA:FF:EE:BA:BE'
+-
+-config 'defaults' 'wifi_device'
+-        option 'channel' '13'
+-        option 'country' 'IL'
+-        option 'beacon_int' '5000'
+-        option 'distance' '1500'
+-
+-config 'defaults' 'wifi_iface'
+-        option 'mcast_rate' '6000'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_augsburg b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_augsburg
+deleted file mode 100644
+index 4ab82cf..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_augsburg
++++ /dev/null
+@@ -1,64 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Augsburg'
+-	option 'homepage' 'http://augsburg.freifunk.net'
+-	option 'ssid' 'augsburg.freifunk.net'
+-	option 'mesh_network' '10.11.0.0/18'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'latitude' '48.37071'
+-	option 'longitude' '10.89475'
+-	option 'suffix' 'ffa'
+-	option 'splash_prefix' '27'
+-	option 'vap' '1'
+-	option adhoc_dhcp_when_vap '1'
+-	option 'ipv6' '1'
+-	option 'ipv6_config' 'auto-ipv6-fromv4'
+-	option 'ipv6_prefix' 'fdca:ffee:ffa::/48'
+-	#option 'extrapackages' ''
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.192.0'
+-
+-config 'defaults' 'bssidscheme'
+-	option '1'	'02:CA:FF:EE:BA:BE'
+-
+-config 'defaults' 'luci_splash'
+-	option 'limit_up' '40'
+-	option 'limit_down' '120'
+-	option 'leasetime' '8'
+-
+-config widget 'customindex'
+-	option enabled '1'
+-	option width '50%'
+-	option paddingright '5%'
+-	option template 'html'
+-
+-config widget 'rssffa'
+-	option enabled '1'
+-	option max '10'
+-	option cache '3600'
+-	option width '50%'
+-	option title 'Freifunk Augsburg Blog'
+-	option template 'rssfeed'
+-	option url 'http://augsburg.freifunk.net/blog?type=100'
+-
+-config widget 'rssaugsburg'
+-	option cache '3600'
+-	option width '50%'
+-	option title 'Augsburger Blogs'
+-	option template 'rssfeed'
+-	option enabled '1'
+-	option max '10'
+-	option url 'http://wgaugsburg.de/augsburg/rss20.xml'
+-
+-config widget 'search'
+-	option template 'search'
+-	option title 'Search'
+-	option enabled '1'
+-	option width '50%'
+-	list engine 'Google|http://www.google.de/search?q=' 
+-	list engine 'Freifunk&#160;Augsburg|http://www.google.de/search?q=site:augsburg.freifunk.net+'
+-	list engine 'Freifunk&#160;Wiki|http://wiki.freifunk.net/index.php?search='
+-
+-config widget 'clear1'
+-	option template 'clear'
+-	option enabled '1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bayreuth b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bayreuth
+deleted file mode 100644
+index 90fccbd..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bayreuth
++++ /dev/null
+@@ -1,20 +0,0 @@
+-config 'community' 'profile'
+-        option 'name' 'Freifunk Bayreuth'
+-        option 'homepage' 'http://bayreuth.freifunk.net'
+-        option 'ssid' 'bayreuth.freifunk.net'
+-        option 'mesh_network' '10.195.0.0/16'
+-        option 'splash_network' '10.104.0.0/16'
+-        option 'latitude' '49.945812'
+-        option 'longitude' '11.575045'
+-        option 'suffix' 'ffbt'
+-        option 'splash_prefix' '28'
+-
+-config 'defaults' 'interface'
+-        option 'netmask' '255.255.192.0'
+-
+-config 'defaults' 'wifi_device'
+-        option 'channel' '4'
+-
+-config 'defaults' 'wifi_iface'
+-        option 'bssid' '42:CA:FF:EE:BA:BE'
+-
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bensheim b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bensheim
+deleted file mode 100644
+index 48c1d47..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bensheim
++++ /dev/null
+@@ -1,9 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Bensheim'
+-	option 'homepage' 'http://bensheim.freifunk.net'
+-	option 'ssid' 'bensheim.freifunk.net'
+-	option 'mesh_network' '10.49.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '49.63939'
+-	option 'longitude' '8.633718'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bergischesland b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bergischesland
+deleted file mode 100644
+index 0de4543..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_bergischesland
++++ /dev/null
+@@ -1,15 +0,0 @@
+-config 'community'	'profile'
+-	option 'name' 'Piratenfreifunk Bergisches Land'
+-	option 'homepage' 'http://www.piraten-bergisches-land.de'
+-	option 'ssid' 'PiratenfunkBL'
+-	option 'mesh_network' '10.3.0.0/16'
+-	option 'splash_network' '192.168.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '51.26849'
+-	option 'longitude' '7.19476'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '11'
+-
+-config 'defaults' 'wifi_iface'
+-	option 'bssid' '02:40:00:42:42:42'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_carbodebit b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_carbodebit
+deleted file mode 100644
+index 0b263f9..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_carbodebit
++++ /dev/null
+@@ -1,23 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'carbodebit'
+-	option 'homepage' 'http://carbodebit.net'
+-	option 'ssid' 'VHDCARBES'
+-	option 'mesh_network' '10.72.1.0/24'
+-	option 'latitude' '43.633683'
+-	option 'longitude' '2.160894'
+-
+-config 'defaults' 'wifi_iface'
+-	option 'bssid' 'DE:78:70:E4:FA:B8'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.255.0'
+-	option 'dns' '10.70.1.1 213.190.64.170 213.190.64.166'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '11'
+-	option 'country' 'FR'
+-	option 'distance' '2000'
+-
+-config 'defaults' 'bssidscheme'
+-	option 'all'      'DE:78:70:E4:FA:B8'
+-
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_demo b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_demo
+deleted file mode 100644
+index c11a74f..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_demo
++++ /dev/null
+@@ -1,21 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Demo'
+-	option 'homepage' 'http://www.freifunk.net'
+-	option 'ssid' 'demo.freifunk.net'
+-	option 'mesh_network' '10.11.12.0/24'
+-	option 'latitude' '51.163375'
+-	option 'longitude' '10.447683'
+-	option 'suffix' 'ff'
+-	option 'vap' '1'
+-	option adhoc_dhcp_when_vap '1'
+-	option 'ipv6' '1'
+-	option 'ipv6_config' 'auto-ipv6-fromv4'
+-	option 'ipv6_prefix' 'fdca:ffff:ffff::/48'
+-	#option 'extrapackages' ''
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.255.0'
+-
+-config 'defaults' 'luci_splash'
+-	option 'limit_up' '50'
+-	option 'limit_down' '200'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_duesseldorf b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_duesseldorf
+deleted file mode 100644
+index cb36aab..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_duesseldorf
++++ /dev/null
+@@ -1,15 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Duesseldorf'
+-	option 'homepage' 'http://freifunk-duesseldorf.de'
+-	option 'ssid' 'duesseldorf.freifunk.net'
+-	option 'mesh_network' '10.40.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '51.217812'
+-	option 'longitude' '6.761564'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '3'
+-
+-config 'defaults' 'wifi_iface'
+-	option 'bssid' '02:CA:FF:EE:BA:BE'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_erfurt b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_erfurt
+deleted file mode 100644
+index dba31a0..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_erfurt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Erfurt'
+-	option 'homepage' 'http://erfurt.freifunk.net'
+-	option 'ssid' 'erfurt.freifunk.net'
+-	option 'mesh_network' '10.99.0.0/16'
+-	option 'latitude' '50.9768'
+-	option 'longitude' '11.02367'
+-	option 'suffix' 'olsr.erfurt.freifunk.net'
+-	option 'vap' '1'
+-	option 'adhoc_dhcp_when_vap' '0'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.0.0'
+-
+-config 'defaults' 'bssidscheme'
+-	option '1' '02:CA:FF:EE:BA:BE'
+-
+-config 'defaults' 'olsrd'
+-    option 'LinkQualityAlgorithm' 'etx_ff'
+-
+-
+-config widget 'customindex'
+-    option enabled '1'
+-    option width '50%'
+-    option paddingright '5%'
+-    option template 'html'
+-
+-config widget 'rssffl'
+-    option enabled '1'
+-    option max '10'
+-    option cache '3600'
+-    option width '100%'
+-    option title 'Freifunk Blog'
+-    option template 'iframe'
+-    option url 'http://freifunk.net'
+-
+-config widget 'rssbundesweit'
+-    option cache '3600'
+-    option width '50%'
+-    option title 'bundesweiter Freifunk Blog'
+-    option template 'rssfeed'
+-    option enabled '1'
+-    option max '10'
+-    option url 'http://blog.freifunk.net/rss.xml'
+-
+-config widget 'clear1'
+-    option template 'clear'
+-    option enabled '1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_evernet b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_evernet
+deleted file mode 100644
+index 0545360..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_evernet
++++ /dev/null
+@@ -1,25 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Evernet eG'
+-	option 'homepage' 'http://www.evernet-eg.de'
+-	option 'ssid' 'evernet.freifunk.net'
+-	option 'mesh_network' '10.0.0.0/8'
+-	option 'latitude' '51.15692062509162'
+-	option 'longitude' '10.716041922569275'
+-	option 'suffix' 'evernet'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.0.0.0'
+-
+-config 'defaults' 'bssidscheme'
+-	option 'all'	'02:CA:FF:EE:BA:BE'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '13'
+-	option 'country' 'DE'
+-	option 'txpower' '19'
+-	option 'beacon_int' '5000'
+-	option 'distance' '1500'
+-	option 'noscan' '0'
+-
+-config 'defaults' 'wifi_iface'
+-	option 'mcast_rate' '6000'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_freiburg b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_freiburg
+deleted file mode 100644
+index eee3d6a..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_freiburg
++++ /dev/null
+@@ -1,45 +0,0 @@
+-config 'community' 'profile'
+-  option 'name' 'Freifunk Freiburg'
+-  option 'homepage' 'http://freiburg.freifunk.net'
+-  option 'ssid' '02:CA:FF:EE:BA:BE'
+-  option 'mesh_network' '10.60.0.0/16'
+-  option 'latitude' '47.994841'
+-  option 'longitude' '7.849772'
+-  option 'suffix' 'olsr.freiburg.freifunk.net'
+-  option 'vap' '1'
+-  option 'adhoc_dhcp_when_vap' '0'
+-
+-config 'defaults' 'interface'
+-  option 'netmask' '255.255.255.255'
+-
+-config 'defaults' 'bssidscheme'
+-  option '1' '02:CA:FF:EE:BA:BE'
+-  option '40' '02:40:CA:FF:EE:EE'
+-
+-config 'defaults' 'wifi_device'
+-  option 'country' 'DE'
+-
+-config 'defaults' 'wifi_iface'
+-  option 'mcast_rate' '6000'
+-
+-config 'defaults' 'olsrd'
+-  option 'LinkQualityAlgorithm' 'etx_ff'
+-
+-config widget 'customindex'
+-  option enabled '1'
+-  option width '50%'
+-  option paddingright '5%'
+-  option template 'html'
+-
+-config widget 'rssbundesweit'
+-  option cache '3600'
+-  option width '50%'
+-  option title 'bundesweiter Freifunk Blog'
+-  option template 'rssfeed'
+-  option enabled '1'
+-  option max '10'
+-  option url 'http://blog.freifunk.net/rss.xml'
+-
+-config widget 'clear1'
+-  option template 'clear'
+-  option enabled '1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_gadow b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_gadow
+deleted file mode 100644
+index bc4a203..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_gadow
++++ /dev/null
+@@ -1,23 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Gadow'
+-	option 'homepage' 'http://gadow.freifunk.net'
+-	option 'ssid' 'gadow.freifunk.net'
+-	option 'mesh_network' '10.61.0.0/16'
+-	option 'latitude' '53.11'
+-	option 'longitude' '12.61'
+-	option 'vap' '1'
+-	option 'adhoc_dhcp_when_vap' '0'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.255.255'
+-
+-
+-config 'defaults' 'bssidscheme'
+-        option '1' '02:CA:FF:EE:BA:BE'
+-        option '40' '02:40:CA:FF:EE:EE'
+-
+-config 'defaults' 'wifi_device'
+-    option 'country' 'DE'
+-
+-config 'defaults' 'wifi_iface'
+-    option 'mcast_rate' '6000'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_guifibages b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_guifibages
+deleted file mode 100644
+index a0fc4fc..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_guifibages
++++ /dev/null
+@@ -1,19 +0,0 @@
+-config 'community' 'profile'
+-        option 'name' 'Guifi Bages'
+-        option 'homepage' 'http://guifi.net/PlaBages'
+-        option 'ssid' 'guifibages'
+-        option 'mesh_network' '10.224.3.0/16'
+-        option 'splash_network' '10.104.0.0/16'
+-	option 'theme' 'luci-theme-freifunk-generic'
+-        option 'latitude' '41.718437'
+-        option 'longitude' '1.826477'
+-        option 'suffix' 'guifibages.cat'
+-        option 'splash_prefix' '27'
+-	option 'extrapackages' 'luci-app-olsr-viz luci-i18n-catalan'
+-
+-config 'defaults' 'interface'
+-        option 'netmask' '255.255.0.0'
+-
+-config 'defaults' 'bssidscheme'
+-	option 'all'	'12:34:56:78:9a:bc'
+-
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle
+deleted file mode 100644
+index 0e8e43f..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle
++++ /dev/null
+@@ -1,40 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Halle'
+-	option 'homepage' 'http://freifunk-halle.net'
+-	option 'ssid' 'halle.freifunk.net'
+-	option 'mesh_network' '104.62.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '51.47911'
+-	option 'longitude' '11.96901'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '13'
+-	option 'country' 'DE'
+-
+-config 'defaults' 'bssidscheme'
+-	option 'all' '02:CA:FF:EE:BA:BE'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.0.0.0'
+-
+-config 'defaults' 'olsrd'
+-	option 'AllowNoInt' 'yes'
+-	option 'FIBMetric' 'flat'
+-	option 'Pollrate' '0.025'
+-	option 'TcRedundancy' '2'
+-	option 'NatThreshold' '0.75'
+-	option 'LinkQualityAlgorithm' 'etx_ff'
+-	option 'LinkQualityFishEye' '1'
+-	option 'Willingness' '3'
+-
+-config 'defaults' 'olsr_interface'
+-	option 'Ip4Broadcast' '255.255.255.255'
+-	option 'HelloInterval' '5.0'
+-	option 'HelloValidityTime' '125.0'
+-	option 'TcInterval'  '3.0'
+-	option 'TcValidityTime' '375.0'
+-	option 'MidInterval' '25.0'
+-	option 'MidValidityTime'  '375.0'
+-	option 'HnaInterval' '25.0'
+-	option 'HnaValidityTime' '375.0'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_hannover b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_hannover
+deleted file mode 100644
+index 008b6c7..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_hannover
++++ /dev/null
+@@ -1,12 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Hannover'
+-	option 'homepage' 'http://hannover.freifunk.net'
+-	option 'ssid' 'hannover.freifunk.net'
+-	option 'mesh_network' '10.2.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '52.38427'
+-	option 'longitude' '9.74359'
+-
+-config 'defaults' 'wifi_iface'
+-	option 'bssid' 'CA:FF:EE:CA:FF:EE'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_heppenheim b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_heppenheim
+deleted file mode 100644
+index a830494..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_heppenheim
++++ /dev/null
+@@ -1,9 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Heppenheim'
+-	option 'homepage' 'http://heppenheim.freifunk.net'
+-	option 'ssid' 'heppenheim.freifunk.net'
+-	option 'mesh_network' '10.48.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '51.151786'
+-	option 'longitude' '10.415039'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_hooge b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_hooge
+deleted file mode 100644
+index 62f6fa9..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_hooge
++++ /dev/null
+@@ -1,22 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Hooge'
+-	option 'homepage' 'http://hooge.freifunk.net'
+-	option 'ssid' 'hooge.freifunk.net'
+-	option 'mesh_network' '10.11.128.0/24'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'latitude' '54.572161'
+-	option 'longitude' '8.559551'
+-	option 'suffix' 'hooge'
+-	option 'splash_prefix' '27'
+-        option 'vap' '1'
+-	option 'extrapackages' ''
+-        list 'owm_api' 'http://api.openwifimap.net'
+-        list 'owm_api' 'http://owmapi.pberg.freifunk.net'
+-        option 'mapserver' 'http://openwifimap.net/'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.255.0'
+-
+-config 'defaults' 'luci_splash'
+-	option 'limit_up' '20'
+-	option 'limit_down' '50'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_kiberpipa b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_kiberpipa
+deleted file mode 100644
+index c2a96e4..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_kiberpipa
++++ /dev/null
+@@ -1,15 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Kiberpipa.net'
+-	option 'homepage' 'http://www.kiberpipa.net'
+-	option 'ssid' 'open.kiberpipa.net'
+-	option 'mesh_network' '10.14.0.0/16'
+-	option 'splash_network' '10.14.128.0/17'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '46.05063'
+-	option 'longitude' '14.50402'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '8'
+-
+-config 'defaults' 'interface'
+-	option 'dns' '10.14.0.1 208.67.222.220 208.67.220.222'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_kyritz b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_kyritz
+deleted file mode 100644
+index f97e79f..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_kyritz
++++ /dev/null
+@@ -1,57 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Kyritz'
+-	option 'homepage' 'http://kyritz.freifunk.net'
+-	option 'ssid' 'mesh.freifunk.net'
+-	option 'mesh_network' '104.59.0.0/16'
+-	option 'latitude' '52.94'
+-	option 'longitude' '12.4'
+-	option 'suffix' 'olsr.kyritz.freifunk.net'
+-	option 'vap' '1'
+-	option 'adhoc_dhcp_when_vap' '0'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.255.255'
+-
+-
+-config 'defaults' 'bssidscheme'
+-        option '1' '02:CA:FF:EE:BA:BE'
+-        option '40' '02:40:CA:FF:EE:EE'
+-
+-config 'defaults' 'wifi_device'
+-    option 'country' 'DE'
+-
+-config 'defaults' 'wifi_iface'
+-    option 'mcast_rate' '6000'
+-
+-
+-config 'defaults' 'olsrd'
+-    option 'LinkQualityAlgorithm' 'etx_ff'
+-
+-
+-config widget 'customindex'
+-    option enabled '1'
+-    option width '50%'
+-    option paddingright '5%'
+-    option template 'html'
+-
+-config widget 'rssffl'
+-    option enabled '1'
+-    option max '10'
+-    option cache '3600'
+-    option width '100%'
+-    option title 'Freifunk Blog'
+-    option template 'iframe'
+-    option url 'http://freifunk.net'
+-
+-config widget 'rssbundesweit'
+-    option cache '3600'
+-    option width '50%'
+-    option title 'bundesweiter Freifunk Blog'
+-    option template 'rssfeed'
+-    option enabled '1'
+-    option max '10'
+-    option url 'http://blog.freifunk.net/rss.xml'
+-
+-config widget 'clear1'
+-    option template 'clear'
+-    option enabled '1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_l59 b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_l59
+deleted file mode 100644
+index 5e6f472..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_l59
++++ /dev/null
+@@ -1,25 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk L59'
+-	option 'homepage' 'http://freifunk.net'
+-	option 'ssid' 'freifunk.net'
+-	option 'mesh_network' '10.59.0.0/16'
+-	option 'splash_network' '6.59.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '52.26337'
+-	option 'longitude' '10.52103'
+-	option 'vap' '1'
+-	option 'adhoc_dhcp_when_vap' '0'
+-
+-config 'defaults' 'interface'
+-    option 'netmask' '255.255.255.255'
+-
+-
+-config 'defaults' 'bssidscheme'
+-        option '1' '02:CA:FF:EE:BA:BE'
+-        option '40' '02:40:CA:FF:EE:EE'
+-
+-config 'defaults' 'wifi_device'
+-    option 'country' 'DE'
+-
+-config 'defaults' 'wifi_iface'
+-    option 'mcast_rate' '6000'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_leipzig b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_leipzig
+deleted file mode 100644
+index 671f3e8..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_leipzig
++++ /dev/null
+@@ -1,55 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Leipzig'
+-	option 'homepage' 'http://leipzig.freifunk.net'
+-	option 'ssid' 'leipzig.freifunk.net'
+-	option 'mesh_network' '10.61.0.0/16'
+-	option 'latitude' '51.33348'
+-	option 'longitude' '12.40297'
+-	option 'suffix' 'olsr.leipzig.freifunk.net'
+-	option 'vap' '1'
+-	option 'adhoc_dhcp_when_vap' '0'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.255.255'
+-
+-config 'defaults' 'bssidscheme'
+-	option '1' '02:CA:FF:EE:BA:BE'
+-	option '40' '02:40:CA:FF:EE:EE'
+-
+-config 'defaults' 'wifi_device'
+-    option 'country' 'DE'
+-
+-config 'defaults' 'wifi_iface'
+-    option 'mcast_rate' '6000'
+-
+-config 'defaults' 'olsrd'
+-    option 'LinkQualityAlgorithm' 'etx_ff'
+-
+-
+-config widget 'customindex'
+-    option enabled '1'
+-    option width '50%'
+-    option paddingright '5%'
+-    option template 'html'
+-
+-config widget 'rssffl'
+-    option enabled '1'
+-    option max '10'
+-    option cache '3600'
+-    option width '100%'
+-    option title 'Freifunk Leipzig Blog'
+-    option template 'iframe'
+-    option url 'http://leipzig.freifunk.net'
+-
+-config widget 'rssbundesweit'
+-    option cache '3600'
+-    option width '50%'
+-    option title 'bundesweiter Freifunk Blog'
+-    option template 'rssfeed'
+-    option enabled '1'
+-    option max '10'
+-    option url 'http://blog.freifunk.net/rss.xml'
+-
+-config widget 'clear1'
+-    option template 'clear'
+-    option enabled '1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_marburg b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_marburg
+deleted file mode 100644
+index 18cff80..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_marburg
++++ /dev/null
+@@ -1,12 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Marburg'
+-	option 'homepage' ' http://marburg.freifunk.de'
+-	option 'ssid' 'marburg.freifunk.net'
+-	option 'mesh_network' '10.128.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '29'
+-	option 'latitude' '49.63939'
+-	option 'longitude' '8.633718'
+-
+-config 'defaults' 'interface'
+-	option 'dns' '8.8.8.8 212.204.49.83'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_oldenburg b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_oldenburg
+deleted file mode 100644
+index e967fdb..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_oldenburg
++++ /dev/null
+@@ -1,15 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Oldenburg'
+-	option 'homepage' 'http://oldenburg.freifunk.net'
+-	option 'ssid' 'oldenburg.freifunk.net'
+-	option 'mesh_network' '10.18.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '53.14083'
+-	option 'longitude' '8.21314'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '6'
+-
+-config 'defaults' 'wifi_iface'
+-	option 'bssid' '02:CA:FF:EE:BA:BE'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_openwireless_bern b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_openwireless_bern
+deleted file mode 100644
+index 810ad8f..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_openwireless_bern
++++ /dev/null
+@@ -1,18 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Openwireless Bern'
+-	option 'homepage' 'http://bern.openwireless.ch/'
+-	option 'ssid' 'www.openwireless.ch'
+-	option 'mesh_network' '10.247.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '50.814788'
+-	option 'longitude' '8.769239'
+-
+-config 'defaults' 'interface'
+-	option 'dns' '208.67.222.222 208.67.220.220'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '10'
+-	option 'country' '756'
+-
+-
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_piraten_dresden b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_piraten_dresden
+deleted file mode 100644
+index 2af0e31..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_piraten_dresden
++++ /dev/null
+@@ -1,12 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Piratenfreifunk Dresden'
+-	option 'homepage' 'http://www.piraten-sachsen.de/'
+-	option 'ssid' 'dresden.freifunk.net'
+-	option 'mesh_network' '10.12.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '51.05081'
+-	option 'longitude' '13.73420'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_potsdam b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_potsdam
+deleted file mode 100644
+index c15624a..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_potsdam
++++ /dev/null
+@@ -1,19 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Potsdam'
+-	option 'homepage' 'http://potsdam.freifunk.net'
+-	option 'ssid' 'www.freifunk-potsdam.de'
+-	option 'mesh_network' '10.22.0.0/16'
+-	option 'splash_network' '192.168.22.0/24'
+-	option 'splash_prefix' '24'
+-	option 'latitude' '52.39349'
+-	option 'longitude' '13.06489'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '5'
+-
+-config 'defaults' 'bssidscheme'
+-	option '5' '02:CA:FF:EE:BA:BE'
+-
+-config 'defaults' 'interface'
+-        option 'dns' '85.214.20.141 213.73.91.35 194.150.168.168'
+-
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_reihen b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_reihen
+deleted file mode 100644
+index e978d37..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_reihen
++++ /dev/null
+@@ -1,20 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Reihen'
+-	option 'homepage' 'http://freifunk.reihen.de'
+-	option 'ssid' 'freifunk.reihen.de'
+-	option 'mesh_network' '172.23.0.0/16'
+-	option 'splash_network' '172.23.26.0/29'
+-	option 'latitude' '49.21'
+-	option 'longitude' '8.91'
+-	option 'splash_prefix' '29'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.0.0'
+-	option 'dns' '172.23.25.204 172.23.31.237 141.1.1.1'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '13'
+-	option 'bssid' '02:07:04:08:08:09'
+-
+-config 'defaults' 'bssidscheme'
+-	option '13'      '02:07:04:08:08:09'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_rosbach b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_rosbach
+deleted file mode 100644
+index 4444f70..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_rosbach
++++ /dev/null
+@@ -1,15 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Rosbach'
+-	option 'homepage' 'freifunk-rosbach.de'
+-	option 'ssid' 'rosbach.freifunk.net'
+-	option 'mesh_network' '10.212.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '50.18'
+-	option 'longitude' '8.42'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '13'
+-
+-config 'defaults' 'wifi_iface'
+-	option 'bssid' 'D2:CA:FF:EE:BA:BE'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_schwarzach b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_schwarzach
+deleted file mode 100644
+index c973ca0..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_schwarzach
++++ /dev/null
+@@ -1,12 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Schwarzach'
+-	option 'homepage' 'http://schwarzach.freifunk.net'
+-	option 'ssid' 'schwarzach.freifunk.net'
+-	option 'mesh_network' '10.81.0.0/20'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'latitude' '49.373'
+-	option 'longitude' '8.983'
+-	option 'splash_prefix' '27'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.240.0'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_seefeld b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_seefeld
+deleted file mode 100644
+index 5d03f7d..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_seefeld
++++ /dev/null
+@@ -1,13 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Seefeld'
+-	option 'homepage' 'http://wiki.freifunk.net/Seefeld.freifunk.net'
+-	option 'ssid' 'seefeld.freifunk.net'
+-	option 'mesh_network' '10.111.0.0/16'
+-	option 'splash_network' '10.104.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '48.03485'
+-	option 'longitude' '11.21279'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '1'
+-	option 'bssid' '02:CA:FF:EE:BA:BB'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_stuttgart b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_stuttgart
+deleted file mode 100644
+index 28d60d8..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_stuttgart
++++ /dev/null
+@@ -1,13 +0,0 @@
+-config 'community' 'profile'
+-        option 'name' 'Freifunk Stuttgart'
+-        option 'homepage' 'http://freifunk-stuttgart.de'
+-        option 'ssid' 'Freifunk Stuttgart'
+-        option 'mesh_network' '172.21.0.0/16'
+-        option 'splash_network' '10.104.0.0/16'
+-        option 'latitude' '48'
+-        option 'longitude' '9'
+-        option 'splash_prefix' '27'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '5'
+-	option 'bssid' '52:CA:FF:EE:BA:BE'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_vogtland b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_vogtland
+deleted file mode 100644
+index 8baeec6..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_vogtland
++++ /dev/null
+@@ -1,23 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Vogtland'
+-	option 'homepage' 'http://wiki.freifunk.net/Freifunk_Vogtland'
+-	option 'ssid' 'vogtland.freifunk.net'
+-	option 'mesh_network' '10.204.0.0/16'
+-	option 'splash_network' '6.204.0.0/16'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '53.11'
+-	option 'longitude' '12.61'
+-
+-config 'defaults' 'interface'
+-	option 'netmask' '255.255.255.255'
+-
+-
+-config 'defaults' 'bssidscheme'
+-        option '1' '02:CA:FF:EE:BA:BE'
+-        option '40' '02:40:CA:FF:EE:EE'
+-
+-config 'defaults' 'wifi_device'
+-    option 'country' 'DE'
+-
+-config 'defaults' 'wifi_iface'
+-    option 'mcast_rate' '6000'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weil b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weil
+deleted file mode 100644
+index ddba1f3..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weil
++++ /dev/null
+@@ -1,23 +0,0 @@
+-config 'community' 'profile'
+-        option 'name' 'Freifunk Weil am Rhein'
+-        option 'homepage' 'http://weil-am-rhein.freifunk.net'
+-        option 'ssid' 'mesh.freifunk.net'
+-        option 'mesh_network' '10.119.0.0/18'
+-        option 'latitude' '47.6056'
+-        option 'longitude' '7.6083'
+-        option 'suffix' 'ffwr'
+-        option 'vap' '1'
+-        option 'adhoc_dhcp_when_vap' '0'
+-        list 'owm_api' 'http://api.openwifimap.net'
+-        list 'owm_api' 'http://owmapi.pberg.freifunk.net'
+-        option 'mapserver' 'http://openwifimap.net/'
+-
+-config 'defaults' 'interface'
+-        option 'netmask' '255.255.192.0'
+-
+-config 'defaults' 'wifi_device'
+-        option 'country' 'DE'
+-        option 'channel' '10'
+-
+-config 'defaults' 'luci_splash'
+-        option 'leasetime' '24'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weimar b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weimar
+deleted file mode 100644
+index 65938e7..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weimar
++++ /dev/null
+@@ -1,10 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Weimarnetz e.V.'
+-	option 'homepage' 'http://www.weimarnetz.de'
+-	option 'ssid' 'weimarnetz'
+-	option 'mesh_network' '10.63.0.0/16'
+-	option 'latitude' '50.989530'
+-	option 'longitude' '11.338675'
+-
+-config 'defaults' 'interface'
+-	option 'dns' '217.11.48.200 217.11.49.200 8.8.8.8'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weinstadt b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weinstadt
+deleted file mode 100644
+index 49a42fa..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_weinstadt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'Freifunk Weinstadt'
+-	option 'homepage' 'http://freifunk-weinstadt.de'
+-	option 'ssid' 'freifunk-weinstadt'
+-	option 'mesh_network' '172.21.0.0/16'
+-	option 'splash_network' '172.21.85.0/30'
+-	option 'latitude' '48.81'
+-	option 'longitude' '9.39'
+-	option 'splash_prefix' '30'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '13'
+-	option 'bssid' '02:07:01:03:08:04'
+-
+-config 'defaults' 'bssidscheme'
+-	option '13'      '02:07:01:03:08:04'
+-
+-config 'defaults' 'interface'
+-	option 'dns' '172.21.77.4 172.21.84.235 141.1.1.1'
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_wlanljubljana b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_wlanljubljana
+deleted file mode 100644
+index eeefbd2..0000000
+--- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_wlanljubljana
++++ /dev/null
+@@ -1,15 +0,0 @@
+-config 'community' 'profile'
+-	option 'name' 'wlan ljubljana'
+-	option 'homepage' 'http://wlan-lj.net'
+-	option 'ssid' 'open.wlan-lj.net'
+-	option 'mesh_network' '10.254.0.0/16'
+-	option 'splash_network' '10.254.120.0/21'
+-	option 'splash_prefix' '27'
+-	option 'latitude' '46.05063'
+-	option 'longitude' '14.50402'
+-
+-config 'defaults' 'wifi_device'
+-	option 'channel' '8'
+-
+-config 'defaults' 'interface'
+-	option 'dns' '10.254.0.1 10.254.0.2'

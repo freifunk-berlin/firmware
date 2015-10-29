@@ -31,6 +31,7 @@ qos-scripts
 firewall
 iwinfo
 libiwinfo-lua
+kadnode
 
 # GUI
 luci-theme-bootstrap

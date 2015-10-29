@@ -27,6 +27,7 @@ vnstat
 ethtool
 iwinfo
 libiwinfo-lua
+kadnode
 
 # GUI
 luci-theme-bootstrap

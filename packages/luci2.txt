@@ -11,8 +11,16 @@ wpad-mini
 
 
 # Defaults
-freifunk-common
-community-profiles
+#freifunk-berlin-dhcp-defaults
+#freifunk-berlin-firewall-defaults
+#freifunk-berlin-freifunk-defaults
+#freifunk-berlin-migration
+#freifunk-berlin-network-defaults
+#freifunk-berlin-olsrd-defaults
+#freifunk-berlin-statistics-defaults
+#freifunk-berlin-uhttpd-defaults
+#freifunk-common
+#community-profiles
 freifunk-watchdog
 
 # Common

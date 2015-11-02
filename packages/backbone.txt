@@ -34,7 +34,6 @@ luci-theme-bootstrap
 luci-base
 luci-i18n-base-de
 luci-mod-admin-full
-luci-i18n-admin-full-de
 uhttpd
 uhttpd-mod-ubus
 uhttpd-mod-tls

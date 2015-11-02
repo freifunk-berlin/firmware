@@ -42,7 +42,6 @@ luci-app-ffwizard-berlin
 luci-app-olsr
 luci-i18n-olsr-de
 luci-app-olsr-services
-luci-i18n-olsr-services-de
 luci-app-owm
 luci-app-owm-cmd
 # Bug in luci-app-olsr (missing luci-lib-json dependency)

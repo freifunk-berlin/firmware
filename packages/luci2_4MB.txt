@@ -6,7 +6,7 @@ wpad-mini
 -ip6tables
 -iptables
 -kmod-nf-nathelper
--ip
+ip
 
 
 # Defaults

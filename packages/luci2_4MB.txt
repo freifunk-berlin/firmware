@@ -1,0 +1,54 @@
+-ppp
+-ppp-mod-pppoe
+-wpad
+wpad-mini
+-firewall
+-ip6tables
+-iptables
+-kmod-nf-nathelper
+-fstools
+-ip
+
+
+# Defaults
+#freifunk-berlin-dhcp-defaults
+#freifunk-berlin-firewall-defaults
+#freifunk-berlin-freifunk-defaults
+#freifunk-berlin-migration
+#freifunk-berlin-network-defaults
+#freifunk-berlin-olsrd-defaults
+#freifunk-berlin-statistics-defaults
+#freifunk-berlin-uhttpd-defaults
+#freifunk-common
+#community-profiles
+freifunk-watchdog
+
+# Common
+dnsmasq
+kadnode
+
+# Utils
+libiwinfo-lua
+
+# GUI
+uhttpd
+uhttpd-mod-ubus
+uhttpd-mod-tls
+px5g
+luci2
+luci2-ffwizard
+
+# OLSR
+olsrd
+olsrd-mod-arprefresh
+-olsrd-mod-dyn-gw
+olsrd-mod-jsoninfo
+-olsrd-mod-txtinfo
+olsrd-mod-nameservice
+olsrd-mod-watchdog
+freifunk-watchdog
+
+
+
+# IPv6
+kmod-ipv6

@@ -6,7 +6,6 @@ wpad-mini
 -ip6tables
 -iptables
 -kmod-nf-nathelper
--fstools
 -ip
 
 

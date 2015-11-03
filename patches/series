@@ -14,3 +14,4 @@
 027-luci_for-15.05-community-profiles-berlin.patch
 028-luci_for-15.05-community-rm-profiles.patch
 029-luci_for-15.05-freifunk-common-config.patch
+030-luci2-add-save-a-apply-function.patch

@@ -1,0 +1,60 @@
+diff --git a/feeds/luci2/luci2/htdocs/luci2/cbi.js b/feeds/luci2/luci2/htdocs/luci2/cbi.js
+index cdffb91..eec0375 100644
+--- a/feeds/luci2/luci2/htdocs/luci2/cbi.js
++++ b/feeds/luci2/luci2/htdocs/luci2/cbi.js
+@@ -2967,7 +2967,9 @@
+ 		{
+ 			var self = ev.data.self;
+ 
+-			self.trigger('apply', ev);
++			self.apply().then(function() {
++				self.trigger('save', ev);
++			});
+ 		},
+ 
+ 		handleSave: function(ev)
+@@ -3177,6 +3179,33 @@
+ 			});
+ 		},
+ 
++		apply: function()
++		{
++			if (!this.validate())
++				return L.deferrable();
++
++			var self = this;
++
++			L.ui.saveScrollTop();
++			L.ui.loading(true);
++
++			return this.save().then(function() {
++				return L.uci.save();
++			}).then(function() {
++				return L.uci.apply();
++			}).then(function() {
++				return L.ui.updateChanges();
++			}).then(function() {
++				return self.load();
++			}).then(function() {
++				self.redraw();
++				self = null;
++
++				L.ui.loading(false);
++				L.ui.restoreScrollTop();
++			});
++		},
++
+ 		send: function()
+ 		{
+ 			if (!this.validate())
+@@ -3244,7 +3273,9 @@
+ 		{
+ 			var self = ev.data.self;
+ 
+-			self.trigger('apply', ev);
++			self.apply().then(function() {
++				self.trigger('save', ev);
++			});
+ 		},
+ 
+ 		handleSave: function(ev)

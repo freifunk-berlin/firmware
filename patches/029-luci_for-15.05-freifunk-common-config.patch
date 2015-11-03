@@ -1,0 +1,13 @@
+diff --git a/feeds/luci/contrib/package/freifunk-common/Makefile b/feeds/luci/contrib/package/freifunk-common/Makefile
+index c15f02d..94d0994 100644
+--- a/feeds/luci/contrib/package/freifunk-common/Makefile
++++ b/feeds/luci/contrib/package/freifunk-common/Makefile
+@@ -21,7 +21,7 @@ define Package/freifunk-common/description
+   Common files and scripts that are needed to run free wireless mesh networks.
+ endef
+ 
+-define Package/luci-mod-freifunk/conffiles
++define Package/freifunk-common/conffiles
+ /etc/config/freifunk
+ endef
+ 

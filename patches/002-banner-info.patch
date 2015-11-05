@@ -23,7 +23,7 @@ Index: openwrt/package/base-files/files/etc/banner
 -  * 3/4 oz Lime Juice       unstrained into a goblet.
 -  * 1 1/2 oz Orange Juice
 -  * 1 tsp. Grenadine Syrup
-+ Firmware Berlin (%N %C, based OpenWrt %R)
++ Firmware Berlin (%N %C rev %R)
 + %P - %S
 + https://wiki.freifunk.net/Berlin:Firmware
 + https://github.com/freifunk-berlin

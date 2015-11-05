@@ -4,6 +4,8 @@ include config.mk
 MAINTARGET=$(word 1, $(subst _, ,$(TARGET)))
 SUBTARGET=$(word 2, $(subst _, ,$(TARGET)))
 
+REVISION=$(shell git log -1 --format=format:%h)
+
 # set dir and file names
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
@@ -87,6 +89,7 @@ $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
 .stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
+	sed -i 's,^# REVISION:=.*,REVISION:=$(REVISION),g' $(OPENWRT_DIR)/include/version.mk
 	touch $@
 
 # compile

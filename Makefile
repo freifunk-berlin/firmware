@@ -4,6 +4,7 @@ include config.mk
 MAINTARGET=$(word 1, $(subst _, ,$(TARGET)))
 SUBTARGET=$(word 2, $(subst _, ,$(TARGET)))
 
+GIT_BRANCH=$(shell git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 REVISION=$(shell git log -1 --format=format:%h)
 
 # set dir and file names
@@ -126,11 +127,18 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  done; \
 	done
 	mkdir -p $(FW_TARGET_DIR)
+	# Create version info file
+	GIT_BRANCH_ESC=$(shell echo $(GIT_BRANCH) | tr '/' '_'); \
+	VERSION_FILE=$(FW_TARGET_DIR)/VERSION-kathleen-$$GIT_BRANCH_ESC.txt; \
+	echo "git branch \"$(GIT_BRANCH)\", revision $(REVISION)" > $$VERSION_FILE; \
+	echo "https://github.com/freifunk-berlin/firmware" >> $$VERSION_FILE; \
+	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
 	# copy different firmwares (like vpn, minimal) including imagebuilder
 	for DIR_ABS in $(IB_BUILD_DIR)/imgbldr/bin/*; do \
 	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
+	  cp $(FW_TARGET_DIR)/VERSION-kathleen-* $$TARGET_DIR/; \
 	  for FILE in $$TARGET_DIR/*-factory.bin $$TARGET_DIR/*-sysupgrade.bin; do \
 	    [ -e "$$FILE" ] || continue; \
 	    NEWNAME="$${FILE/openwrt-/kathleen-}"; \

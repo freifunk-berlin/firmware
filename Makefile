@@ -129,7 +129,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	mkdir -p $(FW_TARGET_DIR)
 	# Create version info file
 	GIT_BRANCH_ESC=$(shell echo $(GIT_BRANCH) | tr '/' '_'); \
-	VERSION_FILE=$(FW_TARGET_DIR)/VERSION-kathleen-$$GIT_BRANCH_ESC.txt; \
+	VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt; \
 	echo "git branch \"$(GIT_BRANCH)\", revision $(REVISION)" > $$VERSION_FILE; \
 	echo "https://github.com/freifunk-berlin/firmware" >> $$VERSION_FILE; \
 	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \

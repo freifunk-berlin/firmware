@@ -140,7 +140,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	mkdir -p $(FW_TARGET_DIR)
 	# Create version info file
 	GIT_BRANCH_ESC=$(shell echo $(GIT_BRANCH) | tr '/' '_'); \
-	VERSION_FILE=$(FW_TARGET_DIR)/VERSION-kathleen-$$GIT_BRANCH_ESC.txt; \
+	VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt; \
 	echo "git branch \"$(GIT_BRANCH)\", revision $(REVISION)" > $$VERSION_FILE; \
 	echo "https://github.com/freifunk-berlin/firmware" >> $$VERSION_FILE; \
 	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
@@ -149,7 +149,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
-	  cp $(FW_TARGET_DIR)/VERSION-kathleen-* $$TARGET_DIR/; \
+	  cp $(FW_TARGET_DIR)/VERSION.txt $$TARGET_DIR/; \
 	  for FILE in $$TARGET_DIR/*-factory.bin $$TARGET_DIR/*-sysupgrade.bin; do \
 	    [ -e "$$FILE" ] || continue; \
 	    NEWNAME="$${FILE/openwrt-/kathleen-}"; \

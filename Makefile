@@ -14,6 +14,7 @@ TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
 UMASK=umask 022
+BUILD_REV=~git$(shell git describe --always)
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
@@ -70,9 +71,19 @@ patch: stamp-clean-patched .stamp-patched
 	cd $(OPENWRT_DIR); quilt push -a
 	touch $@
 
+.stamp-build_rev: .FORCE
+ifneq (,$(wildcard .stamp-build_rev))
+ifneq ($(shell cat .stamp-build_rev),$(BUILD_REV))
+	echo $(BUILD_REV) | diff >/dev/null -q $@ - || echo -n $(BUILD_REV) >$@
+endif
+else
+	echo -n $(BUILD_REV) >$@
+endif
+
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG)
+$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
+	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/$(BUILD_REV)\"/" $(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
@@ -167,3 +178,4 @@ clean: stamp-clean .stamp-openwrt-cleaned
 
 .PHONY: openwrt-clean openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
+.FORCE:

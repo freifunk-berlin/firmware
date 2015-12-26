@@ -14,7 +14,8 @@ TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
 UMASK=umask 022
-BUILD_REV=~git$(shell git describe --always)
+BUILD_REV_tmp=$(shell git describe --always)
+BUILD_REV=~git$(BUILD_REV_tmp)
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
@@ -72,6 +73,12 @@ patch: stamp-clean-patched .stamp-patched
 	touch $@
 
 .stamp-build_rev: .FORCE
+# temp compare both REvision strings
+ifneq ($(REVISION),$(BUILD_REV_tmp))
+	echo "git describe --always different from git log -1"
+	exit 1
+endif
+# end temp
 ifneq (,$(wildcard .stamp-build_rev))
 ifneq ($(shell cat .stamp-build_rev),$(BUILD_REV))
 	echo $(BUILD_REV) | diff >/dev/null -q $@ - || echo -n $(BUILD_REV) >$@

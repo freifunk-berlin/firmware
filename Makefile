@@ -156,7 +156,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
-	  cp $(FW_TARGET_DIR)/VERSION-kathleen-* $$TARGET_DIR/; \
+	  cp $(FW_TARGET_DIR)/VERSION.txt $$TARGET_DIR/; \
 	  for FILE in $$TARGET_DIR/*-factory.bin $$TARGET_DIR/*-sysupgrade.bin; do \
 	    [ -e "$$FILE" ] || continue; \
 	    NEWNAME="$${FILE/openwrt-/kathleen-}"; \

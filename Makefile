@@ -151,6 +151,15 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	echo "git branch \"$(GIT_BRANCH)\", revision $(REVISION)" > $$VERSION_FILE; \
 	echo "https://github.com/freifunk-berlin/firmware" >> $$VERSION_FILE; \
 	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
+	# add feed revisions \
+	for FEED in `cd $(OPENWRT_DIR); ./scripts/feeds list -n`; do \
+	  FEED_DIR=$(addprefix $(OPENWRT_DIR)/feeds/,$$FEED); \
+	  FEED_GIT_BRANCH=`git -C $$FEED_DIR symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'`; \
+	  FEED_REVISION=`git -C $$FEED_DIR log -1 --format=format:%hcd`; \
+	  FEED_GIT_BRANCH_ESC=`echo $$FEED_GIT_BRANCH | tr '/' '_'`; \
+	  #echo "Feed $$FEED: git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION"; \
+	  echo "Feed $$FEED: git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $$VERSION_FILE; \
+	done
 	# copy different firmwares (like vpn, minimal) including imagebuilder
 	for DIR_ABS in $(IB_BUILD_DIR)/imgbldr/bin/*; do \
 	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \

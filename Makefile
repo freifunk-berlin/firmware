@@ -4,8 +4,8 @@ include config.mk
 MAINTARGET=$(word 1, $(subst _, ,$(TARGET)))
 SUBTARGET=$(word 2, $(subst _, ,$(TARGET)))
 
-GIT_BRANCH=$(shell git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-REVISION=$(shell git log -1 --format=format:%h)
+GIT_BRANCH=git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'
+REVISION=git log -1 --format=format:%h
 
 # set dir and file names
 FW_DIR=$(shell pwd)
@@ -74,7 +74,7 @@ patch: stamp-clean-patched .stamp-patched
 
 .stamp-build_rev: .FORCE
 # temp compare both REvision strings
-ifneq ($(REVISION),$(BUILD_REV_tmp))
+ifneq ($(shell $(REVISION)),$(BUILD_REV_tmp))
 	echo "git describe --always different from git log -1"
 	exit 1
 endif
@@ -97,7 +97,7 @@ $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
 .stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
-	sed -i 's,^# REVISION:=.*,REVISION:=$(REVISION),g' $(OPENWRT_DIR)/include/version.mk
+	sed -i 's,^# REVISION:=.*,REVISION:=$(shell $(REVISION)),g' $(OPENWRT_DIR)/include/version.mk
 	touch $@
 
 # compile
@@ -146,18 +146,16 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	done
 	mkdir -p $(FW_TARGET_DIR)
 	# Create version info file
-	GIT_BRANCH_ESC=$(shell echo $(GIT_BRANCH) | tr '/' '_'); \
+	GIT_BRANCH_ESC=$(shell $(GIT_BRANCH) | tr '/' '_'); \
 	VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt; \
-	echo "git branch \"$(GIT_BRANCH)\", revision $(REVISION)" > $$VERSION_FILE; \
+	echo "git branch \"$$GIT_BRANCH_ESC\", revision $(shell $(REVISION))" > $$VERSION_FILE; \
 	echo "https://github.com/freifunk-berlin/firmware" >> $$VERSION_FILE; \
 	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
 	# add feed revisions \
 	for FEED in `cd $(OPENWRT_DIR); ./scripts/feeds list -n`; do \
 	  FEED_DIR=$(addprefix $(OPENWRT_DIR)/feeds/,$$FEED); \
-	  FEED_GIT_BRANCH=`git -C $$FEED_DIR symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'`; \
-	  FEED_REVISION=`git -C $$FEED_DIR log -1 --format=format:%hcd`; \
-	  FEED_GIT_BRANCH_ESC=`echo $$FEED_GIT_BRANCH | tr '/' '_'`; \
-	  #echo "Feed $$FEED: git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION"; \
+	  FEED_GIT_BRANCH_ESC=`cd $$FEED_DIR; $(GIT_BRANCH) | tr '/' '_'`; \
+	  FEED_REVISION=`cd $$FEED_DIR; $(REVISION)`; \
 	  echo "Feed $$FEED: git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $$VERSION_FILE; \
 	done
 	# copy different firmwares (like vpn, minimal) including imagebuilder

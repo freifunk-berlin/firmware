@@ -15,7 +15,7 @@ IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
 UMASK=umask 022
 BUILD_REV_tmp=$(shell git describe --always)
-BUILD_REV=~git$(BUILD_REV_tmp)
+BUILD_REV=.git$(BUILD_REV_tmp)
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)

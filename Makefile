@@ -14,8 +14,6 @@ TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
 UMASK=umask 022
-BUILD_REV_tmp=$(shell git describe --always)
-BUILD_REV=.git$(BUILD_REV_tmp)
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
@@ -73,24 +71,18 @@ patch: stamp-clean-patched .stamp-patched
 	touch $@
 
 .stamp-build_rev: .FORCE
-# temp compare both REvision strings
-ifneq ($(shell $(REVISION)),$(BUILD_REV_tmp))
-	echo "git describe --always different from git log -1"
-	exit 1
-endif
-# end temp
 ifneq (,$(wildcard .stamp-build_rev))
-ifneq ($(shell cat .stamp-build_rev),$(BUILD_REV))
-	echo $(BUILD_REV) | diff >/dev/null -q $@ - || echo -n $(BUILD_REV) >$@
+ifneq ($(shell cat .stamp-build_rev),$(REVISION))
+	echo $(REVISION) | diff >/dev/null -q $@ - || echo -n $(REVISION) >$@
 endif
 else
-	echo -n $(BUILD_REV) >$@
+	echo -n $(REVISION) >$@
 endif
 
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
-	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/$(BUILD_REV)\"/" $(OPENWRT_DIR)/.config
+	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\.$(REVISION)\"/" $(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
@@ -116,7 +108,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
 	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(OPENWRT_DIR)/staging_dir/toolchain-*/bin))
-	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*$(BUILD_REV)*.tar.bz2))
+	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*.$(REVISION)*.tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	# shorten dir name to prevent too long paths
 	mv $(IB_BUILD_DIR)/$(shell basename $(IB_FILE) .tar.bz2) $(IB_BUILD_DIR)/imgbldr
@@ -176,7 +168,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/OpenWrt-*.tar.bz2
-	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*$(BUILD_REV)*.tar.bz2 $(FW_TARGET_DIR)/
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.$(REVISION)*.tar.bz2 $(FW_TARGET_DIR)/
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
 	rm -rf $$PACKAGES_DIR; \

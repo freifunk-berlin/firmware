@@ -158,7 +158,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
 	  cp $(FW_TARGET_DIR)/VERSION.txt $$TARGET_DIR/; \
-	  for FILE in $$TARGET_DIR/*-factory.bin $$TARGET_DIR/*-sysupgrade.bin; do \
+	  for FILE in $$TARGET_DIR/openwrt*; do \
 	    [ -e "$$FILE" ] || continue; \
 	    NEWNAME="$${FILE/openwrt-/kathleen-}"; \
 	    NEWNAME="$${NEWNAME/ar71xx-generic-/}"; \

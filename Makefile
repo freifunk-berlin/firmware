@@ -5,7 +5,7 @@ MAINTARGET=$(word 1, $(subst _, ,$(TARGET)))
 SUBTARGET=$(word 2, $(subst _, ,$(TARGET)))
 
 GIT_BRANCH=git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'
-REVISION=git log -1 --format=format:%h
+REVISION=git describe --always
 
 # set dir and file names
 FW_DIR=$(shell pwd)
@@ -20,6 +20,8 @@ DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
 
 # profiles to be built (router models)
 PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
+
+FW_REVISION=$(shell $(REVISION))
 
 default: firmwares
 
@@ -72,24 +74,24 @@ patch: stamp-clean-patched .stamp-patched
 
 .stamp-build_rev: .FORCE
 ifneq (,$(wildcard .stamp-build_rev))
-ifneq ($(shell cat .stamp-build_rev),$(REVISION))
-	echo $(REVISION) | diff >/dev/null -q $@ - || echo -n $(REVISION) >$@
+ifneq ($(shell cat .stamp-build_rev),$(FW_REVISION))
+	echo $(FW_REVISION) | diff >/dev/null -q $@ - || echo -n $(FW_REVISION) >$@
 endif
 else
-	echo -n $(REVISION) >$@
+	echo -n $(FW_REVISION) >$@
 endif
 
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
-	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\.$(REVISION)\"/" $(OPENWRT_DIR)/.config
+	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\.$(FW_REVISION)\"/" $(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
 .stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
-	sed -i 's,^# REVISION:=.*,REVISION:=$(shell $(REVISION)),g' $(OPENWRT_DIR)/include/version.mk
+	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(OPENWRT_DIR)/include/version.mk
 	touch $@
 
 # compile
@@ -108,7 +110,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
 	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(OPENWRT_DIR)/staging_dir/toolchain-*/bin))
-	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*.$(REVISION)*.tar.bz2))
+	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*.$(FW_REVISION)*.tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	# shorten dir name to prevent too long paths
 	mv $(IB_BUILD_DIR)/$(shell basename $(IB_FILE) .tar.bz2) $(IB_BUILD_DIR)/imgbldr
@@ -140,7 +142,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# Create version info file
 	GIT_BRANCH_ESC=$(shell $(GIT_BRANCH) | tr '/' '_'); \
 	VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt; \
-	echo "git branch \"$$GIT_BRANCH_ESC\", revision $(shell $(REVISION))" > $$VERSION_FILE; \
+	echo "git branch \"$$GIT_BRANCH_ESC\", revision $(FW_REVISION)" > $$VERSION_FILE; \
 	echo "https://github.com/freifunk-berlin/firmware" >> $$VERSION_FILE; \
 	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
 	# add feed revisions \
@@ -168,7 +170,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/OpenWrt-*.tar.bz2
-	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.$(REVISION)*.tar.bz2 $(FW_TARGET_DIR)/
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.$(FW_REVISION)*.tar.bz2 $(FW_TARGET_DIR)/
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
 	rm -rf $$PACKAGES_DIR; \

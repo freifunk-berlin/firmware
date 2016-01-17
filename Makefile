@@ -85,6 +85,7 @@ endif
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev
 	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
+	cat $(FW_DIR)/configs/common.config >>$(OPENWRT_DIR)/.config
 	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig

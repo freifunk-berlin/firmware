@@ -145,7 +145,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	    PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE_ABS | tr -t '\n' ' '); \
 	    $(UMASK);\
 	    echo -e "\n *** Building Kathleen image file for profile \"$${PROFILE}\" with packages list \"$${PACKAGES_FILE}\".\n"; \
-	    $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
+	    $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
 	  done; \
 	done
 	mkdir -p $(FW_TARGET_DIR)

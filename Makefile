@@ -9,6 +9,12 @@ SUBTARGET=$(subst -,_,$(word 2, $(subst _, ,$(TARGET))))
 ifeq ($(strip $(SUBTARGET)),)
 SUBTARGET="generic"
 endif
+# special handling of ramips, as the only target is a subtarget
+# changing the config-filename to ramips_mt7620.config will break buildbot step 2
+# (changing CONFIG_VERSION_REPO-setting in Openwrt-config)
+ifeq ($(MAINTARGET),ramips)
+SUBTARGET="mt7620"
+endif
 
 GIT_REPO=git config --get remote.origin.url
 GIT_BRANCH=git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'

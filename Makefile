@@ -143,17 +143,16 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# Create version info file
 	GIT_BRANCH_ESC=$(shell $(GIT_BRANCH) | tr '/' '_'); \
 	VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt; \
-	echo "git branch \"$$GIT_BRANCH_ESC\", revision $(FW_REVISION)" > $$VERSION_FILE; \
-	echo "https://github.com/freifunk-berlin/firmware" >> $$VERSION_FILE; \
+	echo "https://github.com/freifunk-berlin/firmware" > $$VERSION_FILE; \
 	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
+	echo "Firmware: git branch \"$$GIT_BRANCH_ESC\", revision $(FW_REVISION)" >> $$VERSION_FILE; \
 	# add feed revisions \
 	for FEED in `cd $(OPENWRT_DIR); ./scripts/feeds list -n`; do \
 	  FEED_DIR=$(addprefix $(OPENWRT_DIR)/feeds/,$$FEED); \
 	  FEED_GIT_REPO=`cd $$FEED_DIR; $(GIT_REPO)`; \
 	  FEED_GIT_BRANCH_ESC=`cd $$FEED_DIR; $(GIT_BRANCH) | tr '/' '_'`; \
 	  FEED_REVISION=`cd $$FEED_DIR; $(REVISION)`; \
-	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO" >> $$VERSION_FILE; \
-	  echo "  git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $$VERSION_FILE; \
+	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $$VERSION_FILE; \
 	done
 	# copy different firmwares (like vpn, minimal) including imagebuilder
 	for DIR_ABS in $(IB_BUILD_DIR)/imgbldr/bin/*; do \

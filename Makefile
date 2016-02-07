@@ -3,6 +3,12 @@ include config.mk
 # get main- and subtarget name from TARGET
 MAINTARGET=$(word 1, $(subst _, ,$(TARGET)))
 SUBTARGET=$(word 2, $(subst _, ,$(TARGET)))
+test=$(subst -,_,$(SUBTARGET))
+SUBTARGET=$(subst -,_,$(word 2, $(subst _, ,$(TARGET))))
+#$(subst( -,_, $(word 2, $(subst _, ,$(TARGET))))
+ifeq ($(strip $(SUBTARGET)),)
+SUBTARGET="generic"
+endif
 
 GIT_REPO=git config --get remote.origin.url
 GIT_BRANCH=git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'
@@ -109,10 +115,12 @@ compile: stamp-clean-compiled .stamp-compiled
 #  * packages directory
 firmwares: stamp-clean-firmwares .stamp-firmwares
 .stamp-firmwares: .stamp-compiled
+	echo $(test)
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
 	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(OPENWRT_DIR)/staging_dir/toolchain-*/bin))
-	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*+$(FW_REVISION)*.tar.bz2))
+	echo $(SUBTARGET)
+	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*+$(FW_REVISION)-$(MAINTARGET)*$(SUBTARGET)*.tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	# shorten dir name to prevent too long paths
 	mv $(IB_BUILD_DIR)/$(shell basename $(IB_FILE) .tar.bz2) $(IB_BUILD_DIR)/imgbldr
@@ -137,7 +145,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	    PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE_ABS | tr -t '\n' ' '); \
 	    $(UMASK);\
 	    echo -e "\n *** Building Kathleen image file for profile \"$${PROFILE}\" with packages list \"$${PACKAGES_FILE}\".\n"; \
-	    $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
+	    $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
 	  done; \
 	done
 	mkdir -p $(FW_TARGET_DIR)

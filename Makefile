@@ -146,6 +146,9 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	echo "https://github.com/freifunk-berlin/firmware" > $$VERSION_FILE; \
 	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
 	echo "Firmware: git branch \"$$GIT_BRANCH_ESC\", revision $(FW_REVISION)" >> $$VERSION_FILE; \
+	# add openwrt revision with data from config.mk \
+	OPENWRT_REVISION=`cd $(OPENWRT_DIR); $(REVISION)`; \
+	echo "OpenWRT: repository from $(OPENWRT_SRC), git branch \"$(OPENWRT_COMMIT)\", revision $$OPENWRT_REVISION" >> $$VERSION_FILE; \
 	# add feed revisions \
 	for FEED in `cd $(OPENWRT_DIR); ./scripts/feeds list -n`; do \
 	  FEED_DIR=$(addprefix $(OPENWRT_DIR)/feeds/,$$FEED); \

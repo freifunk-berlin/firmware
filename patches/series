@@ -8,3 +8,4 @@
 017-luci-bootstrap-input-css.patch
 021-fix-mt7620-failsafe.patch
 022-rt2x00_allow_adhoc_and_ap.patch
+023-olsrd-smartgw-rules.patch

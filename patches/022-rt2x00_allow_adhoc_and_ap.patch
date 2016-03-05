@@ -1,7 +1,7 @@
 Index: openwrt/package/kernel/mac80211/patches/940-rt2x00_allow_adhoc_and_ap.patch
 ===================================================================
 --- /dev/null
-+++ openwrt/package/kernel/mac80211/patches/940-rt2x00_allow_adhoc_and_ap.patch
++++ openwrt/package/kernel/mac80211/patches/940-freifunk-berlin-rt2x00_allow_adhoc_and_ap.patch
 @@ -0,0 +1,43 @@
 +Index: compat-wireless-2016-01-10/drivers/net/wireless/ralink/rt2x00/rt2x00.h
 +===================================================================

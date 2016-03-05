@@ -1,4 +1,3 @@
-001-openwrt-cpe2X0-5X0-v1.1-support.patch
 002-banner-info.patch
 011-luci-freifunk-policyrouting-berlin.patch
 013-delete_non_existing_profiles.patch

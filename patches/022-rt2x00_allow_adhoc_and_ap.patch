@@ -3,10 +3,10 @@ Index: openwrt/package/kernel/mac80211/patches/940-rt2x00_allow_adhoc_and_ap.pat
 --- /dev/null
 +++ openwrt/package/kernel/mac80211/patches/940-rt2x00_allow_adhoc_and_ap.patch
 @@ -0,0 +1,43 @@
-+Index: compat-wireless-2015-03-09/drivers/net/wireless/rt2x00/rt2x00.h
++Index: compat-wireless-2016-01-10/drivers/net/wireless/ralink/rt2x00/rt2x00.h
 +===================================================================
-+--- compat-wireless-2015-03-09.orig/drivers/net/wireless/rt2x00/rt2x00.h
-++++ compat-wireless-2015-03-09/drivers/net/wireless/rt2x00/rt2x00.h
++--- compat-wireless-2016-01-10.orig/drivers/net/wireless/ralink/rt2x00/rt2x00.h
+++++ compat-wireless-2016-01-10/drivers/net/wireless/ralink/rt2x00/rt2x00.h
 +@@ -859,7 +859,7 @@ struct rt2x00_dev {
 + 	/*
 + 	 * Interface combinations
@@ -16,10 +16,10 @@ Index: openwrt/package/kernel/mac80211/patches/940-rt2x00_allow_adhoc_and_ap.pat
 + 	struct ieee80211_iface_combination if_combinations[NUM_IF_COMB];
 + 
 + 	/*
-+Index: compat-wireless-2015-03-09/drivers/net/wireless/rt2x00/rt2x00dev.c
++Index: compat-wireless-2016-01-10/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
 +===================================================================
-+--- compat-wireless-2015-03-09.orig/drivers/net/wireless/rt2x00/rt2x00dev.c
-++++ compat-wireless-2015-03-09/drivers/net/wireless/rt2x00/rt2x00dev.c
++--- compat-wireless-2016-01-10.orig/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
+++++ compat-wireless-2016-01-10/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
 +@@ -1282,18 +1282,21 @@ static inline void rt2x00lib_set_if_comb
 + 	 * Build up AP interface limits structure.
 + 	 */

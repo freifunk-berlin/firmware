@@ -3,12 +3,12 @@ Index: firmware/openwrt/target/imagebuilder/files/Makefile
 --- openwrt.orig/target/imagebuilder/files/Makefile	2015-04-07 00:27:34.000000000 +0200
 +++ openwrt/target/imagebuilder/files/Makefile	2015-04-09 01:28:05.000000000 +0200
 @@ -111,6 +111,9 @@
- ifneq ($(USER_FILES),)
  	$(MAKE) copy_files
  endif
+ 	$(MAKE) package_postinst
 +ifneq ($(CUSTOM_POSTINST_SCRIPT),)
 +	(cd "$(TARGET_DIR)" ; bash $(CUSTOM_POSTINST_SCRIPT))
 +endif
- 	$(MAKE) package_postinst
  	$(MAKE) build_image
  
+ package_index: FORCE

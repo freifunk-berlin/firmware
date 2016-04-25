@@ -26,11 +26,10 @@ libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap
-# Bug in LuCI (missing nixio dependency)
-luci-lib-nixio
 uhttpd
 uhttpd-mod-ubus
 luci-app-ffwizard-berlin
+luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-olsr-services
 luci-app-owm

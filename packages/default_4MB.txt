@@ -7,10 +7,13 @@
 -ppp
 -ppp-mod-pppoe
 -wpad
+-firewall
+-iptables
+-ip6tables
 
 # Defaults
 freifunk-berlin-dhcp-defaults
-freifunk-berlin-firewall-defaults
+#freifunk-berlin-firewall-defaults
 freifunk-berlin-freifunk-defaults
 freifunk-berlin-migration
 freifunk-berlin-network-defaults
@@ -19,9 +22,8 @@ community-profiles
 
 # Common
 dnsmasq
-qos-scripts
-firewall
 iwinfo
+tc
 libiwinfo-lua
 
 # GUI

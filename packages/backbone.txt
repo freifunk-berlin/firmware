@@ -32,7 +32,7 @@ uhttpd
 uhttpd-mod-ubus
 uhttpd-mod-tls
 px5g
-luci-mod-freifunk
+luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-olsr-services
 luci-app-owm

@@ -2,7 +2,6 @@
 003-update-community-profiles.patch
 004-luci_fix-lookup-of-community-name.patch
 011-luci-freifunk-policyrouting-berlin.patch
-014-ffwizard-redirect-on-firstboot.patch
 016-imagebuilder-custom-postinst-script.patch
 017-luci-bootstrap-input-css.patch
 021-fix-mt7620-failsafe.patch

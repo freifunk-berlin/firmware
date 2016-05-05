@@ -47,11 +47,11 @@ openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
 
 # patches require updated openwrt working copy
 $(OPENWRT_DIR)/patches: | .stamp-openwrt-updated
-	ln -s $(FW_DIR)/patches $(OPENWRT_DIR)
+	ln -s $(FW_DIR)/patches $@
 
 # feeds
-$(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated
-	cp $(FW_DIR)/feeds.conf $(OPENWRT_DIR)/feeds.conf
+$(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated feeds.conf
+	cp $(FW_DIR)/feeds.conf $@
 
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated

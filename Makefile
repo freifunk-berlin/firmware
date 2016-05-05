@@ -11,7 +11,7 @@ REVISION=git describe --always
 # set dir and file names
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
-TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config
+TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config $(FW_DIR)/configs/common.config
 IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
 UMASK=umask 022
@@ -84,8 +84,7 @@ endif
 
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev
-	cp $(TARGET_CONFIG) $(OPENWRT_DIR)/.config
-	cat $(FW_DIR)/configs/common.config >>$(OPENWRT_DIR)/.config
+	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
 	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig

@@ -90,21 +90,25 @@ else
 endif
 
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG)
+$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG)
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
 # prepare openwrt working copy
-prepare: stamp-clean-prepared .stamp-prepared .stamp-build_rev
-.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
-	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(OPENWRT_DIR)/include/version.mk
+prepare: stamp-clean-prepared .stamp-prepared
+.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config .stamp-build_rev
+	# look for correct REVISION or set just replace the line with the correct
+	grep -q REVISION:=$(FW_REVISION) $(OPENWRT_DIR)/include/version.mk || \
+	  sed -i "/REVISION:=/c\REVISION:=$(FW_REVISION)" $(OPENWRT_DIR)/include/version.mk
 ifeq ($(BUILDTYPE),unstable)
-	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(OPENWRT_DIR)/.config
+	sed -i "/^CONFIG_VERSION_NUMBER=/d" $(OPENWRT_DIR)/.config
+	cat $(TARGET_CONFIG)|grep -e "^CONFIG_VERSION_NUMBER=" | \
+	  sed "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" >>$(OPENWRT_DIR)/.config
 endif
 ifdef REPOPATH
 	# escape "/" in PATH for SED by "\/"
-	sed -i "s/^CONFIG_VERSION_REPO=.*$$/CONFIG_VERSION_REPO=$(subst /,\/,$(REPOPATH))/" $(OPENWRT_DIR)/.config
+	sed -i 's,^CONFIG_VERSION_REPO=.*,CONFIG_VERSION_REPO=$(subst /,\/,$(REPOPATH)),g' $(OPENWRT_DIR)/.config
 endif
 	touch $@
 

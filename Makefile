@@ -27,6 +27,9 @@ FW_REVISION=$(shell $(REVISION))
 ifndef BUILDTYPE
 $(error BUILDTYPE is not set)
 endif
+ifeq ($(filter release unstable,$(BUILDTYPE)),)
+ $(error invalid BUILDTYPE "$(BUILDTYPE)")
+endif
 
 default: firmwares
 

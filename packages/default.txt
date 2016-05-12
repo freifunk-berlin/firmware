@@ -51,8 +51,6 @@ luci-i18n-olsr-de
 luci-i18n-olsr-en
 luci-i18n-openvpn-de
 luci-i18n-openvpn-en
-luci-i18n-splash-de
-luci-i18n-splash-en
 luci-i18n-statistics-de
 luci-i18n-statistics-en
 

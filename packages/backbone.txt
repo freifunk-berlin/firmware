@@ -41,14 +41,8 @@ luci-theme-bootstrap
 # GUI addon
 luci-i18n-base-de
 luci-i18n-base-en
-luci-i18n-firewall-de
-luci-i18n-firewall-en
 luci-i18n-olsr-de
 luci-i18n-olsr-en
-luci-i18n-openvpn-de
-luci-i18n-openvpn-en
-luci-i18n-splash-de
-luci-i18n-splash-en
 luci-i18n-statistics-de
 luci-i18n-statistics-en
 

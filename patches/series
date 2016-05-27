@@ -7,3 +7,4 @@
 022-rt2x00_allow_adhoc_and_ap.patch
 023-gl-ar150-cc.patch
 024-openwrt_add_ramips-nexx-image.patch
+025-openwrt_add_tpl-wr842v3.patch

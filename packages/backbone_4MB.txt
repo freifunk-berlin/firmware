@@ -43,8 +43,6 @@ luci-app-olsr
 luci-app-olsr-services
 luci-app-owm
 luci-app-owm-cmd
-# Bug in luci-app-olsr (missing luci-lib-json dependency)
-luci-lib-json
 
 # OLSR
 olsrd

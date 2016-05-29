@@ -70,6 +70,9 @@ pre-patch: stamp-clean-pre-patch .stamp-pre-patch
 # patch openwrt working copy
 patch: stamp-clean-patched .stamp-patched
 .stamp-patched: .stamp-pre-patch
+	# quilt push -a might fail if already applied all patches
+	# call quilt pop -a to go to the bottom. ignore return code of quilt pop -a
+	-cd $(OPENWRT_DIR); quilt pop -a
 	cd $(OPENWRT_DIR); quilt push -a
 	touch $@
 

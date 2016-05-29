@@ -10,13 +10,13 @@ REVISION=git describe --always
 
 # set dir and file names
 FW_DIR=$(shell pwd)
-OPENWRT_DIR=$(FW_DIR)/openwrt
+LEDE_DIR=$(FW_DIR)/lede
 TARGET_CONFIG=$(FW_DIR)/configs/$(TARGET).config $(FW_DIR)/configs/common.config
 IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
 UMASK=umask 022
 
-# if any of the following files have been changed: clean up openwrt dir
+# if any of the following files have been changed: clean up lede dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
 
 # profiles to be built (router models)
@@ -26,37 +26,37 @@ FW_REVISION=$(shell $(REVISION))
 
 default: firmwares
 
-# clone openwrt
-$(OPENWRT_DIR):
-	git clone $(OPENWRT_SRC) $(OPENWRT_DIR)
+# clone lede
+$(LEDE_DIR):
+	git clone $(LEDE_SRC) $(LEDE_DIR)
 
-# clean up openwrt working copy
-openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
-.stamp-openwrt-cleaned: config.mk | $(OPENWRT_DIR)
-	cd $(OPENWRT_DIR); \
+# clean up lede working copy
+lede-clean: stamp-clean-lede-cleaned .stamp-lede-cleaned
+.stamp-lede-cleaned: config.mk | $(LEDE_DIR)
+	cd $(LEDE_DIR); \
 	  ./scripts/feeds clean && \
 	  git clean -dff && git fetch && git reset --hard HEAD && \
 	  rm -rf bin .config feeds.conf build_dir/target-* logs/
 	touch $@
 
-# update openwrt and checkout specified commit
-openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
-.stamp-openwrt-updated: .stamp-openwrt-cleaned
-	cd $(OPENWRT_DIR); git checkout --detach $(OPENWRT_COMMIT)
+# update lede and checkout specified commit
+lede-update: stamp-clean-lede-updated .stamp-lede-updated
+.stamp-lede-updated: .stamp-lede-cleaned
+	cd $(LEDE_DIR); git checkout --detach $(LEDE_COMMIT)
 	touch $@
 
-# patches require updated openwrt working copy
-$(OPENWRT_DIR)/patches: | .stamp-openwrt-updated
-	ln -s $(FW_DIR)/patches $(OPENWRT_DIR)
+# patches require updated lede working copy
+$(LEDE_DIR)/patches: | .stamp-lede-updated
+	ln -s $(FW_DIR)/patches $(LEDE_DIR)
 
 # feeds
-$(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated
-	cp $(FW_DIR)/feeds.conf $(OPENWRT_DIR)/feeds.conf
+$(LEDE_DIR)/feeds.conf: .stamp-lede-updated
+	cp $(FW_DIR)/feeds.conf $(LEDE_DIR)/feeds.conf
 
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
-.stamp-feeds-updated: $(OPENWRT_DIR)/feeds.conf
-	+cd $(OPENWRT_DIR); \
+.stamp-feeds-updated: $(LEDE_DIR)/feeds.conf
+	+cd $(LEDE_DIR); \
 	  ./scripts/feeds uninstall -a && \
 	  ./scripts/feeds update && \
 	  ./scripts/feeds install -a
@@ -64,13 +64,13 @@ feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 
 # prepare patch
 pre-patch: stamp-clean-pre-patch .stamp-pre-patch
-.stamp-pre-patch: .stamp-feeds-updated $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
+.stamp-pre-patch: .stamp-feeds-updated $(wildcard $(FW_DIR)/patches/*) | $(LEDE_DIR)/patches
 	touch $@
 
-# patch openwrt working copy
+# patch lede working copy
 patch: stamp-clean-patched .stamp-patched
 .stamp-patched: .stamp-pre-patch
-	cd $(OPENWRT_DIR); quilt push -a
+	cd $(LEDE_DIR); quilt push -a
 	touch $@
 
 .stamp-build_rev: .FORCE
@@ -85,27 +85,27 @@ endif
 # share download dir
 $(FW_DIR)/dl:
 	mkdir $(FW_DIR)/dl
-$(OPENWRT_DIR)/dl: $(FW_DIR)/dl
-	ln -s $(FW_DIR)/dl $(OPENWRT_DIR)/dl
+$(LEDE_DIR)/dl: $(FW_DIR)/dl
+	ln -s $(FW_DIR)/dl $(LEDE_DIR)/dl
 
-# openwrt config
-$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
-	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
-	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(OPENWRT_DIR)/.config
+# lede config
+$(LEDE_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev $(LEDE_DIR)/dl
+	cat $(TARGET_CONFIG) >$(LEDE_DIR)/.config
+	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(LEDE_DIR)/.config
 	$(UMASK); \
-	  $(MAKE) -C $(OPENWRT_DIR) defconfig
+	  $(MAKE) -C $(LEDE_DIR) defconfig
 
-# prepare openwrt working copy
+# prepare lede working copy
 prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
-	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(OPENWRT_DIR)/include/version.mk
+.stamp-prepared: .stamp-patched $(LEDE_DIR)/.config
+	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(LEDE_DIR)/include/version.mk
 	touch $@
 
 # compile
 compile: stamp-clean-compiled .stamp-compiled
 .stamp-compiled: .stamp-prepared
 	$(UMASK); \
-	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
+	  $(MAKE) -C $(LEDE_DIR) $(MAKE_ARGS)
 	touch $@
 
 # fill firmwares-directory with:
@@ -116,8 +116,8 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 .stamp-firmwares: .stamp-compiled
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
-	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(OPENWRT_DIR)/staging_dir/toolchain-*/bin))
-	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*+$(FW_REVISION)*.tar.bz2))
+	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(LEDE_DIR)/staging_dir/toolchain-*/bin))
+	$(eval IB_FILE := $(shell ls $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.bz2))
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	# shorten dir name to prevent too long paths
 	mv $(IB_BUILD_DIR)/$(shell basename $(IB_FILE) .tar.bz2) $(IB_BUILD_DIR)/imgbldr
@@ -152,12 +152,12 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	echo "https://github.com/freifunk-berlin/firmware" > $$VERSION_FILE; \
 	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
 	echo "Firmware: git branch \"$$GIT_BRANCH_ESC\", revision $(FW_REVISION)" >> $$VERSION_FILE; \
-	# add openwrt revision with data from config.mk \
-	OPENWRT_REVISION=`cd $(OPENWRT_DIR); $(REVISION)`; \
-	echo "OpenWRT: repository from $(OPENWRT_SRC), git branch \"$(OPENWRT_COMMIT)\", revision $$OPENWRT_REVISION" >> $$VERSION_FILE; \
+	# add lede revision with data from config.mk \
+	LEDE_REVISION=`cd $(LEDE_DIR); $(REVISION)`; \
+	echo "OpenWRT: repository from $(LEDE_SRC), git branch \"$(LEDE_COMMIT)\", revision $$LEDE_REVISION" >> $$VERSION_FILE; \
 	# add feed revisions \
-	for FEED in `cd $(OPENWRT_DIR); ./scripts/feeds list -n`; do \
-	  FEED_DIR=$(addprefix $(OPENWRT_DIR)/feeds/,$$FEED); \
+	for FEED in `cd $(LEDE_DIR); ./scripts/feeds list -n`; do \
+	  FEED_DIR=$(addprefix $(LEDE_DIR)/feeds/,$$FEED); \
 	  FEED_GIT_REPO=`cd $$FEED_DIR; $(GIT_REPO)`; \
 	  FEED_GIT_BRANCH_ESC=`cd $$FEED_DIR; $(GIT_BRANCH) | tr '/' '_'`; \
 	  FEED_REVISION=`cd $$FEED_DIR; $(REVISION)`; \
@@ -169,9 +169,9 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  rm -rf $$TARGET_DIR; \
 	  mv $$DIR_ABS $$TARGET_DIR; \
 	  cp $(FW_TARGET_DIR)/$$VERSION_FILE $$TARGET_DIR/; \
-	  for FILE in $$TARGET_DIR/openwrt*; do \
+	  for FILE in $$TARGET_DIR/lede*; do \
 	    [ -e "$$FILE" ] || continue; \
-	    NEWNAME="$${FILE/openwrt-/kathleen-}"; \
+	    NEWNAME="$${FILE/lede-/kathleen-}"; \
 	    NEWNAME="$${NEWNAME/ar71xx-generic-/}"; \
 	    NEWNAME="$${NEWNAME/mpc85xx-generic-/}"; \
 	    NEWNAME="$${NEWNAME/squashfs-/}"; \
@@ -180,12 +180,12 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	done;
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
-	rm -f $(FW_TARGET_DIR)/OpenWrt-*.tar.bz2
-	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*+$(FW_REVISION)*.tar.bz2 $(FW_TARGET_DIR)/
+	rm -f $(FW_TARGET_DIR)/*.tar.bz2
+	cp -a $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.bz2 $(FW_TARGET_DIR)/
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
 	rm -rf $$PACKAGES_DIR; \
-	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/packages $$PACKAGES_DIR
+	cp -a $(LEDE_DIR)/bin/$(MAINTARGET)/$(SUBTARGET)/packages $$PACKAGES_DIR
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
 
@@ -195,8 +195,8 @@ stamp-clean-%:
 stamp-clean:
 	rm -f .stamp-*
 
-clean: stamp-clean .stamp-openwrt-cleaned
+clean: stamp-clean .stamp-lede-cleaned
 
-.PHONY: openwrt-clean openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
+.PHONY: lede-clean lede-update patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:

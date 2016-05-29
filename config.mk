@@ -1,7 +1,7 @@
 # default parameters for Makefile
 SHELL:=$(shell which bash)
-TARGET=ar71xx
+TARGET=ar71xx_generic
 PACKAGES_LIST_DEFAULT=default backbone
-OPENWRT_SRC=git://git.openwrt.org/15.05/openwrt.git
-OPENWRT_COMMIT=64e116779c0f7da6d98068b8e7c50f528c8a91f2
+LEDE_SRC=https://git.lede-project.org/source.git
+LEDE_COMMIT=9128ed33b5d476eecbc0d5ec37c9002a8b103b81
 MAKE_ARGS=

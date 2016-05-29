@@ -1,10 +1,6 @@
 002-banner-info.patch
-003-update-community-profiles.patch
 011-luci-freifunk-policyrouting-berlin.patch
 016-imagebuilder-custom-postinst-script.patch
 017-luci-bootstrap-input-css.patch
-021-fix-mt7620-failsafe.patch
 022-rt2x00_allow_adhoc_and_ap.patch
-023-gl-ar150-cc.patch
 024-openwrt_add_ramips-nexx-image.patch
-025-openwrt_add_tpl-wr842v3.patch

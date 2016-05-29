@@ -3,5 +3,6 @@
 patches/*~
 bin
 openwrt
+/lede/
 firmwares
 dl

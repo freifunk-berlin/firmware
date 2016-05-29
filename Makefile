@@ -85,8 +85,14 @@ else
 	echo -n $(FW_REVISION) >$@
 endif
 
+# share download dir
+$(FW_DIR)/dl:
+	mkdir $(FW_DIR)/dl
+$(OPENWRT_DIR)/dl: $(FW_DIR)/dl
+	ln -s $(FW_DIR)/dl $(OPENWRT_DIR)/dl
+
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev
+$(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
 	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(OPENWRT_DIR)/.config
 	$(UMASK); \

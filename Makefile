@@ -189,6 +189,12 @@ stamp-clean-%:
 stamp-clean:
 	rm -f .stamp-*
 
+# unpatch needs "patches/" in openwrt
+unpatch: $(OPENWRT_DIR)/patches
+# RC = 2 of quilt --> nothing to be done
+	cd $(OPENWRT_DIR); quilt pop -a -f || [ $$? = 2 ] && true
+	rm -f .stamp-patched
+
 clean: stamp-clean .stamp-openwrt-cleaned
 
 .PHONY: openwrt-clean openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean

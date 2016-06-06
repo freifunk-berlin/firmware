@@ -55,7 +55,7 @@ $(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated feeds.conf
 
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
-.stamp-feeds-updated: $(OPENWRT_DIR)/feeds.conf
+.stamp-feeds-updated: $(OPENWRT_DIR)/feeds.conf unpatch
 	+cd $(OPENWRT_DIR); \
 	  ./scripts/feeds uninstall -a && \
 	  ./scripts/feeds update && \

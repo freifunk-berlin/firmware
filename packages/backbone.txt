@@ -62,6 +62,14 @@ kmod-batman-adv
 alfred
 batctl
 
+# BMX7
+bmx7
+bmx7-uci-config
+bmx7-json
+bmx7-sms
+bmx7-tun
+bmx7-table
+
 # Statistics
 luci-app-statistics
 collectd

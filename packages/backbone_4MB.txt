@@ -57,7 +57,4 @@ kmod-batman-adv
 alfred
 batctl
 
-# IPv6
-kmod-ipv6
-
 # Statistics/collectd not included in 4MB image

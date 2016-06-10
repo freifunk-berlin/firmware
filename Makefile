@@ -161,7 +161,10 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
 	rm -rf $$PACKAGES_DIR; \
-	cp -a $(LEDE_DIR)/bin/$(MAINTARGET)/$(SUBTARGET)/packages $$PACKAGES_DIR
+	mkdir -p $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
+	cp -a $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
+	# e.g. packages/packages/mips_34k the doublicated packages is correct! \
+	cp -a $(LEDE_DIR)/bin/packages $$PACKAGES_DIR/
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
 

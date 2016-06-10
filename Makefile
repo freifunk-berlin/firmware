@@ -182,10 +182,11 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/*.tar.bz2
 	cp -a $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.bz2 $(FW_TARGET_DIR)/
+	mkdir -p $(FW_TARGET_DIR)/packages/targets/$(MAINTARGET)/$(SUBTARGET)
 	# copy packages
-	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
-	rm -rf $$PACKAGES_DIR; \
-	cp -a $(LEDE_DIR)/bin/$(MAINTARGET)/$(SUBTARGET)/packages $$PACKAGES_DIR
+	cp -a $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $(FW_TARGET_DIR)/packages/targets/$(MAINTARGET)/$(SUBTARGET)/
+	# e.g. packages/packages/mips_34k the doublicated packages is correct!
+	cp -a $(LEDE_DIR)/bin/packages $(FW_TARGET_DIR)/packages/
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
 

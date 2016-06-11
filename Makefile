@@ -121,33 +121,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	mkdir -p $(IB_BUILD_DIR)
 	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(OPENWRT_DIR)/staging_dir/toolchain-*/bin))
 	$(eval IB_FILE := $(shell ls -tr $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*.tar.bz2 | tail -n1))
-	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
-	# shorten dir name to prevent too long paths
-	mv $(IB_BUILD_DIR)/$(shell basename $(IB_FILE) .tar.bz2) $(IB_BUILD_DIR)/imgbldr
-	export PATH=$(PATH):$(TOOLCHAIN_PATH); \
-	PACKAGES_PATH="$(FW_DIR)/packages"; \
-	for PROFILE_ITER in $(PROFILES); do \
-	  for PACKAGES_FILE in $(PACKAGES_LIST_DEFAULT); do \
-	    PROFILE=$$PROFILE_ITER \
-	    CUSTOM_POSTINST_PARAM=""; \
-	    if [[ $$PROFILE =~ ":" ]]; then \
-	      SUFFIX="$$(echo $$PROFILE | cut -d':' -f 2)"; \
-	      PACKAGES_SUFFIXED="$${PACKAGES_FILE}_$${SUFFIX}"; \
-	      if [[ -f "$$PACKAGES_PATH/$$PACKAGES_SUFFIXED.txt" ]]; then \
-	        PACKAGES_FILE="$$PACKAGES_SUFFIXED"; \
-	        PROFILE=$$(echo $$PROFILE | cut -d':' -f 1); \
-	      fi; \
-	    fi; \
-	    if [[ -f "$$PACKAGES_PATH/$$PACKAGES_FILE.sh" ]]; then \
-	      CUSTOM_POSTINST_PARAM="CUSTOM_POSTINST_SCRIPT=$$PACKAGES_PATH/$$PACKAGES_FILE.sh"; \
-	    fi; \
-	    PACKAGES_FILE_ABS="$$PACKAGES_PATH/$$PACKAGES_FILE.txt"; \
-	    PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE_ABS | tr -t '\n' ' '); \
-	    $(UMASK);\
-	    echo -e "\n *** Building Kathleen image file for profile \"$${PROFILE}\" with packages list \"$${PACKAGES_FILE}\".\n"; \
-	    $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
-	  done; \
-	done
+	#mv $(IB_BUILD_DIR)/$(shell basename $(IB_FILE) .tar.bz2) $(IB_BUILD_DIR)/imgbldr
 	mkdir -p $(FW_TARGET_DIR)
 	# Create version info file
 	GIT_BRANCH_ESC=$(shell $(GIT_BRANCH) | tr '/' '_'); \
@@ -166,25 +140,10 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	  FEED_REVISION=`cd $$FEED_DIR; $(REVISION)`; \
 	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $$VERSION_FILE; \
 	done
-	# copy different firmwares (like vpn, minimal) including imagebuilder
-	for DIR_ABS in $(IB_BUILD_DIR)/imgbldr/bin/*; do \
-	  TARGET_DIR=$(FW_TARGET_DIR)/$$(basename $$DIR_ABS); \
-	  rm -rf $$TARGET_DIR; \
-	  mv $$DIR_ABS $$TARGET_DIR; \
-	  cp $(FW_TARGET_DIR)/$$VERSION_FILE $$TARGET_DIR/; \
-	  for FILE in $$TARGET_DIR/openwrt*; do \
-	    [ -e "$$FILE" ] || continue; \
-	    NEWNAME="$${FILE/openwrt-/kathleen-}"; \
-	    NEWNAME="$${NEWNAME/ar71xx-generic-/}"; \
-	    NEWNAME="$${NEWNAME/mpc85xx-generic-/}"; \
-	    NEWNAME="$${NEWNAME/squashfs-/}"; \
-	    mv "$$FILE" "$$NEWNAME"; \
-	  done; \
-	done;
+	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
 	# copy imagebuilder, sdk and toolchain (if existing)
-	# remove old versions
-	rm -f $(FW_TARGET_DIR)/OpenWrt-*.tar.bz2
 	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.tar.bz2 $(FW_TARGET_DIR)/
+	mkdir -p $(FW_TARGET_DIR)/packages/targets/$(MAINTARGET)/$(SUBTARGET)
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
 	rm -rf $$PACKAGES_DIR; \

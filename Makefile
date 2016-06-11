@@ -140,9 +140,9 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
 	# copy imagebuilder, sdk and toolchain (if existing)
 	cp -a $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.bz2 $(FW_TARGET_DIR)/
-	mkdir -p $(FW_TARGET_DIR)/packages/targets/$(MAINTARGET)/$(SUBTARGET)
+	mkdir -p $(FW_TARGET_DIR)/packages/targets/$(MAINTARGET)/$(SUBTARGET)/packages
 	# copy packages
-	cp -a $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $(FW_TARGET_DIR)/packages/targets/$(MAINTARGET)/$(SUBTARGET)/
+	cp -a $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $(FW_TARGET_DIR)/packages/targets/$(MAINTARGET)/$(SUBTARGET)/packages/
 	# e.g. packages/packages/mips_34k the doublicated packages is correct!
 	cp -a $(LEDE_DIR)/bin/packages $(FW_TARGET_DIR)/packages/
 	rm -rf $(IB_BUILD_DIR)

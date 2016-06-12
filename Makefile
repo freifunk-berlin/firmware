@@ -46,6 +46,9 @@ openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
 	  rm -rf bin .config feeds.conf build_dir/target-* logs/
 	touch $@
 
+openwrt-clean-bin:
+	rm -rf $(OPENWRT_DIR)/bin
+
 # update openwrt and checkout specified commit
 openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
 .stamp-openwrt-updated: .stamp-openwrt-cleaned
@@ -110,7 +113,7 @@ endif
 
 # compile
 compile: stamp-clean-compiled .stamp-compiled
-.stamp-compiled: .stamp-prepared
+.stamp-compiled: .stamp-prepared openwrt-clean-bin
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 	touch $@
@@ -204,6 +207,6 @@ stamp-clean:
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
-.PHONY: openwrt-clean openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
+.PHONY: openwrt-clean openwrt-update openwrt-clean-bin patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:

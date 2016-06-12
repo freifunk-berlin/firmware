@@ -32,12 +32,15 @@ $(OPENWRT_DIR):
 
 # clean up openwrt working copy
 openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
-.stamp-openwrt-cleaned: config.mk | $(OPENWRT_DIR)
+.stamp-openwrt-cleaned: config.mk | $(OPENWRT_DIR) openwrt-clean-bin
 	cd $(OPENWRT_DIR); \
 	  ./scripts/feeds clean && \
 	  git clean -dff && git fetch && git reset --hard HEAD && \
-	  rm -rf bin .config feeds.conf build_dir/target-* logs/
+	  rm -rf .config feeds.conf build_dir/target-* logs/
 	touch $@
+
+openwrt-clean-bin:
+	rm -rf $(OPENWRT_DIR)/bin
 
 # update openwrt and checkout specified commit
 openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
@@ -97,7 +100,7 @@ prepare: stamp-clean-prepared .stamp-prepared
 
 # compile
 compile: stamp-clean-compiled .stamp-compiled
-.stamp-compiled: .stamp-prepared
+.stamp-compiled: .stamp-prepared openwrt-clean-bin
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 	touch $@
@@ -197,6 +200,6 @@ unpatch: $(OPENWRT_DIR)/patches
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
-.PHONY: openwrt-clean openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
+.PHONY: openwrt-clean openwrt-clean-bin openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:

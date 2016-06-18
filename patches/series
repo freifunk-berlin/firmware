@@ -1,8 +1,13 @@
 000-fix-mt7620-failsafe.patch
 001-rt2x00_allow_adhoc_and_ap.patch
-002-gl-ar150-cc.patch
-003-add_ramips-nexx-image.patch
-004-add_tpl-wr842v3.patch
+002-add_ramips-nexx-image.patch
+003-add_tpl-wr842v3.patch
+004-add_GL-AR150.patch
+005-add_GL-AR300.patch
+006-add_GL-DominoPi.patch
+007-add_GL-MT300A.patch
+008-add_GL-MT300N.patch
+009-add_GL-MT750.patch
 200-update-community-profiles.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch

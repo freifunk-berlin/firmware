@@ -9,6 +9,7 @@
 008-add_GL-MT300N.patch
 009-add_GL-MT750.patch
 010-tpl-CPE_enable_LNA.patch
+011-fix-gcc6-build.patch
 200-update-community-profiles.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch

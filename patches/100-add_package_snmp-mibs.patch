@@ -1,0 +1,62 @@
+commit 5eead6cd002b4d66f13123886c2d263ef94ec351
+Author: Sven Roederer <devel-sven@geroedel.de>
+Date:   Sat Jul 23 13:26:01 2016 +0200
+
+    net-snmp: add package snmp-mibs
+    
+    this installs the default MIBS-files under /usr/share/snmp/mibs
+
+diff --git a/feeds/packages/net/net-snmp/Makefile b/feeds/packages/net/net-snmp/Makefile
+index 5736e0d..86a70b1 100644
+--- a/feeds/packages/net/net-snmp/Makefile
++++ b/feeds/packages/net/net-snmp/Makefile
+@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=net-snmp
+ PKG_VERSION:=5.4.4
+-PKG_RELEASE:=1
++PKG_RELEASE:=2
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+ PKG_SOURCE_URL:=@SF/net-snmp
+@@ -88,6 +88,18 @@ $(call Package/net-snmp/Default/description)
+ endef
+ 
+ 
++define Package/snmp-mibs
++$(call Package/net-snmp/Default)
++  TITLE:=Open source SNMP implementation (MIB-files)
++endef
++
++define Package/snmp-mibs/description
++$(call Package/net-snmp/Default/description)
++ .
++ This package contains SNMP MIB-Files.
++endef
++
++
+ SNMP_MIB_MODULES_INCLUDED = \
+ 	host/hr_device \
+ 	host/hr_disk \
+@@ -164,7 +176,6 @@ CONFIGURE_ARGS += \
+ 	--enable-applications \
+ 	--disable-debugging \
+ 	--disable-manuals \
+-	--disable-mibs \
+ 	--disable-scripts \
+ 	--with-out-mib-modules="$(SNMP_MIB_MODULES_EXCLUDED)" \
+ 	--with-mib-modules="$(SNMP_MIB_MODULES_INCLUDED)" \
+@@ -250,7 +261,13 @@ define Package/snmp-utils/install
+ 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/snmp{get,set,status,test,trap,walk} $(1)/usr/bin/
+ endef
+ 
++define Package/snmp-mibs/install
++	$(INSTALL_DIR) $(1)/usr/share/snmp/mibs
++	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/snmp/mibs/* $(1)/usr/share/snmp/mibs/
++endef
++
+ $(eval $(call BuildPackage,libnetsnmp))
+ $(eval $(call BuildPackage,snmp-utils))
+ $(eval $(call BuildPackage,snmpd))
+ $(eval $(call BuildPackage,snmpd-static))
++$(eval $(call BuildPackage,snmp-mibs))

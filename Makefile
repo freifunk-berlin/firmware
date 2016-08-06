@@ -24,6 +24,13 @@ PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 
+ifndef BUILDTYPE
+$(error BUILDTYPE is not set)
+endif
+ifeq ($(filter release unstable,$(BUILDTYPE)),)
+ $(error invalid BUILDTYPE "$(BUILDTYPE)")
+endif
+
 default: firmwares
 
 # clone openwrt
@@ -38,6 +45,9 @@ openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
 	  git clean -dff && git fetch && git reset --hard HEAD && \
 	  rm -rf bin .config feeds.conf build_dir/target-* logs/
 	touch $@
+
+openwrt-clean-bin:
+	rm -rf $(OPENWRT_DIR)/bin
 
 # update openwrt and checkout specified commit
 openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
@@ -83,21 +93,31 @@ else
 endif
 
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev
+$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG)
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
-	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
-	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(OPENWRT_DIR)/include/version.mk
+.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config .stamp-build_rev
+	# look for correct REVISION or set just replace the line with the correct
+	grep -q REVISION:=$(FW_REVISION) $(OPENWRT_DIR)/include/version.mk || \
+	  sed -i "/REVISION:=/c\REVISION:=$(FW_REVISION)" $(OPENWRT_DIR)/include/version.mk
+ifeq ($(BUILDTYPE),unstable)
+	sed -i "/^CONFIG_VERSION_NUMBER=/d" $(OPENWRT_DIR)/.config
+	cat $(TARGET_CONFIG)|grep -e "^CONFIG_VERSION_NUMBER=" | \
+	  sed "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" >>$(OPENWRT_DIR)/.config
+endif
+ifdef REPOPATH
+	# escape "/" in PATH for SED by "\/"
+	sed -i 's,^CONFIG_VERSION_REPO=.*,CONFIG_VERSION_REPO=$(subst /,\/,$(REPOPATH)),g' $(OPENWRT_DIR)/.config
+endif
 	touch $@
 
 # compile
 compile: stamp-clean-compiled .stamp-compiled
-.stamp-compiled: .stamp-prepared
+.stamp-compiled: .stamp-prepared openwrt-clean-bin
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 	touch $@
@@ -111,7 +131,11 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
 	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(OPENWRT_DIR)/staging_dir/toolchain-*/bin))
+ifeq ($(BUILDTYPE),unstable)
 	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*+$(FW_REVISION)*.tar.bz2))
+else
+	$(eval IB_FILE := $(shell ls $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-ImageBuilder-*.tar.bz2))
+endif
 	cd $(IB_BUILD_DIR); tar xf $(IB_FILE)
 	# shorten dir name to prevent too long paths
 	mv $(IB_BUILD_DIR)/$(shell basename $(IB_FILE) .tar.bz2) $(IB_BUILD_DIR)/imgbldr
@@ -175,7 +199,11 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/OpenWrt-*.tar.bz2
+ifeq ($(BUILDTYPE),unstable)
 	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*+$(FW_REVISION)*.tar.bz2 $(FW_TARGET_DIR)/
+else
+	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.tar.bz2 $(FW_TARGET_DIR)/
+endif
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
 	rm -rf $$PACKAGES_DIR; \
@@ -191,6 +219,6 @@ stamp-clean:
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
-.PHONY: openwrt-clean openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
+.PHONY: openwrt-clean openwrt-update openwrt-clean-bin patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:

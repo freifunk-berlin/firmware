@@ -45,6 +45,13 @@ PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 
+ifndef BUILDTYPE
+$(error BUILDTYPE is not set)
+endif
+ifeq ($(filter release unstable,$(BUILDTYPE)),)
+ $(error invalid BUILDTYPE "$(BUILDTYPE)")
+endif
+
 default: firmwares
 
 # clone openwrt
@@ -122,8 +129,10 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
+ifeq ($(BUILDTYPE),unstable)
 	# always replace CONFIG_VERSION_CODE by FW_REVISION
 	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
+endif
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 

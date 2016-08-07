@@ -24,6 +24,13 @@ PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 
+ifndef BUILDTYPE
+$(error BUILDTYPE is not set)
+endif
+ifeq ($(filter release unstable,$(BUILDTYPE)),)
+ $(error invalid BUILDTYPE "$(BUILDTYPE)")
+endif
+
 default: firmwares
 
 # clone openwrt
@@ -88,14 +95,20 @@ endif
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
-	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
 .stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
-	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(OPENWRT_DIR)/include/version.mk
+	# look for correct REVISION or set just replace the line with the correct
+	grep -q REVISION:=$(FW_REVISION) $(OPENWRT_DIR)/include/version.mk || \
+	  sed -i "/REVISION:=/c\REVISION:=$(FW_REVISION)" $(OPENWRT_DIR)/include/version.mk
+ifeq ($(BUILDTYPE),unstable)
+	sed -i "/^CONFIG_VERSION_NUMBER=/d" $(OPENWRT_DIR)/.config
+	cat $(TARGET_CONFIG)|grep -e "^CONFIG_VERSION_NUMBER=" | \
+	  sed "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" >>$(OPENWRT_DIR)/.config
+endif
 	touch $@
 
 # compile

@@ -3,14 +3,6 @@
 -wpad-mini
 wpad
 
-# Defaults
-freifunk-berlin-dhcp-defaults
-freifunk-berlin-freifunk-defaults
-freifunk-berlin-network-defaults
-freifunk-berlin-olsrd-defaults
-freifunk-berlin-statistics-defaults
-freifunk-berlin-uhttpd-defaults
-
 # Common
 dnsmasq
 
@@ -30,21 +22,7 @@ uhttpd
 uhttpd-mod-ubus
 uhttpd-mod-tls
 px5g
-luci-mod-freifunk-ui
-luci-app-olsr
-luci-app-olsr-services
-luci-app-owm
-luci-app-owm-ant
-luci-app-owm-cmd
-luci-app-owm-gui
-luci-theme-bootstrap
-# GUI addon
-luci-i18n-base-de
-luci-i18n-base-en
-luci-i18n-olsr-de
-luci-i18n-olsr-en
-luci-i18n-statistics-de
-luci-i18n-statistics-en
+freifunk-berlin-wizard-frontend
 
 # OLSR
 olsrd
@@ -65,7 +43,6 @@ batctl
 kmod-ipv6
 
 # Statistics
-luci-app-statistics
 collectd
 collectd-mod-interface
 collectd-mod-iwinfo

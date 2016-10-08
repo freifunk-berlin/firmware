@@ -10,15 +10,6 @@
 -opkg
 -usign
 
-# Defaults
-freifunk-berlin-dhcp-defaults
-freifunk-berlin-firewall-defaults
-freifunk-berlin-freifunk-defaults
-freifunk-berlin-migration
-freifunk-berlin-network-defaults
-freifunk-berlin-olsrd-defaults
-community-profiles
-
 # Common
 dnsmasq
 qos-scripts
@@ -27,15 +18,9 @@ iwinfo
 libiwinfo-lua
 
 # GUI
-luci-theme-bootstrap
 uhttpd
 uhttpd-mod-ubus
-luci-app-ffwizard-berlin
-luci-mod-freifunk-ui
-luci-app-olsr
-luci-app-olsr-services
-luci-app-owm
-luci-app-owm-cmd
+freifunk-berlin-wizard-frontend
 
 # OLSR
 olsrd

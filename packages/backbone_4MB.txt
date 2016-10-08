@@ -8,14 +8,6 @@
 -ppp-mod-pppoe
 -wpad
 
-# Defaults
-freifunk-berlin-dhcp-defaults
-freifunk-berlin-freifunk-defaults
-freifunk-berlin-network-defaults
-freifunk-berlin-olsrd-defaults
-freifunk-berlin-statistics-defaults
-freifunk-berlin-uhttpd-defaults
-
 # Common
 dnsmasq
 
@@ -31,18 +23,10 @@ iwinfo
 libiwinfo-lua
 
 # GUI
-luci-theme-bootstrap
-# Bug in LuCI (missing nixio dependency)
-luci-lib-nixio
 uhttpd
 uhttpd-mod-ubus
 #px5g
-luci-mod-freifunk-ui
-luci-mod-admin-full
-luci-app-olsr
-luci-app-olsr-services
-luci-app-owm
-luci-app-owm-cmd
+freifunk-berlin-wizard-frontend
 
 # OLSR
 olsrd

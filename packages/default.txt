@@ -3,17 +3,6 @@
 -wpad-mini
 wpad
 
-# Defaults
-freifunk-berlin-dhcp-defaults
-freifunk-berlin-firewall-defaults
-freifunk-berlin-freifunk-defaults
-freifunk-berlin-migration
-freifunk-berlin-network-defaults
-freifunk-berlin-olsrd-defaults
-freifunk-berlin-statistics-defaults
-freifunk-berlin-uhttpd-defaults
-community-profiles
-
 # Common
 mtr
 ip
@@ -32,27 +21,7 @@ uhttpd
 uhttpd-mod-ubus
 uhttpd-mod-tls
 px5g
-luci-app-ffwizard-berlin
-luci-mod-freifunk-ui
-luci-app-olsr
-luci-app-firewall
-luci-app-olsr-services
-luci-app-owm
-luci-app-owm-ant
-luci-app-owm-cmd
-luci-app-owm-gui
-luci-theme-bootstrap
-# GUI addon
-luci-i18n-base-de
-luci-i18n-base-en
-luci-i18n-firewall-de
-luci-i18n-firewall-en
-luci-i18n-olsr-de
-luci-i18n-olsr-en
-luci-i18n-openvpn-de
-luci-i18n-openvpn-en
-luci-i18n-statistics-de
-luci-i18n-statistics-en
+freifunk-berlin-wizard-frontend
 
 # OLSR
 olsrd
@@ -73,11 +42,9 @@ batctl
 kmod-ipv6
 
 # VPN
-luci-app-openvpn
 openvpn-polarssl
 
 # Statistics
-luci-app-statistics
 collectd
 collectd-mod-interface
 collectd-mod-iwinfo

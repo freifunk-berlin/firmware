@@ -10,6 +10,7 @@
 009-add_GL-MT750.patch
 010-tpl-CPE_enable_LNA.patch
 011-fix-gcc6-build.patch
+012-iwinfo_add_nsm2locoxm.patch
 200-update-community-profiles.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch

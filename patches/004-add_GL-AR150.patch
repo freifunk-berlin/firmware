@@ -8,11 +8,11 @@ Date:   Thu May 5 11:02:05 2016 +0800
     
     Signed-off-by: Alfie Zhao <alzhao@gmail.com>
 
-diff --git a/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds b/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-index a4b355a..0bd0b35 100644
---- a/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-+++ b/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-@@ -181,6 +181,10 @@ dlan-pro-1200-ac)
+Index: openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
++++ openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
+@@ -188,6 +188,10 @@ dlan-pro-1200-ac)
  	ucidef_set_led_trigger_gpio "plcr" "dLAN" "devolo:error:dlan" "16" "0"
  	;;
  
@@ -23,11 +23,11 @@ index a4b355a..0bd0b35 100644
  gl-inet)
  	ucidef_set_led_netdev "lan" "LAN" "gl-connect:green:lan" "eth1"
  	ucidef_set_led_wlan "wlan" "WLAN" "gl-connect:red:wlan" "phy0tpt"
-diff --git a/target/linux/ar71xx/base-files/etc/uci-defaults/02_network b/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-index b2e15bb..c7ba875 100755
---- a/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-+++ b/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-@@ -379,6 +379,7 @@ dir-505-a1)
+Index: openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
++++ openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
+@@ -382,6 +382,7 @@ dir-505-a1)
  alfa-ap96 |\
  alfa-nx |\
  ap83 |\
@@ -35,11 +35,11 @@ index b2e15bb..c7ba875 100755
  gl-inet |\
  jwap003 |\
  pb42 |\
-diff --git a/target/linux/ar71xx/base-files/lib/ar71xx.sh b/target/linux/ar71xx/base-files/lib/ar71xx.sh
-index dab4d2c..813ff91 100755
---- a/target/linux/ar71xx/base-files/lib/ar71xx.sh
-+++ b/target/linux/ar71xx/base-files/lib/ar71xx.sh
-@@ -458,6 +458,9 @@ ar71xx_board_detect() {
+Index: openwrt/target/linux/ar71xx/base-files/lib/ar71xx.sh
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/lib/ar71xx.sh
++++ openwrt/target/linux/ar71xx/base-files/lib/ar71xx.sh
+@@ -461,6 +461,9 @@ ar71xx_board_detect() {
  		name="gl-inet"
  		gl_inet_board_detect
  		;;
@@ -49,11 +49,11 @@ index dab4d2c..813ff91 100755
  	*"EnGenius EPG5000")
  		name="epg5000"
  		;;
-diff --git a/target/linux/ar71xx/base-files/lib/upgrade/platform.sh b/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-index d025632..59ee053 100755
---- a/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-+++ b/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-@@ -211,6 +211,7 @@ platform_check_image() {
+Index: openwrt/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
++++ openwrt/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
+@@ -212,6 +212,7 @@ platform_check_image() {
  	dlan-pro-500-wp | \
  	dlan-pro-1200-ac | \
  	dragino2 | \
@@ -61,11 +61,11 @@ index d025632..59ee053 100755
  	epg5000 | \
  	esr1750 | \
  	esr900 | \
-diff --git a/target/linux/ar71xx/config-3.18 b/target/linux/ar71xx/config-3.18
-index e2ff826..3598a55 100644
---- a/target/linux/ar71xx/config-3.18
-+++ b/target/linux/ar71xx/config-3.18
-@@ -69,6 +69,7 @@ CONFIG_ATH79_MACH_ESR1750=y
+Index: openwrt/target/linux/ar71xx/config-3.18
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/config-3.18
++++ openwrt/target/linux/ar71xx/config-3.18
+@@ -70,6 +70,7 @@ CONFIG_ATH79_MACH_ESR1750=y
  CONFIG_ATH79_MACH_ESR900=y
  CONFIG_ATH79_MACH_EW_DORIN=y
  CONFIG_ATH79_MACH_F9K1115V2=y
@@ -73,11 +73,10 @@ index e2ff826..3598a55 100644
  CONFIG_ATH79_MACH_GL_INET=y
  CONFIG_ATH79_MACH_GS_MINIBOX_V1=y
  CONFIG_ATH79_MACH_GS_OOLITE=y
-diff --git a/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar150.c b/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar150.c
-new file mode 100644
-index 0000000..1e5e6ca
+Index: openwrt/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar150.c
+===================================================================
 --- /dev/null
-+++ b/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar150.c
++++ openwrt/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar150.c
 @@ -0,0 +1,125 @@
 +/*
 + *  GL_ar150 board support
@@ -204,10 +203,9 @@ index 0000000..1e5e6ca
 +}
 +
 +MIPS_MACHINE(ATH79_MACH_GL_AR150, "GL-AR150", "GL-AR150",gl_ar150_setup);
-diff --git a/target/linux/ar71xx/generic/profiles/gl-connect.mk b/target/linux/ar71xx/generic/profiles/gl-connect.mk
-deleted file mode 100644
-index e9377db..0000000
---- a/target/linux/ar71xx/generic/profiles/gl-connect.mk
+Index: openwrt/target/linux/ar71xx/generic/profiles/gl-connect.mk
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/generic/profiles/gl-connect.mk
 +++ /dev/null
 @@ -1,17 +0,0 @@
 -#
@@ -227,11 +225,10 @@ index e9377db..0000000
 -endef
 -
 -$(eval $(call Profile,GLINET))
-diff --git a/target/linux/ar71xx/generic/profiles/gli.mk b/target/linux/ar71xx/generic/profiles/gli.mk
-new file mode 100644
-index 0000000..89b2ead
+Index: openwrt/target/linux/ar71xx/generic/profiles/gli.mk
+===================================================================
 --- /dev/null
-+++ b/target/linux/ar71xx/generic/profiles/gli.mk
++++ openwrt/target/linux/ar71xx/generic/profiles/gli.mk
 @@ -0,0 +1,27 @@
 +#
 +# Copyright (C) 2013 OpenWrt.org
@@ -260,10 +257,10 @@ index 0000000..89b2ead
 +endef
 +
 +$(eval $(call Profile,GL-AR150))
-diff --git a/target/linux/ar71xx/image/Makefile b/target/linux/ar71xx/image/Makefile
-index 9a7acbd..fc932e6 100644
---- a/target/linux/ar71xx/image/Makefile
-+++ b/target/linux/ar71xx/image/Makefile
+Index: openwrt/target/linux/ar71xx/image/Makefile
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/image/Makefile
++++ openwrt/target/linux/ar71xx/image/Makefile
 @@ -144,6 +144,14 @@ define Device/weio
  endef
  TARGET_DEVICES += weio
@@ -279,11 +276,10 @@ index 9a7acbd..fc932e6 100644
  define Device/wndr3700
    BOARDNAME = WNDR3700
    NETGEAR_KERNEL_MAGIC = 0x33373030
-diff --git a/target/linux/ar71xx/patches-3.18/911-MIPS-ath79-add-gl_ar150.patch b/target/linux/ar71xx/patches-3.18/911-MIPS-ath79-add-gl_ar150.patch
-new file mode 100644
-index 0000000..31db581
+Index: openwrt/target/linux/ar71xx/patches-3.18/911-MIPS-ath79-add-gl_ar150.patch
+===================================================================
 --- /dev/null
-+++ b/target/linux/ar71xx/patches-3.18/911-MIPS-ath79-add-gl_ar150.patch
++++ openwrt/target/linux/ar71xx/patches-3.18/911-MIPS-ath79-add-gl_ar150.patch
 @@ -0,0 +1,39 @@
 +--- a/arch/mips/ath79/Kconfig
 ++++ b/arch/mips/ath79/Kconfig

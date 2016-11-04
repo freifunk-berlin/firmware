@@ -1,0 +1,10 @@
+--- a/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
++++ b/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+@@ -1,5 +1,7 @@
+ #!/bin/sh
+ 
++[ "$INTERFACE" = wan ] && exit
++
+ . /lib/functions.sh
+ . /lib/functions/network.sh
+ 

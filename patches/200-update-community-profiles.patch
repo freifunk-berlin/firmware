@@ -1,8 +1,8 @@
-diff --git a/contrib/package/community-profiles/files/etc/config/profile_berlin b/contrib/package/community-profiles/files/etc/config/profile_berlin
-index b4694c0..7fff870 100644
---- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
-+++ b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
-@@ -1,50 +1,38 @@
+Index: openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
+===================================================================
+--- openwrt.orig/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
++++ openwrt/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_berlin
+@@ -1,50 +1,39 @@
  config 'community' 'profile'
  	option 'name' 'Freifunk Berlin'
  	option 'homepage' 'http://berlin.freifunk.net'
@@ -17,6 +17,7 @@ index b4694c0..7fff870 100644
 -	list 'owm_api' 'http://api.openwifimap.net'
 -	list 'owm_api' 'http://owmapi.pberg.freifunk.net'
 -	option 'mapserver' 'http://map.pberg.freifunk.net/'
++	option 'owm_api' 'http://util.berlin.freifunk.net'
  
  config 'defaults' 'wifi_device'
  	option 'channel' '13'

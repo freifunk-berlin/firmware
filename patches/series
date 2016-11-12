@@ -1,6 +1,5 @@
-001-tools-mkfwimage2-remove-256-length-limit-for-partiti.patch
-002-rt2x00_allow_adhoc_and_ap.patch
-003-openwrt_add_ramips-nexx-image.patch
+001-rt2x00_allow_adhoc_and_ap.patch
+002-openwrt_add_ramips-nexx-image.patch
 200-update-community-profiles.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch

@@ -134,7 +134,7 @@ info $DEST_DIR
 info "Extract image builder $IB_FILE"
 tar xf "$IB_FILE" -C "$TEMP_DIR"
 
-for profile in "$PROFILES" ; do
+for profile in $PROFILES ; do
 	info "Building a profile for $profile"
 
 	# profiles can have a suffix. like 4mb devices get a smaller package list pro use case
@@ -171,4 +171,3 @@ for profile in "$PROFILES" ; do
 		make -C "${TEMP_DIR}/$(ls ${TEMP_DIR}/)" image "PROFILE=$profile" "PACKAGES=$packages" "BIN_DIR=${DEST_DIR}/${package_list}" $img_params
 	done
 done
-

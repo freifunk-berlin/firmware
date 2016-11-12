@@ -1,0 +1,8 @@
+--- /dev/null
++++ b/package/base-files/files/etc/uci-defaults/00_update_iwinfo
+@@ -0,0 +1,5 @@
++#!/bin/sh
++
++echo >>/usr/share/libiwinfo/hardware.txt '0x168c 0x002e 0x0777 0xe0a2    8      0  "Ubiquiti" "NanoStation Loco M2 (XM)"'
++
++exit 0

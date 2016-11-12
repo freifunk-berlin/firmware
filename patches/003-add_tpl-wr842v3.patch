@@ -13,23 +13,23 @@ Date:   Fri May 20 23:29:08 2016 +0200
     
     modified for OpenWRT-CC from LEDE-Project 0b45bec22c59cc6e6b2fa71dc9a88386c5587132
 
-diff --git a/target/linux/ar71xx/base-files/etc/diag.sh b/target/linux/ar71xx/base-files/etc/diag.sh
-index 5a184cd..4577bc7 100644
---- a/target/linux/ar71xx/base-files/etc/diag.sh
-+++ b/target/linux/ar71xx/base-files/etc/diag.sh
-@@ -267,6 +267,7 @@ get_status_led() {
- 	tl-wr841n-v8 | \
+Index: openwrt/target/linux/ar71xx/base-files/etc/diag.sh
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/etc/diag.sh
++++ openwrt/target/linux/ar71xx/base-files/etc/diag.sh
+@@ -280,6 +280,7 @@ get_status_led() {
+ 	tl-wr841n-v11 | \
  	tl-wa830re-v2 | \
  	tl-wr842n-v2 | \
 +	tl-wr842n-v3 | \
  	tl-wr941nd | \
  	tl-wr941nd-v5)
  		status_led="tp-link:green:system"
-diff --git a/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds b/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-index a4b355a..efedcd3 100644
---- a/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-+++ b/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-@@ -498,6 +498,16 @@ tl-wr842n-v2)
+Index: openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
++++ openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
+@@ -519,6 +519,16 @@ tl-wr842n-v2)
  	ucidef_set_led_usbdev "usb" "USB" "tp-link:green:3g" "1-1"
  	;;
  
@@ -46,23 +46,23 @@ index a4b355a..efedcd3 100644
  tl-wa801nd-v2 | \
  tl-wa901nd-v3)
  	ucidef_set_led_netdev "lan" "LAN" "tp-link:green:lan" "eth0"
-diff --git a/target/linux/ar71xx/base-files/etc/uci-defaults/02_network b/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-index b2e15bb..525673f 100755
---- a/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-+++ b/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-@@ -436,6 +436,7 @@ tl-wr741nd |\
- tl-wr741nd-v4 |\
+Index: openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
++++ openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
+@@ -440,6 +440,7 @@ tl-wr741nd-v4 |\
  tl-wr841n-v7 |\
  tl-wr841n-v9 |\
+ tl-wr841n-v11 |\
 +tl-wr842n-v3 |\
  whr-g301n |\
  whr-hp-g300n |\
  whr-hp-gn |\
-diff --git a/target/linux/ar71xx/base-files/lib/ar71xx.sh b/target/linux/ar71xx/base-files/lib/ar71xx.sh
-index dab4d2c..45be808 100755
---- a/target/linux/ar71xx/base-files/lib/ar71xx.sh
-+++ b/target/linux/ar71xx/base-files/lib/ar71xx.sh
-@@ -800,6 +800,9 @@ ar71xx_board_detect() {
+Index: openwrt/target/linux/ar71xx/base-files/lib/ar71xx.sh
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/lib/ar71xx.sh
++++ openwrt/target/linux/ar71xx/base-files/lib/ar71xx.sh
+@@ -821,6 +821,9 @@ ar71xx_board_detect() {
  	*"TL-WR842N/ND v2")
  		name="tl-wr842n-v2"
  		;;
@@ -72,43 +72,32 @@ index dab4d2c..45be808 100755
  	*TL-WR941ND)
  		name="tl-wr941nd"
  		;;
-diff --git a/target/linux/ar71xx/base-files/lib/upgrade/platform.sh b/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-index d025632..7e890bf 100755
---- a/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-+++ b/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-@@ -353,6 +353,7 @@ platform_check_image() {
- 	tl-wr841n-v8 | \
+Index: openwrt/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
++++ openwrt/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
+@@ -360,6 +360,7 @@ platform_check_image() {
  	tl-wr841n-v9 | \
+ 	tl-wr841n-v11 | \
  	tl-wr842n-v2 | \
 +	tl-wr842n-v3 | \
  	tl-wr941nd | \
  	tl-wr941nd-v5 | \
  	tl-wr941nd-v6 | \
-diff --git a/target/linux/ar71xx/files/arch/mips/ath79/mach-tl-wr841n-v9.c b/target/linux/ar71xx/files/arch/mips/ath79/mach-tl-wr841n-v9.c
-index 3e5c2a2..0209603 100644
---- a/target/linux/ar71xx/files/arch/mips/ath79/mach-tl-wr841n-v9.c
-+++ b/target/linux/ar71xx/files/arch/mips/ath79/mach-tl-wr841n-v9.c
-@@ -1,7 +1,8 @@
+Index: openwrt/target/linux/ar71xx/files/arch/mips/ath79/mach-tl-wr841n-v9.c
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/files/arch/mips/ath79/mach-tl-wr841n-v9.c
++++ openwrt/target/linux/ar71xx/files/arch/mips/ath79/mach-tl-wr841n-v9.c
+@@ -1,5 +1,5 @@
  /*
-- *  TP-LINK TL-WR841N/ND v9
-+ *  TP-LINK TL-WR841N/ND v9/TL-WR842N/ND v3
+- *  TP-LINK TL-WR841N/ND v9/v11
++ *  TP-LINK TL-WR841N/ND v9/v11/TL-WR842N/ND v3
   *
   *  Copyright (C) 2014 Matthias Schiffer <mschiffer@universe-factory.net>
-+ *  Copyright (C) 2016 Cezary Jackiewicz <cezary@eko.one.pl>
-  *
-  *  This program is free software; you can redistribute it and/or modify it
-  *  under the terms of the GNU General Public License version 2 as published
-@@ -19,6 +20,7 @@
- #include "dev-gpio-buttons.h"
- #include "dev-leds-gpio.h"
- #include "dev-m25p80.h"
-+#include "dev-usb.h"
- #include "dev-wmac.h"
- #include "machtypes.h"
- 
-@@ -33,6 +35,20 @@
- #define TL_WR841NV9_GPIO_BTN_RESET	12
- #define TL_WR841NV9_GPIO_BTN_WIFI	17
+  *  Copyright (C) 2016 Cezary Jackiewicz <cezary@eko.one.pl>
+@@ -49,6 +49,20 @@
+ #define TL_WR841NV11_GPIO_BTN_RESET	12
+ #define TL_WR841NV11_GPIO_BTN_WIFI	17
  
 +#define TL_WR842NV3_GPIO_LED_SYSTEM	2
 +#define TL_WR842NV3_GPIO_LED_WLAN	3
@@ -127,8 +116,8 @@ index 3e5c2a2..0209603 100644
  #define TL_WR841NV9_KEYS_POLL_INTERVAL	20	/* msecs */
  #define TL_WR841NV9_KEYS_DEBOUNCE_INTERVAL (3 * TL_WR841NV9_KEYS_POLL_INTERVAL)
  
-@@ -95,6 +111,68 @@ static struct gpio_keys_button tl_wr841n_v9_gpio_keys[] __initdata = {
- 	}
+@@ -151,6 +165,68 @@ static struct gpio_led tl_wr841n_v11_led
+ 	},
  };
  
 +static struct gpio_led tl_wr842n_v3_leds_gpio[] __initdata = {
@@ -193,13 +182,13 @@ index 3e5c2a2..0209603 100644
 +	}
 +};
 +
- 
  static void __init tl_ap143_setup(void)
  {
-@@ -142,3 +220,20 @@ static void __init tl_wr841n_v9_setup(void)
+ 	u8 *mac = (u8 *) KSEG1ADDR(0x1f01fc00);
+@@ -212,3 +288,21 @@ static void __init tl_wr841n_v11_setup(v
  
- MIPS_MACHINE(ATH79_MACH_TL_WR841N_V9, "TL-WR841N-v9", "TP-LINK TL-WR841N/ND v9",
- 	     tl_wr841n_v9_setup);
+ MIPS_MACHINE(ATH79_MACH_TL_WR841N_V11, "TL-WR841N-v11", "TP-LINK TL-WR841N/ND v11",
+ 	     tl_wr841n_v11_setup);
 +
 +static void __init tl_wr842n_v3_setup(void)
 +{
@@ -217,10 +206,11 @@ index 3e5c2a2..0209603 100644
 +
 +MIPS_MACHINE(ATH79_MACH_TL_WR842N_V3, "TL-WR842N-v3", "TP-LINK TL-WR842N/ND v3",
 +	     tl_wr842n_v3_setup);
-diff --git a/target/linux/ar71xx/image/Makefile b/target/linux/ar71xx/image/Makefile
-index 85a1857..2a65934 100644
---- a/target/linux/ar71xx/image/Makefile
-+++ b/target/linux/ar71xx/image/Makefile
++
+Index: openwrt/target/linux/ar71xx/image/Makefile
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/image/Makefile
++++ openwrt/target/linux/ar71xx/image/Makefile
 @@ -590,6 +590,13 @@ define Device/tl-wr842n-v2
      TPLINK_HWID := 0x8420002
  endef
@@ -239,16 +229,15 @@ index 85a1857..2a65934 100644
      DEVICE_PROFILE := TLWR841
      TPLINK_HWID := 0x08470008
  endef
--TARGET_DEVICES += tl-wr841-v8 tl-wr841-v9 tl-wr841-v10 tl-wr841-v11 tl-wr842n-v2 tl-wr843nd-v1 tl-wr847n-v8
-+TARGET_DEVICES += tl-wr841-v8 tl-wr841-v9 tl-wr841-v10 tl-wr841-v11 tl-wr842n-v2 tl-wr842n-v3 tl-wr843nd-v1 tl-wr847n-v8
+-TARGET_DEVICES += tl-wr841n-v8 tl-wr841n-v9 tl-wr841n-v10 tl-wr841n-v11 tl-wr842n-v2 tl-wr843nd-v1 tl-wr847n-v8
++TARGET_DEVICES += tl-wr841n-v8 tl-wr841n-v9 tl-wr841n-v10 tl-wr841n-v11 tl-wr842n-v2 tl-wr842n-v3 tl-wr843nd-v1 tl-wr847n-v8
  
  define Device/tl-wr941nd-v5
      $(Device/tplink-4mlzma)
-diff --git a/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-tl_wr842v3.patch b/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-tl_wr842v3.patch
-new file mode 100644
-index 0000000..da51afc
+Index: openwrt/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-tl_wr842v3.patch
+===================================================================
 --- /dev/null
-+++ b/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-tl_wr842v3.patch
++++ openwrt/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-tl_wr842v3.patch
 @@ -0,0 +1,34 @@
 +--- a/arch/mips/ath79/Kconfig
 ++++ b/arch/mips/ath79/Kconfig

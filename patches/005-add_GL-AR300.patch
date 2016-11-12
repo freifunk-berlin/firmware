@@ -9,11 +9,11 @@ Date:   Thu May 5 11:02:06 2016 +0800
     
     Signed-off-by: alzhao <alzhao@gmail.com>
 
-diff --git a/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds b/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-index 0bd0b35..7c00947 100644
---- a/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-+++ b/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
-@@ -185,6 +185,10 @@ gl-ar150)
+Index: openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
++++ openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/01_leds
+@@ -192,6 +192,10 @@ gl-ar150)
  	ucidef_set_led_wlan "wlan" "WLAN" "gl_ar150:wlan" "phy0tpt"
  	;;
  
@@ -24,11 +24,11 @@ index 0bd0b35..7c00947 100644
  gl-inet)
  	ucidef_set_led_netdev "lan" "LAN" "gl-connect:green:lan" "eth1"
  	ucidef_set_led_wlan "wlan" "WLAN" "gl-connect:red:wlan" "phy0tpt"
-diff --git a/target/linux/ar71xx/base-files/etc/uci-defaults/02_network b/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-index c7ba875..3cd97ec 100755
---- a/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-+++ b/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
-@@ -391,6 +391,12 @@ wpe72)
+Index: openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
++++ openwrt/target/linux/ar71xx/base-files/etc/uci-defaults/02_network
+@@ -394,6 +394,12 @@ wpe72)
  	ucidef_set_interfaces_lan_wan "eth1" "eth0"
  	;;
  
@@ -41,13 +41,13 @@ index c7ba875..3cd97ec 100755
  wpj344)
  	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
  	ucidef_add_switch "switch0" "1" "1"
-diff --git a/target/linux/ar71xx/base-files/lib/ar71xx.sh b/target/linux/ar71xx/base-files/lib/ar71xx.sh
-index 813ff91..bc5dc17 100755
---- a/target/linux/ar71xx/base-files/lib/ar71xx.sh
-+++ b/target/linux/ar71xx/base-files/lib/ar71xx.sh
-@@ -442,6 +442,9 @@ ar71xx_board_detect() {
- 	*"Dragino v2")
- 		name="dragino2"
+Index: openwrt/target/linux/ar71xx/base-files/lib/ar71xx.sh
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/lib/ar71xx.sh
++++ openwrt/target/linux/ar71xx/base-files/lib/ar71xx.sh
+@@ -445,6 +445,9 @@ ar71xx_board_detect() {
+ 	*"DW33D")
+ 		name="dw33d"
  		;;
 +	*"GL-AR300")
 +		name="gl-ar300"
@@ -55,11 +55,11 @@ index 813ff91..bc5dc17 100755
  	*"EAP300 v2")
  		name="eap300v2"
  		;;
-diff --git a/target/linux/ar71xx/base-files/lib/upgrade/platform.sh b/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-index 59ee053..0800642 100755
---- a/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-+++ b/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
-@@ -212,6 +212,7 @@ platform_check_image() {
+Index: openwrt/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
++++ openwrt/target/linux/ar71xx/base-files/lib/upgrade/platform.sh
+@@ -213,6 +213,7 @@ platform_check_image() {
  	dlan-pro-1200-ac | \
  	dragino2 | \
  	gl-ar150 | \
@@ -67,11 +67,11 @@ index 59ee053..0800642 100755
  	epg5000 | \
  	esr1750 | \
  	esr900 | \
-diff --git a/target/linux/ar71xx/config-3.18 b/target/linux/ar71xx/config-3.18
-index 3598a55..4365232 100644
---- a/target/linux/ar71xx/config-3.18
-+++ b/target/linux/ar71xx/config-3.18
-@@ -70,6 +70,7 @@ CONFIG_ATH79_MACH_ESR900=y
+Index: openwrt/target/linux/ar71xx/config-3.18
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/config-3.18
++++ openwrt/target/linux/ar71xx/config-3.18
+@@ -71,6 +71,7 @@ CONFIG_ATH79_MACH_ESR900=y
  CONFIG_ATH79_MACH_EW_DORIN=y
  CONFIG_ATH79_MACH_F9K1115V2=y
  CONFIG_ATH79_MACH_GL_AR150=y
@@ -79,11 +79,10 @@ index 3598a55..4365232 100644
  CONFIG_ATH79_MACH_GL_INET=y
  CONFIG_ATH79_MACH_GS_MINIBOX_V1=y
  CONFIG_ATH79_MACH_GS_OOLITE=y
-diff --git a/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar300.c b/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar300.c
-new file mode 100644
-index 0000000..62fafad
+Index: openwrt/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar300.c
+===================================================================
 --- /dev/null
-+++ b/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar300.c
++++ openwrt/target/linux/ar71xx/files/arch/mips/ath79/mach-gl-ar300.c
 @@ -0,0 +1,106 @@
 +/*
 + *  Domino board support
@@ -191,10 +190,10 @@ index 0000000..62fafad
 +}
 +
 +MIPS_MACHINE(ATH79_MACH_GL_AR300, "GL-AR300", "GL-AR300",gl_ar300_setup);
-diff --git a/target/linux/ar71xx/generic/profiles/gli.mk b/target/linux/ar71xx/generic/profiles/gli.mk
-index 89b2ead..e399739 100644
---- a/target/linux/ar71xx/generic/profiles/gli.mk
-+++ b/target/linux/ar71xx/generic/profiles/gli.mk
+Index: openwrt/target/linux/ar71xx/generic/profiles/gli.mk
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/generic/profiles/gli.mk
++++ openwrt/target/linux/ar71xx/generic/profiles/gli.mk
 @@ -25,3 +25,14 @@ define Profile/GL-AR150/Description
  endef
  
@@ -210,10 +209,10 @@ index 89b2ead..e399739 100644
 +endef
 +
 +$(eval $(call Profile,GL-AR300))
-diff --git a/target/linux/ar71xx/image/Makefile b/target/linux/ar71xx/image/Makefile
-index fc932e6..59bc919 100644
---- a/target/linux/ar71xx/image/Makefile
-+++ b/target/linux/ar71xx/image/Makefile
+Index: openwrt/target/linux/ar71xx/image/Makefile
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/image/Makefile
++++ openwrt/target/linux/ar71xx/image/Makefile
 @@ -152,6 +152,14 @@ define Device/gl-ar150
  endef
  TARGET_DEVICES += gl-ar150
@@ -229,11 +228,10 @@ index fc932e6..59bc919 100644
  define Device/wndr3700
    BOARDNAME = WNDR3700
    NETGEAR_KERNEL_MAGIC = 0x33373030
-diff --git a/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-gl_ar300.patch b/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-gl_ar300.patch
-new file mode 100644
-index 0000000..f7cfb57
+Index: openwrt/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-gl_ar300.patch
+===================================================================
 --- /dev/null
-+++ b/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-gl_ar300.patch
++++ openwrt/target/linux/ar71xx/patches-3.18/912-MIPS-ath79-add-gl_ar300.patch
 @@ -0,0 +1,39 @@
 +--- a/arch/mips/ath79/Kconfig
 ++++ b/arch/mips/ath79/Kconfig

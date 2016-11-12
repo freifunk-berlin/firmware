@@ -1,13 +1,17 @@
-Index: openwrt/package/base-files/files/etc/banner
+Index: lede/package/base-files/files/etc/banner
 ===================================================================
---- openwrt.orig/package/base-files/files/etc/banner
-+++ openwrt/package/base-files/files/etc/banner
-@@ -1,14 +1,21 @@
--  _______                     ________        __
-- |       |.-----.-----.-----.|  |  |  |.----.|  |_
-- |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
-- |_______||   __|_____|__|__||________||__|  |____|
--          |__| W I R E L E S S   F R E E D O M
+--- lede.orig/package/base-files/files/etc/banner	2016-06-02 02:43:57.601381806 +0200
++++ lede/package/base-files/files/etc/banner	2016-06-02 02:46:17.928201514 +0200
+@@ -1,10 +1,20 @@
+-     _________
+-    /        /\      _    ___ ___  ___
+-   /  LE    /  \    | |  | __|   \| __|
+-  /    DE  /    \   | |__| _|| |) | _|
+- /________/  LE  \  |____|___|___/|___|                      lede-project.org
+- \        \   DE /
+-  \    LE  \    /  -----------------------------------------------------------
+-   \  DE    \  /    %N (%C, %R)
+-    \________\/    -----------------------------------------------------------
 +  _____        _  __             _
 + |  ___|      (_)/ _|           | |
 + | |_ _ __ ___ _| |_ _   _ _ __ | | __
@@ -15,24 +19,16 @@ Index: openwrt/package/base-files/files/etc/banner
 + | | | | |  __/ | | | |_| | | | |   <
 + \_| |_|  \___|_|_|  \__,_|_| |_|_|\_\
 +
-  -----------------------------------------------------
-- CHAOS CALMER (%C, %R)
-- -----------------------------------------------------
--  * 1 1/2 oz Gin            Shake with a glassful
--  * 1/4 oz Triple Sec       of broken ice and pour
--  * 3/4 oz Lime Juice       unstrained into a goblet.
--  * 1 1/2 oz Orange Juice
--  * 1 tsp. Grenadine Syrup
 + Firmware Berlin (%N %C rev %R)
 + %P - %S
 + https://wiki.freifunk.net/Berlin:Firmware
 + https://github.com/freifunk-berlin
-  -----------------------------------------------------
++ -----------------------------------------------------
 +
 + If you find bugs please report them at:
 +
 +   https://github.com/freifunk-berlin/firmware/issues
 +
 + For questions write a mail to <berlin@berlin.freifunk.net>
-+ or check https://berlin.freifunk.net/contact for our weekly meetings.
-+
++ or come to our weekly meetings at cbase/wikimedia in Berlin.
+ 

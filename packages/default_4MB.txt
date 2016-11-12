@@ -30,8 +30,5 @@ olsrd-mod-jsoninfo
 olsrd-mod-nameservice
 kmod-ipip
 
-# IPv6
-kmod-ipv6
-
 # VPN
 openvpn-polarssl

@@ -1,5 +1,100 @@
 # Changelog
 
+## Version 0.2.0
+
+* OpenWrt ChaosCalmer of Nov 8, 2016 (1b6dc2e)
+  * kernel 3.18.44
+  * improved Security, hardware-support
+  * fixes bricking NanoStations XM with original-firmware >5.5
+* OpenWrt packages of Oct 29, 2016 (e3e9f34)
+  * Collectd V5.4.2
+* OpenWrt LuCI of Nov 8, 2016 (9047456)
+* OpenWrt routing of Jun 7, 2016 (d580d71)
+  * olsr v0.9.0.3
+  * batman-adv: 2016.1 bugfixes & stability updates
+  * OONF release 0.12.1
+
+### packages
+```
+patches: fix issue#402 (bypass VPN on mesh)
+snmp-templates: add template to query Ubiquiti AirMax via SNMP
+configs: add package snmp-utils
+configs: do not build ffwizard-pberg
+[packages] use luci-mod-freifunk-ui
+enable CONFIG_PACKAGE_kmod-ppp for PPPoE/PPP/mobile connections
+[luci-app-ffwizard-berlin] do not use ffwatchd
+packages/default_4MB: remove opkg and usign
+build kernel modules for usb-ethernet tethering
+[packages]: build luci-app-olsr-viz as package
+[configs] build kernel modules for cifs/ext4/vfat, nls, USB ACM/serial/storage
+[configs] build luci-app-splash
+[configs] build olsrd2
+remove l2gvpn package
+remove libwebsocket and websocket server implementation
+remove auto-ipv6-node package
+remove auto-ipv6-gw package
+remove ffwizard-pberg
+remove luci-app-chat
+```
+
+### hardware-support
+```
+add OpenWRT-support for TP-link WR-842v3
+OpenWRT added support for TPlink WR841-v11 and others
+add TP-link MR3220 for ar71xx
+add GL.inet AR150, AR300, DominioPi, MT300A+N, MT750
+add GL-AR150 support
+add support for D-Link DIR505 router
+Add profile for TP-Link TL-WA801N/ND routers.
+add version 1.1 support to CPE210/220/510/520
+Add support for Archer C7 v2
+add ramips config (Nexx WT3020)
+add GL.iNet 6416A
+```
+
+### feeds
+```
+[patches] update OWM API URL
+[olsrd-defaults] fix filename of olsr6 watchdog file
+network-defaults: add workaround for too high txpower on NanoStation M2
+[ffwizard] fix replacing VPN key/cert
+fork freifunk-ui from luci-mod-freifunk-ui
+[ffwizard] set start and limit in dhcp configuration
+[freifunk-berlin-openvpn-files] start OpenVPN via hotplug script, use --local for binding to WAN IP only
+Replace dyngw ping check target with stable ones
+[ffwizard] remove all references to uci "system.system.latlon"
+[ff-berlin-statistics-defaults]: change ping host for collectd
+[ffwizard] [migration] use ffvpn for QoS rather than wan
+[uhttpd-defaults]: do not force a redirect to https
+[owm] add --dry-run option for debugging
+```
+
+### config
+```
+[configs] disable kernel Swap-support
+[configs] use LUCI_SRCDIET=y to create smaller rootfs
+[configs] disable SSP_SUPPORT
+[configs] strip kernel exports
+```
+
+### build
+```
+patches: add PATCHES.rst to introduce a counting structure
+Makefile: add target openwrt-clean-bin
+Makefile: add unpatch target
+[patches] run postinst-script just before building the image
+split up configs into common part and arch-specific part
+Makefile: create VERSION file with git branch and revision
+Set VERSION and REVISION string from this firmware repository
+```
+
+## Version 0.1.2
+
+```
+[patches] update OLSRd to v0.9.0.2
+[feeds] update firmware-packages (OpenVPN mssfix)
+```
+
 ## Version 0.1.1
 
 * https://github.com/freifunk-berlin/firmware/commits/v0.1.1

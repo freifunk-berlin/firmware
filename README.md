@@ -8,21 +8,45 @@ The firmware is based on vanilla [OpenWrt](https://wiki.openwrt.org/start) "Chao
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 0.2.0 "Kathleen" - 2015-xx-xx
-...
+## Release Note 0.2.0 "Kathleen" - 2016-11-27
+* fixes:
+  * Security fixes (kernel, applications)
+  * fix unwanted access of ff-clients to private LAN (issue #402)
+  * fix for incorrect DHCP-address-range (issue #311)
+  * adjust tx-power of Ubiquiti Nanostations M2 from too high level (issue #381)
+  * fix olsr watchdog & startup (issue #400)
+  * switch from deactivated host "freifunk.net" for olsrd-dyngw (packages-berlin@5a79963)
+* enhancements:
+  * more supported hardware
+  * include OLSRv2, LuCI-splash
+  * flashdrive support
+  * template package to monitor Ubiquiti AirOS routers via SNMP
+  * avoid routing of VPN03-traffic over mesh
+  * use VPN03 interface for traffic-shaping and prioritization
+  * reupload of VPN03 certificates in ffwizard
+  * redirect to ffwizard even when password is set
+* other changes
+  * remove opkg from all "4MB"-variants
+  * remove unused "latlon" property from UCI system.system
+  * remove ffwatchdog in favor of procd
+  * don't update OWM without configured router-position
+
 
 ## Features
-* based on [OpenWrt](https://wiki.openwrt.org/start) Chaos Calmer
+* based on [OpenWrt](https://wiki.openwrt.org/start) Chaos Calmer (15.05.1)
+  * Linux 3.18.44
+  * OLSR 0.9.0.3
+  * B.A.T.M.A.N. 2016.1
 * primary router target: TP-Link WDR 3500/3600/4300
 * custom package lists for different settings
   * "default" variant includes ffwizard, openvpn, BATMAN
   * "backbone" variant excludes ffwizard and openvpn, includes more debugging tools
   * "default_4MB" variant excludes public router statistics page (luci-mod-freifunk), monitoring (collectd), BATMAN
   * "backbone_4MB" variant excludes ffwizard, luci-mod-freifunk, openvpn, collectd, includes BATMAN and more debugging tools
-* includes updated OLSRD and BATMAN
 * new OLSR setup and configuration:
   * SmartGateway for gateway selection (e.g. honors uplink speed)
   * dynamic gateway plugin for uplink connectivity tests (gwcheck script removed)
+    on hosts: 85.214.20.141, 213.73.91.35, 194.150.168.168
   * freifunk-policyrouting fixed/patched for VPN03 setup
 * new configuration [wizard](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin)
   * starts after first boot and guides new users through the configuration of the router

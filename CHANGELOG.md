@@ -54,6 +54,7 @@ add GL.iNet 6416A
 
 ### feeds
 ```
+[patches] OWM: use firmware.name and firmware.revision correctly
 [patches] update OWM API URL
 [olsrd-defaults] fix filename of olsr6 watchdog file
 network-defaults: add workaround for too high txpower on NanoStation M2

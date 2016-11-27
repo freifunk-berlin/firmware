@@ -30,6 +30,7 @@ New features like a new network concept will be part of future releases.
   * remove unused "latlon" property from UCI system.system
   * remove ffwatchdog in favor of procd
   * don't update OWM without configured router-position
+  * OWM: use firmware.name and firmware.revision correctly (issue 406)
 
 
 ## Features

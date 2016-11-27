@@ -1,0 +1,109 @@
+commit e6c1abf7f3154f000b7c0c89a776e8979a16536c
+Author: Sven Roederer <freifunk@it-solutions.geroedel.de>
+Date:   Sun Nov 27 15:57:31 2016 +0100
+
+    owm: send release-name in field firmware.name
+    
+    currently the complete release-name is send in field firmware.release only
+    ("firmware":{"name":"","revision":"Freifunk Berlin kathleen 0.1.2"}). With
+    new OpenWrt 15.05 / LuCI automatically the revision is added to this.
+    
+    this makes sorting / grouping by relase difficult and requires some
+    extra steps on client-side.
+    
+    This change corrects the datafields as follows:
+    "firmware":{"name":"Freifunk Berlin kathleen 0.2.0","revision":"git affe"}
+    - "name" is DISTRIB_ID + DISTRIB_CODENAME + DISTRIB_RELEASE
+    - "revision" is DISTRIB_REVISION
+    - use owm.get_version in place of luci.version
+    - rely on "/etc/openwrt_release" as original luci.version
+
+diff --git a/utils/luci-app-owm/Makefile b/utils/luci-app-owm/Makefile
+index a19618f..d854a26 100644
+--- a/feeds/packages_berlin/utils/luci-app-owm/Makefile
++++ b/feeds/packages_berlin/utils/luci-app-owm/Makefile
+@@ -8,7 +8,7 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=luci-app-owm
+-PKG_RELEASE:=0.4.13
++PKG_RELEASE:=0.4.14
+ 
+ 
+ PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
+diff --git a/utils/luci-app-owm/luasrc/owm.lua b/utils/luci-app-owm/luasrc/owm.lua
+index 4aae13c..e430ce2 100644
+--- a/feeds/packages_berlin/utils/luci-app-owm/luasrc/owm.lua
++++ b/feeds/packages_berlin/utils/luci-app-owm/luasrc/owm.lua
+@@ -18,7 +18,6 @@ local string = require "string"
+ local sys = require "luci.sys"
+ local uci = require "luci.model.uci".cursor_state()
+ local util = require "luci.util"
+-local version = require "luci.version"
+ local webadmin = require "luci.tools.webadmin"
+ local status = require "luci.tools.status"
+ local json = require "luci.json"
+@@ -34,6 +33,8 @@ local ip = require "luci.ip"
+ local ipairs, os, pairs, next, type, tostring, tonumber, error, print =
+ 	ipairs, os, pairs, next, type, tostring, tonumber, error, print
+ 
++local dofile, _G = dofile, _G
++
+ --- LuCI OWM-Library
+ -- @cstyle	instance
+ module "luci.owm"
+@@ -60,6 +61,37 @@ function sysinfo_for_kathleen020()
+         return system, model
+ end
+ 
++-- inspired by luci.version
++--- Returns the system version info build from /etc/openwrt_release
++--- switch from luci.version which always includes
++--- the revision in the "distversion" field and gives empty "distname"
++-- @ return	the releasename 
++--         	(DISTRIB_ID + DISTRIB_CODENAME + DISTRIB_RELEASE)
++-- @ return	the releaserevision
++--         	(DISTRIB_REVISION)
++function get_version()
++	local distname = ""
++	local distrev = ""
++	local version = {}
++
++	dofile("/etc/openwrt_release")
++	if _G.DISTRIB_ID then
++		distname = _G.DISTRIB_ID .. " "
++	end
++	if _G.DISTRIB_CODENAME then
++		distname = distname .. _G.DISTRIB_CODENAME .. " "
++	end
++	if _G.DISTRIB_RELEASE then
++		distname = distname .. _G.DISTRIB_RELEASE
++	end
++	if _G.DISTRIB_REVISION then
++		distrev = _G.DISTRIB_REVISION
++	end
++	version['distname'] = distname
++	version['distrevision'] = distrev
++	return version
++end
++
+ function fetch_olsrd_config()
+ 	local jsonreq4 = ""
+ 	local jsonreq6 = ""
+@@ -248,6 +280,7 @@ function get()
+ 	local _ubus = bus.connect()
+ 	local _ubusclicache = { }
+ 	local position = get_position()
++	local version = get_version()
+ --	local _, object
+ --	for _, object in ipairs(_ubus:objects()) do
+ --		local _ubusclicache = object:match("^clicache%.(.+)")
+@@ -282,7 +315,7 @@ function get()
+ 	--	distname=version.distname,
+ 		name=version.distname, --owm
+ 	--	distversion=version.distversion,
+-		revision=version.distversion --owm
++		revision=version.distrevision --owm
+ 	}
+ 
+ 	root.freifunk = {}

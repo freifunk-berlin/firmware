@@ -18,3 +18,4 @@
 701-luci-freifunk-policyrouting-berlin.patch
 702-luci-bootstrap-input-css.patch
 703-policyrouting_fix_bypass-vpn.patch
+800-fix_owm-firmware-name.patch

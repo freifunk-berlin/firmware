@@ -41,6 +41,7 @@ lede-clean: stamp-clean-lede-cleaned .stamp-lede-cleaned
 
 lede-clean-bin:
 	rm -rf $(LEDE_DIR)/bin
+	rm -rf $(LEDE_DIR)/build_dir/target-*/*-{imagebuilder,sdk}-*
 
 # update lede and checkout specified commit
 lede-update: stamp-clean-lede-updated .stamp-lede-updated

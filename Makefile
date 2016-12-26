@@ -1,8 +1,8 @@
 include config.mk
 
 # get main- and subtarget name from TARGET
-MAINTARGET=$(word 1, $(subst _, ,$(TARGET)))
-SUBTARGET=$(word 2, $(subst _, ,$(TARGET)))
+MAINTARGET=$(word 1, $(subst -, ,$(TARGET)))
+SUBTARGET=$(word 2, $(subst -, ,$(TARGET)))
 
 GIT_REPO=git config --get remote.origin.url
 GIT_BRANCH=git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'

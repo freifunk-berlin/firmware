@@ -11,16 +11,16 @@ REVISION=git describe --always
 # set dir and file names
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
-TARGET_CONFIG=$(FW_DIR)/configs/common.config $(FW_DIR)/configs/$(TARGET).config
+TARGET_CONFIG=$(FW_DIR)/configs/common.config $(FW_DIR)/configs/$(MAINTARGET)-$(SUBTARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
-FW_TARGET_DIR=$(FW_DIR)/firmwares/$(TARGET)
+FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 UMASK=umask 022
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
 
 # profiles to be built (router models)
-PROFILES=$(shell cat $(FW_DIR)/profiles/$(TARGET).profiles)
+PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 

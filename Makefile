@@ -98,14 +98,14 @@ $(LEDE_DIR)/files: $(FW_DIR)/embedded-files
 # lede config
 $(LEDE_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(LEDE_DIR)/dl
 	cat $(TARGET_CONFIG) >$(LEDE_DIR)/.config
-	sed -i "/^CONFIG_VERSION_NUMBER=/ s/\"$$/\+$(FW_REVISION)\"/" $(LEDE_DIR)/.config
+	# always replace CONFIG_VERSION_CODE by FW_REVISION
+	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(LEDE_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(LEDE_DIR) defconfig
 
 # prepare lede working copy
 prepare: stamp-clean-prepared .stamp-prepared $(LEDE_DIR)/files
 .stamp-prepared: .stamp-patched $(LEDE_DIR)/.config
-	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(LEDE_DIR)/include/version.mk
 	touch $@
 
 # compile

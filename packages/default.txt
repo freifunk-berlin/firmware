@@ -30,7 +30,7 @@ libiwinfo-lua
 # GUI-basics
 uhttpd
 uhttpd-mod-ubus
-px5g
+px5g-mbedtls
 luci-app-ffwizard-berlin
 luci-mod-freifunk-ui
 luci-app-olsr
@@ -70,7 +70,7 @@ batctl
 
 # VPN
 luci-app-openvpn
-openvpn-polarssl
+openvpn-mbedtls
 
 # Statistics
 luci-app-statistics

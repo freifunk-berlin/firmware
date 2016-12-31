@@ -28,7 +28,7 @@ libiwinfo-lua
 # GUI-basics
 uhttpd
 uhttpd-mod-ubus
-px5g
+px5g-mbedtls
 luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-olsr-services

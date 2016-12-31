@@ -36,7 +36,7 @@ luci-theme-bootstrap
 luci-lib-nixio
 uhttpd
 uhttpd-mod-ubus
-#px5g
+#px5g-mbedtls
 luci-mod-freifunk-ui
 luci-mod-admin-full
 luci-app-olsr

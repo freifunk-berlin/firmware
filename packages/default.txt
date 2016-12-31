@@ -70,7 +70,7 @@ batctl
 
 # VPN
 luci-app-openvpn
-openvpn-mbedtls
+openvpn-openssl
 
 # Statistics
 luci-app-statistics

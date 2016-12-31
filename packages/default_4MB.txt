@@ -46,4 +46,4 @@ olsrd-mod-nameservice
 kmod-ipip
 
 # VPN
-openvpn-mbedtls
+openvpn-openssl

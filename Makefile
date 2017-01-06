@@ -16,6 +16,11 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
+# test for existing $TARGET-config or abort
+ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
+$(error config for $(TARGET) not defined)
+endif
+
 # if any of the following files have been changed: clean up lede dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
 

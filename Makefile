@@ -148,6 +148,8 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	for file in `find $(RELPATH) -name "openwrt*-squashfs-*.bin"` ; do mv $$file $${file/squashfs-/}; done
 	# 2) remove all TARGET names (e.g. ar71xx-generic) from filename
 	for file in `find $(RELPATH) -name "openwrt*-$(MAINTARGET)-$(SUBTARGET)-*.bin"` ; do mv $$file $${file/$(MAINTARGET)-$(SUBTARGET)-/}; done
+	# in addition rename all files starting with openwrt- to kathleen-
+	for file in `find $(RELPATH) -name "openwrt-*"` ; do mv $$file $${file/openwrt-/kathleen-}; done
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/OpenWrt-*.tar.bz2

@@ -144,7 +144,6 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/OpenWrt-*.tar.bz2
 	cp -a $(OPENWRT_DIR)/bin/$(MAINTARGET)/OpenWrt-*.tar.bz2 $(FW_TARGET_DIR)/
-	mkdir -p $(FW_TARGET_DIR)/packages/targets/$(MAINTARGET)/$(SUBTARGET)
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
 	rm -rf $$PACKAGES_DIR; \

@@ -138,7 +138,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/*.tar.xz
 	for file in $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
-	  if [ -e $$file ]; then cp -a $$file $(FW_TARGET_DIR)/ ; fi \
+	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
 	done
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \

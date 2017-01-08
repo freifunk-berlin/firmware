@@ -16,6 +16,10 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
+ifeq ($(shell hostname -f),buildbot)
+SET_BUILDBOT=yes
+endif
+
 ifeq ($(SET_BUILDBOT),no)
 undefine IS_BUILDBOT
 else

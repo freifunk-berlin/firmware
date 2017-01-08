@@ -16,6 +16,10 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
+ifdef IS_BUILDBOT
+$(info running on buildslave, maybe special actions will apply ...)
+endif
+
 # test for existing $TARGET-config or abort
 ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
 $(error config for $(TARGET) not defined)
@@ -121,6 +125,10 @@ compile: stamp-clean-compiled .stamp-compiled
 .stamp-compiled: .stamp-prepared lede-clean-bin
 	$(UMASK); \
 	  $(MAKE) -C $(LEDE_DIR) $(MAKE_ARGS)
+# check if running via buildbot and remove the build_dir folder to save some space
+ifdef IS_BUILDBOT
+	rm -rf $(LEDE_DIR)/build_dir
+endif
 	touch $@
 
 # fill firmwares-directory with:

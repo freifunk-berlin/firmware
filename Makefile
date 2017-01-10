@@ -60,10 +60,9 @@ $(LEDE_DIR)/feeds.conf: .stamp-lede-updated feeds.conf
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 .stamp-feeds-updated: $(LEDE_DIR)/feeds.conf unpatch
-	+cd $(LEDE_DIR); \
-	  ./scripts/feeds uninstall -a && \
-	  ./scripts/feeds update && \
-	  ./scripts/feeds install -a
+	cd $(LEDE_DIR); ./scripts/feeds uninstall -a
+	cd $(LEDE_DIR); ./scripts/feeds update
+	cd $(LEDE_DIR); ./scripts/feeds install -a
 	touch $@
 
 # prepare patch

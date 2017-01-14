@@ -91,6 +91,10 @@ $(FW_DIR)/dl:
 $(OPENWRT_DIR)/dl: $(FW_DIR)/dl
 	ln -s $(FW_DIR)/dl $(OPENWRT_DIR)/dl
 
+# make embedded-files avail to openwrt
+$(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
+	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
+
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
@@ -99,7 +103,7 @@ $(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENW
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
 # prepare openwrt working copy
-prepare: stamp-clean-prepared .stamp-prepared
+prepare: stamp-clean-prepared .stamp-prepared $(OPENWRT_DIR)/files
 .stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
 	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(OPENWRT_DIR)/include/version.mk
 	touch $@

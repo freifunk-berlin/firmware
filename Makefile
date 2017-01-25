@@ -91,10 +91,6 @@ $(FW_DIR)/dl:
 $(OPENWRT_DIR)/dl: $(FW_DIR)/dl
 	ln -s $(FW_DIR)/dl $(OPENWRT_DIR)/dl
 
-# make embedded-files avail to openwrt
-$(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
-	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
-
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
@@ -104,7 +100,7 @@ $(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENW
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config .stamp-embedfiles
+.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config
 	sed -i 's,^# REVISION:=.*,REVISION:=$(FW_REVISION),g' $(OPENWRT_DIR)/include/version.mk
 	touch $@
 
@@ -149,7 +145,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	    PACKAGES_LIST=$$(grep -v '^\#' $$PACKAGES_FILE_ABS | tr -t '\n' ' '); \
 	    $(UMASK);\
 	    echo -e "\n *** Building Kathleen image file for profile \"$${PROFILE}\" with packages list \"$${PACKAGES_FILE}\".\n"; \
-	    $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" FILES=$(FW_DIR)/embedded-files $$CUSTOM_POSTINST_PARAM || exit 1; \
+	    $(MAKE) -C $(IB_BUILD_DIR)/imgbldr image PROFILE="$$PROFILE" PACKAGES="$$PACKAGES_LIST" BIN_DIR="$(IB_BUILD_DIR)/imgbldr/bin/$$PACKAGES_FILE" $$CUSTOM_POSTINST_PARAM || exit 1; \
 	  done; \
 	done
 	mkdir -p $(FW_TARGET_DIR)

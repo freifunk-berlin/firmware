@@ -14,6 +14,7 @@
 100-add_package_snmp-mibs.patch
 200-update-community-profiles.patch
 600-imagebuilder-custom-postinst-script.patch
+700-banner-info.patch
 701-luci-freifunk-policyrouting-berlin.patch
 702-luci-bootstrap-input-css.patch
 703-policyrouting_fix_bypass-vpn.patch

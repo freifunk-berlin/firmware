@@ -70,16 +70,20 @@ $0 -i <IB_FILE> -p <profile>
 -l <dir> (optional) directory to the package lists
 -n <dir> (optional) path to a temp directory
 -u <list> usecase. seperate multiple usecases by a space
+-e <dir> (optional) directory of files to directtly include into image
 "
 }
 
-while getopts "di:l:n:p:t:u:" option; do
+while getopts "di:l:n:p:t:u:e:" option; do
         case "$option" in
 		d)
 			DEBUG=y
 			;;
                 i)
                         IB_FILE="$OPTARG"
+                        ;;
+                e)
+                        MBED_DIR="$OPTARG"
                         ;;
                 p)
                         PROFILES="$OPTARG"
@@ -161,6 +165,12 @@ for profile in $PROFILES ; do
 		if [ -f "$hookfile" ]; then
 			info "Using a post inst hook."
 			img_params="$img_params CUSTOM_POSTINST_SCRIPT=$hookfile"
+		fi
+
+		if [ -n "$MBED_DIR" ]; then
+			mbed_dir=$(to_absolute_path "${MBED_DIR}")
+			info "embedding files from $mbed_dir."
+			img_params="$img_params FILES=$mbed_dir"
 		fi
 
 		packages=$(parse_pkg_list_file "${PKGLIST_DIR}/${package_list}.txt")

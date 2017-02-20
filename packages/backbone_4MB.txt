@@ -36,7 +36,7 @@ luci-theme-bootstrap
 luci-lib-nixio
 uhttpd
 uhttpd-mod-ubus
-#px5g
+#px5g-mbedtls
 luci-mod-freifunk-ui
 luci-mod-admin-full
 luci-app-olsr
@@ -56,8 +56,5 @@ kmod-ipip
 kmod-batman-adv
 alfred
 batctl
-
-# IPv6
-kmod-ipv6
 
 # Statistics/collectd not included in 4MB image

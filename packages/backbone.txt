@@ -28,8 +28,7 @@ libiwinfo-lua
 # GUI-basics
 uhttpd
 uhttpd-mod-ubus
-uhttpd-mod-tls
-px5g
+px5g-mbedtls
 luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-olsr-services
@@ -60,9 +59,6 @@ kmod-ipip
 kmod-batman-adv
 alfred
 batctl
-
-# IPv6
-kmod-ipv6
 
 # Statistics
 luci-app-statistics

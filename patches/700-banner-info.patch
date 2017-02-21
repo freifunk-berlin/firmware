@@ -10,7 +10,7 @@ Index: lede/package/base-files/files/etc/banner
 - /________/  LE  \  |____|___|___/|___|                      lede-project.org
 - \        \   DE /
 -  \    LE  \    /  -----------------------------------------------------------
--   \  DE    \  /    %N (%C, %R)
+-   \  DE    \  /    %N (%V, %C)
 -    \________\/    -----------------------------------------------------------
 +  _____        _  __             _
 + |  ___|      (_)/ _|           | |
@@ -19,7 +19,7 @@ Index: lede/package/base-files/files/etc/banner
 + | | | | |  __/ | | | |_| | | | |   <
 + \_| |_|  \___|_|_|  \__,_|_| |_|_|\_\
 +
-+ Firmware Berlin (%N %C rev %R)
++ Firmware Berlin (%N %V rev %C)
 + %P - %S
 + https://wiki.freifunk.net/Berlin:Firmware
 + https://github.com/freifunk-berlin

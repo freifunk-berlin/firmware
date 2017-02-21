@@ -170,7 +170,9 @@ for profile in $PROFILES ; do
 		if [ -n "$MBED_DIR" ]; then
 			mbed_dir=$(to_absolute_path "${MBED_DIR}")
 			info "embedding files from $mbed_dir."
-			img_params="$img_params FILES=$mbed_dir"
+			if [ $(ls $mbed_dir | wc -l) -gt 0 ]; then
+			    img_params="$img_params FILES=$mbed_dir"
+			fi
 		fi
 
 		packages=$(parse_pkg_list_file "${PKGLIST_DIR}/${package_list}.txt")

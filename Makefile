@@ -91,7 +91,9 @@ $(FW_DIR)/dl:
 $(LEDE_DIR)/dl: $(FW_DIR)/dl
 	ln -s $(FW_DIR)/dl $(LEDE_DIR)/dl
 
-# make embedded-files avail to lede
+# create embedded-files/ and make it avail to lede
+$(FW_DIR)/embedded-files:
+	mkdir $@
 $(LEDE_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(LEDE_DIR)/files
 
@@ -104,8 +106,8 @@ $(LEDE_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(LEDE_DIR
 	  $(MAKE) -C $(LEDE_DIR) defconfig
 
 # prepare lede working copy
-prepare: stamp-clean-prepared .stamp-prepared $(LEDE_DIR)/files
-.stamp-prepared: .stamp-patched $(LEDE_DIR)/.config
+prepare: stamp-clean-prepared .stamp-prepared
+.stamp-prepared: .stamp-patched $(LEDE_DIR)/.config $(LEDE_DIR)/files
 	touch $@
 
 # compile

@@ -11,7 +11,6 @@
 010-tpl-CPE_enable_LNA.patch
 011-tpl-wr841_names.patch
 012-iwinfo_add_nsm2locoxm.patch
-100-add_package_snmp-mibs.patch
 200-update-community-profiles.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch

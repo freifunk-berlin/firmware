@@ -1,6 +1,7 @@
 000-add_ubnt-erx-sfp.patch
 001-rt2x00_allow_adhoc_and_ap.patch
 002-add_ramips-nexx-image.patch
+003-netifd-update-to-git-HEAD-version.patch
 004-openwrt-release_use_configured_revision.patch
 005-hostapd_nolegacy_by_default.patch
 300-use_olsrd0903.patch

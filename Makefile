@@ -14,6 +14,7 @@ LEDE_DIR=$(FW_DIR)/lede
 TARGET_CONFIG=$(FW_DIR)/configs/common.config $(FW_DIR)/configs/$(MAINTARGET)-$(SUBTARGET).config
 IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
+VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
 # if any of the following files have been changed: clean up lede dir
@@ -122,29 +123,12 @@ compile: stamp-clean-compiled .stamp-compiled
 #  * imagebuilder file
 #  * packages directory
 firmwares: stamp-clean-firmwares .stamp-firmwares
-.stamp-firmwares: .stamp-compiled
+.stamp-firmwares: .stamp-compiled $(VERSION_FILE)
 	rm -rf $(IB_BUILD_DIR)
 	mkdir -p $(IB_BUILD_DIR)
 	$(eval TOOLCHAIN_PATH := $(shell printf "%s:" $(LEDE_DIR)/staging_dir/toolchain-*/bin))
 	$(eval IB_FILE := $(shell ls -tr $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
 	mkdir -p $(FW_TARGET_DIR)
-	# Create version info file
-	GIT_BRANCH_ESC=$(shell $(GIT_BRANCH) | tr '/' '_'); \
-	VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt; \
-	echo "https://github.com/freifunk-berlin/firmware" > $$VERSION_FILE; \
-	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $$VERSION_FILE; \
-	echo "Firmware: git branch \"$$GIT_BRANCH_ESC\", revision $(FW_REVISION)" >> $$VERSION_FILE; \
-	# add lede revision with data from config.mk \
-	LEDE_REVISION=`cd $(LEDE_DIR); $(REVISION)`; \
-	echo "OpenWRT: repository from $(LEDE_SRC), git branch \"$(LEDE_COMMIT)\", revision $$LEDE_REVISION" >> $$VERSION_FILE; \
-	# add feed revisions \
-	for FEED in `cd $(LEDE_DIR); ./scripts/feeds list -n`; do \
-	  FEED_DIR=$(addprefix $(LEDE_DIR)/feeds/,$$FEED); \
-	  FEED_GIT_REPO=`cd $$FEED_DIR; $(GIT_REPO)`; \
-	  FEED_GIT_BRANCH_ESC=`cd $$FEED_DIR; $(GIT_BRANCH) | tr '/' '_'`; \
-	  FEED_REVISION=`cd $$FEED_DIR; $(REVISION)`; \
-	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $$VERSION_FILE; \
-	done
 	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
 	# get relative path of firmwaredir
 	$(eval RELPATH := $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' "$(FW_TARGET_DIR)" "$(FW_DIR)" ))
@@ -169,6 +153,25 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	cp -a $(LEDE_DIR)/bin/packages $$PACKAGES_DIR/
 	rm -rf $(IB_BUILD_DIR)
 	touch $@
+
+$(VERSION_FILE): .stamp-prepared
+	mkdir -p $(FW_TARGET_DIR)
+	# Create version info file
+	GIT_BRANCH_ESC=$(shell $(GIT_BRANCH) | tr '/' '_'); \
+	echo "https://github.com/freifunk-berlin/firmware" > $(VERSION_FILE); \
+	echo "https://wiki.freifunk.net/Berlin:Firmware" >> $(VERSION_FILE); \
+	echo "Firmware: git branch \"$$GIT_BRANCH_ESC\", revision $(FW_REVISION)" >> $(VERSION_FILE); \
+	# add lede revision with data from config.mk \
+	LEDE_REVISION=`cd $(LEDE_DIR); $(REVISION)`; \
+	echo "OpenWRT: repository from $(LEDE_SRC), git branch \"$(LEDE_COMMIT)\", revision $$LEDE_REVISION" >> $(VERSION_FILE); \
+	# add feed revisions \
+	for FEED in `cd $(LEDE_DIR); ./scripts/feeds list -n`; do \
+	  FEED_DIR=$(addprefix $(LEDE_DIR)/feeds/,$$FEED); \
+	  FEED_GIT_REPO=`cd $$FEED_DIR; $(GIT_REPO)`; \
+	  FEED_GIT_BRANCH_ESC=`cd $$FEED_DIR; $(GIT_BRANCH) | tr '/' '_'`; \
+	  FEED_REVISION=`cd $$FEED_DIR; $(REVISION)`; \
+	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $(VERSION_FILE); \
+	done
 
 stamp-clean-%:
 	rm -f .stamp-$*

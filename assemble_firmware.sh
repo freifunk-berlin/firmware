@@ -154,7 +154,13 @@ for profile in $PROFILES ; do
 			package_list="${usecase}"
 		fi
 
-		info "Building usecase $usecase"
+		if [ -e "${PKGLIST_DIR}/${package_list}.txt" ]; then
+			info "Building usecase $usecase"
+		else
+			error "usecase $usecase not defined"
+			exit 1
+		fi
+
 		info "Using package list $package_list"
 
 		hookfile=$(to_absolute_path "${PKGLIST_DIR}/${package_list}.sh")

@@ -12,7 +12,6 @@ REVISION=git describe --always
 FW_DIR=$(shell pwd)
 LEDE_DIR=$(FW_DIR)/lede
 TARGET_CONFIG=$(FW_DIR)/configs/common.config $(FW_DIR)/configs/$(MAINTARGET)-$(SUBTARGET).config
-IB_BUILD_DIR=$(FW_DIR)/imgbldr_tmp
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
@@ -124,8 +123,6 @@ compile: stamp-clean-compiled .stamp-compiled
 #  * packages directory
 firmwares: stamp-clean-firmwares .stamp-firmwares
 .stamp-firmwares: .stamp-compiled $(VERSION_FILE)
-	rm -rf $(IB_BUILD_DIR)
-	mkdir -p $(IB_BUILD_DIR)
 	$(eval IB_FILE := $(shell ls -tr $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
 	mkdir -p $(FW_TARGET_DIR)
 	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
@@ -150,7 +147,6 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	cp -a $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
 	# e.g. packages/packages/mips_34k the doublicated packages is correct! \
 	cp -a $(LEDE_DIR)/bin/packages $$PACKAGES_DIR/
-	rm -rf $(IB_BUILD_DIR)
 	touch $@
 
 $(VERSION_FILE): .stamp-prepared

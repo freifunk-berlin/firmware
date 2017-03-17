@@ -118,22 +118,11 @@ compile: stamp-clean-compiled .stamp-compiled
 	touch $@
 
 # fill firmwares-directory with:
-#  * firmwares built with imagebuilder
 #  * imagebuilder file
 #  * packages directory
+#  * firmware-images are already in place (target images)
 firmwares: stamp-clean-firmwares .stamp-firmwares
-.stamp-firmwares: .stamp-compiled $(VERSION_FILE)
-	$(eval IB_FILE := $(shell ls -tr $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
-	mkdir -p $(FW_TARGET_DIR)
-	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
-	# get relative path of firmwaredir
-	$(eval RELPATH := $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' "$(FW_TARGET_DIR)" "$(FW_DIR)" ))
-	# shorten firmware of images to prevent some (TP-Link) firmware-upgrader from complaining
-	# see https://github.com/freifunk-berlin/firmware/issues/178
-	# 1) remove all "squashfs" from filenames
-	for file in `find $(RELPATH) -name "freifunk-berlin-*-squashfs-*.bin"` ; do mv $$file $${file/squashfs-/}; done
-	# 2) remove all TARGET names (e.g. ar71xx-generic) from filename
-	for file in `find $(RELPATH) -name "freifunk-berlin-*-$(MAINTARGET)-$(SUBTARGET)-*.bin"` ; do mv $$file $${file/$(MAINTARGET)-$(SUBTARGET)-/}; done
+.stamp-firmwares: .stamp-images $(VERSION_FILE)
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/*.tar.xz
@@ -167,6 +156,21 @@ $(VERSION_FILE): .stamp-prepared
 	  FEED_REVISION=`cd $$FEED_DIR; $(REVISION)`; \
 	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $(VERSION_FILE); \
 	done
+
+# build our firmware-images with the Imagebuilder and store them in FW_TARGET_DIR
+.stamp-images: .stamp-compiled
+	$(eval IB_FILE := $(shell ls -tr $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
+	mkdir -p $(FW_TARGET_DIR)
+	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
+	# get relative path of firmwaredir
+	$(eval RELPATH := $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' "$(FW_TARGET_DIR)" "$(FW_DIR)" ))
+	# shorten firmware of images to prevent some (TP-Link) firmware-upgrader from complaining
+	# see https://github.com/freifunk-berlin/firmware/issues/178
+	# 1) remove all "squashfs" from filenames
+	for file in `find $(RELPATH) -name "freifunk-berlin-*-squashfs-*.bin"` ; do mv $$file $${file/squashfs-/}; done
+	# 2) remove all TARGET names (e.g. ar71xx-generic) from filename
+	for file in `find $(RELPATH) -name "freifunk-berlin-*-$(MAINTARGET)-$(SUBTARGET)-*.bin"` ; do mv $$file $${file/$(MAINTARGET)-$(SUBTARGET)-/}; done
+	touch $@
 
 stamp-clean-%:
 	rm -f .stamp-$*

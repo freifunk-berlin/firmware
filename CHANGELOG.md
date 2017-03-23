@@ -1,5 +1,34 @@
 # Changelog
 
+## Version 0.3.0
+
+* OpenWrt ChaosCalmer of Mar 09, 2017 (9a1fd3e)
+  * kernel 3.18.45
+* OpenWrt packages of Apr 8, 2017 (b5f4718)
+* OpenWrt LuCI of Jan 13, 2017 (b89b022)
+* Berlin-packages of Apr 9, 2017 (6bd5486)
+
+### packages
+```
+dhcp-defaults: quieten dnsmasq
+collectd-addons/dnsmasq: package added
+```
+
+### hardware-support
+```
+build GL.inet AR300, MT300a, MT300n
+build Buffalo WZRHPG300NH2, WZRHPAG300H, WZR600DHP, WZRHPG450H
+build TPlink-WR941
+```
+
+### build
+Makefile is compatible to the current LEDE-compatible 
+```
+convert target-names to include always MAINTARGET and SUBTARGET
+Makefile: split off firmware assemble from Makefile
+append subtarget name to all platforms
+```
+
 ## Version 0.2.0
 
 * OpenWrt ChaosCalmer of Nov 8, 2016 (1b6dc2e)

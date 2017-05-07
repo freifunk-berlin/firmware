@@ -139,12 +139,13 @@ See the "Features" section above for a description of the purpose of each packag
 make TARGET=mpc85xx PACKAGES_LIST_DEFAULT=backbone
 ```
 
-The default target is `ar71xx`. At the moment we support the following targets:
+The default target is `ar71xx-generic`. At the moment we support the following targets:
 
-* ar71xx
-* ar71xx_mikrotik
-* mpc85xx
-* x86
+* ar71xx-generic
+* ar71xx-mikrotik
+* mpc85xx-generic
+* ramips-mt7620
+* x86-generic
 
 You can find configs for these targets in `configs/`.
 

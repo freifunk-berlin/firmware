@@ -145,6 +145,7 @@ The default target is `ar71xx-generic`. At the moment we support the following t
 * ar71xx-mikrotik
 * mpc85xx-generic
 * ramips-mt7620
+* ramips-mt7621
 * x86-generic
 
 You can find configs for these targets in `configs/`.

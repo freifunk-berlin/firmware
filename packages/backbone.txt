@@ -9,6 +9,7 @@ freifunk-berlin-freifunk-defaults
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-statistics-defaults
+freifunk-berlin-system-defaults
 freifunk-berlin-uhttpd-defaults
 
 # Common

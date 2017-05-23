@@ -29,10 +29,11 @@ libiwinfo-lua
 
 # OLSR
 olsrd
-olsrd-mod-arprefresh
+#olsrd-mod-arprefresh
 olsrd-mod-dyn-gw
 olsrd-mod-jsoninfo
 olsrd-mod-nameservice
+olsrd-mod-watchdog
 kmod-ipip
 
 # BATMAN

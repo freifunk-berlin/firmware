@@ -16,6 +16,11 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
+# test for existing $TARGET-config or abort
+ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
+$(error config for $(TARGET) not defined)
+endif
+
 # if any of the following files have been changed: clean up lede dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
 
@@ -41,6 +46,7 @@ lede-clean: stamp-clean-lede-cleaned .stamp-lede-cleaned
 
 lede-clean-bin:
 	rm -rf $(LEDE_DIR)/bin
+	rm -rf $(LEDE_DIR)/build_dir/target-*/*-{imagebuilder,sdk}-*
 
 # update lede and checkout specified commit
 lede-update: stamp-clean-lede-updated .stamp-lede-updated
@@ -59,10 +65,9 @@ $(LEDE_DIR)/feeds.conf: .stamp-lede-updated feeds.conf
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 .stamp-feeds-updated: $(LEDE_DIR)/feeds.conf unpatch
-	+cd $(LEDE_DIR); \
-	  ./scripts/feeds uninstall -a && \
-	  ./scripts/feeds update && \
-	  ./scripts/feeds install -a
+	cd $(LEDE_DIR); ./scripts/feeds uninstall -a
+	cd $(LEDE_DIR); ./scripts/feeds update
+	cd $(LEDE_DIR); ./scripts/feeds install -a
 	touch $@
 
 # prepare patch

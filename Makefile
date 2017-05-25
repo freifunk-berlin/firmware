@@ -162,9 +162,25 @@ $(VERSION_FILE): .stamp-prepared
 	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $(VERSION_FILE); \
 	done
 
+images: .stamp-images
+
 # build our firmware-images with the Imagebuilder and store them in FW_TARGET_DIR
+#
+# check if "IB_FILE" is defined on commandline for building just some
+# firmware-images with the precomiled Imagebuilder
+# if it is --> use this value for proceeding
+#              and have no prerequirements for ".stamp-images"
+# if it's not: --> use the IB_FILE from the regular lovcation is
+#                  gets created during build, in this case a
+#                  prerequirement is a build LEDE
+ifeq ($(origin IB_FILE),command line)
+.stamp-images: .FORCE
+	$(info IB_FILE explicitly defined; using it for building firmware-images)
+else
 .stamp-images: .stamp-compiled
+	$(info IB_FILE not defined; assuming called from inside regular build)
 	$(eval IB_FILE := $(shell ls -tr $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
+endif
 	mkdir -p $(FW_TARGET_DIR)
 	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
 	# get relative path of firmwaredir

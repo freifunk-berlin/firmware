@@ -138,6 +138,11 @@ See the "Features" section above for a description of the purpose of each packag
 ```
 make TARGET=mpc85xx PACKAGES_LIST_DEFAULT=backbone
 ```
+in addition you can build your own image from a prebuilt imagebuilder by something like:
+
+```
+make images IB_FILE=<file> TARGET=... PACKAGES_LIST_DEFAULT=...
+```
 
 The default target is `ar71xx-generic`. At the moment we support the following targets:
 

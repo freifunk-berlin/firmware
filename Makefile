@@ -25,7 +25,8 @@ endif
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
 
 # profiles to be built (router models)
-PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
+IB_JOBS=$(shell ./ib-generate-jobs.sh -m $(MAINTARGET) -s $(SUBTARGET) -p "$(PACKAGES_LIST_DEFAULT)")
+IB_JOB_TARGETS=$(addprefix ib-job/,$(IB_JOBS))
 
 FW_REVISION=$(shell $(REVISION))
 
@@ -166,7 +167,7 @@ $(VERSION_FILE): .stamp-prepared
 .stamp-images: .stamp-compiled
 	$(eval IB_FILE := $(shell ls -tr $(LEDE_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
 	mkdir -p $(FW_TARGET_DIR)
-	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
+	$(MAKE) -f ib-generate-firmware.makefile $(IB_JOB_TARGETS) IB_FILE=$(IB_FILE) IB_JOB_TARGETS="$(IB_JOB_TARGETS)" DEST_DIR=$(FW_TARGET_DIR)
 	# get relative path of firmwaredir
 	$(eval RELPATH := $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' "$(FW_TARGET_DIR)" "$(FW_DIR)" ))
 	# shorten firmware of images to prevent some (TP-Link) firmware-upgrader from complaining

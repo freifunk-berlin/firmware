@@ -75,37 +75,37 @@ $0 -i <IB_FILE> -p <profile>
 }
 
 while getopts "di:l:n:p:t:u:e:" option; do
-        case "$option" in
+	case "$option" in
 		d)
 			DEBUG=y
 			;;
-                i)
-                        IB_FILE="$OPTARG"
-                        ;;
-                e)
-                        MBED_DIR="$OPTARG"
-                        ;;
-                p)
-                        PROFILES="$OPTARG"
-                        ;;
-                t)
-                        DEST_DIR="$OPTARG"
-                        ;;
-                l)
-                        PKGLIST_DIR="$OPTARG"
-                        ;;
-                n)
-                        TEMP_DIR="$OPTARG"
-                        ;;
+		i)
+			IB_FILE="$OPTARG"
+			;;
+		e)
+			MBED_DIR="$OPTARG"
+			;;
+		p)
+			PROFILES="$OPTARG"
+			;;
+		t)
+			DEST_DIR="$OPTARG"
+			;;
+		l)
+			PKGLIST_DIR="$OPTARG"
+			;;
+		n)
+			TEMP_DIR="$OPTARG"
+			;;
 		u)
-                        USECASES="$OPTARG"
-                        ;;
-                *)
-                        echo "Invalid argument '-$OPTARG'."
-                        usage
-                        exit 1
-                        ;;
-        esac
+			USECASES="$OPTARG"
+			;;
+		*)
+			echo "Invalid argument '-$OPTARG'."
+			usage
+			exit 1
+			;;
+	esac
 done
 shift $((OPTIND - 1))
 
@@ -177,7 +177,7 @@ for profile in $PROFILES ; do
 			mbed_dir=$(to_absolute_path "${MBED_DIR}")
 			info "embedding files from $mbed_dir."
 			if [ $(ls $mbed_dir | wc -l) -gt 0 ]; then
-			    img_params="$img_params FILES=$mbed_dir"
+				img_params="$img_params FILES=$mbed_dir"
 			fi
 		fi
 

@@ -26,6 +26,7 @@ qos-scripts
 firewall
 iwinfo
 libiwinfo-lua
+tcpdump
 
 # GUI-basics
 uhttpd

@@ -79,6 +79,7 @@ pre-patch: stamp-clean-pre-patch .stamp-pre-patch
 patch: stamp-clean-patched .stamp-patched
 .stamp-patched: .stamp-pre-patch
 	cd $(LEDE_DIR); quilt push -a
+	rm -rf $(LEDE_DIR)/tmp
 	touch $@
 
 .stamp-build_rev: .FORCE
@@ -203,6 +204,7 @@ stamp-clean:
 unpatch: $(LEDE_DIR)/patches
 # RC = 2 of quilt --> nothing to be done
 	cd $(LEDE_DIR); quilt pop -a -f || [ $$? = 2 ] && true
+	rm -rf $(LEDE_DIR)/tmp
 	rm -f .stamp-patched
 
 clean: stamp-clean .stamp-lede-cleaned

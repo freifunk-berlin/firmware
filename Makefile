@@ -1,5 +1,9 @@
 include config.mk
 
+ifneq ($(TARGET),ramips-mt7621)
+$(error I shall not build for target $(TARGET))
+endif
+
 # get main- and subtarget name from TARGET
 MAINTARGET=$(word 1, $(subst -, ,$(TARGET)))
 SUBTARGET=$(word 2, $(subst -, ,$(TARGET)))

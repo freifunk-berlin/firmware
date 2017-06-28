@@ -18,6 +18,7 @@ freifunk-berlin-migration
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-system-defaults
+freifunk-berlin-uplink-tunnelberlin-files
 community-profiles
 
 # Common

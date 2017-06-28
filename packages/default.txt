@@ -13,6 +13,7 @@ freifunk-berlin-olsrd-defaults
 freifunk-berlin-statistics-defaults
 freifunk-berlin-system-defaults
 freifunk-berlin-uhttpd-defaults
+freifunk-berlin-uplink-tunnelberlin-files
 community-profiles
 
 # Common

@@ -1,0 +1,89 @@
+-ppp
+-ppp-mod-pppoe
+-wpad-mini
+wpad
+
+# Defaults
+freifunk-berlin-dhcp-defaults
+freifunk-berlin-firewall-defaults
+freifunk-berlin-freifunk-defaults
+freifunk-berlin-migration
+freifunk-berlin-network-defaults
+freifunk-berlin-olsrd-defaults
+freifunk-berlin-statistics-defaults
+freifunk-berlin-system-defaults
+freifunk-berlin-uhttpd-defaults
+community-profiles
+
+# Common
+mtr
+ip
+iperf
+tmux
+vnstat
+ethtool
+dnsmasq
+qos-scripts
+firewall
+iwinfo
+libiwinfo-lua
+tcpdump
+
+# GUI-basics
+uhttpd
+uhttpd-mod-ubus
+px5g-mbedtls
+libustream-mbedtls
+luci-app-ffwizard-berlin
+luci-mod-freifunk-ui
+luci-app-olsr
+luci-app-firewall
+luci-app-olsr-services
+luci-app-owm
+luci-app-owm-ant
+luci-app-owm-cmd
+luci-app-owm-gui
+luci-theme-bootstrap
+# GUI addon
+luci-i18n-base-de
+luci-i18n-base-en
+luci-i18n-firewall-de
+luci-i18n-firewall-en
+luci-i18n-olsr-de
+luci-i18n-olsr-en
+#luci-i18n-openvpn-de
+#luci-i18n-openvpn-en
+luci-i18n-statistics-de
+luci-i18n-statistics-en
+
+# OLSR
+olsrd
+olsrd-mod-arprefresh
+olsrd-mod-dyn-gw
+olsrd-mod-jsoninfo
+olsrd-mod-txtinfo
+olsrd-mod-nameservice
+olsrd-mod-watchdog
+kmod-ipip
+
+# BATMAN
+kmod-batman-adv
+alfred
+batctl
+
+# Uplink
+#luci-app-openvpn
+#openvpn-openssl
+freifunk-berlin-uplink-notunnel-files
+
+# Statistics
+luci-app-statistics
+collectd
+collectd-mod-interface
+collectd-mod-iwinfo
+collectd-mod-network
+collectd-mod-olsrd
+collectd-mod-rrdtool
+collectd-mod-ping
+collectd-mod-uptime
+collectd-mod-memory

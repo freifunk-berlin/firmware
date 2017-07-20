@@ -1,0 +1,25 @@
+diff -ur openwrt.orig/package/utils/busybox/Config-defaults.in openwrt/package/utils/busybox/Config-defaults.in
+--- openwrt.orig/package/utils/busybox/Config-defaults.in	2017-07-12 10:47:13.242874481 +0200
++++ openwrt/package/utils/busybox/Config-defaults.in	2017-07-12 11:03:17.000000000 +0200
+@@ -2238,7 +2238,7 @@
+ 	default n
+ config BUSYBOX_DEFAULT_FEATURE_TRACEROUTE_USE_ICMP
+ 	bool
+-	default n
++	default y
+ config BUSYBOX_DEFAULT_TUNCTL
+ 	bool
+ 	default n
+diff -ur openwrt.orig/package/utils/busybox/Makefile openwrt/package/utils/busybox/Makefile
+--- openwrt.orig/package/utils/busybox/Makefile	2017-07-12 10:47:13.242874481 +0200
++++ openwrt/package/utils/busybox/Makefile	2017-07-12 11:03:17.000000000 +0200
+@@ -9,7 +9,7 @@
+
+ PKG_NAME:=busybox
+ PKG_VERSION:=1.23.2
+-PKG_RELEASE:=1
++PKG_RELEASE:=2
+ PKG_FLAGS:=essential
+
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+

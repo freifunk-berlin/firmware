@@ -1,5 +1,7 @@
 001-rt2x00_allow_adhoc_and_ap.patch
 002-add_ramips-nexx-image.patch
+004-fix_x86domu-xen.patch
+005-fix_x86domu-console.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch
 701-luci-freifunk-policyrouting-berlin.patch

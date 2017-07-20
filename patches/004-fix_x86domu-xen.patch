@@ -1,0 +1,50 @@
+From: Baptiste Jonglez <git at bitsofnetworks.org>
+
+This is a backport of 641a65fd062987a456216cc4fa91ff2910528261 in master.
+
+This change re-enables PAE for the 32-bit x86 subtarget, which is
+interesting in its own right but also necessary for Xen support.
+
+Commit af1d1ebd ("x86: enable 4G high memory support for generic (32bit)
+subtarget") inadvertently disabled both PAE and Xen support.
+
+Fixes: FS#908
+
+Cc: Daniel Golle <daniel at makrotopia.org>
+Cc: Jo-Philipp Wich <jo at mein.io>
+Signed-off-by: Baptiste Jonglez <git at bitsofnetworks.org>
+---
+ target/linux/x86/generic/config-default | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/target/linux/x86/generic/config-default b/target/linux/x86/generic/config-default
+index 1a14c270bc..c4ca4fd396 100644
+--- a/target/linux/x86/generic/config-default
++++ b/target/linux/x86/generic/config-default
+@@ -42,6 +42,7 @@ CONFIG_AGP_INTEL=y
+ # CONFIG_AGP_SWORKS is not set
+ # CONFIG_AGP_VIA is not set
+ # CONFIG_APM is not set
++CONFIG_ARCH_DMA_ADDR_T_64BIT=y
+ CONFIG_ARCH_ENABLE_SPLIT_PMD_PTLOCK=y
+ CONFIG_ARCH_MIGHT_HAVE_ACPI_PDC=y
+ CONFIG_ARCH_PHYS_ADDR_T_64BIT=y
+@@ -165,7 +166,8 @@ CONFIG_HDMI=y
+ CONFIG_HIBERNATE_CALLBACKS=y
+ CONFIG_HID=y
+ CONFIG_HID_BATTERY_STRENGTH=y
+-# CONFIG_HIGHMEM64G is not set
++# CONFIG_HIGHMEM4G is not set
++CONFIG_HIGHMEM64G=y
+ CONFIG_HOTPLUG_CPU=y
+ CONFIG_HPET=y
+ CONFIG_HPET_MMAP=y
+@@ -267,6 +269,7 @@ CONFIG_PATA_VIA=y
+ CONFIG_PCIEAER=y
+ CONFIG_PCIEPORTBUS=y
+ CONFIG_PCIE_PME=y
++CONFIG_PCI_BUS_ADDR_T_64BIT=y
+ CONFIG_PCI_MMCONFIG=y
+ CONFIG_PCI_XEN=y
+ # CONFIG_PCWATCHDOG is not set
+

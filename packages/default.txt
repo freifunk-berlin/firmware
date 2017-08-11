@@ -32,6 +32,7 @@ tcpdump
 uhttpd
 uhttpd-mod-ubus
 px5g-mbedtls
+libustream-mbedtls
 luci-app-ffwizard-berlin
 luci-mod-freifunk-ui
 luci-app-olsr

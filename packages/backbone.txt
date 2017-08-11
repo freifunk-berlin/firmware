@@ -29,6 +29,7 @@ libiwinfo-lua
 uhttpd
 uhttpd-mod-ubus
 px5g-mbedtls
+libustream-mbedtls
 luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-olsr-services

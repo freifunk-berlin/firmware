@@ -71,7 +71,7 @@ kmod-batman-adv
 alfred
 batctl
 
-# VPN
+# Uplink
 luci-app-openvpn
 openvpn-mbedtls
 freifunk-berlin-uplink-tunnelberlin-files

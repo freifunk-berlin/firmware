@@ -11,7 +11,6 @@ freifunk-berlin-migration
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-statistics-defaults
-freifunk-berlin-system-defaults
 freifunk-berlin-uhttpd-defaults
 community-profiles
 
@@ -51,8 +50,8 @@ luci-i18n-firewall-de
 luci-i18n-firewall-en
 luci-i18n-olsr-de
 luci-i18n-olsr-en
-#luci-i18n-openvpn-de
-#luci-i18n-openvpn-en
+luci-i18n-openvpn-de
+luci-i18n-openvpn-en
 luci-i18n-statistics-de
 luci-i18n-statistics-en
 
@@ -72,9 +71,9 @@ alfred
 batctl
 
 # Uplink
-#luci-app-openvpn
-#openvpn-openssl
-freifunk-berlin-uplink-notunnel-files
+freifunk-berlin-uplink-vpn03-files
+luci-app-openvpn
+openvpn-openssl
 
 # Statistics
 luci-app-statistics

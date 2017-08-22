@@ -17,7 +17,6 @@ freifunk-berlin-freifunk-defaults
 freifunk-berlin-migration
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
-freifunk-berlin-system-defaults
 community-profiles
 
 # Common
@@ -47,5 +46,5 @@ olsrd-mod-nameservice
 kmod-ipip
 
 # Uplink
-#openvpn-openssl
-freifunk-berlin-uplink-notunnel-files
+freifunk-berlin-uplink-vpn03-files
+openvpn-openssl

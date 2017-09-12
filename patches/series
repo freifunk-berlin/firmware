@@ -1,6 +1,7 @@
 000-add_ubnt-erx-sfp.patch
 001-rt2x00_allow_adhoc_and_ap.patch
 002-add_ramips-nexx-image.patch
+200-luci_fix_meshid.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch
 701-luci-freifunk-policyrouting-berlin.patch

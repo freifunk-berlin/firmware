@@ -46,5 +46,5 @@ olsrd-mod-nameservice
 kmod-ipip
 
 # VPN
-openvpn-openssl
-freifunk-berlin-uplink-vpn03-files
+openvpn-mbedtls
+freifunk-berlin-uplink-tunnelberlin-files

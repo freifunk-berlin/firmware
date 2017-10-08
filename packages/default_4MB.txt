@@ -27,7 +27,6 @@ iwinfo
 libiwinfo-lua
 
 # GUI
-luci-theme-bootstrap
 uhttpd
 uhttpd-mod-ubus
 luci-app-ffwizard-berlin
@@ -36,6 +35,7 @@ luci-app-olsr
 luci-app-olsr-services
 luci-app-owm
 luci-app-owm-cmd
+luci-theme-bootstrap
 
 # OLSR
 olsrd

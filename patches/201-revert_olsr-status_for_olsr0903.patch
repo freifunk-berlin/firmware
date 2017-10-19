@@ -1,0 +1,60 @@
+commit 9f3b6a39e0bd7353a34eb1e7098738411cf5a8f9
+Author: Sven Roederer <freifunk@it-solutions.geroedel.de>
+Date:   Fri Oct 20 01:00:54 2017 +0200
+
+    Revert "luci-app-olsr: adapt to changed behavior of new OLSRd v0.9.5"
+    
+    This reverts commit bae82052e0651c4fa256a249b9da07fa15c94ff0.
+
+diff --git a/applications/luci-app-olsr/luasrc/controller/olsr.lua b/applications/luci-app-olsr/luasrc/controller/olsr.lua
+index 0564bd4..9a997bd 100644
+--- a/feeds/luci/applications/luci-app-olsr/luasrc/controller/olsr.lua
++++ b/feeds/luci/applications/luci-app-olsr/luasrc/controller/olsr.lua
+@@ -87,8 +87,8 @@ function action_json()
+ 	local v4_port = uci:get("olsrd", "olsrd_jsoninfo", "port") or 9090
+ 	local v6_port = uci:get("olsrd6", "olsrd_jsoninfo", "port") or 9090
+ 
+-	jsonreq4 = utl.exec("(echo /status | nc 127.0.0.1 " .. v4_port .. " | sed -n '/^[}{ ]/p') 2>/dev/null" )
+-	jsonreq6 = utl.exec("(echo /status | nc ::1 " .. v6_port .. " | sed -n '/^[}{ ]/p') 2>/dev/null")
++	jsonreq4 = utl.exec("(echo /status | nc 127.0.0.1 " .. v4_port .. ") 2>/dev/null" )
++	jsonreq6 = utl.exec("(echo /status | nc ::1 " .. v6_port .. ") 2>/dev/null")
+ 	http.prepare_content("application/json")
+ 	if not jsonreq4 or jsonreq4 == "" then
+ 		jsonreq4 = "{}"
+@@ -375,8 +375,8 @@ function fetch_jsoninfo(otable)
+ 	local v4_port = uci:get("olsrd", "olsrd_jsoninfo", "port") or 9090
+ 	local v6_port = uci:get("olsrd6", "olsrd_jsoninfo", "port") or 9090
+ 
+-	jsonreq4 = utl.exec("(echo /" .. otable .. " | nc 127.0.0.1 " .. v4_port .. " | sed -n '/^[}{ ]/p') 2>/dev/null")
+-	jsonreq6 = utl.exec("(echo /" .. otable .. " | nc ::1 " .. v6_port .. " | sed -n '/^[}{ ]/p') 2>/dev/null")
++	jsonreq4 = utl.exec("(echo /" .. otable .. " | nc 127.0.0.1 " .. v4_port .. ") 2>/dev/null")
++	jsonreq6 = utl.exec("(echo /" .. otable .. " | nc ::1 " .. v6_port .. ") 2>/dev/null")
+ 	local jsondata4 = {}
+ 	local jsondata6 = {}
+ 	local data4 = {}
+diff --git a/applications/luci-app-olsr/luasrc/view/status-olsr/neighbors.htm b/applications/luci-app-olsr/luasrc/view/status-olsr/neighbors.htm
+index c077c20..31dd7d0 100644
+--- a/feeds/luci/applications/luci-app-olsr/luasrc/view/status-olsr/neighbors.htm
++++ b/feeds/luci/applications/luci-app-olsr/luasrc/view/status-olsr/neighbors.htm
+@@ -12,8 +12,8 @@ local i = 1
+ if luci.http.formvalue("status") == "1" then
+ 	local rv = {}
+ 	for k, link in ipairs(links) do
+-		link.linkCost = tonumber(link.linkCost) or 0
+-		if link.linkCost == 4194304 then
++		link.linkCost = tonumber(link.linkCost)/1024 or 0
++		if link.linkCost == 4096 then
+ 			link.linkCost = 0
+ 		end
+ 		local color = olsrtools.etx_color(link.linkCost)
+@@ -129,8 +129,8 @@ end
+ 		<tbody id="olsr_neigh_table">
+ 		<% 	local i = 1
+ 			for k, link in ipairs(links) do
+-			link.linkCost = tonumber(link.linkCost) or 0
+-			if link.linkCost == 4194304 then
++			link.linkCost = tonumber(link.linkCost)/1024 or 0
++			if link.linkCost == 4096 then
+ 				link.linkCost = 0
+ 			end
+ 

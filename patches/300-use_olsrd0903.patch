@@ -1,0 +1,110 @@
+commit 048070f679b7977db8cb6902129dce09c6cb43bf
+Author: Sven Roederer <devel-sven@geroedel.de>
+Date:   Wed Jan 18 23:11:48 2017 +0100
+
+    olsrd: backport olsrd 0.9.0.3 from for-15.05 branch
+
+diff --git a/olsrd/Makefile b/olsrd/Makefile
+index cce17b9..d0ab390 100644
+--- a/feeds/routing/olsrd/Makefile
++++ b/feeds/routing/olsrd/Makefile
+@@ -1,5 +1,5 @@
+ # 
+-# Copyright (C) 2009-2016 OpenWrt.org
++# Copyright (C) 2009-2012 OpenWrt.org
+ #
+ # This is free software, licensed under the GNU General Public License v2.
+ # See /LICENSE for more information.
+@@ -8,17 +8,14 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=olsrd
+-PKG_VERSION:=0.9.5
+-PKG_RELEASE=$(PKG_SOURCE_VERSION)
++PKG_VERSION:=0.9.0.3
++PKG_RELEASE:=1
+ 
+-PKG_SOURCE_PROTO:=git
+-PKG_SOURCE_URL:=https://github.com/OLSR/olsrd.git
+-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+-PKG_SOURCE_VERSION:=v0.9.5
+-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
+-PKG_MIRROR_MD5SUM:=
++PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
++PKG_SOURCE_URL:=http://www.olsr.org/releases/0.9
+ 
+-PKG_BUILD_PARALLEL:=0
++PKG_MD5SUM:=fa5cf15c29c7ebd9b8425267676c7865
++PKG_BUILD_PARALLEL:=1
+ PKG_LICENSE:=BSD-3-Clause
+ 
+ include $(INCLUDE_DIR)/package.mk
+@@ -87,12 +84,6 @@ define Package/olsrd-mod-jsoninfo
+   TITLE:=Small informative plugin with JSON output
+ endef
+ 
+-define Package/olsrd-mod-netjson
+-  $(call Package/olsrd/template)
+-  DEPENDS:=olsrd
+-  TITLE:=netjson plugin with JSON output
+-endef
+-
+ define Package/olsrd-mod-mdns
+   $(call Package/olsrd/template)
+   DEPENDS:=olsrd
+@@ -119,7 +110,7 @@ endef
+ 
+ define Package/olsrd-mod-pud
+   $(call Package/olsrd/template)
+-  DEPENDS:=olsrd +libgps +ncurses
++  DEPENDS:=olsrd
+   TITLE:=Position Update Distribution plugin
+ endef
+ 
+@@ -171,7 +162,7 @@ MAKE_FLAGS+= \
+ 	DESTDIR="$(PKG_INSTALL_DIR)" \
+ 	STRIP="true" \
+ 	INSTALL_LIB="true" \
+-	SUBDIRS="arprefresh bmf dot_draw dyn_gw dyn_gw_plain httpinfo jsoninfo netjson mdns nameservice p2pd pgraph pud quagga secure sgwdynspeed txtinfo watchdog"
++	SUBDIRS="arprefresh bmf dot_draw dyn_gw dyn_gw_plain httpinfo jsoninfo mdns nameservice p2pd pgraph pud quagga secure sgwdynspeed txtinfo watchdog"
+ 
+ define Build/Compile
+ 	$(call Build/Compile/Default,all)
+@@ -228,11 +219,6 @@ define Package/olsrd-mod-jsoninfo/install
+ 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/jsoninfo/olsrd_jsoninfo.so.* $(1)/usr/lib/
+ endef
+ 
+-define Package/olsrd-mod-netjson/install
+-	$(INSTALL_DIR) $(1)/usr/lib
+-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/netjson/olsrd_netjson.so.* $(1)/usr/lib/
+-endef
+-
+ define Package/olsrd-mod-mdns/install
+ 	$(INSTALL_DIR) $(1)/usr/lib
+ 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/mdns/olsrd_mdns.so.* $(1)/usr/lib/
+@@ -299,7 +285,6 @@ $(eval $(call BuildPackage,olsrd-mod-dyn-gw))
+ $(eval $(call BuildPackage,olsrd-mod-dyn-gw-plain))
+ $(eval $(call BuildPackage,olsrd-mod-httpinfo))
+ $(eval $(call BuildPackage,olsrd-mod-jsoninfo))
+-$(eval $(call BuildPackage,olsrd-mod-netjson))
+ $(eval $(call BuildPackage,olsrd-mod-mdns))
+ $(eval $(call BuildPackage,olsrd-mod-nameservice))
+ $(eval $(call BuildPackage,olsrd-mod-p2pd))
+diff --git a/olsrd/patches/missing-include-dirs-warning.patch b/olsrd/patches/missing-include-dirs-warning.patch
+deleted file mode 100644
+index 2bf0895..0000000
+--- a/feeds/routing/olsrd/patches/missing-include-dirs-warning.patch
++++ /dev/null
+@@ -1,12 +0,0 @@
+-diff -ur olsrd-0.9.5_orig/lib/pud/nmealib/Makefile.inc olsrd-0.9.5/lib/pud/nmealib/Makefile.inc
+---- olsrd-0.9.5_orig/lib/pud/nmealib/Makefile.inc	2016-12-22 12:23:42.175283967 +0100
+-+++ olsrd-0.9.5/lib/pud/nmealib/Makefile.inc	2016-12-22 12:24:24.591015066 +0100
+-@@ -63,7 +63,7 @@
+-                 -Wmissing-format-attribute -Wno-multichar -Wno-deprecated-declarations -Wendif-labels -Wwrite-strings \
+-                 -Wbad-function-cast -Wpointer-arith -Wcast-qual -Wshadow -Wformat -Wsequence-point -Wcast-align \
+-                 -Wnested-externs -Winline -Wdisabled-optimization -funit-at-a-time -fPIC -ggdb -Wformat=2 -Winit-self \
+--                -Wmissing-include-dirs -Wswitch-default -Wswitch-enum -Wconversion -Wdouble-promotion \
+-+                -Wswitch-default -Wswitch-enum -Wconversion -Wdouble-promotion \
+-                 -Werror=format-security -Wformat-security -Wformat-y2k -Wredundant-decls -Wundef -Wunreachable-code \
+-                 -Wunused-parameter
+- 

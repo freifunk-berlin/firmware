@@ -1,0 +1,11 @@
+diff -ur luci.orig/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+--- a/feeds/luci.orig/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting	2017-11-15 03:33:15.000000000 +0100
++++ b/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting	2017-11-15 03:37:33.930137791 +0100
+@@ -1,6 +1,7 @@
+ #!/bin/sh
+ 
+ [ "$INTERFACE" = wan ] && exit
++[ "$INTERFACE" = ffuplink ] && exit
+ 
+ . /lib/functions.sh
+ . /lib/functions/network.sh

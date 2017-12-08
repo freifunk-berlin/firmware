@@ -16,8 +16,16 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
-ifdef IS_BUILDBOT
-$(info running on buildslave, maybe special actions will apply ...)
+ifeq ($(SET_BUILDBOT),no)
+undefine IS_BUILDBOT
+else
+ifeq ($(SET_BUILDBOT),yes)
+IS_BUILDBOT=yes
+endif
+endif
+
+ifeq ($(IS_BUILDBOT),yes)
+$(info special actions apply to builds on this host ...)
 endif
 
 # test for existing $TARGET-config or abort

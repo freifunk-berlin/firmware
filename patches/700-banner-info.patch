@@ -1,17 +1,13 @@
-Index: lede/package/base-files/files/etc/banner
-===================================================================
---- lede.orig/package/base-files/files/etc/banner	2016-06-02 02:43:57.601381806 +0200
-+++ lede/package/base-files/files/etc/banner	2016-06-02 02:46:17.928201514 +0200
-@@ -1,10 +1,20 @@
--     _________
--    /        /\      _    ___ ___  ___
--   /  LE    /  \    | |  | __|   \| __|
--  /    DE  /    \   | |__| _|| |) | _|
-- /________/  LE  \  |____|___|___/|___|                      lede-project.org
-- \        \   DE /
--  \    LE  \    /  -----------------------------------------------------------
--   \  DE    \  /    %N (%V, %C)
--    \________\/    -----------------------------------------------------------
+--- lede/package/base-files/files/etc/banner	2017-12-10 21:27:21.352612551 +0100
++++ /tmp/banner	2017-12-10 21:19:20.000000000 +0100
+@@ -1,8 +1,20 @@
+-  _______                     ________        __
+- |       |.-----.-----.-----.|  |  |  |.----.|  |_
+- |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
+- |_______||   __|_____|__|__||________||__|  |____|
+-          |__| W I R E L E S S   F R E E D O M
+- -----------------------------------------------------
+- %D %V, %C
 +  _____        _  __             _
 + |  ___|      (_)/ _|           | |
 + | |_ _ __ ___ _| |_ _   _ _ __ | | __
@@ -23,7 +19,7 @@ Index: lede/package/base-files/files/etc/banner
 + %P - %S
 + https://wiki.freifunk.net/Berlin:Firmware
 + https://github.com/freifunk-berlin
-+ -----------------------------------------------------
+  -----------------------------------------------------
 +
 + If you find bugs please report them at:
 +
@@ -31,4 +27,4 @@ Index: lede/package/base-files/files/etc/banner
 +
 + For questions write a mail to <berlin@berlin.freifunk.net>
 + or check https://berlin.freifunk.net/contact for our weekly meetings.
- 
++

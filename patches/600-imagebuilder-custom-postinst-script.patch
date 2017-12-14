@@ -2,13 +2,13 @@ Index: openwrt/target/imagebuilder/files/Makefile
 ===================================================================
 --- openwrt.orig/target/imagebuilder/files/Makefile
 +++ openwrt/target/imagebuilder/files/Makefile
-@@ -114,6 +114,9 @@ ifneq ($(USER_FILES),)
+@@ -118,6 +118,9 @@ ifneq ($(USER_FILES),)
  	$(MAKE) copy_files
  endif
- 	$(MAKE) package_postinst
+ 	$(MAKE) -s package_postinst
 +ifneq ($(CUSTOM_POSTINST_SCRIPT),)
 +	(cd "$(TARGET_DIR)" ; bash $(CUSTOM_POSTINST_SCRIPT))
 +endif
- 	$(MAKE) build_image
+ 	$(MAKE) -s build_image
+ 	$(MAKE) -s checksum
  
- package_index: FORCE

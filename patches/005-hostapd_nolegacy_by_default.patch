@@ -1,0 +1,13 @@
+diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
+index 1f28661..378b114 100644
+--- a/package/network/services/hostapd/files/hostapd.sh
++++ b/package/network/services/hostapd/files/hostapd.sh
+@@ -82,7 +82,7 @@ hostapd_prepare_device_config() {
+ 
+ 	set_default country_ie 1
+ 	set_default doth 1
+-	set_default legacy_rates 1
++	set_default legacy_rates 0
+ 
+ 	[ "$hwmode" = "b" ] && legacy_rates=1
+ 

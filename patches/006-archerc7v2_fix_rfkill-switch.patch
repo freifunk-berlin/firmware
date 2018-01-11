@@ -1,0 +1,12 @@
+diff --git a/target/linux/ar71xx/files/arch/mips/ath79/mach-archer-c7.c b/target/linux/ar71xx/files/arch/mips/ath79/mach-archer-c7.c
+index f00998c..3a38b94 100644
+--- a/target/linux/ar71xx/files/arch/mips/ath79/mach-archer-c7.c
++++ b/target/linux/ar71xx/files/arch/mips/ath79/mach-archer-c7.c
+@@ -138,6 +138,7 @@ static struct gpio_keys_button archer_c7_v2_gpio_keys[] __initdata = {
+ 		.code		= KEY_RFKILL,
+ 		.debounce_interval = ARCHER_C7_KEYS_DEBOUNCE_INTERVAL,
+ 		.gpio		= ARCHER_C7_V2_GPIO_BTN_RFKILL,
++		.active_low	= 1,
+ 	},
+ };
+ 

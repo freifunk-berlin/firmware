@@ -1,0 +1,20 @@
+diff --git a/modules/luci-base/luasrc/model/network.lua b/modules/luci-base/luasrc/model/network.lua
+index 49d91b8..938ba74 100644
+--- a/feeds/luci/modules/luci-base/luasrc/model/network.lua
++++ b/feeds/luci/modules/luci-base/luasrc/model/network.lua
+@@ -1550,6 +1550,7 @@ end
+ 
+ function wifinet.active_mode(self)
+ 	local m = self.iwinfo.mode or self:ubus("net", "config", "mode") or self:get("mode") or "ap"
++	if not self:is_up() then m = self:get("mode") or "ap" end
+ 
+ 	if     m == "ap"      then m = "Master"
+ 	elseif m == "sta"     then m = "Client"
+@@ -1566,6 +1567,7 @@ function wifinet.active_mode_i18n(self)
+ end
+ 
+ function wifinet.active_ssid(self)
++	if not self:is_up() then return self:get("ssid") end
+ 	return self.iwinfo.ssid or self:ubus("net", "config", "ssid") or self:get("ssid")
+ end
+ 

@@ -7,7 +7,6 @@ wpad
 freifunk-berlin-dhcp-defaults
 freifunk-berlin-firewall-defaults
 freifunk-berlin-freifunk-defaults
-freifunk-berlin-migration
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-statistics-defaults

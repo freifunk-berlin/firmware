@@ -1,9 +1,9 @@
-# Freifunk Firmware Berlin "Kathleen"
+# Freifunk Firmware Berlin "Hedy"
 https://wiki.freifunk.net/Berlin:Firmware
 
-*[Kathleen Booth](https://en.wikipedia.org/wiki/Kathleen_Booth) was the author of the first assembly language*.
+*[Hedy Lamarr](https://en.wikipedia.org/wiki/Hedy_Lamarr#Inventor) and composer George Antheil developed in 1942 a torpedo guidance system using spread spectrum and frequency hopping technology which is still the base for Wi-Fi and other radio technologies*.
 
-The purpose for this release is to have a stable firmware for beginners for the Freifunk mesh in Berlin.
+This release introduces interface "ffuplink" to get rid of a hardlinked tunnel. Now it is possible to use different flavours of tunnels as well as no tunnel to connect to the internet. Additionally Mesh (11s) is now supported in LuCi to mesh native instead of IBSS. As well it is intended to catch up with current software development and to offer a stable firmware for Freifunk mesh in Berlin.
 The firmware is based on vanilla [OpenWrt](https://wiki.openwrt.org/start) "Chaos Calmer" with some modifications (to fix
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.

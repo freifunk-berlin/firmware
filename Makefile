@@ -208,6 +208,8 @@ endif
 	for file in `find $(RELPATH) -name "freifunk-berlin-*-squashfs-*.bin"` ; do mv $$file $${file/squashfs-/}; done
 	# 2) remove all TARGET names (e.g. ar71xx-generic) from filename
 	for file in `find $(RELPATH) -name "freifunk-berlin-*-$(MAINTARGET)-$(SUBTARGET)-*.bin"` ; do mv $$file $${file/$(MAINTARGET)-$(SUBTARGET)-/}; done
+	# 3) replace default filename prefix "freifunk-berlin" by current version-nick
+	for file in `find $(RELPATH) -name "freifunk-berlin-*"` ; do mv $$file $${file/freifunk-berlin/hedy}; done
 	touch $@
 
 stamp-clean-%:

@@ -129,9 +129,12 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
-ifeq ($(BUILDTYPE),unstable)
 	# always replace CONFIG_VERSION_CODE by FW_REVISION
 	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
+ifeq ($(BUILDTYPE),release)
+	# always set CONFIG_VERSION_CODE_FILENAMES to false, to have only the official release-version
+	# in the name (prevent *Hedy-1.0.0-v1.0.0*.bin)
+	sed -i "/^CONFIG_VERSION_CODE_FILENAMES=/c\CONFIG_VERSION_CODE_FILENAMES=n" $(OPENWRT_DIR)/.config
 endif
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig

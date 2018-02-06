@@ -1,5 +1,114 @@
 # Changelog
 
+## Version 1.0.0
+
+### overall system
+```
+rename interface "ffvpn" to "ffuplink"
+move interface "ffvpn" into its own firewall-zone
+network-defaults: set interface "wan" as bridge
+hostapd: disable 802.11 legacy-rates by default
+kernel: bump 4.4 to 4.4.116
+openvpn: update to 2.4.4
+Update OONF to 0.14.1-1
+batman-adv: update to 2016.5
+olsrd: stay at v 0.9.0.3 for compatibility with BBB-VPN (https://github.com/OLSR/olsrd/issues/20)
+configs: in preinit and failsafe change network to 192.168.42.1/24
+for 4MB-models there ist only enough space in the default-image
+use OpenVPN-openssl as of RSA1024-keys for VPN03 and BBB-VPN
+```
+
+### packages
+```
+caa7958715 packages: remove "migration" for Hedy-1.0.0
+64cd8de4b1 patches: do not run policy-routing script on interface ffuplink
+5550d6bb52 configs: add package ffuplink-notunnel (as image-flavor "default")
+0b7aa08806 Add "diffutils" and "patch" to optional packages
+3dd9eaf575 Allow ICMP for busybox traceroute
+8f5085c6f6 configs: build kmod-nf-nathelper-extra as module
+cdfd3b0b5e add packages to support setup of ipip-tunnels (also for LuCI)
+35e8419d27 packages: add tcpdump to the default package set
+ac6dd7c412 configs: add iperf3 and collectd-modules conntrack, irq
+d02b09ff62 configs: add PPPoE-support
+9a331fb011 configs: remove deprecated 6to4-package
+86e155c2df configs: select collectd-dhcp-addon by default
+d2f4aa74bb configs: disable "HORST", which fails to build
+6d0c0dd52c configs: add package luci-app-wifischedule
+```
+
+### hardware-support
+```
+696871104f Add Raspberry Pi 3 configuration
+7251b6648f added RaspberryPi configuration
+a0d1ca0ecd backport Ubiquiti ERX SFP to LEDE 17.01
+f8dc9aa640 profiles: add TP-Link WR1043ND-v4
+```
+
+### feeds
+```
+5e8f501c2 wizard, uplink-files: add uci-setting to request different auth-types
+19cb3cddd dhcp-defaults: don't announce as default-gw
+41ea9464b guard: add function "rename_guard <src> <dest>"
+f845b3bb3 ffwizard: drop private AP-feature
+1288c3dc9 ffwizard, migration: don't create cronjob to restart "wan"
+a08be1521 freifunk-defaults: change our settings, which differ from upstream
+fa8619e2a freifunk-berlin-freifunk-defaults: use uci-default script
+8b7e40011 openvpn-files: depend on virtual-package openvpn-crypto
+fa3a118d collectd: fix for uptime plugin
+938db714 collectd: upstream fix for vulnerabity in network plugin CVE-2017-7401
+3f6a27fbf luci-mod-admin-full: Add mesh_fwding support
+33f6527cc luci-mod-admin-full: Add meshId support
+426c1043b luci-mod-admin-full: auto-migrate ifnames when changing VLAN configuration
+6e412cc78 luci-mod-admin-full: reload wifi settings page after changing countey code
+1cd096d29 luci-mod-admin-full: allow unset txpower value
+```
+
+### build
+```
+20e25c82d6 Makefile: do not include git-revision in filename of releases
+708240926d Makefile: prefix images with "hedy"
+ec06e30ea4 Makefile: add setting "SET_BUILDBOT"
+cad82aea78 Makefile: add BUILD env "IS_BUILDBOT"
+972e689370 assemble_firmware: skip usecases with empty package-list
+97eef0a600 Makefile: new target "images" to only create the firmware-images
+86330521ff Makefile: IB_BUILD_DIR is obsoleted by assemble_firmware.sh
+cdc1404263 Makefile: remove unused TOOLCHAIN_PATH
+e7b8a364d5 Makefile: define separate target for VERSION.txt
+105d293ef9 assemble_firmware: check for files in embedded-directory
+a66896d3ca Makefile: use openwrt/files to embedd files directly into image
+```
+
+packages:
+```
+2e44ee693 network-defaults: setup the ip rules at runtime
+2df127c7a network-defaults: prohibit traffic to net on ffuplink
+08474427d uplink-notunnel: setup default-route via hotplug.d
+98f0a3442 ffwizard: adapt to new hostname from "system-defaults" package
+a29d9a4d3 system-defaults: change the default hostname
+e284bc9bd add new package: freifunk-berlin-uplink-tunnelberlin-files
+02fb2519b firewall-defaults, wizard: add separate zone ffvpn
+
+```
+OpenWRT
+```
+b934aa2f21 kernel: update 17.01 kernel to 4.4.116
+77e79b2dd0 openvpn: update to 2.4.4
+108a42bcba ramips: support jumbo frame on mt7621 up to 2k
+f0a493160c mac80211: gracefully handle preexisting VIF
+f173464f13 base-files: add generic board_name function to functions.sh
+b41a2e646e opkg: bump to version 2017-12-08
+f5f5f583f9 hostapd: backport fix for wnm_sleep_mode=0
+3590316121 dnsmasq: backport infinite dns retries fix
+e626942c33 dnsmasq: load instance-specific conf-file if exists
+```
+also check the releasenotes of underlying LEDE releases
+* https://lede-project.org/releases/17.01/notes-17.01.4
+* https://lede-project.org/releases/17.01/notes-17.01.3
+* https://lede-project.org/releases/17.01/notes-17.01.2
+* https://lede-project.org/releases/17.01/notes-17.01.1
+* https://lede-project.org/releases/17.01/notes-17.01.0
+
+
 ## Version 0.3.0
 
 * OpenWrt ChaosCalmer of Mar 09, 2017 (9a1fd3e)

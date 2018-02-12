@@ -75,6 +75,7 @@ batctl
 luci-app-openvpn
 openvpn-mbedtls
 freifunk-berlin-uplink-tunnelberlin-files
+luci-app-vpnbypass
 
 # Statistics
 luci-app-statistics

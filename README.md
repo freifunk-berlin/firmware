@@ -3,42 +3,54 @@ https://wiki.freifunk.net/Berlin:Firmware
 
 *[Hedy Lamarr](https://en.wikipedia.org/wiki/Hedy_Lamarr#Inventor) and composer George Antheil developed in 1942 a torpedo guidance system using spread spectrum and frequency hopping technology which is still the base for Wi-Fi and other radio technologies*.
 
-This release introduces interface "ffuplink" to get rid of a hardlinked tunnel. Now it is possible to use different flavours of tunnels as well as no tunnel to connect to the internet. Additionally Mesh (11s) is now supported in LuCi to mesh native instead of IBSS. As well it is intended to catch up with current software development and to offer a stable firmware for Freifunk mesh in Berlin.
-The firmware is based on vanilla [OpenWrt](https://wiki.openwrt.org/start) "Chaos Calmer" with some modifications (to fix
+This release removes the hardlinked VPN03-tunnel. Now it is possible to use different flavours of tunnels as well as no tunnel to connect to the internet. Additionally Mesh (11s) is now supported in LuCi to mesh native instead of IBSS. As well it is intended to catch up with current software development and to offer a stable firmware for Freifunk mesh in Berlin.
+The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some modifications (to fix
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 0.3.0 "Kathleen" - 2017-04-10
-* enhancements:
-  * images for 
-    * GL.inet AR300, MT300a, MT300n
-    * Buffalo WZRHPG300NH2, WZRHPAG300H, WZR600DHP, WZRHPG450H
-  * prevent dnsmasq from spammimg the syslog (quietdhcp=1)
-  * new package: "collectd-dnsmasq-addon" to monitor DHCP-lease usage
+## Release Note 1.0.0 "Hedy" - 2018-02-xx
+* only for fresh installs of nodes, it's __not approved__ for upgrading from previous releases
+* images for 
+  * Ubiquiti ERX SFP, TP-Link WR1043ND-v4
+  * support for RaspberryPi and RaspberryPi3 (compile yourself)
+* introduces interface "ffuplink" for a flexible configuration of the wired uplink
+* improved support of 802.11s mesh in LuCI
+* disabling of 802.11b wifi-rates by default
+* in preinit and failsafe it IP-address is 192.168.42.1/24 (like an unconfigured node)
+* the LAN-interface (br-lan) is not providing a default route on a unconfigured node, so manual reconfiguration is required when not using the assistent
+* the assistent will not offer the setup of a private AP anymore
+* when changing or initially confiuring VLANs (via LuCI) the interfacenames will also be changed (should fix #388)
+* a lot of security-fixes for linux and many packages
 
 ## Features
-* based on [OpenWrt](https://wiki.openwrt.org/start) Chaos Calmer (15.05.1)
-  * Linux 3.18.45
-  * OLSR 0.9.0.3
-  * B.A.T.M.A.N. 2016.1
-* primary router target: TP-Link WDR 3500/3600/4300
+* based on [OpenWrt](https://openwrt.org/start) v17.01.4+ (lede-17.01  branch)
+  * Linux 4.4.116
+  * OLSR 0.9.0.3 (downgraded for BBB-VPN compatibility)
+  * B.A.T.M.A.N. 2016.5
 * custom package lists for different settings
   * "default" variant includes ffwizard, openvpn, BATMAN
+  * "default_4MB" like the "default" variant, but excludes public router statistics page (luci-mod-freifunk), monitoring (collectd), BATMAN to fit into boards with 4MB flash
+  * "tunnel-berlin" like default variant and uses the tunnel-service of the Berlin-community as default uplink
+  * "vpn03" like default variant and uses the VPN03-service (deprecated) as default uplink
   * "backbone" variant excludes ffwizard and openvpn, includes more debugging tools
-  * "default_4MB" variant excludes public router statistics page (luci-mod-freifunk), monitoring (collectd), BATMAN
   * "backbone_4MB" variant excludes ffwizard, luci-mod-freifunk, openvpn, collectd, includes BATMAN and more debugging tools
 * new OLSR setup and configuration:
   * SmartGateway for gateway selection (e.g. honors uplink speed)
   * dynamic gateway plugin for uplink connectivity tests (gwcheck script removed)
     on hosts: 85.214.20.141, 213.73.91.35, 194.150.168.168
-  * freifunk-policyrouting fixed/patched for VPN03 setup
-* new configuration [wizard](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin)
+* a configuration [wizard](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin)
   * starts after first boot and guides new users through the configuration of the router
 * monitoring of nodes through collectd
+* some well known network-interfaces
+  * "br-dhcp" for all client-traffic
+  * "wlan0-adhoc-2" and "wlan1-adhoc-5" for AdHoc-meshing between nodes in 2.4GHz and 5GHz
+  * "ffuplink" for all traffic sent via the uplink of the node-operator, in case "share traffic" is set up
+    * freifunk-policyrouting fixed/patched for ffuplink-interface
 * frei.funk as local DNS entry for your router
   * you do not have to remember your IP to get access
 * change default lan ip address to 192.168.42.1/24
   * avoids network collisions
+  * this is also used in OpenWRT failsafe
 * one dhcp network for APs and lan (bridged)
 * remove of autoipv6 and use of ULA ipv6 prefixes
 * default dns servers:

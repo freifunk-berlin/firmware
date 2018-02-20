@@ -1,6 +1,8 @@
 002-add_ramips-nexx-image.patch
 004-openwrt-release_use_configured_revision.patch
 005-hostapd_nolegacy_by_default.patch
+007-Add_TP-Link_Pharos_v2_board_detection.patch
+008-add_support_for_TP-Link_CPE210_v2.patch
 200-wifi_nolegacy_rates_by_default.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch

@@ -3,13 +3,14 @@ https://wiki.freifunk.net/Berlin:Firmware
 
 *[Hedy Lamarr](https://en.wikipedia.org/wiki/Hedy_Lamarr#Inventor) and composer George Antheil developed in 1942 a torpedo guidance system using spread spectrum and frequency hopping technology which is still the base for Wi-Fi and other radio technologies*.
 
-This release removes the hardlinked VPN03-tunnel. Now it is possible to use different flavours of tunnels as well as no tunnel to connect to the internet. Additionally Mesh (11s) is now supported in LuCi to mesh native instead of IBSS. As well it is intended to catch up with current software development and to offer a stable firmware for Freifunk mesh in Berlin.
+This release removes the hardlinked VPN03-tunnel. Now it is possible to use different flavours of tunnels as well as no tunnel to connect to the internet. Additionally Mesh (11s) is now supported in LuCi to mesh native instead of IBSS. Also it is intended to catch up with current software development and to offer a stable firmware for Freifunk mesh in Berlin.
+
 The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some modifications (to fix
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
 ## Release Note 1.0.0 "Hedy" - 2018-02-xx
-* only for fresh installs of nodes, it's __not approved__ for upgrading from previous releases
+* __only for fresh installs of nodes, it's not approved for upgrading from previous releases__
 * images for 
   * Ubiquiti ERX SFP, TP-Link WR1043ND-v4
   * support for RaspberryPi and RaspberryPi3 (compile yourself)

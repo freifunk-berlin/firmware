@@ -9,7 +9,7 @@ The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some 
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 1.0.0 "Hedy" - 2018-02-xx
+## Release Note 1.0.0 "Hedy" - 2018-02-26
 * __only for fresh installs of nodes, it's not approved for upgrading from previous releases__
 * images for 
   * Ubiquiti ERX SFP, TP-Link WR1043ND-v4

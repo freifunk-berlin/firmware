@@ -54,8 +54,8 @@ olsrd-mod-nameservice
 kmod-ipip
 
 # BATMAN
-kmod-batman-adv
-alfred
-batctl
+#kmod-batman-adv
+#alfred
+#batctl
 
 # Statistics/collectd not included in 4MB image

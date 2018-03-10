@@ -56,7 +56,8 @@ default: firmwares
 
 # clone openwrt
 $(OPENWRT_DIR):
-	git clone $(OPENWRT_SRC) $(OPENWRT_DIR)
+	$(UMASK); \
+	  git clone $(OPENWRT_SRC) $(OPENWRT_DIR)
 
 # clean up openwrt working copy
 openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
@@ -89,7 +90,7 @@ $(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated feeds.conf
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 .stamp-feeds-updated: $(OPENWRT_DIR)/feeds.conf unpatch
 	cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
-	cd $(OPENWRT_DIR); ./scripts/feeds update
+	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update
 	cd $(OPENWRT_DIR); ./scripts/feeds install -a
 	touch $@
 

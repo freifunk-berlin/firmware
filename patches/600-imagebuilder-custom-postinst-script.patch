@@ -1,11 +1,11 @@
-Index: openwrt/target/imagebuilder/files/Makefile
-===================================================================
---- openwrt.orig/target/imagebuilder/files/Makefile
-+++ openwrt/target/imagebuilder/files/Makefile
-@@ -118,6 +118,9 @@ ifneq ($(USER_FILES),)
- 	$(MAKE) copy_files
- endif
- 	$(MAKE) -s package_postinst
+diff --git a/target/imagebuilder/files/Makefile b/target/imagebuilder/files/Makefile
+index 95df8bf113..0debd5a882 100644
+--- a/target/imagebuilder/files/Makefile
++++ b/target/imagebuilder/files/Makefile
+@@ -105,6 +105,9 @@ _call_image: staging_dir/host/.prereq-build
+ 	$(MAKE) package_reload
+ 	$(MAKE) package_install
+ 	$(MAKE) -s prepare_rootfs
 +ifneq ($(CUSTOM_POSTINST_SCRIPT),)
 +	(cd "$(TARGET_DIR)" ; bash $(CUSTOM_POSTINST_SCRIPT))
 +endif

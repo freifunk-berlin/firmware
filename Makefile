@@ -12,6 +12,7 @@ REVISION=git describe --always
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/common.config $(FW_DIR)/configs/$(MAINTARGET)-$(SUBTARGET).config
+TARGET_CONFIGADD=$(FW_DIR)/configs/$(MAINTARGET)-$(SUBTARGET).configadd
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
@@ -131,6 +132,19 @@ $(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENW
 	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) defconfig
+	# add/undefine values that got overwritten by "make defconfig"
+	if [ -e $(TARGET_CONFIGADD) ] ; then \
+	  REM="-- removed" ; \
+	  cat $(TARGET_CONFIGADD)|while read LINE ; do \
+	    [[ $$LINE == "#"* ]] && continue ; \
+	    if [[ $$LINE == *"=-" ]]; then \
+	      SYM=$${LINE%=-} ; \
+	      sed -i "s/^$${SYM}=.*/# & $${REM}/" $(OPENWRT_DIR)/.config ; \
+	      LINE="# $${SYM} is not set" ; \
+	    fi ; \
+	    echo "$${LINE}" >> $(OPENWRT_DIR)/.config ; \
+	  done ; \
+	fi \
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared

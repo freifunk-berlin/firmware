@@ -168,6 +168,32 @@ The default target is `ar71xx-generic`. At the moment we support the following t
 
 You can find configs for these targets in `configs/`.
 
+#### Configuring the openwrt build options
+
+The openwrt build options are defined in following files:
+```
+configs/
+    common.config
+    <target>.config
+    <target>.configadd
+```
+
+During the build process, their content gets passed to `openwrt/.config` to set the openwrt build options, e.g. which packages are built and what options they use.
+
+* `common.config` contains options, that are common for all TARGETs.
+* `<target>.config` contains options specific to this TARGET, e.g. which TARGET is selected in openwrt and what kernel-modules need to be included in the image.
+
+  Both `common.config` and `<target>.config` contain options in the style of "**CONFIG_FOO=y**" and "**CONFIG_FOO=n**", which are added to `openwrt/.config` in a **first step**, before openwrt's `make defconfig` is used to create an initial setup for this TARGET.
+
+* `<target>.configadd` is optional and can contain additional kernel-options.
+
+  If `<target>.configadd` exists, its content is merged with `openwrt/.config` in a **second step**.
+  This can be necessary, because some kernel-options will be overwritten by the former `make defconfig` step.
+
+  The `<target>.configadd` accepts options in both styles mentioned above, and a third style "**CONFIG_FOO=-**", that will remove this option from `openwrt/.config`.
+  Removing options instead of overwriting them can be necessary to avoid a "configuration is out of sync" warning (which is triggered, because openwrt interpretes its `.config` file and compares the result with its original `.config`. If an option, that is explicitely set, will evaluate to its default value "# CONFIG_FOO is not set" in the interpreted version, this difference will cause the warning).
+
+
 ### Continuous integration / Buildbot
 
 The firmware is [built

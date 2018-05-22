@@ -1,0 +1,17 @@
+Index: openwrt/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
+===================================================================
+--- /dev/null
++++ openwrt/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
+@@ -0,0 +1,12 @@
++--- a/library/x509_crt.c
+++++ b/library/x509_crt.c
++@@ -98,7 +98,7 @@ const mbedtls_x509_crt_profile mbedtls_x
++     MBEDTLS_X509_ID_FLAG( MBEDTLS_MD_SHA512 ),
++     0xFFFFFFF, /* Any PK alg    */
++     0xFFFFFFF, /* Any curve     */
++-    2048,
+++    1024,
++ };
++ 
++ /*
++

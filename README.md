@@ -89,14 +89,14 @@ sure the list contains `quilt`. We use it for patch management.
 
 On Ubuntu/Debian:
 ```
-apt-get install git subversion build-essential libncurses5-dev zlib1g-dev gawk \
+apt-get install git build-essential libncurses5-dev zlib1g-dev gawk time \
   unzip libxml-perl flex wget gawk libncurses5-dev gettext quilt python libssl-dev
 ```
 
 On openSUSE:
 ```
 zypper install --type pattern devel_basis
-zypper install git subversion ncurses-devel zlib-devel gawk \
+zypper install git ncurses-devel zlib-devel gawk time \
   unzip perl-libxml-perl flex wget gawk gettext-runtime quilt python libopenssl-devel
 ```
 

@@ -9,8 +9,8 @@ The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some 
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 1.0.0 "Hedy" - 2018-02-26
-* __only for fresh installs of nodes, it's not approved for upgrading from previous releases__
+## Release Note 1.0.1 "Hedy" - 2018-05-29
+* just a small maintenance release for Hedy-1.0.0, which brings the missing upgrade possibility from previous releases
 * images for 
   * Ubiquiti ERX SFP, TP-Link WR1043ND-v4
   * support for RaspberryPi and RaspberryPi3 (compile yourself)
@@ -21,10 +21,10 @@ New features like a new network concept will be part of future releases.
 * the LAN-interface (br-lan) is not providing a default route on a unconfigured node, so manual reconfiguration is required when not using the assistent
 * the assistent will not offer the setup of a private AP anymore
 * when changing or initially confiuring VLANs (via LuCI) the interfacenames will also be changed (should fix #388)
-* a lot of security-fixes for linux and many packages
+* a lot of security-fixes for linux and many packages (since Kathleen 0.3.0)
 
 ## Features
-* based on [OpenWrt](https://openwrt.org/start) v17.01.4+ (lede-17.01  branch)
+* based on [OpenWrt](https://openwrt.org/start) v17.01.4+ (lede-17.01 branch)
   * Linux 4.4.116
   * OLSR 0.9.0.3 (downgraded for BBB-VPN compatibility)
   * B.A.T.M.A.N. 2016.5
@@ -51,7 +51,7 @@ New features like a new network concept will be part of future releases.
   * you do not have to remember your IP to get access
 * change default lan ip address to 192.168.42.1/24
   * avoids network collisions
-  * this is also used in OpenWRT failsafe
+  * this is also used in OpenWrt failsafe
 * one dhcp network for APs and lan (bridged)
 * remove of autoipv6 and use of ULA ipv6 prefixes
 * default dns servers:

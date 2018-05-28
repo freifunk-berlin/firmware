@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.0.1
+
+### overall system
+* add migration from previous releases
+* add a UCI-option "ffberlin-uplink" which holds the current previous uplink-preset
+
 ## Version 1.0.0
 
 ### overall system

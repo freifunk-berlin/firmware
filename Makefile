@@ -150,6 +150,12 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
 	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
 	done
+	# copy initrd images (if existing)
+	# remove old versions
+	rm -f $(FW_TARGET_DIR)/*-vmlinux-initramfs.elf
+	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-vmlinux-initramfs.elf; do \
+	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
+	done
 	# copy packages
 	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
 	rm -rf $$PACKAGES_DIR; \

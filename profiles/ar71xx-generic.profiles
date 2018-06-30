@@ -1,9 +1,7 @@
 archer-c7-v1
 archer-c7-v2
-archer-c7-v4
 archer-c7-v5
 archer-c5-v1
-archer-c59-v1
 cpe210-v2
 cpe210-220-v1
 cpe510-520-v1
@@ -31,7 +29,6 @@ tl-wr1043nd-v1
 tl-wr1043nd-v2
 tl-wr1043nd-v3
 tl-wr1043nd-v4
-tl-wr1043n-v5
 ubnt-air-gateway
 ubnt-air-gateway-pro
 ubnt-airrouter
@@ -48,8 +45,6 @@ ubnt-rs
 ubnt-rspro
 ubnt-unifi
 ubnt-unifiac-lite
-ubnt-unifiac-mesh
-ubnt-unifiac-pro
 ubnt-unifi-outdoor
 WZRHPG300NH2
 WZRHPAG300H

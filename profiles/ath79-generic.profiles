@@ -10,10 +10,10 @@ ubnt_unifi
 ubnt_unifiac-lite
 ubnt_unifiac-mesh
 ubnt_unifiac-pro
-tl-wdr3600
-tl-wdr4300
-tl-wr1043nd-v1
-tl-wr1043nd-v2
-tl-wr1043nd-v3
-tl-wr1043nd-v4
+tplink_tl-wdr3600
+tplink_tl-wdr4300
+tplink_tl-wr1043nd-v1
+tplink_tl-wr1043nd-v2
+tplink_tl-wr1043nd-v3
+tplink_tl-wr1043nd-v4
 tplink_archer-c7-v2

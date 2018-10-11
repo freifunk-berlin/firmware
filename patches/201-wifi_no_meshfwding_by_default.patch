@@ -1,6 +1,6 @@
-diff -ur modules/luci-mod-admin-full/luasrc/model/cbi/admin_network/wifi.lua mod-patch/luci-mod-admin-full/luasrc/model/cbi/admin_network/wifi.lua
---- a/feeds/luci/modules/luci-mod-admin-full/luasrc/model/cbi/admin_network/wifi.lua	2018-07-22 03:35:34.309103302 +0200
-+++ b/feeds/luci/modules/luci-mod-admin-full/luasrc/model/cbi/admin_network/wifi.lua	2018-07-22 13:32:28.000000000 +0200
+diff -ur modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua mod-patch/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
+--- a/feeds/luci/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua	2018-07-22 03:35:34.309103302 +0200
++++ b/feeds/luci/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua	2018-07-22 13:32:28.000000000 +0200
 @@ -370,7 +370,7 @@
  
  meshfwd = s:taboption("advanced", Flag, "mesh_fwding", translate("Forward mesh peer traffic"))

@@ -1,7 +1,7 @@
-diff --git a/modules/luci-mod-admin-full/luasrc/model/cbi/admin_network/wifi.lua b/modules/luci-mod-admin-full/luasrc/model/cbi/admin_network/wifi.lua
+diff --git a/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua b/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
 index c0bb38030..877395a36 100644
---- a/feeds/luci/modules/luci-mod-admin-full/luasrc/model/cbi/admin_network/wifi.lua
-+++ b/feeds/luci/modules/luci-mod-admin-full/luasrc/model/cbi/admin_network/wifi.lua
+--- a/feeds/luci/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
++++ b/feeds/luci/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
 @@ -230,7 +230,7 @@ if hwtype == "mac80211" then
  
  	legacyrates = s:taboption("advanced", Flag, "legacy_rates", translate("Allow legacy 802.11b rates"))

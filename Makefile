@@ -16,15 +16,6 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
-# This at all is just a temporarly fix for
-# * https://github.com/freifunk-berlin/firmware/issues/414
-# * https://github.com/freifunk-berlin/buildbot/pull/42
-# which enables saving same diskspace during build as buildslave "wg1337"
-# has only a limited RAM-disk used as buildspace
-ifeq ($(shell hostname -f),buildbot)
-SET_BUILDBOT=yes
-endif
-
 ifeq ($(SET_BUILDBOT),no)
 undefine IS_BUILDBOT
 else

@@ -17,11 +17,9 @@ VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
 ifeq ($(SET_BUILDBOT),no)
-undefine IS_BUILDBOT
-else
-ifeq ($(SET_BUILDBOT),yes)
-IS_BUILDBOT=yes
-endif
+override IS_BUILDBOT=no
+else ifeq ($(SET_BUILDBOT),yes)
+override IS_BUILDBOT=yes
 endif
 
 ifeq ($(IS_BUILDBOT),yes)

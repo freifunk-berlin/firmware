@@ -157,16 +157,8 @@ in addition you can build your own image from a prebuilt imagebuilder by somethi
 make images IB_FILE=<file> TARGET=... PACKAGES_LIST_DEFAULT=...
 ```
 
-The default target is `ar71xx-generic`. At the moment we support the following targets:
-
-* ar71xx-generic
-* ar71xx-mikrotik
-* mpc85xx-generic
-* ramips-mt7620
-* ramips-mt7621
-* x86-generic
-
-You can find configs for these targets in `configs/`.
+The default target is `ar71xx-generic`. For a complete list of supported targets look in `configs/` for the target-specific configs.
+Each of these targets need a matching file in `profiles/` with the profiles (boards) that should be build with the imagebuilder.
 
 ### Continuous integration / Buildbot
 

@@ -145,6 +145,8 @@ As you notice there are several different image variants ("backbone", "default",
 These different *packages lists* are defined in `packages/`.
 See the "Features" section above for a description of the purpose of each package list.
 
+### customizing make
+
 `make` will use by default `TARGET` and `PACKAGES_LIST_DEFAULT` defined in
 `config.mk`. You can customize this by overriding them:
 
@@ -167,6 +169,15 @@ The default target is `ar71xx-generic`. At the moment we support the following t
 * x86-generic
 
 You can find configs for these targets in `configs/`.
+
+additional options
+
+* IS_BUILDBOT : 
+  * this will be "yes" when running on the buildbot farm and helps to save some disc-space by removing files not required anymore. On manual builds you should not set this to "yes", as you have to rebuild the whole toolchain each time.
+* SET_BUILDBOT : 
+  * "env" the Makefile will honor the "IS_BUILDBOT" environment
+  * "yes" the Makefile will always act as "IS_BUILDBOT" was set to "yes"
+  * "no"  the Makefile will always act as "IS_BUILDBOT" was set to "no" / is unset. This way we can run builds on the buildbot like a local build.
 
 ### Continuous integration / Buildbot
 

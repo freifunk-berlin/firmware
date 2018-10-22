@@ -87,7 +87,7 @@ http://github.com/freifunk-berlin/packages_berlin.
 
 ### Build Prerequisites
 
-Please take a look at the [OpenWrt documentation](http://wiki.openwrt.org/doc/howto/buildroot.exigence#examples.of.package.installations)
+Please take a look at the [OpenWrt documentation](https://openwrt.org/docs/guide-developer/build-system/install-buildsystem?s[]=prerequisites#prerequisites)
 for a complete and uptodate list of packages for your operating system. Make
 sure the list contains `quilt`. We use it for patch management.
 
@@ -119,9 +119,8 @@ cd firmware
 make
 ```
 
-The build will take some time. You can improve the build time with
-[build options](http://wiki.openwrt.org/doc/howto/build#make_options) such as
-`-j <number of cores>`. `V=s` will give more verbose error messages.
+The build will take some time. You can improve the build time with [build options](https://openwrt.org/docs/guide-developer/build-system/use-buildsystem)
+such as `-j <number of cores>`. `V=s` will give more verbose error messages.
 
 An internet connection is required during the build process. A good internet
 connection can improve the build time.
@@ -214,7 +213,7 @@ once you pushed the new branch to github.
 
 **Important:** all patches should be pushed upstream!
 
-If a patch is not yet included upstream, it can be placed in the `patches` directory with the `quilt` tool. Please configure `quilt` as described in the [OpenWrt wiki](http://wiki.openwrt.org/doc/devel/patches) (which also provides a documentation of `quilt`).
+If a patch is not yet included upstream, it can be placed in the `patches` directory with the `quilt` tool. Please configure `quilt` as described in the [OpenWrt wiki](https://openwrt.org/docs/guide-developer/patches) (which also provides a documentation of `quilt`).
 
 #### Add, modify or delete a patch
 
@@ -228,7 +227,7 @@ Then switch to the openwrt directory:
 ```bash
 cd openwrt
 ```
-Now you can use the `quilt` commands as described in the [OpenWrt wiki](http://wiki.openwrt.org/doc/devel/patches).
+Now you can use the `quilt` commands as described in the [OpenWrt wiki](https://openwrt.org/docs/guide-developer/patches).
 
 ##### Example: add a patch
 
@@ -268,4 +267,3 @@ git send-email \
 ```
 
 Additional information: https://dev.openwrt.org/wiki/SubmittingPatches
-

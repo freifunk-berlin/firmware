@@ -1,0 +1,270 @@
+--- a/feeds/gluon/net/tunneldigger/Makefile
++++ b/feeds/gluon/net/tunneldigger/Makefile
+@@ -33,6 +33,8 @@ define Package/tunneldigger/install
+ 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tunneldigger $(1)/usr/bin/tunneldigger
+ 	$(INSTALL_DIR) $(1)/etc/init.d
+ 	$(INSTALL_BIN) ./files/tunneldigger.init $(1)/etc/init.d/tunneldigger
++	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
++	$(INSTALL_BIN) ./files/tunneldigger.hotplug $(1)/etc/hotplug.d/iface/60-tunneldigger
+ 	$(INSTALL_DIR) $(1)/etc/config
+ 	$(INSTALL_DATA) ./files/config.default $(1)/etc/config/tunneldigger
+ endef
+--- /dev/null
++++ b/feeds/gluon/net/tunneldigger/files/tunneldigger.hotplug
+@@ -0,0 +1,114 @@
++#!/bin/sh
++
++. /lib/functions.sh
++. /lib/functions/network.sh
++
++PIDPATH=/var/run
++tunnel_id=0
++
++missing() {
++	logger -t td-client "Not starting tunneldigger \"$1\" - missing $2" >&2
++}
++
++handle_td_ifup() {
++	local cfg=$1
++	local enabled
++	local addresses
++	local uuid
++	local interface
++	local group
++	local limit_bw_down
++	local hook_script
++	local bind_interface
++	local broker_selection
++
++
++	config_get_bool enabled "$cfg" enabled 1
++	config_get addresses "$cfg" address
++	config_get uuid "$cfg" uuid
++	config_get interface "$cfg" interface
++	config_get group "$cfg" group
++	config_get limit_bw_down "$cfg" limit_bw_down
++	config_get hook_script "$cfg" hook_script
++	config_get bind_interface "$cfg" bind_interface
++	config_get broker_selection "$cfg" broker_selection
++
++	let tunnel_id++
++
++	[ $enabled -eq 0 ] && return
++
++	[ "$INTERFACE" != "${bind_interface}" ] && return
++
++	local broker_opts=""
++	local address
++	for address in $addresses; do
++		append broker_opts "-b ${address}"
++	done
++
++	[ ! -z "${limit_bw_down}" ] && append broker_opts "-L ${limit_bw_down}"
++	[ ! -z "${hook_script}" ] && append broker_opts "-s ${hook_script}"
++	[ ! -z "${bind_interface}" ] && {
++		# Resolve logical interface name.
++		unset _bind_interface
++		network_get_device _bind_interface "${bind_interface}" || _bind_interface="${bind_interface}"
++		append broker_opts "-I ${_bind_interface}"
++	}
++	[ ! -z "${broker_selection}" ] && {
++		# Set broker selection.
++		case "${broker_selection}" in
++			usage)
++				append broker_opts "-a"
++			;;
++			first)
++				append broker_opts "-g"
++			;;
++			random)
++				append broker_opts "-r"
++			;;
++		esac
++	}
++
++	if [ -z "$uuid" ]; then
++		missing $cfg uuid
++		return
++	elif [ -z "$interface" ]; then
++		missing $cfg interface
++		return
++	fi
++
++	logger -t td-client "Starting tunneldigger \"$cfg\" on ${interface}"
++	/sbin/start-stop-daemon -S -q -b -m -c root:${group} -p ${PIDPATH}/tunneldigger.${interface}.pid -x /usr/bin/tunneldigger -- -u ${uuid} -i ${interface} -t ${tunnel_id} ${broker_opts}
++}
++
++handle_td_ifdown() {
++	local cfg=$1
++	local enabled
++	local interface
++	local bind_interface
++
++	config_get_bool enabled "$cfg" enabled 1
++	config_get interface "$cfg" interface
++	config_get bind_interface "$cfg" bind_interface
++
++	if [ "$INTERFACE" = "${bind_interface}" ]; then
++		local PIDFILE=${PIDPATH}/tunneldigger.${interface}.pid
++		local PID="$(cat ${PIDFILE})"
++		logger -t td-client "Stopping tunneldigger \"$cfg\" on ${interface} PIDFILE=${PIDFILE}"
++		/sbin/start-stop-daemon -K -q -p $PIDFILE
++		while test -d "/proc/${PID}"; do
++			logger -t td-client "  waiting for tunneldigger to stop"
++			sleep 1
++		done
++		logger -t td-client "  tunneldigger stopped"
++	fi
++}
++
++config_load tunneldigger
++if [ "$ACTION" = ifup ]; then
++	config_foreach handle_td_ifup broker
++fi
++
++if [ "$ACTION" = ifdown ]; then
++	config_foreach handle_td_ifdown broker
++fi
++
+--- a/feeds/gluon/net/tunneldigger/files/tunneldigger.init
++++ b/feeds/gluon/net/tunneldigger/files/tunneldigger.init
+@@ -5,75 +5,78 @@
+ START=90
+ 
+ PIDPATH=/var/run
+-tunnel_id=1
++tunnel_id=0
+ 
+ missing() {
+-	echo "Not starting tunneldigger - missing $1" >&2
++	echo "Not starting tunneldigger \"$1\" - missing $2" >&2
+ }
+ 
+-config_cb() {
+-	local cfg="$CONFIG_SECTION"
+-	config_get configname "$cfg" TYPE
+-	case "$configname" in
+-		broker)
+-			config_get_bool enabled "$cfg" enabled 1
+-			config_get addresses "$cfg" address
+-			config_get uuid "$cfg" uuid
+-			config_get interface "$cfg" interface
+-			config_get group "$cfg" group
+-			config_get limit_bw_down "$cfg" limit_bw_down
+-			config_get hook_script "$cfg" hook_script
+-			config_get bind_interface "$cfg" bind_interface
+-			config_get broker_selection "$cfg" broker_selection
+-			
+-			[ $enabled -eq 0 ] && return
+-
+-			local broker_opts=""
+-			for address in $addresses; do
+-			  append broker_opts "-b ${address}"
+-			done
+-
+-			[ ! -z "${limit_bw_down}" ] && append broker_opts "-L ${limit_bw_down}"
+-			[ ! -z "${hook_script}" ] && append broker_opts "-s ${hook_script}"
+-			[ ! -z "${bind_interface}" ] && {
+-				# Resolve logical interface name.
+-				unset _bind_interface
+-				network_get_device _bind_interface "${bind_interface}" || _bind_interface="${bind_interface}"
+-				append broker_opts "-I ${_bind_interface}"
+-			}
+-			[ ! -z "${broker_selection}" ] && {
+-				# Set broker selection.
+-				case "${broker_selection}" in
+-					usage)
+-						append broker_opts "-a"
+-					;;
+-					first)
+-						append broker_opts "-g"
+-					;;
+-					random)
+-						append broker_opts "-r"
+-					;;
+-				esac
+-			}
+-
+-			if [ -z "$uuid" ]; then
+-				missing uuid
+-				return
+-			elif [ -z "$interface" ]; then
+-				missing interface
+-				return
+-			fi
+-
+-			echo "Starting tunneldigger on ${interface}"
+-			/sbin/start-stop-daemon -S -q -b -m -c root:${group} -p ${PIDPATH}/tunneldigger.${interface}.pid -x /usr/bin/tunneldigger -- -u ${uuid} -i ${interface} -t ${tunnel_id} ${broker_opts}
+-
+-			let tunnel_id++
+-		;;
+-	esac
++handle_td() {
++	local cfg=$1
++	local enabled
++	local addresses
++	local uuid
++	local interface
++	local group
++	local limit_bw_down
++	local hook_script
++	local bind_interface
++	local broker_selection
++
++	config_get_bool enabled "$cfg" enabled 1
++	config_get addresses "$cfg" address
++	config_get uuid "$cfg" uuid
++	config_get interface "$cfg" interface
++	config_get group "$cfg" group
++	config_get limit_bw_down "$cfg" limit_bw_down
++	config_get hook_script "$cfg" hook_script
++	config_get bind_interface "$cfg" bind_interface
++	config_get broker_selection "$cfg" broker_selection
++
++	let tunnel_id++
++
++	[ $enabled -eq 0 ] && return
++	# The hotplug script will take care of tunnels bound to an interface
++	[ ! -z "${bind_interface}" ] && return
++
++	local broker_opts=""
++	local address
++	for address in $addresses; do
++		append broker_opts "-b ${address}"
++	done
++
++	[ ! -z "${limit_bw_down}" ] && append broker_opts "-L ${limit_bw_down}"
++	[ ! -z "${hook_script}" ] && append broker_opts "-s ${hook_script}"
++	[ ! -z "${broker_selection}" ] && {
++		# Set broker selection.
++		case "${broker_selection}" in
++			usage)
++				append broker_opts "-a"
++			;;
++			first)
++				append broker_opts "-g"
++			;;
++			random)
++				append broker_opts "-r"
++			;;
++		esac
++	}
++
++	if [ -z "$uuid" ]; then
++		missing $cfg uuid
++		return
++	elif [ -z "$interface" ]; then
++		missing $cfg interface
++		return
++	fi
++
++	echo "Starting tunneldigger \"$cfg\" on ${interface}"
++	/sbin/start-stop-daemon -S -q -b -m -c root:${group} -p ${PIDPATH}/tunneldigger.${interface}.pid -x /usr/bin/tunneldigger -- -u ${uuid} -i ${interface} -t ${tunnel_id} ${broker_opts}
+ }
+ 
+ start() {
+ 	config_load tunneldigger
++	config_foreach handle_td broker
+ }
+ 
+ stop() {

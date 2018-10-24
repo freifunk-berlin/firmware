@@ -38,7 +38,7 @@ New features like a new network concept will be part of future releases.
 * new OLSR setup and configuration:
   * SmartGateway for gateway selection (e.g. honors uplink speed)
   * dynamic gateway plugin for uplink connectivity tests (gwcheck script removed)
-    on hosts: 85.214.20.141, 213.73.91.35, 194.150.168.168
+    on hosts: 85.214.20.141, 80.67.169.40, 194.150.168.168
 * a configuration [wizard](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin)
   * starts after first boot and guides new users through the configuration of the router
 * monitoring of nodes through collectd
@@ -56,7 +56,7 @@ New features like a new network concept will be part of future releases.
 * remove of autoipv6 and use of ULA ipv6 prefixes
 * default dns servers:
   * 85.214.20.141 (FoeBud / Digital Courage)
-  * 213.73.91.35 (CCC Berlin)
+  * 80.67.169.40 (www.fdn.fr/actions/dns)
   * 194.150.168.168 (dns.as250.net)
   * 2001:4ce8::53 (as250)
   * 2001:910:800::12 (french data network - http://www.fdn.fr/)
@@ -68,8 +68,9 @@ The firmware wiki page is at: https://wiki.freifunk.net/Berlin:Firmware
 For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
 
-A tutorial on router configuration is available here (in German only):
-http://berlin.freifunk.net/participate/howto/
+A tutorial on router configuration is available here:
+German: https://wiki.freifunk.net/Berlin:Firmware:Howto
+English: https://wiki.freifunk.net/Berlin:Firmware:En:Howto
 
 ## Development
 
@@ -83,7 +84,7 @@ http://github.com/freifunk-berlin/packages_berlin.
 
 ### Build Prerequisites
 
-Please take a look at the [OpenWrt documentation](http://wiki.openwrt.org/doc/howto/buildroot.exigence#examples.of.package.installations)
+Please take a look at the [OpenWrt documentation](https://openwrt.org/docs/guide-developer/build-system/install-buildsystem?s[]=prerequisites#prerequisites)
 for a complete and uptodate list of packages for your operating system. Make
 sure the list contains `quilt`. We use it for patch management.
 
@@ -110,9 +111,8 @@ cd firmware
 make
 ```
 
-The build will take some time. You can improve the build time with
-[build options](http://wiki.openwrt.org/doc/howto/build#make_options) such as
-`-j <number of cores>`. `V=s` will give more verbose error messages.
+The build will take some time. You can improve the build time with [build options](https://openwrt.org/docs/guide-developer/build-system/use-buildsystem)
+such as `-j <number of cores>`. `V=s` will give more verbose error messages.
 
 An internet connection is required during the build process. A good internet
 connection can improve the build time.
@@ -190,7 +190,7 @@ once you pushed the new branch to github.
 
 **Important:** all patches should be pushed upstream!
 
-If a patch is not yet included upstream, it can be placed in the `patches` directory with the `quilt` tool. Please configure `quilt` as described in the [OpenWrt wiki](http://wiki.openwrt.org/doc/devel/patches) (which also provides a documentation of `quilt`).
+If a patch is not yet included upstream, it can be placed in the `patches` directory with the `quilt` tool. Please configure `quilt` as described in the [OpenWrt wiki](https://openwrt.org/docs/guide-developer/patches) (which also provides a documentation of `quilt`).
 
 #### Add, modify or delete a patch
 
@@ -204,7 +204,7 @@ Then switch to the openwrt directory:
 ```bash
 cd openwrt
 ```
-Now you can use the `quilt` commands as described in the [OpenWrt wiki](http://wiki.openwrt.org/doc/devel/patches).
+Now you can use the `quilt` commands as described in the [OpenWrt wiki](https://openwrt.org/docs/guide-developer/patches).
 
 ##### Example: add a patch
 
@@ -244,4 +244,3 @@ git send-email \
 ```
 
 Additional information: https://dev.openwrt.org/wiki/SubmittingPatches
-

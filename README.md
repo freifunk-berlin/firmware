@@ -38,7 +38,7 @@ New features like a new network concept will be part of future releases.
 * new OLSR setup and configuration:
   * SmartGateway for gateway selection (e.g. honors uplink speed)
   * dynamic gateway plugin for uplink connectivity tests (gwcheck script removed)
-    on hosts: 85.214.20.141, 213.73.91.35, 194.150.168.168
+    on hosts: 85.214.20.141, 80.67.169.40, 194.150.168.168
 * a configuration [wizard](https://github.com/freifunk-berlin/packages-berlin/tree/master/utils/luci-app-ffwizard-berlin)
   * starts after first boot and guides new users through the configuration of the router
 * monitoring of nodes through collectd
@@ -56,7 +56,7 @@ New features like a new network concept will be part of future releases.
 * remove of autoipv6 and use of ULA ipv6 prefixes
 * default dns servers:
   * 85.214.20.141 (FoeBud / Digital Courage)
-  * 213.73.91.35 (CCC Berlin)
+  * 80.67.169.40 (www.fdn.fr/actions/dns)
   * 194.150.168.168 (dns.as250.net)
   * 2001:4ce8::53 (as250)
   * 2001:910:800::12 (french data network - http://www.fdn.fr/)
@@ -68,8 +68,9 @@ The firmware wiki page is at: https://wiki.freifunk.net/Berlin:Firmware
 For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
 
-A tutorial on router configuration is available here (in German only):
-http://berlin.freifunk.net/participate/howto/
+A tutorial on router configuration is available here:
+German: https://wiki.freifunk.net/Berlin:Firmware:Howto
+English: https://wiki.freifunk.net/Berlin:Firmware:En:Howto
 
 ## Development
 

@@ -136,7 +136,7 @@ DEST_DIR=$(to_absolute_path "$DEST_DIR")
 info $DEST_DIR
 
 info "Extract image builder $IB_FILE"
-tar xf "$IB_FILE" -C "$TEMP_DIR"
+tar xf "$IB_FILE" --strip-components=1 -C "$TEMP_DIR"
 
 for profile in $PROFILES ; do
 	info "Building a profile for $profile"
@@ -194,7 +194,7 @@ for profile in $PROFILES ; do
 		# Don't use the "BIN_DIR" option of the imagebuilder, as this fails for some boards
 		# Till it'S fixed upstream, we move the files manually to the required destination
 		# (see https://github.com/freifunk-berlin/firmware/pull/434)
-		make -C ${TEMP_DIR}/$(ls ${TEMP_DIR}/) image PROFILE="$profile" PACKAGES="$packages" $img_params
-		find ${TEMP_DIR}/$(ls ${TEMP_DIR}/)/bin/targets/ -type f -exec mv '{}' ${DEST_DIR}/${package_list} \;
+		make -C ${TEMP_DIR}/ image PROFILE="$profile" PACKAGES="$packages" $img_params
+		find ${TEMP_DIR}/bin/targets/ -type f -exec mv '{}' ${DEST_DIR}/${package_list} \;
 	done
 done

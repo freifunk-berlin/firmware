@@ -2,7 +2,6 @@
 002-add_ramips-nexx-image.patch
 004-openwrt-release_use_configured_revision.patch
 005-hostapd_nolegacy_by_default.patch
-101-tunneldigger_init.patch
 200-wifi_nolegacy_rates_by_default.patch
 201-wifi_no_meshfwding_by_default.patch
 600-imagebuilder-custom-postinst-script.patch

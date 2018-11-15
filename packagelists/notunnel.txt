@@ -35,7 +35,7 @@ uhttpd
 uhttpd-mod-ubus
 px5g-wolfssl
 luci-app-ffwizard-berlin
-luci-mod-freifunk-ui
+luci-mod-freifunk
 luci-app-olsr
 freifunk-common-olsr
 luci-app-firewall
@@ -53,6 +53,8 @@ luci-i18n-base-de
 luci-i18n-base-en
 luci-i18n-firewall-de
 luci-i18n-firewall-en
+luci-i18n-freifunk-de
+luci-i18n-freifunk-en
 luci-i18n-olsr-de
 luci-i18n-olsr-en
 luci-i18n-statistics-de

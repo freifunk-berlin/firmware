@@ -34,7 +34,6 @@ luci-app-ffwizard-berlin
 luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-olsr-services
-luci-app-opkg
 luci-app-owm
 luci-app-owm-cmd
 luci-theme-bootstrap

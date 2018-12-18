@@ -73,7 +73,7 @@ batctl
 
 # Uplink
 luci-app-openvpn
-openvpn-mbedtls
+openvpn-openssl
 freifunk-berlin-uplink-tunnelberlin-files
 
 # Statistics

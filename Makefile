@@ -143,17 +143,11 @@ endif
 #  * packages directory
 #  * firmware-images are already in place (target images)
 firmwares: stamp-clean-firmwares .stamp-firmwares
-.stamp-firmwares: .stamp-images $(VERSION_FILE)
+.stamp-firmwares: .stamp-images $(VERSION_FILE) .stamp-initrd
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/*.tar.xz
 	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
-	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
-	done
-	# copy initrd images (if existing)
-	# remove old versions
-	rm -f $(FW_TARGET_DIR)/*-vmlinux-initramfs.elf
-	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-vmlinux-initramfs.elf; do \
 	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
 	done
 	# copy packages
@@ -163,6 +157,22 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	cp -a $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
 	# e.g. packages/packages/mips_34k the doublicated packages is correct! \
 	cp -a $(OPENWRT_DIR)/bin/packages $$PACKAGES_DIR/
+	touch $@
+
+initrd: .stamp-initrd
+.stamp-initrd: .stamp-compiled
+	$(eval TARGET_BINDIR := $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET))
+	mkdir -p $(FW_TARGET_DIR)
+	# copy initrd images (if existing)
+	# remove old versions
+	rm -f $(FW_TARGET_DIR)/*-vmlinux-initramfs.elf
+	for file in $(TARGET_BINDIR)/*-vmlinux-initramfs.elf; do \
+	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
+	done
+	rm -f $(FW_TARGET_DIR)/*-initramfs-kernel.bin
+	for profile in `cat profiles/$(MAINTARGET)-$(SUBTARGET).profiles`; do \
+	  if [ -e $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin ]; then mv $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin $(FW_TARGET_DIR)/ ; fi \
+	done
 	touch $@
 
 $(VERSION_FILE): .stamp-prepared

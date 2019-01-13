@@ -49,7 +49,9 @@ c4323e802 migration: fix dependency
 ```
 
 ### openwrt
-update to OpenWrt-Release 17.01.6+ (https://openwrt.org/releases/17.01/notes-17.01.6)
+update to OpenWrt-Release 17.01.6+ for OpenWrt-core, OpenWrt-packages, LuCI and OpenWrt-Routing
+(https://openwrt.org/releases/17.01/notes-17.01.6)
+
 ```
 01a8f0e444 mac80211: brcmfmac: backport first important changes from the 4.20
 10eb247ee8 mac80211: add iw command wrapper with error logging
@@ -72,6 +74,28 @@ e84f289a02 rules.mk: fix syntax error
 459a40fce2 apm821xx: MBL: load kernel/dtb from SATA 0:1 first
 834bd86424 apm821xx: switch MX60(W)'s recovery images to multi-image method
 9d4eed6837 mac80211: brcmfmac: fix use-after-free & possible NULL pointer dereference
+```
+
+packages:
+```
+578a7c506 tinc: update to 1.0.35
+c3109a256 tiff: security bump to 4.0.10
+6fdeb2df9 sqlite3: security bump
+d309d0090 sqlite3: use dynamic linking for sqlite cli tool
+```
+
+Luci:
+```
+27ff6e930 freifunk profiles: add nameserver 80.67.169.40 from www.fdn.fr/actions/dns
+3f16979c2 community-profiles: create profile for Fürstenwalde
+f4f063252 community-profiles: change subnet of mesh_network option for Berlin
+e86fedb7d timezone data: update to 2018i
+```
+
+routing:
+```
+2ac8e7b batman-adv: Merge bugfixes from 2018.3
+2c8de62 batman-adv: Merge bugfixes from 2018.4
 ```
 
 ## Version 1.0.1

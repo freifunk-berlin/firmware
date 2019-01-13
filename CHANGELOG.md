@@ -48,6 +48,32 @@ c4323e802 migration: fix dependency
 7edad1f32 Wizard: Check for empty Mesh-IP
 ```
 
+### openwrt
+update to OpenWrt-Release 17.01.6+ (https://openwrt.org/releases/17.01/notes-17.01.6)
+```
+01a8f0e444 mac80211: brcmfmac: backport first important changes from the 4.20
+10eb247ee8 mac80211: add iw command wrapper with error logging
+a360d5a18e mac80211: brcmfmac: rename 4.20 backport patches
+b1fc9b79d0 mac80211: brcmfmac: backport the latest 4.20 changes
+c11f335275 mac80211: brcmutil: backport chanspec debugging patch
+e50a5a9328 mac80211: brcmfmac: add 2 more recent changes
+5970e6d466 libubox: update to latest git HEAD
+0f47ce8180 base-files: fix unkillable processes after restart
+4c101f8b3a uclient: update to latest Git head
+6cf22507fd uhttpd: update to latest Git head
+ecf104c023 sdk: find kernel modules when KDIR is a symlink
+e42415723b base-files: fix prerm return value, align with postinst code
+89ed2d6f78 rules.mk: add INSTALL_SUID macro
+e84f289a02 rules.mk: fix syntax error
+3e6e33f528 procd: procd_send_signal use signal names
+26b8069604 rpcd: update to latest Git head
+65044a50ab kernel: bump 4.4 to 4.4.167
+202c3ceb13 cns3xxx: fix writing to wrong PCI registers
+459a40fce2 apm821xx: MBL: load kernel/dtb from SATA 0:1 first
+834bd86424 apm821xx: switch MX60(W)'s recovery images to multi-image method
+9d4eed6837 mac80211: brcmfmac: fix use-after-free & possible NULL pointer dereference
+```
+
 ## Version 1.0.1
 
 ### overall system

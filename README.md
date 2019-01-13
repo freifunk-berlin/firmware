@@ -58,9 +58,10 @@ New features like a new network concept will be part of future releases.
 * remove of autoipv6 and use of ULA ipv6 prefixes
 * default dns servers:
   * 85.214.20.141 (FoeBud / Digital Courage)
+  * 80.67.169.40 (french data network - http://www.fdn.fr/)
   * 194.150.168.168 (dns.as250.net)
   * 2001:4ce8::53 (as250)
-  * 80.67.169.40, 2001:910:800::12 (french data network - http://www.fdn.fr/)
+  * 2001:910:800::12 (french data network - http://www.fdn.fr/)
 
 ## Contact / More information
 

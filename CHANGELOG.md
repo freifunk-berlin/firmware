@@ -6,7 +6,8 @@
 * add support of changing the uplink-preset
 * add a new uplink-preset "tunnelberlin-tunneldigger"
 
-### basic system
+### Freifunk Berlin
+__build system__
 ```
 59c14076f3 Changelog: initial notes about Hedy-1.0.2
 9de0251d10 README: update for Hedy-1.0.2
@@ -28,7 +29,7 @@ df5e603ea3 Move tl-wr710n_v1.0 and tl-wr710n_v2.1 to non-tiny profile
 f83651bfdc config: set VERSION to Hedy-1.0.2-alpha
 ```
 
-### packages-berlin
+__packages-berlin__
 ```
 ee46c1fbb migration: allow whitespace at begin of logmessages
 abfb8fd4a hotplug 60-ffopenvpn: remove local declaration of variables
@@ -48,10 +49,11 @@ c4323e802 migration: fix dependency
 7edad1f32 Wizard: Check for empty Mesh-IP
 ```
 
-### openwrt
+### Upstream (OpenWrt and OpenWrt-Routing)
 update to OpenWrt-Release 17.01.6+ for OpenWrt-core, OpenWrt-packages, LuCI and OpenWrt-Routing
 (https://openwrt.org/releases/17.01/notes-17.01.6)
 
+__OpenWrt-core__
 ```
 01a8f0e444 mac80211: brcmfmac: backport first important changes from the 4.20
 10eb247ee8 mac80211: add iw command wrapper with error logging
@@ -76,7 +78,7 @@ e84f289a02 rules.mk: fix syntax error
 9d4eed6837 mac80211: brcmfmac: fix use-after-free & possible NULL pointer dereference
 ```
 
-packages:
+__Packages-feed__
 ```
 578a7c506 tinc: update to 1.0.35
 c3109a256 tiff: security bump to 4.0.10
@@ -84,7 +86,7 @@ c3109a256 tiff: security bump to 4.0.10
 d309d0090 sqlite3: use dynamic linking for sqlite cli tool
 ```
 
-Luci:
+__LuCI-feed__:
 ```
 27ff6e930 freifunk profiles: add nameserver 80.67.169.40 from www.fdn.fr/actions/dns
 3f16979c2 community-profiles: create profile for Fürstenwalde
@@ -92,7 +94,7 @@ f4f063252 community-profiles: change subnet of mesh_network option for Berlin
 e86fedb7d timezone data: update to 2018i
 ```
 
-routing:
+__Routing-feed__
 ```
 2ac8e7b batman-adv: Merge bugfixes from 2018.3
 2c8de62 batman-adv: Merge bugfixes from 2018.4

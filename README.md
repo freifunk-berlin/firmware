@@ -30,15 +30,7 @@ New features like a new network concept will be part of future releases.
   * Linux 4.4.167
   * OLSR 0.9.0.3 (downgraded for BBB-VPN compatibility)
   * B.A.T.M.A.N. 2016.5 (with patches of 2019.0)
-* custom package lists for different settings
-  * "default" variant includes ffwizard, openvpn, BATMAN
-  * "default_4MB" like the "default" variant, but excludes public router statistics page (luci-mod-freifunk), monitoring (collectd), BATMAN to fit into boards with 4MB flash
-  * "tunnel-berlin" like default variant and uses the tunnel-service of the Berlin-community via OpenVPN as default uplink
-  * "tunnel-berlin-tunneldigger" like default variant and uses the tunnel-service of the Berlin-community via tunneldigger as default uplink
-  * "tunnel-berlin-tunneldigger_4MB" like the "tunnel-berlin-tunneldigger" variant, but excludes public router statistics page (luci-mod-freifunk), monitoring (collectd), BATMAN to fit into boards with 4MB flash
-  * "vpn03" like default variant and uses the VPN03-service (deprecated) as default uplink
-  * "backbone" variant excludes ffwizard and openvpn, includes more debugging tools
-  * "backbone_4MB" variant excludes ffwizard, luci-mod-freifunk, openvpn, collectd, includes BATMAN and more debugging tools
+* custom package sets for different use cases (see the [Wiki-page](https://wiki.freifunk.net/Berlin:Firmware#Image-Typen))
 * new OLSR setup and configuration:
   * SmartGateway for gateway selection (e.g. honors uplink speed)
   * dynamic gateway plugin for uplink connectivity tests (gwcheck script removed)

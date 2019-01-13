@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 1.0.2
+
+### overall system
+* add support of changing the uplink-preset
+* add a new uplink-preset "tunnelberlin-tunneldigger"
+
+### packages-berlin
+567b5d1ec notunnel ffuplink: routing table set using the options ip[4,6]table
+3d5064d41 lib-guard: add guard_delete()
+ada5b8b33 wizard:backport VPN03 references, https-links
+c930acb36 Merge pull request #154 from freifunk-berlin/freifunk-berlin-tunneldigger
+91e91b779 uplink notunnel: add setting a static macaddr
+6da0d4e75 migration: run jffs-cleanup as very last uci-default script
+d5fc0731d Merge changes which provide the basics for changing the uplink-preset
+d332954f9 Merge code to change the uplinks
+212db2396 migration: update DNS-Servers for interface DHCP
+15b1fbb62 add OLSRd core dump garbage collectiong (#173)
+7edad1f32 Wizard: Check for empty Mesh-IP
+
+
 ## Version 1.0.1
 
 ### overall system

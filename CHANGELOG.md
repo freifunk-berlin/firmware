@@ -6,8 +6,34 @@
 * add support of changing the uplink-preset
 * add a new uplink-preset "tunnelberlin-tunneldigger"
 
+### basic system
+```
+59c14076f3 Changelog: initial notes about Hedy-1.0.2
+9de0251d10 README: update for Hedy-1.0.2
+0675f3f272 Revert "Hardware: Add support for the Mikrotik rb750gr3"
+32fc4ba0cb set VERSION_NUMBER to 1.0.2-rc2
+35d82a3fdd update berlin-packages to HEAD of "for-Hedy-1.0.x" branch (26. Dec 2018)
+52c60b69ab common.config: set VERSION_NUMBER to 1.0.2-rc1
+446183a524 Hardware: Add support for the Mikrotik rb750gr3
+3035147e66 packages: switch to OpenVPN-openssl
+e0d937f76d build: add freifunk-berlin-bbbdigger as a module
+ad5c3deaaa build: add tunneldigger images
+688080dada update berlin-packages to HEAD of "for-Hedy-1.0.x" branch (20. Dec 2018)
+18bb058698 update 3rd-party-feeds to HEAD of 17.01 branch (18. Dec 2018)
+7497023317 update OpenWRT to HEAD of LEDE-17.01 (18. Dec 2018)
+514acf2043 update OpenWrt and feeds to lede-17.01.6
+109b43e0e9 patches: patch mbedtls to allow 1024 bits RSA
+d3108ff6db configs: remove obsolete OpenVPN_polarssl options
+df5e603ea3 Move tl-wr710n_v1.0 and tl-wr710n_v2.1 to non-tiny profile
+f83651bfdc config: set VERSION to Hedy-1.0.2-alpha
+```
+
 ### packages-berlin
+```
+ee46c1fbb migration: allow whitespace at begin of logmessages
+abfb8fd4a hotplug 60-ffopenvpn: remove local declaration of variables
 567b5d1ec notunnel ffuplink: routing table set using the options ip[4,6]table
+274eff87d uplinks: fix quoting
 3d5064d41 lib-guard: add guard_delete()
 ada5b8b33 wizard:backport VPN03 references, https-links
 c930acb36 Merge pull request #154 from freifunk-berlin/freifunk-berlin-tunneldigger
@@ -17,8 +43,10 @@ d5fc0731d Merge changes which provide the basics for changing the uplink-preset
 d332954f9 Merge code to change the uplinks
 212db2396 migration: update DNS-Servers for interface DHCP
 15b1fbb62 add OLSRd core dump garbage collectiong (#173)
+075fd47ee uplink_tunnelberlin_td: fix name of preset
+c4323e802 migration: fix dependency
 7edad1f32 Wizard: Check for empty Mesh-IP
-
+```
 
 ## Version 1.0.1
 

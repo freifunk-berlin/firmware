@@ -5,6 +5,7 @@
 ### overall system
 * add support of changing the uplink-preset
 * add a new uplink-preset "tunnelberlin-tunneldigger"
+* add package "freifunk-berlin-bbbdigger" as alternative to BBB-VPN via OpenVPN
 
 ### Freifunk Berlin
 __build system__

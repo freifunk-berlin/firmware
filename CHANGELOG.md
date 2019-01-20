@@ -61,6 +61,7 @@ e42415723b base-files: fix prerm return value, align with postinst code
 459a40fce2 apm821xx: MBL: load kernel/dtb from SATA 0:1 first
 834bd86424 apm821xx: switch MX60(W)'s recovery images to multi-image method
 9d4eed6837 mac80211: brcmfmac: fix use-after-free & possible NULL pointer dereference
+e09592748c cns3xxx: use actual size reads for PCIe
 ```
 
 __Packages-feed__
@@ -81,7 +82,7 @@ e86fedb7d timezone data: update to 2018i
 
 __Routing-feed__
 ```
-2c8de62 batman-adv: Merge bugfixes from 2018.4
+4e4a03244 batman-adv: Merge bugfixes from 2019.0
 ```
 
 ## Version 1.0.1

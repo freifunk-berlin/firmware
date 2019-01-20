@@ -1,5 +1,90 @@
 # Changelog
 
+## Version 1.0.2
+
+### overall system
+* add support of changing the uplink-preset
+* add a new uplink-preset "tunnelberlin-tunneldigger"
+* add package "freifunk-berlin-bbbdigger" as alternative to BBB-VPN via OpenVPN
+
+### Freifunk Berlin
+__build system__
+```
+3035147e66 packages: switch to OpenVPN-openssl
+e0d937f76d build: add freifunk-berlin-bbbdigger as a module
+ad5c3deaaa build: add tunneldigger images
+109b43e0e9 patches: patch mbedtls to allow 1024 bits RSA
+d3108ff6db configs: remove obsolete OpenVPN_polarssl options
+df5e603ea3 Move tl-wr710n_v1.0 and tl-wr710n_v2.1 to non-tiny profile
+```
+
+__packages-berlin__
+```
+ee46c1fbb migration: allow whitespace at begin of logmessages
+abfb8fd4a hotplug 60-ffopenvpn: remove local declaration of variables
+567b5d1ec notunnel ffuplink: routing table set using the options ip[4,6]table
+3d5064d41 lib-guard: add guard_delete()
+ada5b8b33 wizard:backport VPN03 references, https-links
+c930acb36 Merge pull request #154 from freifunk-berlin/freifunk-berlin-tunneldigger
+91e91b779 uplink notunnel: add setting a static macaddr
+6da0d4e75 migration: run jffs-cleanup as very last uci-default script
+d5fc0731d Merge changes which provide the basics for changing the uplink-preset
+d332954f9 Merge code to change the uplinks
+212db2396 migration: update DNS-Servers for interface DHCP
+15b1fbb62 add OLSRd core dump garbage collectiong (#173)
+7edad1f32 Wizard: Check for empty Mesh-IP
+```
+
+### Upstream (OpenWrt and OpenWrt-Routing)
+update to OpenWrt-Release 17.01.6+ for OpenWrt-core, OpenWrt-packages, LuCI and OpenWrt-Routing
+(https://openwrt.org/releases/17.01/notes-17.01.6)
+
+__OpenWrt-core__
+```
+01a8f0e444 mac80211: brcmfmac: backport first important changes from the 4.20
+10eb247ee8 mac80211: add iw command wrapper with error logging
+a360d5a18e mac80211: brcmfmac: rename 4.20 backport patches
+b1fc9b79d0 mac80211: brcmfmac: backport the latest 4.20 changes
+c11f335275 mac80211: brcmutil: backport chanspec debugging patch
+e50a5a9328 mac80211: brcmfmac: add 2 more recent changes
+5970e6d466 libubox: update to latest git HEAD
+0f47ce8180 base-files: fix unkillable processes after restart
+4c101f8b3a uclient: update to latest Git head
+6cf22507fd uhttpd: update to latest Git head
+ecf104c023 sdk: find kernel modules when KDIR is a symlink
+e42415723b base-files: fix prerm return value, align with postinst code
+89ed2d6f78 rules.mk: add INSTALL_SUID macro
+3e6e33f528 procd: procd_send_signal use signal names
+26b8069604 rpcd: update to latest Git head
+65044a50ab kernel: bump 4.4 to 4.4.167
+202c3ceb13 cns3xxx: fix writing to wrong PCI registers
+459a40fce2 apm821xx: MBL: load kernel/dtb from SATA 0:1 first
+834bd86424 apm821xx: switch MX60(W)'s recovery images to multi-image method
+9d4eed6837 mac80211: brcmfmac: fix use-after-free & possible NULL pointer dereference
+e09592748c cns3xxx: use actual size reads for PCIe
+```
+
+__Packages-feed__
+```
+578a7c506 tinc: update to 1.0.35
+c3109a256 tiff: security bump to 4.0.10
+6fdeb2df9 sqlite3: security bump
+d309d0090 sqlite3: use dynamic linking for sqlite cli tool
+```
+
+__LuCI-feed__:
+```
+27ff6e930 freifunk profiles: add nameserver 80.67.169.40 from www.fdn.fr/actions/dns
+3f16979c2 community-profiles: create profile for Fürstenwalde
+f4f063252 community-profiles: change subnet of mesh_network option for Berlin
+e86fedb7d timezone data: update to 2018i
+```
+
+__Routing-feed__
+```
+4e4a03244 batman-adv: Merge bugfixes from 2019.0
+```
+
 ## Version 1.0.1
 
 ### overall system

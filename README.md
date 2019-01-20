@@ -17,7 +17,7 @@ New features like a new network concept will be part of future releases.
 * introduces interface "ffuplink" for a flexible configuration of the wired uplink
 * improved support of 802.11s mesh in LuCI
 * disabling of 802.11b wifi-rates by default
-* in preinit and failsafe it IP-address is 192.168.42.1/24 (like an unconfigured node)
+* in preinit and failsafe the IP-address is 192.168.42.1/24 (like an unconfigured node)
 * the LAN-interface (br-lan) is not providing a default route on a unconfigured node, so manual reconfiguration is required when not using the assistent
 * the assistent will not offer the setup of a private AP anymore
 * when changing or initially confiuring VLANs (via LuCI) the interfacenames will also be changed (should fix #388)

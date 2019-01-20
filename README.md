@@ -11,7 +11,7 @@ New features like a new network concept will be part of future releases.
 
 ## Release Note 1.0.2 "Hedy" - 2019-01-xx
 * a maintenance release for Hedy-1.0.x-series
-* brings the the new feature of changing the uplink preset-type
+* brings the new feature of changing the uplink preset-type
 * a new uplink-preset "tunnelberlin-tunneldigger"
 * updates to fix security-problems and minor functional problems 
 * images for 

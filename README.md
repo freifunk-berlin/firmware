@@ -100,6 +100,11 @@ zypper install --type pattern devel_basis
 zypper install git ncurses-devel zlib-devel gawk time \
   unzip perl-libxml-perl flex wget gawk gettext-runtime quilt python libopenssl-devel
 ```
+On Arch/Antergos:
+```
+pacman -S base-devel git ncurses lib32-zlib gawk time unzip perl-xml-libxml \
+ flex wget gettext quilt python openssl
+```
 
 ### Building all firmwares
 

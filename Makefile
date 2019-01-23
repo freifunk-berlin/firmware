@@ -162,16 +162,16 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 initrd: .stamp-initrd
 .stamp-initrd: .stamp-compiled
 	$(eval TARGET_BINDIR := $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET))
-	mkdir -p $(FW_TARGET_DIR)
-	# copy initrd images (if existing)
+	$(eval INITRD_DIR := $(FW_TARGET_DIR)/initrd)
 	# remove old versions
-	rm -f $(FW_TARGET_DIR)/*-vmlinux-initramfs.elf
+	rm -f $(INITRD_DIR)
+	mkdir -p $(INITRD_DIR)
+	# copy initrd images (if existing)
 	for file in $(TARGET_BINDIR)/*-vmlinux-initramfs.elf; do \
-	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
+	  if [ -e $$file ]; then mv $$file $(INITRD_DIR)/ ; fi \
 	done
-	rm -f $(FW_TARGET_DIR)/*-initramfs-kernel.bin
 	for profile in `cat profiles/$(MAINTARGET)-$(SUBTARGET).profiles`; do \
-	  if [ -e $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin ]; then mv $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin $(FW_TARGET_DIR)/ ; fi \
+	  if [ -e $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin ]; then mv $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin $(INITRD_DIR)/ ; fi \
 	done
 	touch $@
 

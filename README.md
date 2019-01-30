@@ -9,7 +9,7 @@ broken stuff in OpenWrt itself or for example LuCI) and additional default packa
 
 More user relevant information about the firmware are on the wiki page at: https://wiki.freifunk.net/Berlin:Firmware. There you can also find the 
 * [ReleaseNotes](https://wiki.freifunk.net/Berlin:Firmware/v1.0.2)
-* a tutorial ([en](https://wiki.freifunk.net/Berlin:Firmware:En:Howto) / [de](German: https://wiki.freifunk.net/Berlin:Firmware:Howto)) on router configuration 
+* a tutorial ([en](https://wiki.freifunk.net/Berlin:Firmware:En:Howto) / [de](https://wiki.freifunk.net/Berlin:Firmware:Howto)) on router configuration 
 
 For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues

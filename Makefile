@@ -12,6 +12,7 @@ REVISION=git describe --always
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/common.config $(FW_DIR)/configs/$(MAINTARGET)-$(SUBTARGET).config
+TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
@@ -115,8 +116,12 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
 
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
+$(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
+ifdef IS_BUILDBOT
+	cat $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) >$(OPENWRT_DIR)/.config
+else
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
+endif
 	# always replace CONFIG_VERSION_CODE by FW_REVISION
 	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
 	$(UMASK); \
@@ -134,7 +139,8 @@ compile: stamp-clean-compiled .stamp-compiled
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 # check if running via buildbot and remove the build_dir folder to save some space
 ifdef IS_BUILDBOT
-	rm -rf $(OPENWRT_DIR)/build_dir
+	# obsolete by TARGET_CONFIG_AUTOBUILD
+	#rm -rf $(OPENWRT_DIR)/build_dir
 endif
 	touch $@
 

@@ -61,7 +61,7 @@ kmod-ipip
 # BATMAN
 kmod-batman-adv
 alfred
-batctl
+batctl-default
 
 # Statistics
 luci-app-statistics

@@ -70,7 +70,7 @@ kmod-ipip
 # BATMAN
 kmod-batman-adv
 alfred
-batctl
+batctl-default
 
 # Uplink
 luci-app-openvpn

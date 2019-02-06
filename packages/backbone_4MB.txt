@@ -57,6 +57,6 @@ kmod-ipip
 # BATMAN
 kmod-batman-adv
 alfred
-batctl
+batctl-default
 
 # Statistics/collectd not included in 4MB image

@@ -26,6 +26,7 @@ qos-scripts
 firewall
 iwinfo
 libiwinfo-lua
+pingcheck
 
 # GUI
 uhttpd

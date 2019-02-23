@@ -30,6 +30,7 @@ ip
 #ethtool
 iwinfo
 libiwinfo-lua
+pingcheck
 
 # GUI
 luci-theme-bootstrap

@@ -25,6 +25,7 @@ vnstat
 ethtool
 iwinfo
 libiwinfo-lua
+pingcheck
 
 # GUI-basics
 uhttpd

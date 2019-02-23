@@ -28,6 +28,7 @@ firewall
 iwinfo
 libiwinfo-lua
 tcpdump
+pingcheck
 
 # GUI-basics
 uhttpd

@@ -6,7 +6,7 @@ tplink_archer-c7-v4
 tplink_archer-c7-v5
 tplink_tl-wr1043n-v5
 ubnt_bullet-m-xw
-ubnt_nanostation-loco-m
-ubnt_picostation-m
+ubnt_nanostation-loco-m:tiny
+ubnt_picostation-m:tiny
 ubnt_unifiac-mesh
 ubnt_unifiac-pro

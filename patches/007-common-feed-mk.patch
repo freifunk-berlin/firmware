@@ -1,0 +1,50 @@
+commit 156855f63e8410af3bfcac1c6035389606c11818
+Author: Sven Roederer <devel-sven@geroedel.de>
+Date:   Sat Mar 2 13:41:26 2019 +0100
+
+    build: have scripts/feeds honor feed.mk of the individual feed
+    
+    The luci and freifunk feed having a common Makefile included by the
+    individual packages. Currently a change to this file will be ignored
+    when running "scripts/feeds update".
+    Add a check for a Makefile "feed.mk" in the root of a feed and include
+    this to the dependencies.
+    
+    Signed-off-by: Sven Roederer <freifunk@it-solutions.geroedel.de>
+
+diff --git a/include/scan.mk b/include/scan.mk
+index d9cd4f7e8c..cf4d7a636b 100644
+--- a/include/scan.mk
++++ b/include/scan.mk
+@@ -12,10 +12,20 @@ OVERRIDELIST:=$(TMP_DIR)/info/.overrides-$(SCAN_TARGET)-$(SCAN_COOKIE)
+ 
+ export PATH:=$(TOPDIR)/staging_dir/host/bin:$(PATH)
+ 
++define feedname
++$(if $(patsubst feeds/%,,$(1)),,$(word 2,$(subst /, ,$(1))))
++endef
++
+ ifeq ($(SCAN_NAME),target)
+   SCAN_DEPS=image/Makefile profiles/*.mk $(TOPDIR)/include/kernel*.mk $(TOPDIR)/include/target.mk image/*.mk
+ else
+   SCAN_DEPS=$(TOPDIR)/include/package*.mk
++  FEED_COMMON_MK=$(TOPDIR)/feeds/$(call feedname,$(SCAN_DIR))/feed.mk
++  $(info FEED_COMMON: $(FEED_COMMON_MK))
++ifneq ($(wildcard $(FEED_COMMON_MK)),)
++  $(info FEED_COMMON exists)
++  SCAN_DEPS += $(FEED_COMMON_MK)
++endif
+ endif
+ 
+ ifeq ($(IS_TTY),1)
+@@ -34,10 +44,6 @@ else
+   endef
+ endif
+ 
+-define feedname
+-$(if $(patsubst feeds/%,,$(1)),,$(word 2,$(subst /, ,$(1))))
+-endef
+-
+ define PackageDir
+   $(TMP_DIR)/.$(SCAN_TARGET): $(TMP_DIR)/info/.$(SCAN_TARGET)-$(1)
+   $(TMP_DIR)/info/.$(SCAN_TARGET)-$(1): $(SCAN_DIR)/$(2)/Makefile $(foreach DEP,$(DEPS_$(SCAN_DIR)/$(2)/Makefile) $(SCAN_DEPS),$(wildcard $(if $(filter /%,$(DEP)),$(DEP),$(SCAN_DIR)/$(2)/$(DEP))))

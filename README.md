@@ -136,18 +136,22 @@ in `firmwares`. The layout looks like the following:
 ```
 firmwares/
     TARGET/
-        OpenWrt-ImageBuilder-....tar.bz2
+        OpenWrt-ImageBuilder-....tar.xz
+        OpenWrt-SDK-....tar.xz
         backbone/
            images..
         default/
            images..
         ...
         packages/
-           base/
-           luci/
-           packages/
-           packages_berlin/
-           routing/
+           packages/<ARCH>
+              base/*.ipk
+              luci/*.ipk
+              packages/*.ipk
+              packages_berlin/*.ipk
+              routing/*.ipk
+           targets/MAINTARGET/SUBTARGET/packages/
+              *.ipk
 ```
 
 As you notice there are several different image variants ("backbone", "default", etc.).

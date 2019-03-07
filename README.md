@@ -136,13 +136,13 @@ in `firmwares`. The layout looks like the following:
 ```
 firmwares/
     TARGET/
-        OpenWrt-ImageBuilder-....tar.xz
-        OpenWrt-SDK-....tar.xz
         backbone/
            images..
         default/
            images..
         ...
+        OpenWrt-ImageBuilder-....tar.xz
+        OpenWrt-SDK-....tar.xz
         packages/
            packages/<ARCH>
               base/*.ipk
@@ -157,6 +157,9 @@ firmwares/
 As you notice there are several different image variants ("backbone", "default", etc.).
 These different *packages lists* are defined in `packages/`.
 See the "Features" section above for a description of the purpose of each package list.
+With the "OpenWrt-Imagebuilder" you can assemble your own image variant with your 
+*packages lists* without having to compile everything yourself. The "OpenWrt-SDK" is
+the fastest way to build your own packages or programs without compiling OpenWrt itself.
 
 `make` will use by default `TARGET` and `PACKAGES_LIST_DEFAULT` defined in
 `config.mk`. You can customize this by overriding them:

@@ -143,6 +143,8 @@ firmwares/
         ...
         OpenWrt-ImageBuilder-....tar.xz
         OpenWrt-SDK-....tar.xz
+        initrd/
+           images..
         packages/
            packages/<ARCH>
               base/*.ipk
@@ -160,6 +162,8 @@ See the "Features" section above for a description of the purpose of each packag
 With the "OpenWrt-Imagebuilder" you can assemble your own image variant with your 
 *packages lists* without having to compile everything yourself. The "OpenWrt-SDK" is
 the fastest way to build your own packages or programs without compiling OpenWrt itself.
+The "initrd" directory contains some initrd-images for netboot, which are required on 
+some boards to initially install OpenWrt.
 
 ### customizing make
 

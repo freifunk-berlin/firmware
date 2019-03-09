@@ -139,8 +139,7 @@ compile: stamp-clean-compiled .stamp-compiled
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 # check if running via buildbot and remove the build_dir folder to save some space
 ifdef IS_BUILDBOT
-	# obsolete by TARGET_CONFIG_AUTOBUILD
-	#rm -rf $(OPENWRT_DIR)/build_dir
+	rm -rf $(OPENWRT_DIR)/build_dir
 endif
 	touch $@
 

@@ -170,9 +170,9 @@ initrd: .stamp-initrd
 .stamp-initrd: .stamp-compiled
 	$(eval TARGET_BINDIR := $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET))
 	$(eval INITRD_DIR := $(FW_TARGET_DIR)/initrd)
+	[ -d $(INITRD_DIR) ] || mkdir -p $(INITRD_DIR)
 	# remove old versions
-	rm -f $(INITRD_DIR)
-	mkdir -p $(INITRD_DIR)
+	rm -f $(INITRD_DIR)/*
 	# copy initrd images (if existing)
 	for file in $(TARGET_BINDIR)/*-vmlinux-initramfs.elf; do \
 	  if [ -e $$file ]; then mv $$file $(INITRD_DIR)/ ; fi \

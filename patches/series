@@ -5,6 +5,7 @@
 007-common-feed-mk.patch
 200-wifi_nolegacy_rates_by_default.patch
 201-wifi_no_meshfwding_by_default.patch
+202-split-luci.mk_pr2637.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch
 701-luci-freifunk-policyrouting-berlin.patch

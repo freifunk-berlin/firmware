@@ -8,9 +8,9 @@ Please add patches in the folowing structure
 - 1xx - packages (upstream)
 - 2xx - LUCI (upstream)
 - 3xx - routing (upstream)
-- 4xx - reserved
+- 4xx - Freifunk (upstream)
 - 5xx - reserved
 - 6xx - build system changes to support this build system
-- 7xx - freifunk specific
+- 7xx - freifunk-berlin specific
 - 8xx - other
 - 9xx - reserved

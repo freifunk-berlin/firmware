@@ -92,6 +92,8 @@ patch: stamp-clean-patched .stamp-patched
 .stamp-patched: .stamp-pre-patch
 	cd $(OPENWRT_DIR); quilt push -a
 	rm -rf $(OPENWRT_DIR)/tmp
+	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update
+	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds install -a
 	touch $@
 
 .stamp-build_rev: .FORCE

@@ -8,6 +8,13 @@ proto_gluon_bat0_init_config() {
 	no_device=1
 	available=1
 	renew_handler=1
+
+	proto_config_add_string 'gw_mode'
+}
+
+lookup_site() {
+	local path="$1" default="$2"
+	lua -e "print(require('gluon.site').$path('$default'))"
 }
 
 proto_gluon_bat0_renew() {
@@ -36,14 +43,43 @@ proto_gluon_bat0_renew() {
 proto_gluon_bat0_setup() {
 	local config="$1"
 
+	local routing_algo=$(lookup_site 'mesh.batman_adv.routing_algo' 'BATMAN_IV')
+
+	modprobe batman-adv
+
+	local gw_mode
+	json_get_vars gw_mode
+
+	batctl routing_algo "$routing_algo"  2>/dev/null
+	batctl interface create
+
+	batctl orig_interval 5000
+	batctl hop_penalty 15
+	batctl multicast_mode 0
+
+	case "$gw_mode" in
+		server)
+			batctl gw_mode "server"
+		;;
+		client)
+			local gw_sel_class="$(lookup_site 'mesh.batman_adv.gw_sel_class')"
+			if [ -n "$gw_sel_class" ]; then
+				batctl gw_mode "client" "$gw_sel_class"
+			else
+				batctl gw_mode "client"
+			fi
+		;;
+		*)
+			batctl gw_mode "off"
+		;;
+	esac
+
+
 	local primary0_mac="$(lua -e 'print(require("gluon.util").generate_mac(3))')"
 
 	ip link add primary0 type dummy
 	echo 1 > /proc/sys/net/ipv6/conf/primary0/disable_ipv6
 	ip link set primary0 address "$primary0_mac" mtu 1532 up
-
-	local routing_algo="$(lua -e 'print(require("gluon.site").mesh.batman_adv.routing_algo())')"
-	(echo "$routing_algo" >/sys/module/batman_adv/parameters/routing_algo) 2>/dev/null
 
 	echo bat0 > /sys/class/net/primary0/batman_adv/mesh_iface
 
@@ -56,8 +92,8 @@ proto_gluon_bat0_setup() {
 proto_gluon_bat0_teardown() {
 	local config="$1"
 
-	ip link del bat0
 	ip link del primary0
+	batctl interface destroy
 }
 
 add_protocol gluon_bat0

@@ -16,6 +16,7 @@ jobs:
         target: 
           - ath79-generic
           - ath79-mikrotik
+          - ath79-nand
           - bcm27xx-bcm2710
           - ipq40xx-generic
           - lantiq-xrx200

@@ -1,0 +1,15 @@
+diff --git a/feeds/freifunk/contrib/package/freifunk-common/files/etc/init.d/freifunk b/feeds/freifunk/contrib/package/freifunk-common/files/etc/init.d/freifunk
+index dbe648ae5..ef7dd7c16 100755
+--- a/feeds/freifunk/contrib/package/freifunk-common/files/etc/init.d/freifunk
++++ b/feeds/freifunk/contrib/package/freifunk-common/files/etc/init.d/freifunk
+@@ -7,10 +7,6 @@ START=99
+ boot() {
+ 	test -f /etc/crontabs/root || touch /etc/crontabs/root
+ 
+-	grep -q 'killall -HUP dnsmasq' /etc/crontabs/root || {
+-		echo "*/5 * * * *	killall -HUP dnsmasq" >> /etc/crontabs/root
+-	}
+-
+ 	grep -q '/usr/sbin/ff_olsr_watchdog' /etc/crontabs/root || {
+ 		echo "*/5 * * * *	/usr/sbin/ff_olsr_watchdog" >> /etc/crontabs/root
+ 	}

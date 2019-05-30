@@ -29,7 +29,7 @@ New features like a new network concept will be part of future releases.
 * based on [OpenWrt](https://openwrt.org/start) v17.01.6+ (lede-17.01 branch)
   * Linux 4.4.167
   * OLSR 0.9.0.3 (downgraded for BBB-VPN compatibility)
-  * B.A.T.M.A.N. 2016.5 (with patches of 2019.0)
+  * B.A.T.M.A.N. 2016.5 (with patches of 2019.2)
 * custom package lists for different settings
   * "default" variant includes ffwizard, openvpn, BATMAN
   * "default_4MB" like the "default" variant, but excludes public router statistics page (luci-mod-freifunk), monitoring (collectd), BATMAN to fit into boards with 4MB flash

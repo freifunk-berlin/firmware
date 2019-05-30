@@ -1,5 +1,58 @@
 # Changelog
 
+## Version 1.0.3
+
+### overall system
+* new hardware: TP-Link MR3020-v1, TP-Link MR3020, TP-Link Archer C50v1
+* use proper umask during build
+
+### Upstream (OpenWrt and OpenWrt-Routing)
+update to OpenWrt-Release 17.01.6+ for OpenWrt-core, OpenWrt-packages, LuCI and OpenWrt-Routing (30. May 2019)
+(https://openwrt.org/releases/17.01/notes-17.01.6)
+
+__OpenWrt-core__
+```
+484117b478 base-files: fix postinstall uci-defaults removal
+0c8e8e2dc9 base-files: install missing /etc/iproute2/ematch_map
+99e5ba3207 opkg: drop argument from check_signature in opkg.conf
+f0115b5011 opkg: switch source url to git.openwrt.org
+009ecf3149 opkg: update to latest Git head
+6c14b29bf1 openssl: bump to 1.0.2q
+f3f21b3d2a mac80211: brcmfmac: fix a possible NULL pointer dereference
+fb333a7fec mac80211: brcmfmac: pick few 4.17 cleanups required for further fixes
+eab6537449 mac80211: brcmfmac: backport 5.0 & 5.1 important changes/fixes
+981f5f7e40 kernel: fix refcnt leak in LED netdev trigger on interface rename
+eaef74279c mac80211: brcmfmac: early work on FullMAC firmware crash recovery
+d3bab051cf mac80211: brcmfmac: really add early fw crash recovery
+3e7fd9275d ca-certificates: Update to Version 20180409
+e74b264231 ca-certificates: ca-bundle: add symlink for openssl default setting
+4f23857011 ca-caertificates: remove myself as PKG_MAINTAINER
+c2f938bf9a ca-certificates: update to version 20190110
+c476954633 openssl: bump to 1.0.2r
+```
+
+__Packages-feed__
+```
+19a8f8101 Change links from git://github.com to https://github.com
+b0ac3bad6 vpnc: fix IPv6-triggered inoperability
+1f6f56204 libssh2: version bump/CVE fixes
+17fef37ff icu: [lede-17.01] support for new Japanese era Reiwa
+c6aca052a libxslt: backport patch for CVE-2019-11068
+```
+
+__LuCI-feed__
+```
+e1e3e238b luci-proto-ppp: add translation to ipv6 handling
+c87900c6a luci-app-nlbwmon: Fixed incorrect period parameter/display
+0aaa0c238 i18n: sync translations
+```
+
+__Routing-feed__
+```
+24b2a9a batman-adv: Merge bugfixes from 2019.1
+0976335 batman-adv: Merge bugfixes from 2019.2
+```
+
 ## Version 1.0.2
 
 ### overall system

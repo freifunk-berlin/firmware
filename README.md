@@ -173,7 +173,7 @@ Then switch to the openwrt directory:
 ```bash
 cd openwrt
 ```
-Now you can use the `quilt` commands as described in the [OpenWrt wiki](https://openwrt.org/docs/guide-developer/patches).
+Now you can use the `quilt` commands as described in the [OpenWrt wiki](https://openwrt.org/docs/guide-developer/build-system/use-patches-with-buildsystem).
 
 ##### Example: add a patch
 

@@ -39,6 +39,7 @@ luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-firewall
 luci-app-olsr-services
+luci-app-opkg
 luci-app-owm
 luci-app-owm-ant
 luci-app-owm-cmd

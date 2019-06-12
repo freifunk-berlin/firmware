@@ -73,3 +73,6 @@ collectd-mod-rrdtool
 collectd-mod-ping
 collectd-mod-uptime
 collectd-mod-memory
+
+# Tunneldigger
+freifunk-berlin-tunneldigger

@@ -109,7 +109,7 @@ index 0000000..c173f0d
 +	#size-cells = <0>;
 +	status = "okay";
 +
-+	hub_port: port at 1 {
++	hub_port: port@1 {
 +		reg = <1>;
 +		#trigger-source-cells = <0>;
 +	};
@@ -123,7 +123,7 @@ index 0000000..c173f0d
 +	status = "okay";
 +	num-cs = <0>;
 +
-+	flash at 0 {
++	flash@0 {
 +		compatible = "jedec,spi-nor";
 +		reg = <0>;
 +		spi-max-frequency = <25000000>;
@@ -133,24 +133,24 @@ index 0000000..c173f0d
 +			#address-cells = <1>;
 +			#size-cells = <1>;
 +
-+			partition at 0 {
++			partition@0 {
 +				label = "u-boot";
 +				reg = <0x000000 0x040000>;
 +				read-only;
 +			};
 +
-+			partition at 40000 {
++			partition@40000 {
 +				label = "u-boot-env";
 +				reg = <0x040000 0x010000>;
 +			};
 +
-+			art: partition at 50000 {
++			art: partition@50000 {
 +				label = "art";
 +				reg = <0x050000 0x010000>;
 +				read-only;
 +			};
 +
-+			partition at 60000 {
++			partition@60000 {
 +				compatible = "denx,uimage";
 +				label = "firmware";
 +				reg = <0x060000 0xfa0000>;

@@ -9,7 +9,7 @@ The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some 
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 1.0.3 "Hedy" - 2019-05-31
+## Release Note 1.0.4 "Hedy" - 2019-06-26
 * a maintenance release for Hedy-1.0.x-series
 * brings the new feature of changing the uplink preset-type
 * a new uplink-preset "tunnelberlin-tunneldigger"
@@ -28,7 +28,7 @@ New features like a new network concept will be part of future releases.
 
 ## Features
 * based on [OpenWrt](https://openwrt.org/start) v17.01.6+ (lede-17.01 branch)
-  * Linux 4.4.167
+  * Linux 4.4.182
   * OLSR 0.9.0.3 (downgraded for BBB-VPN compatibility)
   * B.A.T.M.A.N. 2016.5 (with patches of 2019.2)
 * custom package lists for different settings

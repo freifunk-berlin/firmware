@@ -1,5 +1,42 @@
 # Changelog
 
+## Version 1.0.4
+
+__OpenWrt-core__
+```
+d92713d2cf openssl: update to 1.0.2s
+af50ce32c5 mac80211: brcmfmac: backport important fixes from kernel 5.2
+6c5c3a2edc kernel: Update to version 4.4.182
+076ea9f473 mbedtls: update to version 2.7.10
+fa1ee2bd2b kernel: Add CONFIG_RTC to generic config
+dc60dc133a brcm2708: Adapt patches to kernel update
+fd4e805846 apm821xx: Revert upstream fix which breaks compile
+103c42e295 layerscape: Adapt patch to changes in upstream kernel
+7fbd325649 kernel: Reorder kernel configuration
+6028f00df0 perf: Fix build on aarch64
+14fb5b4f15 LEDE v17.01.7: adjust config defaults
+fab672cc7a LEDE v17.01.7: revert to branch defaults
+```
+
+__Packages-feed__
+```
+76ad27dfc nlbwmon: preserve protocols mapping across sysupgrade
+5f9815edb nlbwmon: update to current HEAD
+9a374b7d4 net/nlbwmon: run with lower priority
+486418e56 nlbwmon: receive dhcp interface triggers
+545d2fadd nlbwmon: update to latest Git HEAD
+```
+
+__LuCI-feed__
+```
+71e2af4f5 treewide: fix datetype/datatype typo
+```
+
+__Routing-feed__
+```
+e100856 batman-adv: Fix duplicated OGMs on NETDEV_UP
+```
+
 ## Version 1.0.3
 
 ### overall system

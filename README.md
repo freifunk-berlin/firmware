@@ -9,13 +9,14 @@ The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some 
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 1.0.2 "Hedy" - 2019-01-21
+## Release Note 1.0.3 "Hedy" - 2019-05-31
 * a maintenance release for Hedy-1.0.x-series
 * brings the new feature of changing the uplink preset-type
 * a new uplink-preset "tunnelberlin-tunneldigger"
 * updates to fix security-problems and minor functional problems 
 * images for 
   * Ubiquiti ERX SFP, TP-Link WR1043ND-v4
+  * TP-Link MR3020-v1, TP-Link MR3020, TP-Link Archer C50v1
   * support for RaspberryPi and RaspberryPi3 (compile yourself)
 * introduces interface "ffuplink" for a flexible configuration of the wired uplink
 * improved support of 802.11s mesh in LuCI

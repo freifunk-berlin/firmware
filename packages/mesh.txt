@@ -1,14 +1,6 @@
--kmod-usb-core
--kmod-usb2
--kmod-ledtrig-usbdev
--kmod-usb-ohci
--kmod-ppp
--kmod-usb-serial
 -ppp
 -ppp-mod-pppoe
 -wpad
-opkg
--usign
 
 # Defaults
 freifunk-berlin-dhcp-defaults

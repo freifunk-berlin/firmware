@@ -7,7 +7,7 @@
 -ppp
 -ppp-mod-pppoe
 -wpad
--opkg
+opkg
 -usign
 
 # Defaults
@@ -19,6 +19,7 @@ freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-system-defaults
 community-profiles
+luci-app-owm-cmd
 
 # Common
 dnsmasq
@@ -27,24 +28,15 @@ firewall
 iwinfo
 libiwinfo-lua
 
-# GUI
-uhttpd
-uhttpd-mod-ubus
-luci-app-ffwizard-berlin
-luci-mod-freifunk-ui
-luci-app-olsr
-luci-app-olsr-services
-luci-app-owm
-luci-app-owm-cmd
-luci-theme-bootstrap
-
 # OLSR
 olsrd
-olsrd-mod-arprefresh
+#olsrd-mod-arprefresh
 olsrd-mod-dyn-gw
 olsrd-mod-jsoninfo
 olsrd-mod-nameservice
+olsrd-mod-watchdog
 kmod-ipip
 
-# Uplink
-freifunk-berlin-uplink-tunnelberlin-tunneldigger-files
+# BATMAN
+kmod-batman-adv
+batctl-tiny

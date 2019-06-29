@@ -39,4 +39,4 @@ kmod-ipip
 
 # BATMAN
 kmod-batman-adv
-batctl
+batctl-tiny

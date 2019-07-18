@@ -248,3 +248,4 @@ clean: stamp-clean .stamp-openwrt-cleaned
 .PHONY: openwrt-clean openwrt-clean-bin openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:
+.SUFFIXES:

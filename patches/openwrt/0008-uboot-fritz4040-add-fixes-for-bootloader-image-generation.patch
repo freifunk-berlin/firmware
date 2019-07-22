@@ -1,0 +1,101 @@
+From: Matthias Schiffer <mschiffer@universe-factory.net>
+Date: Sat, 20 Jul 2019 13:12:58 +0200
+Subject: uboot-fritz4040: add fixes for bootloader image generation
+
+Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+
+diff --git a/package/boot/uboot-fritz4040/patches/200-fritzcreator-replace-obscure-padding-generation-with.patch b/package/boot/uboot-fritz4040/patches/200-fritzcreator-replace-obscure-padding-generation-with.patch
+new file mode 100644
+index 0000000000000000000000000000000000000000..9b7dadac6883ec9eb97bd065e62e01f36f3b7843
+--- /dev/null
++++ b/package/boot/uboot-fritz4040/patches/200-fritzcreator-replace-obscure-padding-generation-with.patch
+@@ -0,0 +1,59 @@
++From 6edce1ad878c4625cce847b44da341aa4ff511bf Mon Sep 17 00:00:00 2001
++From: Matthias Schiffer <mschiffer@universe-factory.net>
++Date: Sat, 20 Jul 2019 12:35:01 +0200
++Subject: [PATCH] fritzcreator: replace obscure padding generation with
++ something more portable
++
++It was reported that OpenWrt/Gluon would sometimes generate invalid
++bootloader images with insufficient padding for the FritzBox [1],
++presumably depending on the distro version used on the build host.
++
++Fix this by replacing the printf-based padding generation (which in one
++case relied on 65536 arguments being passed to a printf command) with a
++more portable read from /dev/zero.
++
++[1] https://github.com/freifunk-gluon/gluon/issues/1766
++---
++ fritz/fritzcreator.sh | 8 ++++----
++ 1 file changed, 4 insertions(+), 4 deletions(-)
++
++diff --git a/fritz/fritzcreator.sh b/fritz/fritzcreator.sh
++index c5404d1..926b590 100755
++--- a/fritz/fritzcreator.sh
+++++ b/fritz/fritzcreator.sh
++@@ -63,7 +63,7 @@ cat "$FRITZ_DTB" "$FRITZ_DTB" "$FRITZ_DTB" "$FRITZ_DTB" >> $UBOOT_FRITZ
++ rm -f "$FRITZ_DTB"
++ 
++ # Add 512 bytes of pad area
++-printf "%0.s\0" {1..512} >> $UBOOT_FRITZ
+++dd if=/dev/zero bs=512 count=1 >> $UBOOT_FRITZ
++ 
++ # This table links to the individual DTBs for every HWSubRevision.
++ # A table entry consists of two 32-bit words.
++@@ -92,7 +92,7 @@ mv "$UBOOT_FRITZ.new" "$UBOOT_FRITZ"
++ 
++ 
++ # Add 64k bytes of pad area
++-printf "%0.s\0" {1..65536} >> $UBOOT_FRITZ
+++dd if=/dev/zero bs=1024 count=64 >> $UBOOT_FRITZ
++ 
++ # Pack it with lzma
++ fritz/lzma e "$UBOOT_FRITZ" -lc1 -lp2 -pb2 "$UBOOT_FRITZ.new"
++@@ -107,7 +107,7 @@ fritz/lzma2eva $UBOOT_LOADADDR $UBOOT_LOADADDR "$UBOOT_FRITZ.new" "$UBOOT_FRITZ"
++ # The next bit. The hshqs partition should be aligned to 0x100
++ let size=$(stat -c%s "$UBOOT_FRITZ")
++ let "pad = 256 - ( $size % 256) % 256"
++-( printf "%0.s\377" {1..256} | dd conv=sync bs=$pad count=1 ) > $UBOOT_FRITZ.pad
+++dd if=/dev/zero bs=$pad count=1 | tr '\0' '\377' > $UBOOT_FRITZ.pad
++ 
++ cat "$UBOOT_FRITZ" "$UBOOT_FRITZ.pad" > $UBOOT_FRITZ.new
++ 
++@@ -117,7 +117,7 @@ rm -f "$UBOOT_FRITZ.pad"
++ 
++ # Apparently, EVA checks for the SquashFS filesystem MAGIC too. Likely for the rootfs
++ # entry.
++-(cat "$UBOOT_FRITZ"; echo "hsqs"; printf "%0.s\0" {1..124} ) > $UBOOT_FRITZ.new
+++(cat "$UBOOT_FRITZ"; echo "hsqs"; dd if=/dev/zero bs=124 count=1 ) > $UBOOT_FRITZ.new
++ 
++ # Make it so that this fits into 512k (Note: we have to add 8 Bytes for the final checksum
++ # so 524280 is 512k - 8.
+diff --git a/package/boot/uboot-fritz4040/patches/201-fritzcreator-actually-add-checksum-spacer.patch b/package/boot/uboot-fritz4040/patches/201-fritzcreator-actually-add-checksum-spacer.patch
+new file mode 100644
+index 0000000000000000000000000000000000000000..07da680f5141eba0d91192a37c8cecc24bbc3148
+--- /dev/null
++++ b/package/boot/uboot-fritz4040/patches/201-fritzcreator-actually-add-checksum-spacer.patch
+@@ -0,0 +1,24 @@
++From 572ff7ff5a8b98022e75c4cca25fdede90eda1c3 Mon Sep 17 00:00:00 2001
++From: Matthias Schiffer <mschiffer@universe-factory.net>
++Date: Sat, 20 Jul 2019 12:43:48 +0200
++Subject: [PATCH] fritzcreator: actually add checksum spacer
++
++The spacer was written to $UBOOT_FRITZ.new, but this file was not used
++at all before it was overwritten again.
++---
++ fritz/fritzcreator.sh | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/fritz/fritzcreator.sh b/fritz/fritzcreator.sh
++index 926b590..843ffdf 100755
++--- a/fritz/fritzcreator.sh
+++++ b/fritz/fritzcreator.sh
++@@ -102,7 +102,7 @@ fritz/lzma2eva $UBOOT_LOADADDR $UBOOT_LOADADDR "$UBOOT_FRITZ.new" "$UBOOT_FRITZ"
++ 
++ # The bootloader seems to add a TI checksum signature (8 Bytes) as part of the
++ # "check mtd1" command in the FTP prompt. To make this easier we add spacer here.
++-(cat "$UBOOT_FRITZ"; printf "\xff\xff\xff\xff\xff\xff\xff\xff" ) > $UBOOT_FRITZ.new
+++printf "\xff\xff\xff\xff\xff\xff\xff\xff" >> $UBOOT_FRITZ
++ 
++ # The next bit. The hshqs partition should be aligned to 0x100
++ let size=$(stat -c%s "$UBOOT_FRITZ")

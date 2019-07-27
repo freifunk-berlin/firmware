@@ -33,7 +33,7 @@ sure the list contains `quilt`. We use it for patch management.
 On Ubuntu/Debian:
 ```
 apt-get install git build-essential libncurses5-dev zlib1g-dev gawk time \
-  unzip libxml-perl flex wget gawk libncurses5-dev gettext quilt python libssl-dev
+  unzip libxml-perl flex wget gawk libncurses5-dev gettext quilt python3 libssl-dev
 ```
 
 On openSUSE:

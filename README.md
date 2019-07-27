@@ -59,7 +59,7 @@ perl-File-Copy perl-FindBin diffutils which
 Debian / Ubuntu:
 ```
 sudo apt install build-essential flex gawk gawk gettext git \
-libncurses5-dev libssl-dev libxml-perl python quilt time unzip wget zlib1g-dev 
+libncurses5-dev libssl-dev libxml-perl python3 quilt time unzip wget zlib1g-dev
 ```
 
 Gentoo:

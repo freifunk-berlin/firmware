@@ -40,6 +40,14 @@ PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 
+ifneq ($(wildcard $(OPENWRT_DIR)/*),)
+#FEEDS=$(shell [ -e $(OPENWRT_DIR)/scripts/feeds ] && (cd $(OPENWRT_DIR); ./scripts/feeds list -n) )
+#FEEDS=cd $(OPENWRT_DIR); ./scripts/feeds list -n
+FEEDS=$(shell cd $(OPENWRT_DIR); ./scripts/feeds list -n)
+#PATCH_FEEDS_TARGET = $(addprefix patch-feed-, $(FEEDS))
+#UNPATCH_FEEDS_TARGET = $(addprefix unpatch-feed-, $(FEEDS))
+endif
+
 default: firmwares
 
 # clone openwrt
@@ -68,32 +76,71 @@ openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
 
 # patches require updated openwrt working copy
 $(OPENWRT_DIR)/patches: | .stamp-openwrt-updated
-	ln -s $(FW_DIR)/patches $@
+	ln -s $(FW_DIR)/patches/openwrt $@
+
+# patches require updated openwrt working copy
+$(OPENWRT_DIR)/feeds/%/patches: .stamp-feeds-updated
+	[ -d $(FW_DIR)/patches/packages/$* ] || mkdir $(FW_DIR)/patches/packages/$*
+	[ -d $@ ] || ln -s $(FW_DIR)/patches/packages/$*/ $@
 
 # feeds
-$(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated feeds.conf
-	cp $(FW_DIR)/feeds.conf $@
+$(OPENWRT_DIR)/feeds.conf: feeds.conf | .stamp-openwrt-updated
+	$(info $(shell cp $(FW_DIR)/feeds.conf $@; echo file copied))
+	$(info updating FEEDS variable, as the feeds.conf has changed)
+#	cd $(OPENWRT_DIR); ./scripts/feeds list -n >$(FW_DIR)/.tmp_feeds
+#	$(eval FEEDS=$(shell cat $(FW_DIR)/.tmp_feeds))
+	$(eval FEEDS=$(shell cd $(OPENWRT_DIR); ./scripts/feeds list -n >$(FW_DIR)/.tmp_feeds; cat $(FW_DIR)/.tmp_feeds))
+	$(info new FEEDS $(FEEDS))
+	rm $(FW_DIR)/.tmp_feeds
 
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
-.stamp-feeds-updated: $(OPENWRT_DIR)/feeds.conf unpatch
-	cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update
+.stamp-feeds-updated: .stamp-patch-openwrt | $(OPENWRT_DIR)/feeds.conf $(addprefix .stamp-feed-update-,$(FEEDS))
+	$(info FEEDS is: $(FEEDS))
+	make $(addprefix .stamp-feed-update-,$(FEEDS))
+	#cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
+	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
+	touch $@
+
+.stamp-feed-update-%: $(OPENWRT_DIR)/feeds.conf
+	#cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
+	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
+	touch $@
+
+.stamp-packages-install: .stamp-patch-openwrt .stamp-patch-feeds .stamp-feeds-updated
 	cd $(OPENWRT_DIR); ./scripts/feeds install -a
 	touch $@
 
 # prepare patch
 pre-patch: stamp-clean-pre-patch .stamp-pre-patch
-.stamp-pre-patch: .stamp-feeds-updated $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
+.stamp-pre-patch:
+#	# ensure that an (empty) patches-directory per feed exists
+#	$(foreach feed,$(FEEDS),$(shell [ -d $(FW_DIR)/patches/packages/$(feed) ] || mkdir $(FW_DIR)/patches/packages/$(feed)))
 	touch $@
 
 # patch openwrt working copy
 patch: stamp-clean-patched .stamp-patched
-.stamp-patched: .stamp-pre-patch
-	cd $(OPENWRT_DIR); quilt push -a
+.stamp-patched: .stamp-patch-openwrt .stamp-patch-feeds
+	touch $@
+
+.stamp-patch-openwrt: $(OPENWRT_DIR)/.pc/applied-patches
+	touch $@
+
+$(OPENWRT_DIR)/.pc/applied-patches: .stamp-pre-patch $(wildcard $(FW_DIR)/patches/openwrt/*) | $(OPENWRT_DIR)/patches
+	cd $(OPENWRT_DIR); quilt push -a || [ $$? = 2 ] && true
 	rm -rf $(OPENWRT_DIR)/tmp
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds install -a
+	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update
+	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds install -a
+
+
+.stamp-patch-feeds: .stamp-pre-patch .stamp-feeds-updated .stamp-patch-openwrt
+	$(info patching all feeds: $(FEEDS))
+	make $(addprefix .stamp-patch-feed-,$(FEEDS))
+	touch $@
+
+.stamp-patch-feed-%: $(wildcard patches/packages/%/*) .stamp-feed-update-% .stamp-patch-openwrt | $(OPENWRT_DIR)/feeds/%/patches
+	$(info this is $@)
+	if [ -f $(OPENWRT_DIR)/feeds/$*/patches/series ]; then cd $(OPENWRT_DIR)/feeds/$*; quilt push -a || [ $$? = 2 ] && true; fi
 	touch $@
 
 .stamp-build_rev: .FORCE
@@ -118,7 +165,7 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
 
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
+$(OPENWRT_DIR)/.config: .stamp-packages-install $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
 ifdef IS_BUILDBOT
 	cat $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) >$(OPENWRT_DIR)/.config
 else
@@ -131,7 +178,7 @@ endif
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files
+.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files .stamp-packages-install
 	touch $@
 
 # compile
@@ -142,6 +189,7 @@ compile: stamp-clean-compiled .stamp-compiled
 # check if running via buildbot and remove the build_dir folder to save some space
 ifdef IS_BUILDBOT
 	rm -rf $(OPENWRT_DIR)/build_dir
+	rm -rf $(OPENWRT_DIR)/staging_dir
 endif
 	touch $@
 
@@ -238,15 +286,32 @@ stamp-clean-%:
 stamp-clean:
 	rm -f .stamp-*
 
+unpatch: unpatch-openwrt unpatch-feeds
+	rm -f .stamp-patched
+
 # unpatch needs "patches/" in openwrt
-unpatch: $(OPENWRT_DIR)/patches
+unpatch-openwrt:
+ifneq ($(wildcard $(OPENWRT_DIR)/.pc),)
 # RC = 2 of quilt --> nothing to be done
 	cd $(OPENWRT_DIR); quilt pop -a -f || [ $$? = 2 ] && true
 	rm -rf $(OPENWRT_DIR)/tmp
-	rm -f .stamp-patched
+endif
+	rm -f .stamp-patch-openwrt
+
+unpatch-feeds: $(OPENWRT_DIR)/feeds.conf $(addprefix unpatch-feed-,$(FEEDS))
+	$(info unpatching all feeds: $(FEEDS))
+	rm -f .stamp-patch-feeds
+
+unpatch-feed-%: $(OPENWRT_DIR)/feeds/%
+	$(info this is $@)
+	[ ! -d $(OPENWRT_DIR)/feeds/$*/.pc ] || \
+		(cd $(OPENWRT_DIR)/feeds/$*; quilt pop -a -f || [ $$? = 2 ] && true)
+	rm .stamp-patch-feed-$*
+
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
 .PHONY: openwrt-clean openwrt-clean-bin openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:
+.SUFFIXES:

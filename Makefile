@@ -33,7 +33,7 @@ $(error config for $(TARGET) not defined)
 endif
 
 # if any of the following files have been changed: clean up openwrt dir
-DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
+DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/openwrt/*) $(wildcard patches/packages/*/*)
 
 # profiles to be built (router models)
 PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)

@@ -7,10 +7,10 @@ Date:   Sun Apr 28 13:09:14 2019 +0200
     Maintaining the cronjobs in separate files seems much more simple
     than in a crontab file.
 
-diff --git a/feeds/freifunk/contrib/package/freifunk-common/Makefile b/feeds/freifunk/contrib/package/freifunk-common/Makefile
+diff --git a/contrib/package/freifunk-common/Makefile b/contrib/package/freifunk-common/Makefile
 index 196f00d0f..78572f6d6 100644
---- a/feeds/freifunk/contrib/package/freifunk-common/Makefile
-+++ b/feeds/freifunk/contrib/package/freifunk-common/Makefile
+--- a/contrib/package/freifunk-common/Makefile
++++ b/contrib/package/freifunk-common/Makefile
 @@ -4,7 +4,7 @@
  include $(TOPDIR)/rules.mk
  
@@ -29,10 +29,10 @@ index 196f00d0f..78572f6d6 100644
  endef
  
  define Package/freifunk-common/description
-diff --git a/feeds/freifunk/contrib/package/freifunk-common/files/etc/init.d/freifunk b/feeds/freifunk/contrib/package/freifunk-common/files/etc/init.d/freifunk
+diff --git a/contrib/package/freifunk-common/files/etc/init.d/freifunk b/contrib/package/freifunk-common/files/etc/init.d/freifunk
 index ef7dd7c16..56a795ff9 100755
---- a/feeds/freifunk/contrib/package/freifunk-common/files/etc/init.d/freifunk
-+++ b/feeds/freifunk/contrib/package/freifunk-common/files/etc/init.d/freifunk
+--- a/contrib/package/freifunk-common/files/etc/init.d/freifunk
++++ b/contrib/package/freifunk-common/files/etc/init.d/freifunk
 @@ -7,10 +7,6 @@ START=99
  boot() {
  	test -f /etc/crontabs/root || touch /etc/crontabs/root
@@ -44,10 +44,10 @@ index ef7dd7c16..56a795ff9 100755
  	[ -d /etc/rc.local.d ] && {
  		for file in /etc/rc.local.d/*; do
  			test -f "$file" && . "$file"
-diff --git a/feeds/freifunk/contrib/package/freifunk-common/files/usr/lib/micron.d/ff_olsr_watchdog b/feeds/freifunk/contrib/package/freifunk-common/files/usr/lib/micron.d/ff_olsr_watchdog
+diff --git a/contrib/package/freifunk-common/files/usr/lib/micron.d/ff_olsr_watchdog b/contrib/package/freifunk-common/files/usr/lib/micron.d/ff_olsr_watchdog
 new file mode 100644
 index 000000000..23d8be696
 --- /dev/null
-+++ b/feeds/freifunk/contrib/package/freifunk-common/files/usr/lib/micron.d/ff_olsr_watchdog
++++ b/contrib/package/freifunk-common/files/usr/lib/micron.d/ff_olsr_watchdog
 @@ -0,0 +1 @@
 +*/5 * * * *	/usr/sbin/ff_olsr_watchdog

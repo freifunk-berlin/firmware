@@ -4,13 +4,6 @@
 005-hostapd_nolegacy_by_default.patch
 007-common-feed-mk.patch
 008-add-glinet-ar750_for_ath79.patch
-200-wifi_nolegacy_rates_by_default.patch
-201-wifi_no_meshfwding_by_default.patch
-401-common_no_cronjob_for_dhsmasq.patch
-402-common_olsrd-watchdig_via_micrond.patch
 600-imagebuilder-custom-postinst-script.patch
 700-banner-info.patch
-701-luci-freifunk-policyrouting-berlin.patch
-703-policyrouting_fix_bypass-vpn.patch
-704-policyrouting_ignore_ffuplink.patch
 800-mbedtls-accept-rsa-1024.patch

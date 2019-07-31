@@ -133,7 +133,7 @@ $(OPENWRT_DIR)/.pc/applied-patches: .stamp-pre-patch $(wildcard $(FW_DIR)/patche
 	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds install -a
 
 
-.stamp-patch-feeds: .stamp-pre-patch .stamp-feeds-updated .stamp-patch-openwrt
+.stamp-patch-feeds: .stamp-pre-patch .stamp-feeds-updated .stamp-patch-openwrt $(addprefix .stamp-patch-feed-,$(FEEDS))
 	$(info patching all feeds: $(FEEDS))
 	make $(addprefix .stamp-patch-feed-,$(FEEDS))
 	touch $@

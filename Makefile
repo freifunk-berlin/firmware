@@ -81,7 +81,7 @@ $(OPENWRT_DIR)/patches: | .stamp-openwrt-updated
 # patches require updated openwrt working copy
 $(OPENWRT_DIR)/feeds/%/patches: .stamp-feeds-updated
 	[ -d $(FW_DIR)/patches/packages/$* ] || mkdir $(FW_DIR)/patches/packages/$*
-	[ -d $@ ] || ln -s $(FW_DIR)/patches/packages/$*/ $@
+	[ -d $@ ] || ln -s $(FW_DIR)/patches/packages/$* $@
 
 # feeds
 $(OPENWRT_DIR)/feeds.conf: feeds.conf | .stamp-openwrt-updated

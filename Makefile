@@ -138,7 +138,7 @@ $(OPENWRT_DIR)/.pc/applied-patches: .stamp-pre-patch $(wildcard $(FW_DIR)/patche
 	make $(addprefix .stamp-patch-feed-,$(FEEDS))
 	touch $@
 
-.stamp-patch-feed-%: $(wildcard patches/packages/%/*) .stamp-feed-update-% .stamp-patch-openwrt | $(OPENWRT_DIR)/feeds/%/patches
+.stamp-patch-feed-%: .stamp-patch-openwrt .stamp-feed-update-% $(wildcard patches/packages/%/*) | $(OPENWRT_DIR)/feeds/%/patches
 	$(info this is $@)
 	if [ -f $(OPENWRT_DIR)/feeds/$*/patches/series ]; then cd $(OPENWRT_DIR)/feeds/$*; quilt push -a || [ $$? = 2 ] && true; fi
 	touch $@

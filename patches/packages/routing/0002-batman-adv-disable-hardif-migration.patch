@@ -1,0 +1,24 @@
+From: David Bauer <mail@david-bauer.net>
+Date: Tue, 17 Sep 2019 21:33:05 +0200
+Subject: batman-adv: disable hardif migration
+
+Gluon takes care of the batadv migration. Therefore, this migration is
+not needed. Disable the migration to preserve the gw_mode setting.
+
+Signed-off-by: David Bauer <mail@david-bauer.net>
+
+diff --git a/batman-adv/files/etc/uci-defaults/99-migrate-batadv_hardif b/batman-adv/files/etc/uci-defaults/99-migrate-batadv_hardif
+index 258b7bd6a58892fd02e257c4679dc46dbcf7adf7..34da08f8ba173556a7f7b3fd458ffc12a09665fe 100755
+--- a/batman-adv/files/etc/uci-defaults/99-migrate-batadv_hardif
++++ b/batman-adv/files/etc/uci-defaults/99-migrate-batadv_hardif
+@@ -1,5 +1,10 @@
+ #!/bin/sh
+ 
++# Don't perform this migration. Gluon will take care of mesh configuration
++# and we need to preserve the gw_mode.
++
++exit 0
++
+ # This UCI-Defaults script will split the batadv proto network interfaces
+ # in batadv_hardif and batadv proto. The configuration options from
+ # /etc/config/batman-adv will be moved to the latter.

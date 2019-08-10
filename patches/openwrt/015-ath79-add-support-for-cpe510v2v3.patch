@@ -1,0 +1,295 @@
+commit cad4132e003cecc386d791d552ddba42c182c216
+Author: Andrew Cameron <apcameron@softhome.net>
+Date:   Wed Jun 26 16:40:54 2019 -0500
+
+    ath79: add support for TP-Link CPE510-v2/v3
+    
+    TP-Link CPE510-v2/v3 is an outdoor wireless CPE for 5 GHz with
+    one Ethernet port based on Atheros AR9344
+    
+    Specifications:
+     - Based on the same underlying hardware as the TP-Link CPE510
+     - Power, LAN, and 4 green LEDs
+     - 1 10/100Mbps Shielded Ethernet Port (Passive PoE in)
+     - Built-in 13dBi 2x2 dual-polarized directional MIMO antenna
+     - Adjustable transmission power from 0 to 23dBm/200mw
+    
+    Flashing instructions:
+     Flash factory image through stock firmware WEB UI
+     or through TFTP
+     To get to TFTP recovery just hold reset button while powering on for
+     around 4-5 seconds and release.
+     Rename factory image to recovery.bin
+     Stock TFTP server IP:192.168.0.100
+     Stock device TFTP adress:192.168.0.254
+    
+    Signed-off-by: Andrew Cameron <apcameron@softhome.net>
+    [whitespace fixes]
+    Signed-off-by: Petr Štetiar <ynezz@true.cz>
+
+diff --git a/target/linux/ath79/base-files/etc/board.d/01_leds b/target/linux/ath79/base-files/etc/board.d/01_leds
+index 238dda18f6..0cb03db4be 100755
+--- a/target/linux/ath79/base-files/etc/board.d/01_leds
++++ b/target/linux/ath79/base-files/etc/board.d/01_leds
+@@ -158,6 +158,15 @@ tplink,cpe210-v3)
+ 	ucidef_set_led_rssi "rssimediumhigh" "RSSIMEDIUMHIGH" "tp-link:green:link3" "wlan0" "60" "100"
+ 	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "tp-link:green:link4" "wlan0" "80" "100"
+ 	;;
++tplink,cpe510-v2|\
++tplink,cpe510-v3)
++	ucidef_set_led_netdev "lan" "LAN" "tp-link:green:lan" "eth0"
++	ucidef_set_rssimon "wlan0" "200000" "1"
++	ucidef_set_led_rssi "rssilow" "RSSILOW" "tp-link:green:link1" "wlan0" "1" "100" "0" "13"
++	ucidef_set_led_rssi "rssimediumlow" "RSSIMEDIUMLOW" "tp-link:green:link2" "wlan0" "26" "100" "-25" "13"
++	ucidef_set_led_rssi "rssimediumhigh" "RSSIMEDIUMHIGH" "tp-link:green:link3" "wlan0" "51" "100" "-50" "13"
++	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "tp-link:green:link4" "wlan0" "76" "100" "-75" "13"
++	;;
+ tplink,re450-v2)
+ 	ucidef_set_led_netdev "lan_data" "LAN Data" "tp-link:green:lan_data" "eth0" "tx rx"
+ 	ucidef_set_led_netdev "lan_link" "LAN Link" "tp-link:green:lan_link" "eth0" "link
+diff --git a/target/linux/ath79/base-files/etc/board.d/02_network b/target/linux/ath79/base-files/etc/board.d/02_network
+index 2413b1f4bc..1d4cec025a 100755
+--- a/target/linux/ath79/base-files/etc/board.d/02_network
++++ b/target/linux/ath79/base-files/etc/board.d/02_network
+@@ -28,6 +28,8 @@ ath79_setup_interfaces()
+ 	pqi,air-pen|\
+ 	tplink,cpe210-v2|\
+ 	tplink,cpe210-v3|\
++	tplink,cpe510-v2|\
++	tplink,cpe510-v3|\
+ 	tplink,re350k-v1|\
+ 	tplink,re450-v2|\
+ 	tplink,tl-mr10u|\
+diff --git a/target/linux/ath79/dts/ar9344_tplink_cpe510-v2.dts b/target/linux/ath79/dts/ar9344_tplink_cpe510-v2.dts
+new file mode 100644
+index 0000000000..758d0c02f0
+--- /dev/null
++++ b/target/linux/ath79/dts/ar9344_tplink_cpe510-v2.dts
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/dts-v1/;
++
++#include "ar9344_tplink_cpe510.dtsi"
++
++/ {
++	compatible = "tplink,cpe510-v2", "qca,ar9344";
++	model = "TP-Link CPE510 v2";
++};
+diff --git a/target/linux/ath79/dts/ar9344_tplink_cpe510-v3.dts b/target/linux/ath79/dts/ar9344_tplink_cpe510-v3.dts
+new file mode 100644
+index 0000000000..0909fcfa73
+--- /dev/null
++++ b/target/linux/ath79/dts/ar9344_tplink_cpe510-v3.dts
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/dts-v1/;
++
++#include "ar9344_tplink_cpe510.dtsi"
++
++/ {
++	compatible = "tplink,cpe510-v3", "qca,ar9344";
++	model = "TP-Link CPE510 v3";
++};
+diff --git a/target/linux/ath79/dts/ar9344_tplink_cpe510.dtsi b/target/linux/ath79/dts/ar9344_tplink_cpe510.dtsi
+new file mode 100644
+index 0000000000..f19ef01d49
+--- /dev/null
++++ b/target/linux/ath79/dts/ar9344_tplink_cpe510.dtsi
+@@ -0,0 +1,152 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++#include "ar9344.dtsi"
++
++/ {
++	aliases {
++		led-boot = &system;
++		led-failsafe = &system;
++		led-running = &system;
++		led-upgrade = &system;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		lan {
++			label = "tp-link:green:lan";
++			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
++		};
++
++		link1 {
++			label = "tp-link:green:link1";
++			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
++		};
++
++		link2 {
++			label = "tp-link:green:link2";
++			gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
++		};
++
++		link3 {
++			label = "tp-link:green:link3";
++			gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
++		};
++
++		system: link4 {
++			label = "tp-link:green:link4";
++			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio 4 GPIO_ACTIVE_LOW>;
++			debounce-interval = <60>;
++		};
++	};
++
++};
++
++&ref {
++	clock-frequency = <40000000>;
++};
++
++&uart {
++	status = "okay";
++};
++
++&spi {
++	num-cs = <1>;
++
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <25000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			uboot: partition@0 {
++				label = "u-boot";
++				reg = <0x000000 0x020000>;
++				read-only;
++			};
++
++			partition@20000 {
++				label = "partition-table";
++				reg = <0x020000 0x010000>;
++				read-only;
++			};
++
++			info: partition@30000 {
++				label = "info";
++				reg = <0x030000 0x010000>;
++				read-only;
++			};
++
++			partition@40000 {
++				label = "firmware";
++				reg = <0x040000 0x780000>;
++
++				compatible = "fixed-partitions";
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				partition@0 {
++					label = "kernel";
++					reg = <0x000000 0x200000>;
++				};
++
++				partition@200000 {
++					label = "rootfs";
++					reg = <0x200000 0x580000>;
++				};
++			};
++
++			partition@7c0000 {
++				label = "config";
++				reg = <0x7c0000 0x030000>;
++				read-only;
++			};
++
++			art: partition@7f0000 {
++				label = "art";
++				reg = <0x7f0000 0x010000>;
++				read-only;
++			};
++		};
++	};
++};
++
++&wmac {
++	status = "okay";
++
++	mtd-cal-data = <&art 0x1000>;
++	mtd-mac-address = <&info 0x08>;
++};
++
++&eth0 {
++	status = "okay";
++
++	mtd-mac-address = <&info 0x08>;
++
++	phy-mode = "mii";
++	phy-handle = <&swphy4>;
++};
++
++&eth1 {
++	status = "okay";
++	compatible = "syscon", "simple-mfd";
++};
+diff --git a/target/linux/ath79/image/generic-tp-link.mk b/target/linux/ath79/image/generic-tp-link.mk
+index f1424d02ee..312ce78f22 100644
+--- a/target/linux/ath79/image/generic-tp-link.mk
++++ b/target/linux/ath79/image/generic-tp-link.mk
+@@ -159,6 +159,40 @@ define Device/tplink_cpe210-v3
+ endef
+ TARGET_DEVICES += tplink_cpe210-v3
+ 
++define Device/tplink_cpe510-v2
++  $(Device/tplink-safeloader)
++  ATH_SOC := ar9344
++  IMAGE_SIZE := 7680k
++  DEVICE_MODEL := CPE510
++  DEVICE_VARIANT := v2
++  DEVICE_PACKAGES := rssileds
++  TPLINK_BOARD_ID := CPE510V2
++  LOADER_TYPE := elf
++  LOADER_FLASH_OFFS := 0x43000 
++  COMPILE := loader-$(1).elf 
++  COMPILE/loader-$(1).elf := loader-okli-compile 
++  KERNEL := kernel-bin | append-dtb | lzma | uImage lzma -M 0x4f4b4c49 | loader-okli $(1) 12288
++  SUPPORTED_DEVICES += cpe510-v2
++endef
++TARGET_DEVICES += tplink_cpe510-v2
++
++define Device/tplink_cpe510-v3
++  $(Device/tplink-safeloader)
++  ATH_SOC := ar9344
++  IMAGE_SIZE := 7680k
++  DEVICE_MODEL := CPE510
++  DEVICE_VARIANT := v3
++  DEVICE_PACKAGES := rssileds
++  TPLINK_BOARD_ID := CPE510V3
++  LOADER_TYPE := elf
++  LOADER_FLASH_OFFS := 0x43000 
++  COMPILE := loader-$(1).elf 
++  COMPILE/loader-$(1).elf := loader-okli-compile 
++  KERNEL := kernel-bin | append-dtb | lzma | uImage lzma -M 0x4f4b4c49 | loader-okli $(1) 12288
++  SUPPORTED_DEVICES += cpe510-v3
++endef
++TARGET_DEVICES += tplink_cpe510-v3
++
+ define Device/tplink_archer-d50-v1
+   ATH_SOC := qca9531
+   DEVICE_TITLE := TP-Link Archer D50 v1

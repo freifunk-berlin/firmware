@@ -1,0 +1,32 @@
+commit dc96aed1a7beaa78d169c63f1593f7d162cfb53f
+Author: Russell Senior <russell@personaltelco.net>
+Date:   Sun Aug 11 01:33:49 2019 -0700
+
+    olsrd: update to 0.9.8
+    
+    Allows building against gpsd-3.19.
+    
+    Signed-off-by: Russell Senior <russell@personaltelco.net>
+
+diff --git a/olsrd/Makefile b/olsrd/Makefile
+index 85f2a75..48d3288 100644
+--- a/olsrd/Makefile
++++ b/olsrd/Makefile
+@@ -8,14 +8,15 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=olsrd
+-PKG_VERSION:=0.9.7
++PKG_VERSION:=0.9.8
+ PKG_RELEASE=$(PKG_SOURCE_VERSION)
+ 
+ PKG_SOURCE_PROTO:=git
+ PKG_SOURCE_URL:=https://github.com/OLSR/olsrd.git
+ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+-PKG_SOURCE_VERSION:=v0.9.7
++PKG_SOURCE_VERSION:=v0.9.8
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
++PKG_HASH:=dbcec5716419aee1b4ee5da09ff9ac6f28cc07b4ead3d532f50e4411c9549f24
+ 
+ PKG_BUILD_PARALLEL:=0
+ PKG_LICENSE:=BSD-3-Clause

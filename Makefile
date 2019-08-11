@@ -123,6 +123,9 @@ patch: stamp-clean-patched .stamp-patched
 .stamp-patched: .stamp-patch-openwrt .stamp-patch-feeds
 	touch $@
 
+%/.pc/applied-patches: | %/patches
+	cd $(OPENWRT_DIR); quilt push -a || [ $$? = 2 ] && true
+
 .stamp-patch-openwrt: .stamp-pre-patch $(wildcard $(FW_DIR)/patches/openwrt/*) $(OPENWRT_DIR)/.pc/applied-patches | $(OPENWRT_DIR)/patches
 	cd $(OPENWRT_DIR); quilt push -a || [ $$? = 2 ] && true
 	rm -rf $(OPENWRT_DIR)/tmp

@@ -1,2 +1,3 @@
 001-fix-dependency-luci-lib-ipkg.patch
-100_PR188.patch
+100_PR188_part1.patch
+101_PR188_part2.patch

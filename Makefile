@@ -305,7 +305,7 @@ unpatch-feed-%: $(OPENWRT_DIR)/feeds/%
 	$(info this is $@)
 	[ ! -d $(OPENWRT_DIR)/feeds/$*/.pc ] || \
 		(cd $(OPENWRT_DIR)/feeds/$*; quilt pop -a -f || [ $$? = 2 ] && true)
-	rm .stamp-patch-feed-$*
+	rm -f .stamp-patch-feed-$*
 
 
 clean: stamp-clean .stamp-openwrt-cleaned

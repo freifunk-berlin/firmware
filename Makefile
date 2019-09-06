@@ -126,7 +126,7 @@ patch: stamp-clean-patched .stamp-patched
 %/.pc/applied-patches: | %/patches
 	cd $(OPENWRT_DIR); quilt push -a || [ $$? = 2 ] && true
 
-.stamp-patch-openwrt: .stamp-pre-patch $(wildcard $(FW_DIR)/patches/openwrt/*) $(OPENWRT_DIR)/.pc/applied-patches | $(OPENWRT_DIR)/patches unpatch-openwrt
+.stamp-patch-openwrt: .stamp-pre-patch $(wildcard $(FW_DIR)/patches/openwrt/*) | $(OPENWRT_DIR)/patches unpatch-openwrt $(OPENWRT_DIR)/.pc/applied-patches
 	cd $(OPENWRT_DIR); quilt push -a || [ $$? = 2 ] && true
 	rm -rf $(OPENWRT_DIR)/tmp
 	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update

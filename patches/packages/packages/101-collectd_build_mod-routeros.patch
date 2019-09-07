@@ -12,15 +12,6 @@ diff --git a/utils/collectd/Makefile b/utils/collectd/Makefile
 index b1f26cf54..94511271e 100644
 --- a/utils/collectd/Makefile
 +++ b/utils/collectd/Makefile
-@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
- 
- PKG_NAME:=collectd
- PKG_VERSION:=5.9.0
--PKG_RELEASE:=2
-+PKG_RELEASE:=3
- 
- PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
- PKG_SOURCE_URL:=https://collectd.org/files/ \
 @@ -83,7 +83,6 @@ COLLECTD_PLUGINS_DISABLED:= \
  	pinba \
  	python \

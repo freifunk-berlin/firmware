@@ -1,6 +1,7 @@
 GLUON_TARGET = $(TARGET)
+.DEFAULT_GOAL := buildbot
 
-all: update
+all:
 
 LC_ALL:=C
 LANG:=C
@@ -180,6 +181,9 @@ manifest: $(LUA) FORCE
 
 	@mkdir -p '$(GLUON_IMAGEDIR)/sysupgrade'
 	@mv 'tmp/$(GLUON_BRANCH).manifest.tmp' '$(GLUON_IMAGEDIR)/sysupgrade/$(GLUON_BRANCH).manifest'
+
+buildbot: update all
+	(info running target buildbot)
 
 FORCE: ;
 

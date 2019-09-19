@@ -1,0 +1,42 @@
+From b85483990651a3f7afb4435b12114c588acdc4a3 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Wed, 18 Sep 2019 09:43:44 +0200
+Subject: [PATCH] luci: add new dependency to luci-lib-ipkg
+
+This became an issue because the luci-lib-ipkg code has been
+removed from luci-base.  The upstream commit is
+https://github.com/openwrt/luci/commit/4bbe32548c407ec6ae104934b3f1fe53539de9f6
+---
+ utils/luci-app-ffwizard-berlin/Makefile | 2 +-
+ utils/luci-mod-freifunk-ui/Makefile     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/utils/luci-app-ffwizard-berlin/Makefile b/utils/luci-app-ffwizard-berlin/Makefile
+index fa1d867..8d90e88 100644
+--- a/utils/luci-app-ffwizard-berlin/Makefile
++++ b/utils/luci-app-ffwizard-berlin/Makefile
+@@ -16,7 +16,7 @@ define Package/luci-app-ffwizard-berlin
+   SUBMENU:=3. Applications
+   TITLE:=Freifunk Berlin configuration wizard
+   URL:=http://berlin.freifunk.net
+-  DEPENDS+= +luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +community-profiles
++  DEPENDS+= +luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +community-profiles +luci-lib-ipkg
+   PKGARCH:=all
+ endef
+ 
+diff --git a/utils/luci-mod-freifunk-ui/Makefile b/utils/luci-mod-freifunk-ui/Makefile
+index e943501..2d49ecb 100644
+--- a/utils/luci-mod-freifunk-ui/Makefile
++++ b/utils/luci-mod-freifunk-ui/Makefile
+@@ -20,7 +20,7 @@ define Package/luci-mod-freifunk-ui
+   CATEGORY:=LuCI
+   SUBMENU:=2. Modules
+   TITLE:=Freifunk Public and Admin LuCI UI
+-  DEPENDS:=+luci-mod-admin-full +luci-lib-json +community-profiles
++  DEPENDS:=+luci-mod-admin-full +luci-lib-json +community-profiles +luci-lib-ipkg
+   PKGARCH:=all
+ endef
+ 
+-- 
+2.11.0
+

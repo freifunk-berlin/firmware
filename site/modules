@@ -1,0 +1,7 @@
+GLUON_SITE_FEEDS='freifunk ffberlin'
+
+PACKAGES_FFBERLIN_REPO=https://github.com/freifunk-berlin/firmware-packages.git
+PACKAGES_FFBERLIN_COMMIT=3998a4cad5679984379b4d5c95b6fddefcfe8f4e
+
+PACKAGES_FREIFUNK_REPO=https://github.com/freifunk/openwrt-packages.git
+PACKAGES_FREIFUNK_COMMIT=2c8f37de4724e3103f6b7586f5e5120cf6f93de5

@@ -24,6 +24,10 @@ for module in $GLUON_MODULES; do
 	for patch in "${GLUON_PATCHESDIR}/$module"/*.patch; do
 		git -c user.name='Gluon Patch Manager' -c user.email='gluon@void.example.com' -c commit.gpgsign=false am --whitespace=nowarn --committer-date-is-author-date "$patch"
 	done
+	[ ! -f "$GLUON_SITEDIR"/patches/$module/*.patch ] || echo "applying site-patches"
+	for patch in "${GLUON_SITEDIR}/patches/$module"/*.patch; do
+		git -c user.name='Gluon Patch Manager' -c user.email='gluon@void.example.com' -c commit.gpgsign=false am --whitespace=nowarn --committer-date-is-author-date "$patch"
+	done
 
 	cd "$GLUONDIR/$module"
 	git fetch "$PATCHDIR" 2>/dev/null

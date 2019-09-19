@@ -29,7 +29,7 @@ GLUON_DEPRECATED ?= $(error GLUON_DEPRECATED not set. Please consult the documen
 
 # initialize (possibly already user set) directory variables
 GLUON_TMPDIR ?= tmp
-GLUON_OUTPUTDIR ?= firmwares
+GLUON_OUTPUTDIR ?= output
 GLUON_IMAGEDIR ?= $(GLUON_OUTPUTDIR)/images
 GLUON_PACKAGEDIR ?= $(GLUON_OUTPUTDIR)/packages
 GLUON_TARGETSDIR ?= targets
@@ -182,7 +182,7 @@ manifest: $(LUA) FORCE
 	@mkdir -p '$(GLUON_IMAGEDIR)/sysupgrade'
 	@mv 'tmp/$(GLUON_BRANCH).manifest.tmp' '$(GLUON_IMAGEDIR)/sysupgrade/$(GLUON_BRANCH).manifest'
 
-buildbot: update all
+buildbot: | update all
 	(info running target buildbot)
 
 FORCE: ;

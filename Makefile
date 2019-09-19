@@ -1,6 +1,6 @@
 GLUON_TARGET = $(TARGET)
 
-all:
+all: update
 
 LC_ALL:=C
 LANG:=C

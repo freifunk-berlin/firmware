@@ -29,7 +29,7 @@ GLUON_DEPRECATED ?= $(error GLUON_DEPRECATED not set. Please consult the documen
 
 # initialize (possibly already user set) directory variables
 GLUON_TMPDIR ?= tmp
-GLUON_OUTPUTDIR ?= output
+GLUON_OUTPUTDIR ?= firmwares/$(GLUON_TARGET)
 GLUON_IMAGEDIR ?= $(GLUON_OUTPUTDIR)/images
 GLUON_PACKAGEDIR ?= $(GLUON_OUTPUTDIR)/packages
 GLUON_TARGETSDIR ?= targets

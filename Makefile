@@ -1,3 +1,4 @@
+GLUON_TARGET ?= $(TARGET)
 .DEFAULT_GOAL := buildbot
 
 all:
@@ -183,7 +184,7 @@ manifest: $(LUA) FORCE
 
 buildbot:
 	$(MAKE) update
-	$(MAKE) GLUON_TARGET=$(TARGET) V=s all
+	$(MAKE) GLUON_TARGET=$(GLUON_TARGET) V=s all
 
 FORCE: ;
 

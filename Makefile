@@ -182,8 +182,8 @@ manifest: $(LUA) FORCE
 	@mv 'tmp/$(GLUON_BRANCH).manifest.tmp' '$(GLUON_IMAGEDIR)/sysupgrade/$(GLUON_BRANCH).manifest'
 
 buildbot:
-	make update
-	make GLUON_TARGET=$(TARGET) all
+	$(MAKE) update
+	$(MAKE) GLUON_TARGET=$(TARGET) V=s all
 
 FORCE: ;
 

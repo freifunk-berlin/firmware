@@ -8,7 +8,9 @@
 GLUON_FEATURES := \
 	freifunk-berlin-ui \
 	freifunk-berlin-defaults \
-	freifunk-berlin-utils
+	freifunk-berlin-utils \
+	freifunk-berlin-statistics-collectd \
+	freifunk-berlin-mesh-olsr
 
 
 ##	GLUON_SITE_PACKAGES

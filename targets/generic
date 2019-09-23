@@ -1,8 +1,6 @@
 assert(env.GLUON_LANGS)
 
 
-config('CONFIG_GLUON_SITEDIR="%s"', env.GLUON_SITEDIR)
-config('CONFIG_GLUON_RELEASE="%s"', env.GLUON_RELEASE)
 try_config('CONFIG_GLUON_BRANCH="%s"', env.GLUON_BRANCH or '')
 
 for lang in string.gmatch(env.GLUON_LANGS, '%S+') do

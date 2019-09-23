@@ -319,6 +319,7 @@ device('tp-link-tl-wr902ac-v1', 'tl-wr902ac-v1', {
 
 device('tp-link-re450', 're450-v1', {
 	packages = ATH10K_PACKAGES,
+	broken = true, -- file-system partition too big (more than 4274644 bytes)
 })
 
 

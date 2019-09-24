@@ -16,8 +16,8 @@ index b7fa19f9d..dd73aa651 100644
    SUBMENU:=3. Applications
    TITLE:=Freifunk Berlin configuration wizard
    URL:=http://berlin.freifunk.net
--  DEPENDS+= +luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc
-+  DEPENDS+= +luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +luci-lib-ipkg
+-  DEPENDS+= +luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +community-profiles
++  DEPENDS+= +luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +community-profiles +luci-lib-ipkg
    PKGARCH:=all
  endef
  

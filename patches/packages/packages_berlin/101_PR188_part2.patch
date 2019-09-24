@@ -8,9 +8,9 @@ index fa1d867b7..febadfd00 100644
  
 -PKG_NAME:=luci-app-ffwizard-berlin
 -PKG_VERSION:=0.0.16
--PKG_RELEASE:=1
+-PKG_RELEASE:=2
 +LUCI_TITLE:=Freifunk Berlin configuration wizard
-+LUCI_DEPENDS:=+luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +luci-lib-ipkg
++LUCI_DEPENDS:=+luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +community-profiles +luci-lib-ipkg
 +PKG_RELEASE:=4
  
 -PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -25,7 +25,7 @@ index fa1d867b7..febadfd00 100644
 -  SUBMENU:=3. Applications
 -  TITLE:=Freifunk Berlin configuration wizard
 -  URL:=http://berlin.freifunk.net
--  DEPENDS+= +luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +luci-lib-ipkg
+-  DEPENDS+= +luci-mod-admin-full +freifunk-policyrouting +luci-lib-jsonc +community-profiles +luci-lib-ipkg
 -  PKGARCH:=all
 -endef
 -

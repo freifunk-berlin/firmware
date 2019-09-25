@@ -1,7 +1,6 @@
-.*.swp
-.stamp*
-patches/*~
-bin
-^openwrt
-firmwares
-dl
+*~
+/openwrt
+/output
+/site
+/tmp
+/packages

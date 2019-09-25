@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a bug in a recent version of Freifunk-Berlin Firmware
+about: Report a bug in a recent version of Gluon
 label: bug
 ---
 
@@ -42,7 +42,7 @@ Thank you for taking the time to report a bug with the Gluon project.
 - Did it work like that before?
 -->
 
-**Firmware Version:**
+**Gluon Version:**
 <!-- 
 Please provide a usable Git reference before applying custom patches:
 
@@ -50,26 +50,22 @@ By using a Git reference:
     $ git describe --always
     v2018.2-17-g3abadc28
 
-Or the URL to the relevant commit
-    https://github.com/freifunk-berlin/firmware/commit/<commit hash here>
+Or the URL to the relevant Gluon commit
+    https://github.com/freifunk-gluon/gluon/commit/<commit hash here>
 -->
 
 **Site Configuration:**
 <!--
-- What image-type did you use?
-- Are you installing from a fresh node or did you do an upgrade?
-- Did you just ran the firmware-wizard?
-- Did you do manual modifications of the configuration?
-- When upgrading, what was the previous version installed?
-
-If you think it might be helpful, upload or provide an URL to your configuration.
-But have in mind that the regular backup file, as created by the node, will 
-contain sensitive data (encrypted root-password, VPN-certificates, ...)
+Please provide the URL to your site configuration repository and the
+explicit commit used to build the firmware experiencing the problem.
+ 
+Additionally excerpts of problem-related configuration parts are 
+often helpful. 
 -->
 
 **Custom patches:**
 <!--
-Be upfront about any custom patches you have applied to your firmware build, as they might
+Be upfront about any custom patches you have applied to your Gluon build, as they might
 be part of your problem.
 -->
 

@@ -1,0 +1,8 @@
+include 'brcm2708.inc'
+
+device('raspberry-pi', 'rpi', {
+	manifest_aliases = {
+		'raspberry-pi-model-b-rev-2',
+		'raspberry-pi-model-b-plus-rev-1.2',
+	},
+})

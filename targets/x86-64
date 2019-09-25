@@ -1,0 +1,6 @@
+include 'x86.inc'
+
+factory_image('x86-64', 'combined-squashfs', '.img.gz')
+factory_image('x86-64', 'combined-squashfs', '.vdi')
+factory_image('x86-64', 'combined-squashfs', '.vmdk')
+sysupgrade_image('x86-64', 'combined-squashfs', '.img.gz')

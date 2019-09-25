@@ -1,0 +1,10 @@
+#!/usr/bin/lua
+
+local sysconfig = require 'gluon.sysconfig'
+
+local util = require 'gluon.util'
+
+
+-- Save the Gluon version in the sysconfig so we know which version we
+-- upgraded from after the next upgrade
+sysconfig.gluon_version = util.trim(util.readfile('/lib/gluon/gluon-version'))

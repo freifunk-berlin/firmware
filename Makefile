@@ -185,7 +185,7 @@ manifest: $(LUA) FORCE
 buildbot:
 	$(MAKE) update
 	$(MAKE) GLUON_TARGET=$(GLUON_TARGET) V=s all
-	mv openwrt/bin/targets/$(BOARD)/$(SUBTARGET)/*.mainfest $(GLUON_IMAGEDIR)/sysupgrade/
+	mv openwrt/bin/targets/$(BOARD)/$(SUBTARGET)/*.manifest $(GLUON_IMAGEDIR)/sysupgrade/
 	mv openwrt/bin/packages $(GLUON_IMAGEDIR)/
 
 FORCE: ;

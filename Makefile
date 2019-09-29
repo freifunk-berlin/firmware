@@ -185,7 +185,7 @@ manifest: $(LUA) FORCE
 buildbot:
 	$(MAKE) update
 ifeq ($(TARGET),ipq40xx-generic)
-	GLUON_TARGET=ipq40xx
+	$(eval GLUON_TARGET=ipq40xx)
 endif
 	$(MAKE) GLUON_TARGET=$(GLUON_TARGET) V=s all
 	mv openwrt/bin/targets/$(BOARD)/$(SUBTARGET)/*.manifest $(GLUON_IMAGEDIR)/sysupgrade/

@@ -53,3 +53,7 @@ GLUON_LANGS ?= en de
 
 # Do not build images for deprecated devices
 GLUON_DEPRECATED ?= 0
+
+# build broken targets by default, e.g. ar71xx-mikrotik
+BROKEN ?= 1
+

@@ -21,7 +21,6 @@ GLUON_FEATURES := \
 #		chosen feature flags
 
 GLUON_SITE_PACKAGES := iwinfo luci-mod-admin-full luci-theme-bootstrap luci-app-ffwizard-berlin luci-mod-freifunk
-#luci-lib-ipkg
 
 ##	DEFAULT_GLUON_RELEASE
 #		version string to use for images

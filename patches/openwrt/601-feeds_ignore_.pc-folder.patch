@@ -1,0 +1,13 @@
+diff --git a/include/scan.mk b/include/scan.mk
+index d9cd4f7e8c..83b328dca9 100644
+--- a/include/scan.mk
++++ b/include/scan.mk
+@@ -68,7 +68,7 @@ endif
+ 
+ $(FILELIST): $(OVERRIDELIST)
+ 	rm -f $(TMP_DIR)/info/.files-$(SCAN_TARGET)-*
+-	find -L $(SCAN_DIR) $(SCAN_EXTRA) -mindepth 1 $(if $(SCAN_DEPTH),-maxdepth $(SCAN_DEPTH)) -name Makefile | xargs grep -aHE 'call $(GREP_STRING)' | sed -e 's#^$(SCAN_DIR)/##' -e 's#/Makefile:.*##' | uniq | awk -v of=$(OVERRIDELIST) -f include/scan.awk > $@
++	find -L $(SCAN_DIR) $(SCAN_EXTRA) -mindepth 1 $(if $(SCAN_DEPTH),-maxdepth $(SCAN_DEPTH)) -name Makefile | xargs grep -aHE 'call $(GREP_STRING)' | sed -e 's#^$(SCAN_DIR)/##' -e 's#/Makefile:.*##' | uniq | awk -v of=$(OVERRIDELIST) -f include/scan.awk | grep -v ^.pc/ > $@
+ 
+ $(TMP_DIR)/info/.files-$(SCAN_TARGET).mk: $(FILELIST)
+ 	( \

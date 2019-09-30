@@ -22,13 +22,22 @@ GLUON_FEATURES := \
 
 GLUON_SITE_PACKAGES := iwinfo luci-mod-admin-full luci-theme-bootstrap luci-app-ffwizard-berlin luci-mod-freifunk
 
+#PKG_REV = $(strip $(shell \
+#			set -- $$(git log -1 --format="%ct %h" --abbrev=7); \
+#			secs="$$(($$1 % 86400))"; \
+#			yday="$$(date --utc --date="@$$1" "+%y.%j")"; \
+#			revision="$$(printf 'git-%s.%05d-%s' "$$yday" "$$secs" "$$2")"; \
+#		))
+PKG_REV_HASH = $(shell git log -1 --format="%h" --abbrev=7)
+PKG_REV_DATE = $(shell date --date=@$$(git log -1 --format="%ct") +%y.%j)
+
 ##	DEFAULT_GLUON_RELEASE
 #		version string to use for images
 #		gluon relies on
 #			opkg compare-versions "$1" '>>' "$2"
 #		to decide if a version is newer or not.
 
-DEFAULT_GLUON_RELEASE := 0.6+exp$(shell date '+%Y%m%d')
+DEFAULT_GLUON_RELEASE := gluon+exp.git-$(PKG_REV_DATE)-$(PKG_REV_HASH)
 
 # Variables set with ?= can be overwritten from the command line
 

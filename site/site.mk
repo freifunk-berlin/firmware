@@ -6,6 +6,7 @@
 #		depending on the combination of features listed
 
 GLUON_FEATURES := \
+	freifunk-berlin-image-wizard-notunnel \
 	freifunk-berlin-ui \
 	freifunk-berlin-defaults \
 	freifunk-berlin-utils \
@@ -20,7 +21,7 @@ GLUON_FEATURES := \
 #		selection that would be enabled by default or due to the
 #		chosen feature flags
 
-GLUON_SITE_PACKAGES := iwinfo luci-mod-admin-full luci-theme-bootstrap luci-app-ffwizard-berlin luci-mod-freifunk
+GLUON_SITE_PACKAGES := iwinfo
 
 #PKG_REV = $(strip $(shell \
 #			set -- $$(git log -1 --format="%ct %h" --abbrev=7); \

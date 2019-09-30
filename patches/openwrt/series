@@ -8,5 +8,6 @@
 008-add-glinet-ar750_for_ath79.patch
 100-wireless-regdb_use_python2.patch
 600-imagebuilder-custom-postinst-script.patch
+601-feeds_ignore_.pc-folder.patch
 700-banner-info.patch
 800-mbedtls-accept-rsa-1024.patch

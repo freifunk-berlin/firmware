@@ -196,7 +196,7 @@ endif
 #  * packages directory
 #  * firmware-images are already in place (target images)
 firmwares: stamp-clean-firmwares .stamp-firmwares
-.stamp-firmwares: .stamp-images $(VERSION_FILE) .stamp-initrd
+.stamp-firmwares: .stamp-images $(VERSION_FILE) .stamp-initrd build-logs
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/*.tar.xz
@@ -246,6 +246,11 @@ $(VERSION_FILE): .stamp-prepared
 	  FEED_REVISION=`cd $$FEED_DIR; $(REVISION)`; \
 	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $(VERSION_FILE); \
 	done
+
+build-logs: .stamp-compiled
+	mkdir -p $(FW_TARGET_DIR)
+	[ -d $(OPENWRT_DIR)/logs ] && mv $(OPENWRT_DIR)/logs $(FW_TARGET_DIR)
+	touch .stamp-$@
 
 images: .stamp-images
 

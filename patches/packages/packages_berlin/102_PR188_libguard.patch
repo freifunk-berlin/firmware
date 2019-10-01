@@ -1,0 +1,18 @@
+diff --git a/addons/freifunk-berlin-lib-guard/Makefile b/addons/freifunk-berlin-lib-guard/Makefile
+index 83f669d..da0ad0e 100644
+--- a/addons/freifunk-berlin-lib-guard/Makefile
++++ b/addons/freifunk-berlin-lib-guard/Makefile
+@@ -1,12 +1,11 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=freifunk-berlin-lib-guard
+-PKG_VERSION:=0.0.4
+ PKG_RELEASE:=1
+ 
+ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+ 
+-include $(INCLUDE_DIR)/package.mk
++include ../../freifunk-berlin-generic.mk
+ 
+ define Package/freifunk-berlin-lib-guard
+   SECTION:=freifunk-berlin

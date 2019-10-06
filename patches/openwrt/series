@@ -1,5 +1,6 @@
 001-mac80211_mesh_no_fwding_by_default.patch
 002-add_ramips-nexx-image.patch
+0001-ipqx0xx-add-Generic-subtarget.patch
 015-ath79-add-support-for-cpe510v2v3.patch
 016-ath79-cpe510v2v3-backport-mk.patch
 #019-add-tplink-cpe-for-ath79.patch

@@ -1,12 +1,27 @@
-diff -ur modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua mod-patch/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
---- a/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua	2018-07-22 03:35:34.309103302 +0200
-+++ b/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua	2018-07-22 13:32:28.000000000 +0200
-@@ -370,7 +370,7 @@
+From 2626f4cfc85557cb1aba278f62840076aa4f3e00 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Sun, 13 Oct 2019 23:23:35 +0200
+Subject: [PATCH] mod-network: disable 802.11s Mesh-forwarding by default
+
+to keep the LuCI-default in sync with our modified default of the
+kernel (4155686786432adab4b56d358e4e6fbd28d0d0a9)
+---
+ .../htdocs/luci-static/resources/view/network/wireless.js               | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+index 0235df0e1..4f6e6c6f5 100644
+--- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
++++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+@@ -809,7 +809,7 @@ return L.view.extend({
  
- meshfwd = s:taboption("advanced", Flag, "mesh_fwding", translate("Forward mesh peer traffic"))
- meshfwd.rmempty = false
--meshfwd.default = "1"
-+meshfwd.default = "0"
- meshfwd:depends({mode="mesh"})
+ 				o = ss.taboption('advanced', form.Flag, 'mesh_fwding', _('Forward mesh peer traffic'));
+ 				o.rmempty = false;
+-				o.default = '1';
++				o.default = '0';
+ 				o.depends('mode', 'mesh');
  
- ssid = s:taboption("general", Value, "ssid", translate("<abbr title=\"Extended Service Set Identifier\">ESSID</abbr>"))
+ 				o = ss.taboption('advanced', form.Value, 'mesh_rssi_threshold', _('RSSI threshold for joining'), _('0 = not using RSSI threshold, 1 = do not change driver default'));
+-- 
+2.11.0
+

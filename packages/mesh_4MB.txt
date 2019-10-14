@@ -1,6 +1,6 @@
 -kmod-usb-core
 -kmod-usb2
--kmod-ledtrig-usbdev
+-kmod-usb-ledtrig-usbport
 -kmod-usb-ohci
 -kmod-ppp
 -kmod-usb-serial

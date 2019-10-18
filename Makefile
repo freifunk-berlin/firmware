@@ -142,6 +142,7 @@ patch: stamp-clean-patched .stamp-patched
 	$(info this is $@)
 	if [ -f $(OPENWRT_DIR)/feeds/$*/patches/series ]; then cd $(OPENWRT_DIR)/feeds/$*; quilt push -a || [ $$? = 2 ] && true; fi
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
+	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds install -p $*
 	touch $@
 
 .stamp-build_rev: .FORCE

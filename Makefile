@@ -141,6 +141,8 @@ $(OPENWRT_DIR)/.pc/applied-patches: .stamp-pre-patch $(wildcard $(FW_DIR)/patche
 .stamp-patch-feed-%: .stamp-patch-openwrt .stamp-feed-update-% $(wildcard patches/packages/%/*) | $(OPENWRT_DIR)/feeds/%/patches
 	$(info this is $@)
 	if [ -f $(OPENWRT_DIR)/feeds/$*/patches/series ]; then cd $(OPENWRT_DIR)/feeds/$*; quilt push -a || [ $$? = 2 ] && true; fi
+	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
+	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds install -p $*
 	touch $@
 
 .stamp-build_rev: .FORCE

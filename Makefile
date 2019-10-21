@@ -102,10 +102,13 @@ feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
 	touch $@
 
-.stamp-feed-update-%: $(OPENWRT_DIR)/feeds.conf
+.stamp-feed-update-%: | $(OPENWRT_DIR)/feeds/%
 	#cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
 	touch $@
+
+$(OPENWRT_DIR)/feeds/%: $(OPENWRT_DIR)/feeds.conf
+	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
 
 .stamp-packages-install: .stamp-patch-openwrt .stamp-patch-feeds .stamp-feeds-updated
 	cd $(OPENWRT_DIR); ./scripts/feeds install -a
@@ -138,7 +141,7 @@ patch: stamp-clean-patched .stamp-patched
 	make $(addprefix .stamp-patch-feed-,$(FEEDS))
 	touch $@
 
-.stamp-patch-feed-%: .stamp-patch-openwrt .stamp-feed-update-% $(wildcard patches/packages/%/*) | $(OPENWRT_DIR)/feeds/%/patches
+.stamp-patch-feed-%: .stamp-patch-openwrt .stamp-feed-update-% $(wildcard $(FW_DIR)/patches/packages/%/*) | $(OPENWRT_DIR)/feeds/%/patches
 	$(info this is $@)
 	if [ -f $(OPENWRT_DIR)/feeds/$*/patches/series ]; then cd $(OPENWRT_DIR)/feeds/$*; quilt push -a || [ $$? = 2 ] && true; fi
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*

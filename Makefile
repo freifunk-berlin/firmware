@@ -258,6 +258,9 @@ build-logs: .stamp-compiled
 	[ -d $(OPENWRT_DIR)/logs ] && mv $(OPENWRT_DIR)/logs $(FW_TARGET_DIR)
 	touch .stamp-$@
 
+clean-build-logs:
+	rm -rf $(FW_TARGET_DIR)/logs
+
 images: .stamp-images
 
 # build our firmware-images with the Imagebuilder and store them in FW_TARGET_DIR
@@ -320,7 +323,7 @@ unpatch-feed-%: $(OPENWRT_DIR)/feeds/%
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
-.PHONY: openwrt-clean openwrt-clean-bin openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
+.PHONY: openwrt-clean openwrt-clean-bin clean-build-logs openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:
 .SUFFIXES:

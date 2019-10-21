@@ -1,2 +1,3 @@
 200-wifi_nolegacy_rates_by_default.patch
 201-wifi_no_meshfwding_by_default.patch
+0001-luci-base-move-some-generic-classes-into-a-separate-.patch

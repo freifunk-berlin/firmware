@@ -12,3 +12,4 @@
 601-feeds_ignore_.pc-folder.patch
 700-banner-info.patch
 800-mbedtls-accept-rsa-1024.patch
+0001-tools-mkimake-fix-handling-of-long-pathnames.patch

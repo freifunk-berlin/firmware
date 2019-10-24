@@ -95,7 +95,7 @@ $(OPENWRT_DIR)/feeds.conf: feeds.conf | .stamp-openwrt-updated
 
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
-.stamp-feeds-updated: | $(OPENWRT_DIR)/feeds.conf $(addprefix .stamp-feed-update-,$(FEEDS))
+.stamp-feeds-updated: | $(OPENWRT_DIR)/feeds.conf $(OPENWRT_DIR)/feeds $(addprefix .stamp-feed-update-,$(FEEDS))
 	$(info FEEDS is: $(FEEDS))
 	make $(addprefix .stamp-feed-update-,$(FEEDS))
 	#cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
@@ -107,7 +107,7 @@ feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
 	touch $@
 
-$(OPENWRT_DIR)/feeds/%: $(OPENWRT_DIR)/feeds.conf
+$(OPENWRT_DIR)/feeds: $(OPENWRT_DIR)/feeds.conf
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
 
 .stamp-packages-install: .stamp-patch-openwrt .stamp-patch-feeds .stamp-feeds-updated

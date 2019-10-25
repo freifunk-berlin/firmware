@@ -188,7 +188,7 @@ prepare: stamp-clean-prepared .stamp-prepared
 
 # compile
 compile: stamp-clean-compiled .stamp-compiled
-.stamp-compiled: .stamp-prepared openwrt-clean-bin
+.stamp-compiled: .stamp-prepared openwrt-clean-bin clean-build-logs
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 # check if running via buildbot and remove the build_dir folder to save some space
@@ -321,7 +321,7 @@ unpatch-feed-%: $(OPENWRT_DIR)/feeds/%
 	rm -f .stamp-patch-feed-$*
 
 
-clean: stamp-clean .stamp-openwrt-cleaned
+clean: stamp-clean .stamp-openwrt-cleaned 
 
 .PHONY: openwrt-clean openwrt-clean-bin clean-build-logs openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:

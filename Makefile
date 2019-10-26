@@ -145,40 +145,10 @@ gluon-update: $(FW_DIR)/modules
 
 $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt $(FW_DIR)/feeds.conf
 	$(MAKE) $(addprefix .stamp-gluon-module-,$(FEEDS))
-#	echo "$*" | tr '[:lower:]' '[:upper:]'
-#		echo "test $$feed"; \
-#		echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]'; \
-#		FEED_UCASE=$$(echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]'); \
-#		echo "ucase: $$FEED_UCASE"; \
-#	for feed in $(FEEDS); do \
-#		grep >$@.tmp -v $$(echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]') $@ ; \
-#		mv -f $@.tmp $@ ; \
-#	done
 	rm -f $@
 	cat >>$@ .stamp-gluon-module-openwrt
 	cat >>$@ $(addprefix .stamp-gluon-module-,$(FEEDS))
 	echo >>$@ GLUON_FEEDS=\'$(FEEDS)\'
-
-$(FW_DIR)/modules_old: $(addprefix .stamp-gluon-module-,$(FEEDS)) $(FW_DIR)/feeds.conf
-	$(MAKE) $(addprefix .stamp-gluon-module-,$(FEEDS))
-	#	echo "$*" | tr '[:lower:]' '[:upper:]'
-	for feed in $(FEEDS); do \
-		echo "test $$feed"; \
-		echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]'; \
-		FEED_UCASE=$$(echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]'); \
-		echo "ucase: $$FEED_UCASE"; \
-		sed -i '/$${FEED_UCASE}/d' $(FW_DIR)/modules ;\
-	done
-	cat $@
-
-	[ -f $(FW_DIR)/modules ] || touch $(FW_DIR)/modules
-# delete old values for this feed
-#	FEED_UCASE=$(echo PACKAGE_$*_ | tr '[:lower:]' '[:upper:]'); \
-#	FEED_UCASE=$(echo $*); \
-#		echo $$FEED_UCASE - end; \
-#		sed -i '/$$FEED_UCASE/d' $@
-	cat $(addprefix .stamp-gluon-module-,$(FEEDS)) >>$@
-#	cat $(addprefix .stamp-gluon-module-,$(FEEDS))
 
 .stamp-gluon-module-openwrt: $(FW_DIR)/config.mk
 	rm -f $@

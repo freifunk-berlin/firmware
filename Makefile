@@ -69,6 +69,7 @@ GLUON_CONFIG_VARS := \
 	BOARD='$(BOARD)' \
 	SUBTARGET='$(SUBTARGET)'
 
+OPENWRTMAKE = $(MAKE) -C openwrt
 LUA := openwrt/staging_dir/hostpkg/bin/lua
 
 $(LUA):

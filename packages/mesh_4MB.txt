@@ -12,7 +12,6 @@ opkg
 
 # Defaults
 freifunk-berlin-dhcp-defaults
-freifunk-berlin-firewall-defaults
 freifunk-berlin-freifunk-defaults
 freifunk-berlin-migration
 freifunk-berlin-network-defaults
@@ -23,8 +22,9 @@ luci-app-owm-cmd
 
 # Common
 dnsmasq
-qos-scripts
-firewall
+-firewall
+-iptables
+-ip6tables
 iwinfo
 libiwinfo-lua
 

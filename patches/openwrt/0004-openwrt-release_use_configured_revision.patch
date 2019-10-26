@@ -1,0 +1,26 @@
+From b0ea33ab7d2688c2015db23d8b11e67148ab67a8 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: openwrt-release_use_configured_revision
+
+Fixes: 853e4dd3 ("ipqx0xx: add Generic subtarget")
+Ref: https://forum.openwrt.org/t/ipq40xx-snapshot-not-updated-since-22nd-august/44126
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+---
+ package/boot/uboot-fritz4040/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff -ur package_a/base-files/files/etc/openwrt_release package/base-files/files/etc/openwrt_release
+--- a/package/base-files/files/etc/openwrt_release	2017-03-06 03:50:57.000000000 +0100
++++ b/package/base-files/files/etc/openwrt_release	2017-10-30 12:14:34.639257255 +0100
+@@ -1,6 +1,6 @@
+ DISTRIB_ID='%D'
+ DISTRIB_RELEASE='%V'
+-DISTRIB_REVISION='%R'
++DISTRIB_REVISION='%C'
+ DISTRIB_TARGET='%S'
+ DISTRIB_ARCH='%A'
+ DISTRIB_DESCRIPTION='%D %V %C'
+-- 
+2.20.1
+

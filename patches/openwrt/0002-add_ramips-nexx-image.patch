@@ -1,3 +1,15 @@
+From b0ea33ab7d2688c2015db23d8b11e67148ab67a8 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: add_ramips-nexx-image
+
+Fixes: 853e4dd3 ("ipqx0xx: add Generic subtarget")
+Ref: https://forum.openwrt.org/t/ipq40xx-snapshot-not-updated-since-22nd-august/44126
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+---
+ package/boot/uboot-fritz4040/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
 commit 1dd4c2929696797625709537bc51f46f00999b6d
 Author: Sven Roederer <devel-sven@geroedel.de>
 Date:   Tue May 3 11:31:49 2016 +0200
@@ -27,3 +39,6 @@ index 0000000..9c668c5
 +	Support for Nexx WT3020-series
 +endef
 +$(eval $(call Profile,WT3020))
+-- 
+2.20.1
+

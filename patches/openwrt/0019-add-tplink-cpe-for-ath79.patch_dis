@@ -1,3 +1,15 @@
+From b0ea33ab7d2688c2015db23d8b11e67148ab67a8 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: add-tplink-cpe-for-ath79
+
+Fixes: 853e4dd3 ("ipqx0xx: add Generic subtarget")
+Ref: https://forum.openwrt.org/t/ipq40xx-snapshot-not-updated-since-22nd-august/44126
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+---
+ package/boot/uboot-fritz4040/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
 diff --git a/target/linux/ath79/base-files/etc/board.d/01_leds b/target/linux/ath79/base-files/etc/board.d/01_leds
 index 8b378f5df1..35cb74db28 100755
 --- a/target/linux/ath79/base-files/etc/board.d/01_leds
@@ -608,3 +620,6 @@ index 55f1ab9420..8dc72c9f43 100644
  	/** Firmware layout for the CPE510/520 */
  	{
  		.id	= "CPE510",
+-- 
+2.20.1
+

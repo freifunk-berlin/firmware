@@ -1,3 +1,15 @@
+From b0ea33ab7d2688c2015db23d8b11e67148ab67a8 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: ath79-cpe510v2v3-backport-mk
+
+Fixes: 853e4dd3 ("ipqx0xx: add Generic subtarget")
+Ref: https://forum.openwrt.org/t/ipq40xx-snapshot-not-updated-since-22nd-august/44126
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+---
+ package/boot/uboot-fritz4040/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
 commit b94dc4646a8fc129a374608594e6a5dbd823f215
 Author: Sven Roederer <devel-sven@geroedel.de>
 Date:   Sat Aug 10 17:13:57 2019 +0200
@@ -42,3 +54,6 @@ index 0caaaaa55b..7484c66637 100644
    SUPPORTED_DEVICES += cpe510-v3
  endef
  TARGET_DEVICES += tplink_cpe510-v3
+-- 
+2.20.1
+

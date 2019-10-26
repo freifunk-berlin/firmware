@@ -1,3 +1,15 @@
+From b0ea33ab7d2688c2015db23d8b11e67148ab67a8 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: ath79-add-support-for-cpe510v2v3
+
+Fixes: 853e4dd3 ("ipqx0xx: add Generic subtarget")
+Ref: https://forum.openwrt.org/t/ipq40xx-snapshot-not-updated-since-22nd-august/44126
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+---
+ package/boot/uboot-fritz4040/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
 commit cad4132e003cecc386d791d552ddba42c182c216
 Author: Andrew Cameron <apcameron@softhome.net>
 Date:   Wed Jun 26 16:40:54 2019 -0500
@@ -293,3 +305,6 @@ index f1424d02ee..312ce78f22 100644
  define Device/tplink_archer-d50-v1
    ATH_SOC := qca9531
    DEVICE_TITLE := TP-Link Archer D50 v1
+-- 
+2.20.1
+

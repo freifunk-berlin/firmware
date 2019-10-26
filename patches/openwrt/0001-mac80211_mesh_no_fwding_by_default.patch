@@ -1,3 +1,15 @@
+From b0ea33ab7d2688c2015db23d8b11e67148ab67a8 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: mac80211_mesh_no_fwding_by_default
+
+Fixes: 853e4dd3 ("ipqx0xx: add Generic subtarget")
+Ref: https://forum.openwrt.org/t/ipq40xx-snapshot-not-updated-since-22nd-august/44126
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+---
+ package/boot/uboot-fritz4040/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
 diff --git a/package/kernel/mac80211/patches/999-mac80211-mesh-no-forwarding-by-default.patch b/package/kernel/mac80211/patches/999-mac80211-mesh-no-forwarding-by-default.patch
 new file mode 100644
 index 0000000000..5bff861737
@@ -16,3 +28,6 @@ index 0000000000..5bff861737
 + 	.rssi_threshold = MESH_RSSI_THRESHOLD,
 + 	.ht_opmode = IEEE80211_HT_OP_MODE_PROTECTION_NONHT_MIXED,
 + 	.dot11MeshHWMPactivePathToRootTimeout = MESH_PATH_TO_ROOT_TIMEOUT,
+-- 
+2.20.1
+

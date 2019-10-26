@@ -66,48 +66,38 @@ GLUON_PATCHESDIR ?= patches
 $(eval $(call mkabspath,GLUON_TMPDIR))
 $(eval $(call mkabspath,GLUON_PATCHESDIR))
 
-export GLUON_TMPDIR GLUON_PATCHESDIR
+GLUON_SITEDIR ?= site
+$(eval $(call mkabspath,GLUON_SITEDIR))
 
-# use .stamp-gluon-module-openwrt and .stamp-gluon-module- of each feed to create modules-file
-$(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt
-	rm -f $@
-	cat >>$@ .stamp-gluon-module-openwrt
-	cat >>$@ $(addprefix .stamp-gluon-module-,$(FEEDS))
-	echo >>$@ GLUON_FEEDS=\'$(FEEDS)\'
+export GLUON_RELEASE GLUON_DEBUG GLUON_DEPRECATED GLUON_DEVICES \
+	 GLUON_TARGETSDIR GLUON_PATCHESDIR GLUON_TMPDIR GLUON_IMAGEDIR GLUON_PACKAGEDIR
 
-.stamp-gluon-module-openwrt: $(FW_DIR)/config.mk
-	rm -f $@
-	echo >>$@ "OPENWRT_REPO=$(OPENWRT_SRC)"
-	echo >>$@ "OPENWRT_COMMIT=$(OPENWRT_COMMIT)"
-# set the $FEED-Branch
-	git clone $$(grep _REPO $@ | cut -d "=" -f 2) $(GLUON_TMPDIR)/gluon_$@
-	cd $(GLUON_TMPDIR)/gluon_$@; git name-rev --refs openwrt-* $$(grep _COMMIT $(FW_DIR)/$@ | \
-		cut -d "=" -f 2) | cut -d / -f 2 | cut -d \~ -f 1 >branchname.txt
-	cd $(GLUON_TMPDIR)/gluon_$@; grep -q master branchname.txt  || \
-		printf >>$(FW_DIR)/$@ "OPENWRT_BRANCH=%s\n" \
-			$$(echo $* | tr '[:lower:]' '[:upper:]') \
-			$$(cat branchname.txt)
-	rm -rf $(GLUON_TMPDIR)/gluon_$@
+GLUON_CONFIG_VARS := \
+	GLUON_SITEDIR='$(GLUON_SITEDIR)' \
+	GLUON_RELEASE='$(GLUON_RELEASE)' \
+	GLUON_BRANCH='$(GLUON_BRANCH)' \
+	GLUON_LANGS='$(GLUON_LANGS)' \
+	BOARD='$(BOARD)' \
+	SUBTARGET='$(SUBTARGET)'
 
-.stamp-gluon-module-%: $(FW_DIR)/feeds.conf
-	rm -f $@
-# set the $FEED-REPO
-	@echo -n "PACKAGES_$*_REPO=" | tr '[:lower:]' '[:upper:]' >>$@
-	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
-		awk -F '([[:space:]|^])' '{ print $$3 }' >>$@
-# set the $FEED-COMMIT
-	@echo -n "PACKAGES_$*_COMMIT=" | tr '[:lower:]' '[:upper:]' >>$@
-	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
-		awk -F '([[:space:]|^])' '{ print $$4 }' >>$@
-# set the $FEED-Branch
-	git clone $$(grep _REPO $@ | cut -d "=" -f 2) $(GLUON_TMPDIR)/gluon_$@
-	cd $(GLUON_TMPDIR)/gluon_$@; git name-rev $$(grep _COMMIT $(FW_DIR)/$@ | \
-		cut -d "=" -f 2) | cut -d / -f 3 | cut -d \~ -f 1 >branchname.txt
-	cd $(GLUON_TMPDIR)/gluon_$@; grep -q master branchname.txt  || \
-		printf >>$(FW_DIR)/$@ "PACKAGES_%s_BRANCH=%s\n" \
-			$$(echo $* | tr '[:lower:]' '[:upper:]') \
-			$$(cat branchname.txt)
-	rm -rf $(GLUON_TMPDIR)/gluon_$@
+LUA := openwrt/staging_dir/hostpkg/bin/lua
+
+$(LUA):
+	@$(CheckExternal)
+
+	+@[ -e openwrt/.config ] || $(OPENWRTMAKE) defconfig
+	+@$(OPENWRTMAKE) tools/install
+	+@$(OPENWRTMAKE) package/lua/host/compile
+
+gluon-config: $(LUA)
+	@$(CheckExternal)
+	@$(GLUON_CONFIG_VARS) \
+		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
+		> openwrt/.config
+	+@$(OPENWRTMAKE) defconfig
+
+	@$(GLUON_CONFIG_VARS) \
+		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
 ## Gluon - End
 

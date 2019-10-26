@@ -32,6 +32,34 @@ ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
 $(error config for $(TARGET) not defined)
 endif
 
+# check for spaces & resolve possibly relative paths
+define mkabspath
+ ifneq (1,$(words [$($(1))]))
+  $$(error $(1) must not contain spaces)
+ endif
+ override $(1) := $(abspath $($(1)))
+endef
+
+# initialize (possibly already user set) directory variables
+GLUON_TMPDIR ?= tmp
+GLUON_OUTPUTDIR ?= output
+GLUON_IMAGEDIR ?= $(GLUON_OUTPUTDIR)/images
+GLUON_PACKAGEDIR ?= $(GLUON_OUTPUTDIR)/packages
+GLUON_TARGETSDIR ?= targets
+GLUON_PATCHESDIR ?= patches
+
+$(eval $(call mkabspath,GLUON_TMPDIR))
+$(eval $(call mkabspath,GLUON_OUTPUTDIR))
+$(eval $(call mkabspath,GLUON_IMAGEDIR))
+$(eval $(call mkabspath,GLUON_PACKAGEDIR))
+$(eval $(call mkabspath,GLUON_TARGETSDIR))
+$(eval $(call mkabspath,GLUON_PATCHESDIR))
+
+export GLUON_RELEASE GLUON_REGION GLUON_MULTIDOMAIN GLUON_WLAN_MESH GLUON_DEBUG GLUON_DEPRECATED GLUON_DEVICES \
+	 GLUON_TARGETSDIR GLUON_PATCHESDIR GLUON_TMPDIR GLUON_IMAGEDIR GLUON_PACKAGEDIR
+## -- GLUON  -- ##
+
+
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/openwrt/*) $(wildcard patches/packages/*/*)
 
@@ -109,6 +137,70 @@ feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 
 $(OPENWRT_DIR)/feeds: $(OPENWRT_DIR)/feeds.conf
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
+
+gluon-update: $(FW_DIR)/modules
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/feeds.sh
+
+$(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt $(FW_DIR)/feeds.conf
+	$(MAKE) $(addprefix .stamp-gluon-module-,$(FEEDS))
+#	echo "$*" | tr '[:lower:]' '[:upper:]'
+#		echo "test $$feed"; \
+#		echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]'; \
+#		FEED_UCASE=$$(echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]'); \
+#		echo "ucase: $$FEED_UCASE"; \
+#	for feed in $(FEEDS); do \
+#		grep >$@.tmp -v $$(echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]') $@ ; \
+#		mv -f $@.tmp $@ ; \
+#	done
+	rm -f $@
+	cat >>$@ .stamp-gluon-module-openwrt
+	cat >>$@ $(addprefix .stamp-gluon-module-,$(FEEDS))
+	echo >>$@ GLUON_FEEDS=\'$(FEEDS)\'
+
+$(FW_DIR)/modules_old: $(addprefix .stamp-gluon-module-,$(FEEDS)) $(FW_DIR)/feeds.conf
+	$(MAKE) $(addprefix .stamp-gluon-module-,$(FEEDS))
+	#	echo "$*" | tr '[:lower:]' '[:upper:]'
+	for feed in $(FEEDS); do \
+		echo "test $$feed"; \
+		echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]'; \
+		FEED_UCASE=$$(echo "PACKAGES_$${feed}_" | tr '[:lower:]' '[:upper:]'); \
+		echo "ucase: $$FEED_UCASE"; \
+		sed -i '/$${FEED_UCASE}/d' $(FW_DIR)/modules ;\
+	done
+	cat $@
+
+	[ -f $(FW_DIR)/modules ] || touch $(FW_DIR)/modules
+# delete old values for this feed
+#	FEED_UCASE=$(echo PACKAGE_$*_ | tr '[:lower:]' '[:upper:]'); \
+#	FEED_UCASE=$(echo $*); \
+#		echo $$FEED_UCASE - end; \
+#		sed -i '/$$FEED_UCASE/d' $@
+	cat $(addprefix .stamp-gluon-module-,$(FEEDS)) >>$@
+#	cat $(addprefix .stamp-gluon-module-,$(FEEDS))
+
+.stamp-gluon-module-openwrt: $(FW_DIR)/config.mk
+	rm -f $@
+	echo >>$@ "OPENWRT_REPO=$(OPENWRT_SRC)"
+	echo >>$@ "OPENWRT_COMMIT=$(OPENWRT_COMMIT)"
+
+.stamp-gluon-module-%: $(FW_DIR)/feeds.conf
+	rm -f $@
+# set the $FEED-REPO
+	@echo -n "PACKAGES_$*_REPO=" | tr '[:lower:]' '[:upper:]' >>$@
+	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
+		awk -F '([[:space:]|^])' '{ print $$3 }' >>$@
+# set the $FEED-COMMIT
+	@echo -n "PACKAGES_$*_COMMIT=" | tr '[:lower:]' '[:upper:]' >>$@
+	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
+		awk -F '([[:space:]|^])' '{ print $$4 }' >>$@
+# set the $FEED-Branch
+	git clone $$(grep _REPO $@ | cut -d "=" -f 2) /tmp/gluon_$@
+	echo -n "PACKAGES_$*_BRANCH=" >>$@
+	cd /tmp/gluon_$@; git name-rev $$(grep _COMMIT $(FW_DIR)/$@ | cut -d "=" -f 2) | cut -d / -f 3 >>$@
+	rm -rf /tmp/gluon_$@
+	echo $@ updated
 
 .stamp-packages-install: .stamp-patch-openwrt .stamp-patch-feeds .stamp-feeds-updated
 	cd $(OPENWRT_DIR); ./scripts/feeds install -a

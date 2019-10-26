@@ -1,3 +1,0 @@
-# as of required OpenVPN the image will be to large for 4MB flash
-#
-# so disable 4MB ...

@@ -55,6 +55,9 @@ $(eval $(call mkabspath,GLUON_PACKAGEDIR))
 $(eval $(call mkabspath,GLUON_TARGETSDIR))
 $(eval $(call mkabspath,GLUON_PATCHESDIR))
 
+GLUON_WLAN_MESH ?= 11s
+GLUON_DEBUG ?= 0
+
 GLUON_SITEDIR ?= site
 $(eval $(call mkabspath,GLUON_SITEDIR))
 
@@ -75,7 +78,7 @@ include $(GLUON_TARGETSDIR)/targets.mk
 CheckTarget := [ '$(BOARD)' ] \
 	|| (echo 'Please set GLUON_TARGET to a valid target. Gluon supports the following targets:'; $(foreach target,$(GLUON_TARGETS),echo ' * $(target)';) false)
 
-list-targets: FORCE
+gluon-list-targets:
 	@$(foreach target,$(GLUON_TARGETS),echo '$(target)';)
 
 

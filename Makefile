@@ -72,6 +72,10 @@ endef
 
 include $(GLUON_TARGETSDIR)/targets.mk
 
+CheckTarget := [ '$(BOARD)' ] \
+	|| (echo 'Please set GLUON_TARGET to a valid target. Gluon supports the following targets:'; $(foreach target,$(GLUON_TARGETS),echo ' * $(target)';) false)
+
+
 OPENWRTMAKE = $(MAKE) -C openwrt
 BOARD := $(GLUON_TARGET_$(GLUON_TARGET)_BOARD)
 SUBTARGET := $(GLUON_TARGET_$(GLUON_TARGET)_SUBTARGET)

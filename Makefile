@@ -84,6 +84,23 @@ GLUON_CONFIG_VARS := \
 	BOARD='$(BOARD)' \
 	SUBTARGET='$(SUBTARGET)'
 
+GLUON_DEFAULT_PACKAGES := hostapd-mini
+
+GLUON_FEATURE_PACKAGES := $(shell scripts/features.sh '$(GLUON_FEATURES)' || echo '__ERROR__')
+ifneq ($(filter __ERROR__,$(GLUON_FEATURE_PACKAGES)),)
+$(error Error while evaluating GLUON_FEATURES)
+endif
+
+
+GLUON_PACKAGES :=
+define merge_packages
+  $(foreach pkg,$(1),
+    GLUON_PACKAGES := $$(strip $$(filter-out -$$(patsubst -%,%,$(pkg)) $$(patsubst -%,%,$(pkg)),$$(GLUON_PACKAGES)) $(pkg))
+  )
+endef
+$(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES) $(GLUON_SITE_PACKAGES)))
+
+
 LUA := openwrt/staging_dir/hostpkg/bin/lua
 
 $(LUA):

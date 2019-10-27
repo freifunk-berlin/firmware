@@ -213,11 +213,14 @@ $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-modul
 	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
 		awk -F '([[:space:]|^])' '{ print $$4 }' >>$@
 # set the $FEED-Branch
-	#git clone $$(grep _REPO $@ | cut -d "=" -f 2) /tmp/gluon_$@
-	echo -n "PACKAGES_$*_BRANCH=" | tr '[:lower:]' '[:upper:]' >>$@
+	git clone $$(grep _REPO $@ | cut -d "=" -f 2) /tmp/gluon_$@
 	cd /tmp/gluon_$@; git name-rev $$(grep _COMMIT $(FW_DIR)/$@ | \
-		cut -d "=" -f 2) | cut -d / -f 3 | cut -d \~ -f 1 >>$(FW_DIR)/$@
-#	rm -rf /tmp/gluon_$@
+		cut -d "=" -f 2) | cut -d / -f 3 | cut -d \~ -f 1 >branchname.txt
+	cd /tmp/gluon_$@; grep -q master branchname.txt  || \
+		printf >>$(FW_DIR)/$@ "PACKAGES_%s_BRANCH=%s\n" \
+			$$(echo $* | tr '[:lower:]' '[:upper:]') \
+			$$(cat branchname.txt)
+	rm -rf /tmp/gluon_$@
 	echo $@ updated
 
 .stamp-packages-install: .stamp-patch-openwrt .stamp-patch-feeds .stamp-feeds-updated

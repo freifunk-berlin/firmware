@@ -122,7 +122,7 @@ $(LUA):
 
 gluon-config: $(LUA)
 	@$(CheckExternal)
-	@$(GLUON_CONFIG_VARS) \
+	@$(GLUON_CONFIG_VARS) GLUON_FOREIGN=1 \
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 		> openwrt/.config
 	+@$(OPENWRTMAKE) defconfig
@@ -145,7 +145,7 @@ ifneq ($(wildcard $(OPENWRT_DIR)/*),)
 #FEEDS=$(shell [ -e $(OPENWRT_DIR)/scripts/feeds ] && (cd $(OPENWRT_DIR); ./scripts/feeds list -n) )
 #FEEDS=cd $(OPENWRT_DIR); ./scripts/feeds list -n
 #FEEDS=$(shell cd $(OPENWRT_DIR); ./scripts/feeds list -n)
-FEEDS=luci packages routing freifunk
+FEEDS=packages luci routing gluon
 #PATCH_FEEDS_TARGET = $(addprefix patch-feed-, $(FEEDS))
 #UNPATCH_FEEDS_TARGET = $(addprefix unpatch-feed-, $(FEEDS))
 endif
@@ -213,9 +213,9 @@ $(OPENWRT_DIR)/feeds: $(OPENWRT_DIR)/feeds.conf
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
 
 gluon-update: $(FW_DIR)/modules
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/feeds.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FOREIGN=1 scripts/update.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FOREIGN=1 scripts/patch.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FOREIGN=1 scripts/feeds.sh
 
 $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt $(FW_DIR)/feeds.conf
 	$(MAKE) $(addprefix .stamp-gluon-module-,$(FEEDS))

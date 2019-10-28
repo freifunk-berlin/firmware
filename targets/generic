@@ -14,3 +14,10 @@ for feed in string.gmatch(exec_capture_raw('. scripts/modules.sh && echo -n "$FE
 		config('# CONFIG_FEED_%s is not set', feed)
 	end
 end
+
+if envtrue.GLUON_DEBUG then
+	config 'CONFIG_DEBUG=y'
+	config 'CONFIG_NO_STRIP=y'
+	config '# CONFIG_USE_STRIP is not set'
+	config '# CONFIG_USE_SSTRIP is not set'
+end

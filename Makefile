@@ -137,14 +137,16 @@ gluon-config: $(LUA)
 	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
-gluon-gen-pkglist: $(LUA)
+gluon-gen-pkglist: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
+$(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
 	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_pkg.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
+		> $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 
 ## -- GLUON  -- ##
 
-gluon-build-image:
-	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
+gluon-build-image: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
+	./scripts/assemble_firmware.sh -b $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR)
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/openwrt/*) $(wildcard patches/packages/*/*)

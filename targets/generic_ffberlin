@@ -1,0 +1,41 @@
+
+config '# CONFIG_TARGET_ROOTFS_INITRAMFS is not set'
+
+config 'CONFIG_ALL_NONSHARED=y'
+
+config '# CONFIG_PACKAGE_usbip is not set' -- fails to build
+config '# CONFIG_PACKAGE_kmod-jool is not set' -- fails to build
+
+config 'CONFIG_BUSYBOX_CUSTOM=y'
+config '# CONFIG_BUSYBOX_CONFIG_FEATURE_PREFER_IPV4_ADDRESS is not set'
+
+config 'CONFIG_PACKAGE_ATH_DEBUG=y'
+
+config '# CONFIG_KERNEL_IP_MROUTE is not set'
+config '# CONFIG_KERNEL_IPV6_MROUTE is not set'
+
+config 'CONFIG_DEVEL=y'
+config 'CONFIG_IB=y'
+config 'CONFIG_IMAGEOPT=y'
+config 'CONFIG_BUILD_LOG=y'
+config 'CONFIG_PACKAGE_bmx7=m'
+config 'CONFIG_PACKAGE_bmx7-iwinfo=m'
+config 'CONFIG_PACKAGE_bmx7-json=m'
+config 'CONFIG_PACKAGE_bmx7-sms=m'
+config 'CONFIG_PACKAGE_bmx7-table=m'
+config 'CONFIG_PACKAGE_bmx7-topology=m'
+config 'CONFIG_PACKAGE_bmx7-tun=m'
+config 'CONFIG_PACKAGE_bmx7-uci-config=m'
+config 'CONFIG_PREINITOPT=y'
+config 'CONFIG_TARGET_PREINIT_IP="192.168.42.1"'
+config 'CONFIG_TARGET_PREINIT_NETMASK="255.255.255.0"'
+config 'CONFIG_TARGET_PREINIT_BROADCAST="192.168.42.255"'
+
+
+packages {
+	'-hostapd-mini',
+	'-odhcpd-ipv6only',
+	'-ppp',
+	'-ppp-mod-pppoe',
+	'freifunk-berlin-system-defaults',
+}

@@ -1,4 +1,3 @@
-config 'CONFIG_GLUON_SPECIALIZE_KERNEL=y'
 
 no_opkg()
 

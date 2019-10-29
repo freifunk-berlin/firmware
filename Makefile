@@ -143,6 +143,11 @@ gluon-config: $(LUA)
 	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
+gluon-update: $(FW_DIR)/modules
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/update.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/patch.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/feeds.sh
+
 gluon-gen-pkglist: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
 	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
@@ -230,11 +235,6 @@ feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 
 $(OPENWRT_DIR)/feeds: $(OPENWRT_DIR)/feeds.conf
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
-
-gluon-update: $(FW_DIR)/modules
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/update.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/patch.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/feeds.sh
 
 $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt $(FW_DIR)/feeds.conf
 	$(MAKE) $(addprefix .stamp-gluon-module-,$(FEEDS))

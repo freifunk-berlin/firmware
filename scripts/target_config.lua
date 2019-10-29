@@ -5,6 +5,7 @@ function funcs.config_message(config, _, ...)
 end
 
 function funcs.config_package(config, pkg, value)
+	io.stderr:write("config_package: " .. pkg .. "\n")
 	config('CONFIG_PACKAGE_%s=%s', pkg, value)
 end
 
@@ -14,6 +15,7 @@ local lib = dofile('scripts/target_config_lib.lua')(funcs)
 local output = {}
 
 for config in pairs(lib.configs) do
+	io.stderr:write(config .. "\n")
 	table.insert(output, config)
 end
 

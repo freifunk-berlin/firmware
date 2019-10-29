@@ -8,14 +8,6 @@ return function(funcs)
 	local target = arg[1]
 	local extra_packages = arg[2]
 
-	local openwrt_config_target
-	if env.SUBTARGET ~= '' then
-		openwrt_config_target = env.BOARD .. '_' .. env.SUBTARGET
-	else
-		openwrt_config_target = env.BOARD
-	end
-
-
 	local function site_packages(image)
 		return lib.exec_capture_raw(string.format([[
 	MAKEFLAGS= make print _GLUON_IMAGE_=%s --no-print-directory -s -f - <<'END_MAKE'
@@ -38,12 +30,8 @@ END_MAKE
 	end
 	lib.include(target)
 
-	lib.check_devices()
-
 
 	if not lib.opkg then
-		lib.config '# CONFIG_SIGNED_PACKAGES is not set'
-		lib.config 'CONFIG_CLEAN_IPKG=y'
 		lib.packages {'-opkg'}
 	end
 
@@ -52,21 +40,16 @@ END_MAKE
 	for _, pkg in ipairs(lib.target_packages) do
 		default_pkgs = default_pkgs .. ' ' .. pkg
 
-		if string.sub(pkg, 1, 1) == '-' then
-			lib.try_config('# CONFIG_PACKAGE_%s is not set', string.sub(pkg, 2))
-		else
-			funcs.config_package(lib.config, pkg, 'y')
-		end
 	end
 
+--	local cjson = require "cjson"
+	local pkg_list = {}
+--	local pkg_list_json
 	for _, dev in ipairs(lib.devices) do
 		local profile = dev.options.profile or dev.name
 		local device_pkgs = default_pkgs
 
 		local function handle_pkg(pkg)
-			if string.sub(pkg, 1, 1) ~= '-' then
-				funcs.config_package(lib.config, pkg, 'm')
-			end
 			device_pkgs = device_pkgs .. ' ' .. pkg
 		end
 
@@ -77,19 +60,18 @@ END_MAKE
 			handle_pkg(pkg)
 		end
 
-		if env.GLUON_FWTYPE == 'gluon' then
-			funcs.config_message(lib.config, string.format("unable to enable device '%s'", profile),
-				'CONFIG_TARGET_DEVICE_%s_DEVICE_%s=y', openwrt_config_target, profile)
-			lib.config('CONFIG_TARGET_DEVICE_PACKAGES_%s_DEVICE_%s="%s"',
-				openwrt_config_target, profile, device_pkgs)
-		end
 		if env.GLUON_FWTYPE == 'ffberlin' then
-			io.stderr:write(string.format("additional packages for board %s: %s\n", profile, device_pkgs))
-			package_list = io.open(string.format("%s/%s.packages", env.GLUON_TMPDIR, profile), "w")
-			package_list:write(device_pkgs)
-			package_list:close()
+--			io.stderr:write(string.format("additional packages for board %s: %s\n", profile, device_pkgs))
+--			package_list = io.open(string.format("%s/%s.packages", env.GLUON_TMPDIR, profile), "w")
+--			package_list:write(device_pkgs)
+--			package_list:close()
+			pkg_list[profile] = device_pkgs
+--			pkg_list_json = cjson.encode(pkg_list)
+			io.stdout:write(string.format("%s:%s\n", profile, device_pkgs))
 		end
 	end
+--	io.stdout:write("pkg-json:" .. pkg_list_json .. "\n")
+--	io.stdout:write("pkg-json:" .. cjson.encode(pkg_list) .. "\n")
 
 	return lib
 end

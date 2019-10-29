@@ -111,16 +111,10 @@ endif
 
 GLUON_PACKAGES :=
 define merge_packages
-  $(info merge_packages: $1)
-  $(info merge_packages: $2)
-  $(info merge_packages: $3)
   $(foreach pkg,$(1),
     GLUON_PACKAGES := $$(strip $$(filter-out -$$(patsubst -%,%,$(pkg)) $$(patsubst -%,%,$(pkg)),$$(GLUON_PACKAGES)) $(pkg))
   )
 endef
-$(info GLUON_DEFAULT_PACKAGES: $(GLUON_DEFAULT_PACKAGES))
-$(info GLUON_FEATURE_PACKAGES: $(GLUON_FEATURE_PACKAGES))
-$(info GLUON_SITE_PACKAGES: $(GLUON_SITE_PACKAGES))
 $(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES) $(GLUON_SITE_PACKAGES)))
 
 
@@ -143,8 +137,9 @@ gluon-config: $(LUA)
 	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
-	@echo creating packages-list
-	@echo >$(GLUON_TMPDIR)/packages-list.txt '$(GLUON_PACKAGES)'
+gluon-gen-pkglist: $(LUA)
+	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
+		$(LUA) scripts/target_pkg.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 
 ## -- GLUON  -- ##
 

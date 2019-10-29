@@ -74,7 +74,7 @@ $0 -i <IB_FILE> -p <profile>
 "
 }
 
-while getopts "di:l:n:p:t:u:e:" option; do
+while getopts "di:n:b:t:e:" option; do
 	case "$option" in
 		d)
 			DEBUG=y
@@ -85,20 +85,14 @@ while getopts "di:l:n:p:t:u:e:" option; do
 		e)
 			MBED_DIR="$OPTARG"
 			;;
-		p)
-			PROFILES="$OPTARG"
-			;;
 		t)
 			DEST_DIR="$OPTARG"
 			;;
-		l)
-			PKGLIST_DIR="$OPTARG"
+		b)
+			BOARDLIST="$OPTARG"
 			;;
 		n)
 			TEMP_DIR="$OPTARG"
-			;;
-		u)
-			USECASES="$OPTARG"
 			;;
 		*)
 			echo "Invalid argument '-$OPTARG'."
@@ -118,12 +112,7 @@ if [ -z "$TEMP_DIR" ] ; then
 	TEMP_DIR=$(mktemp -d imgXXXXXX)
 fi
 
-if [ -z "$USECASES" ] ; then
-	error "No usecase(s) given"
-	exit 1
-fi
-
-if [ -z "$PROFILES" ] ; then
+if [ -z "$BOARDLIST" ] ; then
 	error "No profile(s) given"
 	exit 1
 fi
@@ -135,39 +124,22 @@ trap signal_handler 0 1 2 3 15
 DEST_DIR=$(to_absolute_path "$DEST_DIR")
 info $DEST_DIR
 
+PROFILES=$(cat ${BOARDLIST} | cut -d : -f 1)
+info "generating images for this boards: $(echo $PROFILES)"
+
 info "Extract image builder $IB_FILE"
 tar xf "$IB_FILE" --strip-components=1 -C "$TEMP_DIR"
 
 for profile in $PROFILES ; do
 	info "Building a profile for $profile"
 
-	# profiles can have a suffix. like 4mb devices get a smaller package list pro use case
-	# UBNT:4MB -> profile "UBNT" suffix "4MB"
-	suffix="$(echo $profile | cut -d':' -f 2)"
-	profile="$(echo $profile | cut -d':' -f 1)"
-
+	USECASES=default
 	for usecase in $USECASES ; do
 		package_list=""
 		packages=""
 		img_params=""
 
-		# check if packagelist with suffix exist
-		if [ -e "${PKGLIST_DIR}/${usecase}_${suffix}.txt" ] ; then
-			package_list="${usecase}_${suffix}"
-		else
-			package_list="${usecase}"
-		fi
-
-		if [ -e "${PKGLIST_DIR}/${package_list}.txt" ]; then
-			info "Building usecase $usecase"
-		else
-			error "usecase $usecase not defined"
-			exit 1
-		fi
-
-		info "Using package list $package_list"
-
-		packages=$(parse_pkg_list_file "${PKGLIST_DIR}/${package_list}.txt")
+		packages="$(grep ${profile} ${BOARDLIST} | cut -d : -f 2)"
 
 		if [ -z "${packages}" ] ; then
 			info "skipping this usecase, as package list is empty"

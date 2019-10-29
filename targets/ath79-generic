@@ -5,6 +5,18 @@ local ATH10K_PACKAGES_QCA9888 = {
 	'-ath10k-firmware-qca9888-ct',
 }
 
+-- AVM
+
+device('avm-fritz-box-4020', 'avm_fritz4020', {
+	factory = false,
+	packages = {'fritz-tffs'},
+})
+
+device('avm-fritz-wlan-repeater-300e', 'avm_fritz300e', {
+	factory = false,
+	packages = {'fritz-tffs'},
+})
+
 -- GL Innovations
 
 device('gl.inet-gl-ar150', 'glinet_gl-ar150', {
@@ -18,6 +30,13 @@ device('gl.inet-gl-ar300m', 'glinet_gl-ar300m-nor', {
 device('gl.inet-gl-ar750', 'glinet_gl-ar750', {
 	factory = false,
 	packages = ATH10K_PACKAGES_QCA9887,
+})
+
+-- OpenMesh
+
+device('openmesh-om5p-ac', 'openmesh_om5p-ac-v2', {
+--	profile = 'OM5PAC',
+	packages = ATH10K_PACKAGES,
 })
 
 -- TP-Link

@@ -1,3 +1,7 @@
+LC_ALL:=C
+LANG:=C
+export LC_ALL LANG
+
 include config.mk
 
 # get main- and subtarget name from TARGET
@@ -40,6 +44,12 @@ define mkabspath
  override $(1) := $(abspath $($(1)))
 endef
 
+GLUON_SITEDIR ?= site
+$(eval $(call mkabspath,GLUON_SITEDIR))
+$(GLUON_SITEDIR)/site.mk:
+	$(error No site configuration was found. Please check out a site configuration to $(GLUON_SITEDIR))
+include $(GLUON_SITEDIR)/site.mk
+
 # initialize (possibly already user set) directory variables
 GLUON_TMPDIR ?= tmp
 GLUON_OUTPUTDIR ?= output
@@ -57,9 +67,6 @@ $(eval $(call mkabspath,GLUON_PATCHESDIR))
 
 GLUON_WLAN_MESH ?= 11s
 GLUON_DEBUG ?= 0
-
-GLUON_SITEDIR ?= site
-$(eval $(call mkabspath,GLUON_SITEDIR))
 
 export GLUON_RELEASE GLUON_REGION GLUON_MULTIDOMAIN GLUON_WLAN_MESH GLUON_DEBUG GLUON_DEPRECATED GLUON_DEVICES \
 	 GLUON_TARGETSDIR GLUON_PATCHESDIR GLUON_TMPDIR GLUON_IMAGEDIR GLUON_PACKAGEDIR
@@ -104,10 +111,16 @@ endif
 
 GLUON_PACKAGES :=
 define merge_packages
+  $(info merge_packages: $1)
+  $(info merge_packages: $2)
+  $(info merge_packages: $3)
   $(foreach pkg,$(1),
     GLUON_PACKAGES := $$(strip $$(filter-out -$$(patsubst -%,%,$(pkg)) $$(patsubst -%,%,$(pkg)),$$(GLUON_PACKAGES)) $(pkg))
   )
 endef
+$(info GLUON_DEFAULT_PACKAGES: $(GLUON_DEFAULT_PACKAGES))
+$(info GLUON_FEATURE_PACKAGES: $(GLUON_FEATURE_PACKAGES))
+$(info GLUON_SITE_PACKAGES: $(GLUON_SITE_PACKAGES))
 $(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES) $(GLUON_SITE_PACKAGES)))
 
 
@@ -122,16 +135,21 @@ $(LUA):
 
 gluon-config: $(LUA)
 	@$(CheckExternal)
-	@$(GLUON_CONFIG_VARS) GLUON_FOREIGN=1 \
+	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 		> openwrt/.config
 	+@$(OPENWRTMAKE) defconfig
 
-	@$(GLUON_CONFIG_VARS) \
+	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
+
+	@echo creating packages-list
+	@echo >$(GLUON_TMPDIR)/packages-list.txt '$(GLUON_PACKAGES)'
 
 ## -- GLUON  -- ##
 
+gluon-build-image:
+	./assemble_firmware.sh -p "$(PROFILES)" -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR) -u "$(PACKAGES_LIST_DEFAULT)"
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/openwrt/*) $(wildcard patches/packages/*/*)
@@ -213,9 +231,9 @@ $(OPENWRT_DIR)/feeds: $(OPENWRT_DIR)/feeds.conf
 	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
 
 gluon-update: $(FW_DIR)/modules
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FOREIGN=1 scripts/update.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FOREIGN=1 scripts/patch.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FOREIGN=1 scripts/feeds.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/update.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/patch.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/feeds.sh
 
 $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt $(FW_DIR)/feeds.conf
 	$(MAKE) $(addprefix .stamp-gluon-module-,$(FEEDS))

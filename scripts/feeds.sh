@@ -11,7 +11,7 @@ rm -rf openwrt/feeds
 rm -rf openwrt/package/feeds
 
 (
-	[ -n ${GLUON_FOREIGN} ] || echo 'src-link gluon_base ../../package'
+	[ ${GLUON_FWTYPE} = "gluon" ] && echo 'src-link gluon_base ../../package'
 	for feed in $FEEDS; do
 		echo "src-link $feed ../../packages/$feed"
 	done

@@ -24,7 +24,7 @@ assert(env.GLUON_SITEDIR)
 assert(env.GLUON_TARGETSDIR)
 assert(env.GLUON_RELEASE)
 assert(env.GLUON_DEPRECATED)
-
+assert(env.GLUON_FWTYPE)
 
 M.site_code = assert(assert(dofile('scripts/site_config.lua')('site.conf')).site_code)
 M.target_packages = {}

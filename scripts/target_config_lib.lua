@@ -28,8 +28,10 @@ END_MAKE
 	end
 
 	lib.include('generic')
-	if env.GLUON_FOREIGN == '' then
+	if env.GLUON_FWTYPE == 'gluon' then
 		lib.include('generic_gluon')
+	elseif env.GLUON_FWTYPE == 'ffberlin' then
+		lib.include('generic_ffberlin')
 	end
 	for pkg in string.gmatch(extra_packages, '%S+') do
 		lib.packages {pkg}
@@ -75,7 +77,7 @@ END_MAKE
 			handle_pkg(pkg)
 		end
 
-		if env.GLUON_FOREIGN == '' then
+		if env.GLUON_FWTYPE == 'gluon' then
 			funcs.config_message(lib.config, string.format("unable to enable device '%s'", profile),
 				'CONFIG_TARGET_DEVICE_%s_DEVICE_%s=y', openwrt_config_target, profile)
 			lib.config('CONFIG_TARGET_DEVICE_PACKAGES_%s_DEVICE_%s="%s"',

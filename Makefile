@@ -36,6 +36,10 @@ ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
 $(error config for $(TARGET) not defined)
 endif
 
+default: firmwares
+
+## -- GLUON  -- ##
+
 # check for spaces & resolve possibly relative paths
 define mkabspath
  ifneq (1,$(words [$($(1))]))
@@ -164,8 +168,6 @@ FEEDS=packages luci routing gluon
 #PATCH_FEEDS_TARGET = $(addprefix patch-feed-, $(FEEDS))
 #UNPATCH_FEEDS_TARGET = $(addprefix unpatch-feed-, $(FEEDS))
 endif
-
-default: firmwares
 
 # clone openwrt
 $(OPENWRT_DIR):

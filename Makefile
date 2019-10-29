@@ -40,6 +40,8 @@ default: firmwares
 
 ## -- GLUON  -- ##
 
+GLUON_TARGET=$(TARGET)
+
 # check for spaces & resolve possibly relative paths
 define mkabspath
  ifneq (1,$(words [$($(1))]))

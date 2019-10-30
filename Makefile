@@ -29,6 +29,9 @@ endif
 
 ifeq ($(IS_BUILDBOT),yes)
 $(info special actions apply to builds on this host ...)
+default: autobuild
+else
+default: firmwares
 endif
 
 # test for existing $TARGET-config or abort
@@ -36,7 +39,9 @@ ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
 $(error config for $(TARGET) not defined)
 endif
 
-default: firmwares
+autobuild:
+	git clone https://github.com/SvenRoederer/ffberlin-gluon-site.git site
+	$(MAKE) firmwares
 
 ## -- GLUON  -- ##
 

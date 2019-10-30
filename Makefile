@@ -138,8 +138,8 @@ $(LUA):
 	+@$(OPENWRTMAKE) tools/install
 	+@$(OPENWRTMAKE) package/lua/host/compile
 
-gluon-config: .stamp-gluon-configured
-.stamp-gluon-configured: .stamp-gluon-updated $(LUA)
+gluon-config: .stamp-gluon-configured_$(TARGET)
+.stamp-gluon-configured_$(TARGET): .stamp-gluon-updated $(LUA)
 	@$(CheckExternal)
 	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
@@ -171,14 +171,14 @@ $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
 
 ## -- GLUON  -- ##
 
-gloun-imagebuilder: .stamp-imagebuilder
-.stamp-imagebuilder: .stamp-gluon-compiled
+gloun-imagebuilder: .stamp-imagebuilder_$(TARGET)
+.stamp-imagebuilder_$(TARGET): .stamp-gluon-compiled_$(TARGET)
 	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
 	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
 	done
 	touch $@
 
-gluon-build-image: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt .stamp-imagebuilder
+gluon-build-image: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt .stamp-imagebuilder_$(TARGET)
 	$(eval IB_FILE := $(shell ls -tr $(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz | tail -n1))
 	./scripts/assemble_firmware.sh -d -b $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR)
 
@@ -331,8 +331,8 @@ prepare: stamp-clean-prepared .stamp-prepared
 	touch $@
 
 # compile
-gluon-compile: .stamp-gluon-compiled
-.stamp-gluon-compiled: $(OPENWRT_DIR)/.config
+gluon-compile: .stamp-gluon-compiled_$(TARGET)
+.stamp-gluon-compiled_$(TARGET): $(OPENWRT_DIR)/.config
 	$(OPENWRTMAKE)
 # check if running via buildbot and remove the build_dir folder to save some space
 ifdef IS_BUILDBOT

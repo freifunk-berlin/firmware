@@ -11,7 +11,7 @@ end
 
 for feed in string.gmatch(exec_capture_raw('. scripts/modules.sh && echo -n "$FEEDS"'), '%S+') do
 	if not default_feeds[feed] then
-		config('# CONFIG_FEED_%s is not set', feed)
+--		config('# CONFIG_FEED_%s is not set', feed)
 	end
 end
 

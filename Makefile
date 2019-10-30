@@ -132,19 +132,19 @@ $(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES)
 LUA := openwrt/staging_dir/hostpkg/bin/lua
 
 $(LUA): $(OPENWRT_DIR)/feeds.conf
-	@$(CheckExternal)
+	$(CheckExternal)
 
-	+@[ -e openwrt/.config ] || $(OPENWRTMAKE) defconfig
-	+@$(OPENWRTMAKE) tools/install
-	+@$(OPENWRTMAKE) package/lua/host/compile
+	+[ -e openwrt/.config ] || $(OPENWRTMAKE) defconfig
+	+$(OPENWRTMAKE) tools/install
+	+$(OPENWRTMAKE) package/lua/host/compile
 
 gluon-config: .stamp-gluon-configured_$(TARGET)
 .stamp-gluon-configured_$(TARGET): .stamp-gluon-updated $(LUA)
-	@$(CheckExternal)
-	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
+	$(CheckExternal)
+	$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 		> openwrt/.config
-	+@$(OPENWRTMAKE) defconfig
+	+$(OPENWRTMAKE) defconfig
 
 #	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 #		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
@@ -159,13 +159,13 @@ gluon-update: gluon-clean-openwrt .stamp-gluon-updated $(OPENWRT_DIR)/feeds.conf
 	touch $@
 
 $(OPENWRT_DIR)/feeds.conf: $(FW_DIR)/modules $(wildcard $(GLUON_SITEDIR)/site.mk)
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/update.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/patch.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/feeds.sh
+	GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/update.sh
+	GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/patch.sh
+	GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/feeds.sh
 
 gluon-gen-pkglist: .stamp-imagebuilder $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
-	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
+	$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_pkg.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 		> $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 

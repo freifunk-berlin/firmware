@@ -199,41 +199,9 @@ FEEDS=packages luci routing gluon
 #UNPATCH_FEEDS_TARGET = $(addprefix unpatch-feed-, $(FEEDS))
 endif
 
-# clean up openwrt working copy
-openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
-.stamp-openwrt-cleaned: config.mk | $(OPENWRT_DIR) openwrt-clean-bin
-	cd $(OPENWRT_DIR); \
-	  ./scripts/feeds clean && \
-	  git clean -dff && git fetch && git reset --hard HEAD && \
-	  rm -rf .config feeds.conf build_dir/target-* logs/
-	touch $@
-
 openwrt-clean-bin:
 	rm -rf $(OPENWRT_DIR)/bin
 	rm -rf $(OPENWRT_DIR)/build_dir/target-*/*-{imagebuilder,sdk}-*
-
-# update openwrt and checkout specified commit
-openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
-.stamp-openwrt-updated: .stamp-openwrt-cleaned
-	cd $(OPENWRT_DIR); git checkout --detach $(OPENWRT_COMMIT)
-	touch $@
-
-# update feeds
-feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
-.stamp-feeds-updated: | $(OPENWRT_DIR)/feeds.conf $(OPENWRT_DIR)/feeds $(addprefix .stamp-feed-update-,$(FEEDS))
-	$(info FEEDS is: $(FEEDS))
-	make $(addprefix .stamp-feed-update-,$(FEEDS))
-	#cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
-	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
-	touch $@
-
-.stamp-feed-update-%: | $(OPENWRT_DIR)/feeds/%
-	#cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
-	touch $@
-
-$(OPENWRT_DIR)/feeds: $(OPENWRT_DIR)/feeds.conf
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
 
 $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt $(FW_DIR)/feeds.conf
 	$(MAKE) $(addprefix .stamp-gluon-module-,$(FEEDS))
@@ -268,42 +236,6 @@ $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-modul
 	rm -rf /tmp/gluon_$@
 	echo $@ updated
 
-.stamp-packages-install: .stamp-patch-openwrt .stamp-patch-feeds .stamp-feeds-updated
-	cd $(OPENWRT_DIR); ./scripts/feeds install -a
-	touch $@
-
-# prepare patch
-pre-patch: stamp-clean-pre-patch .stamp-pre-patch
-.stamp-pre-patch:
-#	# ensure that an (empty) patches-directory per feed exists
-#	$(foreach feed,$(FEEDS),$(shell [ -d $(FW_DIR)/patches/packages/$(feed) ] || mkdir $(FW_DIR)/patches/packages/$(feed)))
-	touch $@
-
-# patch openwrt working copy
-patch: stamp-clean-patched .stamp-patched
-
-%/.pc/applied-patches: | %/patches
-	cd $(OPENWRT_DIR); quilt push -a || [ $$? = 2 ] && true
-
-.stamp-patch-openwrt: .stamp-pre-patch $(wildcard $(FW_DIR)/patches/openwrt/*) | $(OPENWRT_DIR)/patches $(OPENWRT_DIR)/.pc/applied-patches
-	cd $(OPENWRT_DIR); quilt push -a || [ $$? = 2 ] && true
-	rm -rf $(OPENWRT_DIR)/tmp
-	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update
-	#$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds install -a
-	touch $@
-
-.stamp-patch-feeds: .stamp-pre-patch .stamp-feeds-updated .stamp-patch-openwrt $(addprefix .stamp-patch-feed-,$(FEEDS))
-	$(info patching all feeds: $(FEEDS))
-	make $(addprefix .stamp-patch-feed-,$(FEEDS))
-	touch $@
-
-.stamp-patch-feed-%: .stamp-patch-openwrt .stamp-feed-update-% $(wildcard $(FW_DIR)/patches/packages/%/*) | $(OPENWRT_DIR)/feeds/%/patches
-	$(info this is $@)
-	if [ -f $(OPENWRT_DIR)/feeds/$*/patches/series ]; then cd $(OPENWRT_DIR)/feeds/$*; quilt push -a || [ $$? = 2 ] && true; fi
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update $*
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds install -p $*
-	touch $@
-
 .stamp-build_rev: .FORCE
 ifneq (,$(wildcard .stamp-build_rev))
 ifneq ($(shell cat .stamp-build_rev),$(FW_REVISION))
@@ -324,11 +256,6 @@ $(FW_DIR)/embedded-files:
 	mkdir $@
 $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
-
-# prepare openwrt working copy
-prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files .stamp-packages-install
-	touch $@
 
 # compile
 gluon-compile: .stamp-gluon-compiled_$(TARGET)

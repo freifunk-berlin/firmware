@@ -1,14 +1,14 @@
-From b0ea33ab7d2688c2015db23d8b11e67148ab67a8 Mon Sep 17 00:00:00 2001
-From: Yousong Zhou <yszhou4tech@gmail.com>
-Date: Fri, 6 Sep 2019 08:29:50 +0000
-Subject: wireless-regdb_use_python2
+From 465817d888c058446e7836ea0fe7721a803ce2c0 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <freifunk@it-solutions.geroedel.de>
+Date: Thu, 5 Sep 2019 22:52:21 +0200
+Subject: [PATCH] patches: hardcode to use python2 for building wireless-regdb
 
-Fixes: 853e4dd3 ("ipqx0xx: add Generic subtarget")
-Ref: https://forum.openwrt.org/t/ipq40xx-snapshot-not-updated-since-22nd-august/44126
-Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+this avoids build-failues when hosts python is python3. The wireless-
+regdb-code is still python2.
 ---
- package/boot/uboot-fritz4040/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ .../openwrt/100-wireless-regdb_use_python2.patch    | 13 +++++++++++++
+ 1 files changed, 13 insertions(+)
+ create mode 100644 patches/openwrt/100-wireless-regdb_use_python2.patch
 
 diff --git a/package/firmware/wireless-regdb/Makefile b/package/firmware/wireless-regdb/Makefile
 index d06da2c708..28234803ab 100644

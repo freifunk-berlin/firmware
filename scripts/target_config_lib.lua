@@ -83,12 +83,6 @@ END_MAKE
 			lib.config('CONFIG_TARGET_DEVICE_PACKAGES_%s_DEVICE_%s="%s"',
 				openwrt_config_target, profile, device_pkgs)
 		end
-		if env.GLUON_FWTYPE == 'ffberlin' then
-			io.stderr:write(string.format("additional packages for board %s: %s\n", profile, device_pkgs))
-			package_list = io.open(string.format("%s/%s.packages", env.GLUON_TMPDIR, profile), "w")
-			package_list:write(device_pkgs)
-			package_list:close()
-		end
 	end
 
 	return lib

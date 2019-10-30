@@ -190,14 +190,7 @@ PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 
-ifneq ($(wildcard $(OPENWRT_DIR)/*),)
-#FEEDS=$(shell [ -e $(OPENWRT_DIR)/scripts/feeds ] && (cd $(OPENWRT_DIR); ./scripts/feeds list -n) )
-#FEEDS=cd $(OPENWRT_DIR); ./scripts/feeds list -n
-#FEEDS=$(shell cd $(OPENWRT_DIR); ./scripts/feeds list -n)
 FEEDS=packages luci routing gluon
-#PATCH_FEEDS_TARGET = $(addprefix patch-feed-, $(FEEDS))
-#UNPATCH_FEEDS_TARGET = $(addprefix unpatch-feed-, $(FEEDS))
-endif
 
 openwrt-clean-bin:
 	rm -rf $(OPENWRT_DIR)/bin

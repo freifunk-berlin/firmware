@@ -133,22 +133,32 @@ $(LUA):
 	+@$(OPENWRTMAKE) tools/install
 	+@$(OPENWRTMAKE) package/lua/host/compile
 
-gluon-config: $(LUA)
+gluon-config: .stamp-gluon-configured
+.stamp-gluon-configured: .stamp-gluon-updated $(LUA)
 	@$(CheckExternal)
 	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 		> openwrt/.config
 	+@$(OPENWRTMAKE) defconfig
 
-	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
-		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
+#	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
+#		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
+	touch $@
 
-gluon-update: $(FW_DIR)/modules
+gluon-clean-openwrt:
+	rm -f $(OPENWRT_DIR)/feeds.conf
+
+gluon-update: gluon-clean-openwrt .stamp-gluon-updated $(OPENWRT_DIR)/feeds.conf .FORCE
+
+.stamp-gluon-updated: $(OPENWRT_DIR)/feeds.conf
+	touch $@
+
+$(OPENWRT_DIR)/feeds.conf: $(FW_DIR)/modules $(wildcard $(GLUON_SITEDIR)/site.mk)
 	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/update.sh
 	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/patch.sh
 	@GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/feeds.sh
 
-gluon-gen-pkglist: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
+gluon-gen-pkglist: .stamp-imagebuilder $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
 	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_pkg.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
@@ -156,8 +166,16 @@ $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
 
 ## -- GLUON  -- ##
 
-gluon-build-image: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
-	./scripts/assemble_firmware.sh -b $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR)
+gloun-imagebuilder: .stamp-imagebuilder
+.stamp-imagebuilder: .stamp-gluon-compiled
+	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
+	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
+	done
+	touch $@
+
+gluon-build-image: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt .stamp-imagebuilder
+	$(eval IB_FILE := $(shell ls -tr $(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz | tail -n1))
+	./scripts/assemble_firmware.sh -d -b $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt -i $(IB_FILE) -e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR)
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/openwrt/*) $(wildcard patches/packages/*/*)
@@ -175,11 +193,6 @@ FEEDS=packages luci routing gluon
 #PATCH_FEEDS_TARGET = $(addprefix patch-feed-, $(FEEDS))
 #UNPATCH_FEEDS_TARGET = $(addprefix unpatch-feed-, $(FEEDS))
 endif
-
-# clone openwrt
-$(OPENWRT_DIR):
-	$(UMASK); \
-	  git clone $(OPENWRT_SRC) $(OPENWRT_DIR)
 
 # clean up openwrt working copy
 openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
@@ -199,25 +212,6 @@ openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
 .stamp-openwrt-updated: .stamp-openwrt-cleaned
 	cd $(OPENWRT_DIR); git checkout --detach $(OPENWRT_COMMIT)
 	touch $@
-
-# patches require updated openwrt working copy
-$(OPENWRT_DIR)/patches: | .stamp-openwrt-updated
-	ln -s $(FW_DIR)/patches/openwrt $@
-
-# patches require updated openwrt working copy
-$(OPENWRT_DIR)/feeds/%/patches: .stamp-feeds-updated
-	[ -d $(FW_DIR)/patches/packages/$* ] || mkdir $(FW_DIR)/patches/packages/$*
-	[ -d $@ ] || ln -s $(FW_DIR)/patches/packages/$* $@
-
-# feeds
-$(OPENWRT_DIR)/feeds.conf: feeds.conf | .stamp-openwrt-updated
-	$(info $(shell cp $(FW_DIR)/feeds.conf $@; echo file copied))
-	$(info updating FEEDS variable, as the feeds.conf has changed)
-#	cd $(OPENWRT_DIR); ./scripts/feeds list -n >$(FW_DIR)/.tmp_feeds
-#	$(eval FEEDS=$(shell cat $(FW_DIR)/.tmp_feeds))
-	$(eval FEEDS=$(shell cd $(OPENWRT_DIR); ./scripts/feeds list -n >$(FW_DIR)/.tmp_feeds; cat $(FW_DIR)/.tmp_feeds))
-	$(info new FEEDS $(FEEDS))
-	rm $(FW_DIR)/.tmp_feeds
 
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
@@ -282,8 +276,6 @@ pre-patch: stamp-clean-pre-patch .stamp-pre-patch
 
 # patch openwrt working copy
 patch: stamp-clean-patched .stamp-patched
-.stamp-patched: .stamp-patch-openwrt .stamp-patch-feeds
-	touch $@
 
 %/.pc/applied-patches: | %/patches
 	cd $(OPENWRT_DIR); quilt push -a || [ $$? = 2 ] && true
@@ -328,28 +320,15 @@ $(FW_DIR)/embedded-files:
 $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
 
-# openwrt config
-$(OPENWRT_DIR)/.config: .stamp-packages-install $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
-ifdef IS_BUILDBOT
-	cat $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) >$(OPENWRT_DIR)/.config
-else
-	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
-endif
-	# always replace CONFIG_VERSION_CODE by FW_REVISION
-	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
-	$(UMASK); \
-	  $(MAKE) -C $(OPENWRT_DIR) defconfig
-
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
 .stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files .stamp-packages-install
 	touch $@
 
 # compile
-compile: stamp-clean-compiled .stamp-compiled
-.stamp-compiled: .stamp-prepared openwrt-clean-bin clean-build-logs
-	$(UMASK); \
-	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
+gluon-compile: .stamp-gluon-compiled
+.stamp-gluon-compiled: $(OPENWRT_DIR)/.config
+	$(OPENWRTMAKE)
 # check if running via buildbot and remove the build_dir folder to save some space
 ifdef IS_BUILDBOT
 	rm -rf $(OPENWRT_DIR)/build_dir

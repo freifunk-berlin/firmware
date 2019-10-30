@@ -131,7 +131,7 @@ $(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES)
 
 LUA := openwrt/staging_dir/hostpkg/bin/lua
 
-$(LUA):
+$(LUA): $(OPENWRT_DIR)/feeds.conf
 	@$(CheckExternal)
 
 	+@[ -e openwrt/.config ] || $(OPENWRTMAKE) defconfig

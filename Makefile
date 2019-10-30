@@ -58,7 +58,12 @@ endef
 GLUON_SITEDIR ?= site
 $(eval $(call mkabspath,GLUON_SITEDIR))
 $(GLUON_SITEDIR)/site.mk:
+ifeq ($(IS_BUILDBOT),yes)
+	$(info running on buildbot --> using default site-repo)
+	git clone https://github.com/SvenRoederer/ffberlin-gluon-site.git site
+else
 	$(error No site configuration was found. Please check out a site configuration to $(GLUON_SITEDIR))
+endif
 include $(GLUON_SITEDIR)/site.mk
 
 # initialize (possibly already user set) directory variables

@@ -171,7 +171,7 @@ $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
 
 ## -- GLUON  -- ##
 
-gloun-imagebuilder: .stamp-imagebuilder_$(TARGET)
+gluon-imagebuilder: .stamp-imagebuilder_$(TARGET)
 .stamp-imagebuilder_$(TARGET): .stamp-gluon-compiled_$(TARGET)
 	[ -d $(FW_TARGET_DIR) ] || mkdir -p $(FW_TARGET_DIR)
 	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \

@@ -173,6 +173,7 @@ $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
 
 gloun-imagebuilder: .stamp-imagebuilder_$(TARGET)
 .stamp-imagebuilder_$(TARGET): .stamp-gluon-compiled_$(TARGET)
+	mkdir -f $(FW_TARGET_DIR)
 	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
 	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
 	done

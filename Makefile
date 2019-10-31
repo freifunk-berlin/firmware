@@ -100,7 +100,7 @@ gluon-list-targets:
 	@$(foreach target,$(GLUON_TARGETS),echo '$(target)';)
 
 
-OPENWRTMAKE = $(MAKE) -C openwrt
+OPENWRTMAKE = $(MAKE) -C openwrt V=s
 BOARD := $(GLUON_TARGET_$(GLUON_TARGET)_BOARD)
 SUBTARGET := $(GLUON_TARGET_$(GLUON_TARGET)_SUBTARGET)
 

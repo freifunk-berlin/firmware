@@ -263,7 +263,7 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 # compile
 gluon-compile: .stamp-gluon-compiled_$(TARGET)
 .stamp-gluon-compiled_$(TARGET): .stamp-gluon-configured_$(TARGET)
-	$(OPENWRTMAKE)
+	+$(OPENWRTMAKE)
 # check if running via buildbot and remove the build_dir folder to save some space
 ifdef IS_BUILDBOT
 	rm -rf $(OPENWRT_DIR)/build_dir

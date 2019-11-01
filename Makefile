@@ -36,7 +36,7 @@ ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
 $(error config for $(TARGET) not defined)
 endif
 
-default: gluon-imagebuilder
+default: debug-files
 
 ## -- GLUON  -- ##
 

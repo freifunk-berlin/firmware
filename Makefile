@@ -270,7 +270,7 @@ ifdef IS_BUILDBOT
 endif
 	touch $@
 
-debug-files: gluon-imagebuilder
+debug-files: gluon-imagebuilder build-logs
 	[ -d $(FW_TARGET_DIR)/debug ] || mkdir -p $(FW_TARGET_DIR)/debug
 	cp $(OPENWRT_DIR)/.config $(FW_TARGET_DIR)/debug/openwrt.config
 	cp $(GLUON_TMPDIR)/images_* $(FW_TARGET_DIR)/debug/
@@ -331,7 +331,7 @@ $(VERSION_FILE): .stamp-prepared
 	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $(VERSION_FILE); \
 	done
 
-build-logs: .stamp-compiled
+build-logs: .stamp-gluon-compiled_$(TARGET)
 	mkdir -p $(FW_TARGET_DIR)
 	[ -d $(OPENWRT_DIR)/logs ] && mv $(OPENWRT_DIR)/logs $(FW_TARGET_DIR)
 	touch .stamp-$@

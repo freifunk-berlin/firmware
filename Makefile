@@ -164,7 +164,7 @@ $(OPENWRT_DIR)/feeds.conf: $(FW_DIR)/modules $(wildcard $(GLUON_SITEDIR)/site.mk
 	GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/feeds.sh
 
 gluon-gen-pkglist: .stamp-imagebuilder $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
-$(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA)
+$(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt: $(LUA) .stamp-gluon-configured_$(TARGET)
 	$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_pkg.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 		> $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt

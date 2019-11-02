@@ -164,7 +164,6 @@ packages {
 'collectd-mod-snmp',
 'collectd-mod-uptime',
 'collectd-mod-wireless',
-'collectd-dnsmasq-addon',
 'collectd-snmp-templates',
 'comgt',
 'community-profiles',

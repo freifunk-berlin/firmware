@@ -278,7 +278,7 @@ endif
 autobuild:
 	$(MAKE) $(GLUON_SITEDIR)/site.mk
 	$(MAKE) gluon-update
-	$(MAKE) debug-files
+	$(MAKE) gluon-imagebuilder
 
 debug-files: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 	[ -d $(FW_TARGET_DIR)/debug ] || mkdir -p $(FW_TARGET_DIR)/debug

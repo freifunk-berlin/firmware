@@ -270,7 +270,7 @@ ifdef IS_BUILDBOT
 endif
 	touch $@
 
-debug-files: gluon-imagebuilder build-logs $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
+debug-files: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 	[ -d $(FW_TARGET_DIR)/debug ] || mkdir -p $(FW_TARGET_DIR)/debug
 	cp $(OPENWRT_DIR)/.config $(FW_TARGET_DIR)/debug/openwrt.config || true
 	cp $(GLUON_TMPDIR)/images_* $(FW_TARGET_DIR)/debug/ || true

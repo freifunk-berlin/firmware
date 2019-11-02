@@ -40,7 +40,7 @@ ifeq ($(IS_BUILDBOT),yes)
 $(info running on buildbot --> using make target "autobuild")
 default: autobuild
 else
-default: gluon-imagebuilder
+default: gluon-build-image
 endif
 
 ## -- GLUON  -- ##
@@ -278,7 +278,7 @@ endif
 autobuild:
 	$(MAKE) $(GLUON_SITEDIR)/site.mk
 	$(MAKE) gluon-update
-	$(MAKE) gluon-imagebuilder
+	$(MAKE) gluon-build-image
 
 debug-files: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 	[ -d $(FW_TARGET_DIR)/debug ] || mkdir -p $(FW_TARGET_DIR)/debug

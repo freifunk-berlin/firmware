@@ -153,9 +153,9 @@ gluon-config: .stamp-gluon-configured_$(TARGET)
 gluon-clean-openwrt:
 	rm -f $(OPENWRT_DIR)/feeds.conf
 
-gluon-update: gluon-clean-openwrt .stamp-gluon-updated $(OPENWRT_DIR)/feeds.conf .FORCE
+gluon-update: gluon-clean-openwrt .stamp-gluon-updated .FORCE
 
-.stamp-gluon-updated: $(OPENWRT_DIR)/feeds.conf
+.stamp-gluon-updated: $(GLUON_SITEDIR)/site.mk $(OPENWRT_DIR)/feeds.conf
 	touch $@
 
 $(OPENWRT_DIR)/feeds.conf: $(FW_DIR)/modules $(wildcard $(GLUON_SITEDIR)/site.mk)

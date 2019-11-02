@@ -72,166 +72,6 @@ config 'CONFIG_OPENVPN_openssl_ENABLE_PORT_SHARE=n'
 config 'CONFIG_OPENVPN_openssl_ENABLE_DEF_AUTH=n'
 config 'CONFIG_OPENVPN_openssl_ENABLE_PF=n'
 
-config 'CONFIG_PACKAGE_6in4=m'
-config 'CONFIG_PACKAGE_ALFRED_BATHOSTS=y'
-config 'CONFIG_PACKAGE_ALFRED_VIS=y'
-config 'CONFIG_PACKAGE_ATH_DFS=y'
-config 'CONFIG_PACKAGE_alfred=m'
-config 'CONFIG_PACKAGE_babeld=m'
-config 'CONFIG_PACKAGE_batctl-default=m'
-config 'CONFIG_PACKAGE_batctl-tiny=m'
-config 'CONFIG_PACKAGE_bmx6=m'
-config 'CONFIG_PACKAGE_bmx6-json=m'
-config 'CONFIG_PACKAGE_bmx6-sms=m'
-config 'CONFIG_PACKAGE_bmx6-table=m'
-config 'CONFIG_PACKAGE_bmx6-uci-config=m'
-config 'CONFIG_PACKAGE_bmx7=m'
-config 'CONFIG_PACKAGE_bmx7-iwinfo=m'
-config 'CONFIG_PACKAGE_bmx7-json=m'
-config 'CONFIG_PACKAGE_bmx7-sms=m'
-config 'CONFIG_PACKAGE_bmx7-table=m'
-config 'CONFIG_PACKAGE_bmx7-topology=m'
-config 'CONFIG_PACKAGE_bmx7-tun=m'
-config 'CONFIG_PACKAGE_bmx7-uci-config=m'
-config 'CONFIG_PACKAGE_collectd=m'
-config 'CONFIG_PACKAGE_collectd-mod-conntrack=m'
-config 'CONFIG_PACKAGE_collectd-mod-cpu=m'
-config 'CONFIG_PACKAGE_collectd-mod-exec=m'
-config 'CONFIG_PACKAGE_collectd-mod-interface=m'
-config 'CONFIG_PACKAGE_collectd-mod-irq=m'
-config 'CONFIG_PACKAGE_collectd-mod-iwinfo=m'
-config 'CONFIG_PACKAGE_collectd-mod-load=m'
-config 'CONFIG_PACKAGE_collectd-mod-memory=m'
-config 'CONFIG_PACKAGE_collectd-mod-network=m'
-config 'CONFIG_PACKAGE_collectd-mod-olsrd=m'
-config 'CONFIG_PACKAGE_collectd-mod-ping=m'
-config 'CONFIG_PACKAGE_collectd-mod-routeros=m'
-config 'CONFIG_PACKAGE_collectd-mod-rrdtool=m'
-config 'CONFIG_PACKAGE_collectd-mod-snmp=m'
-config 'CONFIG_PACKAGE_collectd-mod-uptime=m'
-config 'CONFIG_PACKAGE_collectd-mod-wireless=m'
-config 'CONFIG_PACKAGE_collectd-dnsmasq-addon=m'
-config 'CONFIG_PACKAGE_collectd-snmp-templates=m'
-config 'CONFIG_PACKAGE_comgt=m'
-config 'CONFIG_PACKAGE_community-profiles=m'
-config 'CONFIG_PACKAGE_diffutils=m'
-config 'CONFIG_PACKAGE_ethtool=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-bbbdigger=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-dhcp-defaults=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-firewall-defaults=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-freifunk-defaults=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-lib-guard=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-migration=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-network-defaults=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-olsrd-defaults=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-openvpn-files=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-system-defaults=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-statistics-defaults=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-tunneldigger=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-uhttpd-defaults=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-uplink-notunnel-files=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-uplink-tunnelberlin-files=m'
-config 'CONFIG_PACKAGE_freifunk-berlin-uplink-tunnelberlin-tunneldigger-files=m'
-config 'CONFIG_PACKAGE_freifunk-common=m'
-config 'CONFIG_PACKAGE_freifunk-firewall=m'
-config 'CONFIG_PACKAGE_freifunk-gwcheck=m'
-config 'CONFIG_PACKAGE_freifunk-policyrouting=m'
-config 'CONFIG_PACKAGE_horst=m'
-config 'CONFIG_PACKAGE_huaweiaktbbo=m'
-config 'CONFIG_PACKAGE_ip=m'
-config 'CONFIG_PACKAGE_iperf=m'
-config 'CONFIG_PACKAGE_iperf3=m'
-config 'CONFIG_PACKAGE_ipip=m'
-config 'CONFIG_PACKAGE_iptables-mod-conntrack-extra=m'
-config 'CONFIG_PACKAGE_iptables-mod-filter=m'
-config 'CONFIG_PACKAGE_iptables-mod-ipopt=m'
-config 'CONFIG_PACKAGE_iwinfo=m'
-config 'CONFIG_PACKAGE_l3roamd=m'
-config 'CONFIG_PACKAGE_libevent2=m'
-config 'CONFIG_PACKAGE_libiwinfo=m'
-config 'CONFIG_PACKAGE_libiwinfo-lua=m'
-config 'CONFIG_PACKAGE_libltdl=m'
-config 'CONFIG_PACKAGE_liblua=m'
-config 'CONFIG_PACKAGE_liblzo=m'
-config 'CONFIG_PACKAGE_libncurses=m'
-config 'CONFIG_PACKAGE_liboping=m'
-config 'CONFIG_PACKAGE_libpcap=m'
-config 'CONFIG_PACKAGE_libpthread=m'
-config 'CONFIG_PACKAGE_librrd1=m'
-config 'CONFIG_PACKAGE_librt=m'
-config 'CONFIG_PACKAGE_libubus-lua=m'
-config 'CONFIG_PACKAGE_libuci-lua=m'
-config 'CONFIG_PACKAGE_libustream-mbedtls=m'
-config 'CONFIG_PACKAGE_lua=m'
-config 'CONFIG_PACKAGE_luci-app-bmx6=m'
-config 'CONFIG_PACKAGE_luci-app-bmx7=m'
-config 'CONFIG_PACKAGE_luci-app-ffwizard-berlin=m'
-config 'CONFIG_PACKAGE_luci-app-firewall=m'
-config 'CONFIG_PACKAGE_luci-app-opkg=m'
-config 'CONFIG_PACKAGE_luci-app-olsr=m'
-config 'CONFIG_PACKAGE_luci-app-olsr-services=m'
-config 'CONFIG_PACKAGE_luci-app-olsr-viz=m'
-config 'CONFIG_PACKAGE_luci-app-openvpn=m'
-config 'CONFIG_PACKAGE_luci-app-owm=m'
-config 'CONFIG_PACKAGE_luci-app-owm-ant=m'
-config 'CONFIG_PACKAGE_luci-app-owm-cmd=m'
-config 'CONFIG_PACKAGE_luci-app-owm-gui=m'
-config 'CONFIG_PACKAGE_luci-app-splash=m'
-config 'CONFIG_PACKAGE_luci-app-statistics=m'
-config 'CONFIG_PACKAGE_luci-app-wifischedule=m'
-config 'CONFIG_PACKAGE_luci-app-vpnbypass=m'
-config 'CONFIG_PACKAGE_luci-base=m'
-config 'CONFIG_PACKAGE_luci-lib-httpclient=m'
-config 'CONFIG_PACKAGE_luci-lib-json=m'
-config 'CONFIG_PACKAGE_luci-lib-luaneightbl=m'
-config 'CONFIG_PACKAGE_luci-lib-nixio=m'
-config 'CONFIG_PACKAGE_luci-mod-admin-full=m'
-config 'CONFIG_PACKAGE_luci-mod-failsafe=y'
-config 'CONFIG_PACKAGE_luci-mod-freifunk-ui=m'
-config 'CONFIG_PACKAGE_luci-proto-3g=m'
-config 'CONFIG_PACKAGE_luci-proto-ipip=m'
-config 'CONFIG_PACKAGE_luci-proto-ppp=m'
-config 'CONFIG_PACKAGE_luci-theme-bootstrap=y'
-config 'CONFIG_PACKAGE_mtr=m'
-config 'CONFIG_PACKAGE_olsrd=m'
-config 'CONFIG_PACKAGE_olsrd-mod-arprefresh=m'
-config 'CONFIG_PACKAGE_olsrd-mod-dot-draw=m'
-config 'CONFIG_PACKAGE_olsrd-mod-dyn-gw=m'
-config 'CONFIG_PACKAGE_olsrd-mod-dyn-gw-plain=m'
-config 'CONFIG_PACKAGE_olsrd-mod-jsoninfo=m'
-config 'CONFIG_PACKAGE_olsrd-mod-nameservice=m'
-config 'CONFIG_PACKAGE_olsrd-mod-netjson=m'
-config 'CONFIG_PACKAGE_olsrd-mod-txtinfo=m'
-config 'CONFIG_PACKAGE_olsrd-mod-watchdog=m'
-config 'CONFIG_PACKAGE_om-watchdog=m'
-config 'CONFIG_PACKAGE_oonf-dlep-proxy=m'
-config 'CONFIG_PACKAGE_oonf-dlep-radio=m'
-config 'CONFIG_PACKAGE_oonf-olsrd2=m'
-config 'CONFIG_PACKAGE_openvpn-mbedtls=m'
-config 'CONFIG_PACKAGE_openvpn-openssl=m'
-config 'CONFIG_PACKAGE_patch=m'
-config 'CONFIG_PACKAGE_ppp=m'
-config 'CONFIG_PACKAGE_ppp-mod-pppoe=m'
-config 'CONFIG_PACKAGE_px5g-mbedtls=m'
-config 'CONFIG_PACKAGE_qos-scripts=m'
-config 'CONFIG_PACKAGE_rrdtool1=m'
-config 'CONFIG_PACKAGE_rssileds=m'
-config 'CONFIG_PACKAGE_simple-tc=m'
-config 'CONFIG_PACKAGE_snmp-utils=m'
-config 'CONFIG_PACKAGE_tc=m'
-config 'CONFIG_PACKAGE_tcpdump=m'
-config 'CONFIG_PACKAGE_tcpdump-mini=m'
-config 'CONFIG_PACKAGE_terminfo=m'
-config 'CONFIG_PACKAGE_tmux=m'
-config 'CONFIG_PACKAGE_uclibcxx=m'
-config 'CONFIG_PACKAGE_uhttpd=y'
-config 'CONFIG_PACKAGE_uhttpd-mod-ubus=m'
-config 'CONFIG_PACKAGE_usb-modeswitch=m'
-config 'CONFIG_PACKAGE_usb-modeswitch-data=m'
-config 'CONFIG_PACKAGE_usbutils=m'
-config 'CONFIG_PACKAGE_vnstat=m'
-config 'CONFIG_PACKAGE_wpad-basic=m'
-config 'CONFIG_PACKAGE_zlib=m'
 
 config 'CONFIG_PACKAGE_kmod-batman-adv=m'
 config 'CONFIG_PACKAGE_kmod-crypto-crc32c=m'
@@ -275,10 +115,172 @@ config 'CONFIG_PACKAGE_kmod-usb-storage=m'
 config 'CONFIG_PACKAGE_kmod-usb-uhci=m'
 config 'CONFIG_PACKAGE_kmod-veth=m'
 
+config 'CONFIG_PACKAGE_ALFRED_BATHOSTS=y'
+config 'CONFIG_PACKAGE_ALFRED_VIS=y'
+config 'CONFIG_PACKAGE_ATH_DFS=y'
+config 'CONFIG_PACKAGE_luci-mod-failsafe=y'
+config 'CONFIG_PACKAGE_luci-theme-bootstrap=y'
+config 'CONFIG_PACKAGE_uhttpd=y'
+
+
 packages {
 	'-hostapd-mini',
 	'-odhcpd-ipv6only',
 	'-ppp',
 	'-ppp-mod-pppoe',
 	'freifunk-berlin-system-defaults',
+'6in4',
+'alfred',
+'babeld',
+'batctl-default',
+'batctl-tiny',
+'bmx6',
+'bmx6-json',
+'bmx6-sms',
+'bmx6-table',
+'bmx6-uci-config',
+'bmx7',
+'bmx7-iwinfo',
+'bmx7-json',
+'bmx7-sms',
+'bmx7-table',
+'bmx7-topology',
+'bmx7-tun',
+'bmx7-uci-config',
+'collectd',
+'collectd-mod-conntrack',
+'collectd-mod-cpu',
+'collectd-mod-exec',
+'collectd-mod-interface',
+'collectd-mod-irq',
+'collectd-mod-iwinfo',
+'collectd-mod-load',
+'collectd-mod-memory',
+'collectd-mod-network',
+'collectd-mod-olsrd',
+'collectd-mod-ping',
+'collectd-mod-routeros',
+'collectd-mod-rrdtool',
+'collectd-mod-snmp',
+'collectd-mod-uptime',
+'collectd-mod-wireless',
+'collectd-dnsmasq-addon',
+'collectd-snmp-templates',
+'comgt',
+'community-profiles',
+'diffutils',
+'ethtool',
+'freifunk-berlin-bbbdigger',
+'freifunk-berlin-dhcp-defaults',
+'freifunk-berlin-firewall-defaults',
+'freifunk-berlin-freifunk-defaults',
+'freifunk-berlin-lib-guard',
+'freifunk-berlin-migration',
+'freifunk-berlin-network-defaults',
+'freifunk-berlin-olsrd-defaults',
+'freifunk-berlin-openvpn-files',
+'freifunk-berlin-system-defaults',
+'freifunk-berlin-statistics-defaults',
+'freifunk-berlin-tunneldigger',
+'freifunk-berlin-uhttpd-defaults',
+'freifunk-berlin-uplink-notunnel-files',
+'freifunk-berlin-uplink-tunnelberlin-files',
+'freifunk-berlin-uplink-tunnelberlin-tunneldigger-files',
+'freifunk-common',
+'freifunk-firewall',
+'freifunk-gwcheck',
+'freifunk-policyrouting',
+'horst',
+'huaweiaktbbo',
+'ip',
+'iperf',
+'iperf3',
+'ipip',
+'iptables-mod-conntrack-extra',
+'iptables-mod-filter',
+'iptables-mod-ipopt',
+'iwinfo',
+'l3roamd',
+'libevent2',
+'libiwinfo',
+'libiwinfo-lua',
+'libltdl',
+'liblua',
+'liblzo',
+'libncurses',
+'liboping',
+'libpcap',
+'libpthread',
+'librrd1',
+'librt',
+'libubus-lua',
+'libuci-lua',
+'libustream-mbedtls',
+'lua',
+'luci-app-bmx6',
+'luci-app-bmx7',
+'luci-app-ffwizard-berlin',
+'luci-app-firewall',
+'luci-app-opkg',
+'luci-app-olsr',
+'luci-app-olsr-services',
+'luci-app-olsr-viz',
+'luci-app-openvpn',
+'luci-app-owm',
+'luci-app-owm-ant',
+'luci-app-owm-cmd',
+'luci-app-owm-gui',
+'luci-app-splash',
+'luci-app-statistics',
+'luci-app-wifischedule',
+'luci-app-vpnbypass',
+'luci-base',
+'luci-lib-httpclient',
+'luci-lib-json',
+'luci-lib-luaneightbl',
+'luci-lib-nixio',
+'luci-mod-admin-full',
+'luci-mod-freifunk-ui',
+'luci-proto-3g',
+'luci-proto-ipip',
+'luci-proto-ppp',
+'mtr',
+'olsrd',
+'olsrd-mod-arprefresh',
+'olsrd-mod-dot-draw',
+'olsrd-mod-dyn-gw',
+'olsrd-mod-dyn-gw-plain',
+'olsrd-mod-jsoninfo',
+'olsrd-mod-nameservice',
+'olsrd-mod-netjson',
+'olsrd-mod-txtinfo',
+'olsrd-mod-watchdog',
+'om-watchdog',
+'oonf-dlep-proxy',
+'oonf-dlep-radio',
+'oonf-olsrd2',
+'openvpn-mbedtls',
+'openvpn-openssl',
+'patch',
+'ppp',
+'ppp-mod-pppoe',
+'px5g-mbedtls',
+'qos-scripts',
+'rrdtool1',
+'rssileds',
+'simple-tc',
+'snmp-utils',
+'tc',
+'tcpdump',
+'tcpdump-mini',
+'terminfo',
+'tmux',
+'uclibcxx',
+'uhttpd-mod-ubus',
+'usb-modeswitch',
+'usb-modeswitch-data',
+'usbutils',
+'vnstat',
+'wpad-basic',
+'zlib',
 }

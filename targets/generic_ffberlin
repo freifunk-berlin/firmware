@@ -169,7 +169,6 @@ packages {
 'community-profiles',
 'diffutils',
 'ethtool',
-'freifunk-berlin-bbbdigger',
 'freifunk-berlin-dhcp-defaults',
 'freifunk-berlin-firewall-defaults',
 'freifunk-berlin-freifunk-defaults',

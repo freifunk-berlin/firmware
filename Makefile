@@ -36,7 +36,12 @@ ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
 $(error config for $(TARGET) not defined)
 endif
 
+ifeq ($(IS_BUILDBOT),yes)
+$(info running on buildbot --> using make target "autobuild")
+default: autobuild
+else
 default: debug-files
+endif
 
 ## -- GLUON  -- ##
 
@@ -269,6 +274,11 @@ ifdef IS_BUILDBOT
 	rm -rf $(OPENWRT_DIR)/build_dir
 endif
 	touch $@
+
+autobuild:
+	$(MAKE) $(GLUON_SITEDIR)/site.mk
+	$(MAKE) gluon-update
+	$(MAKE) debug-files
 
 debug-files: $(GLUON_TMPDIR)/images_$(GLUON_TARGET).txt
 	[ -d $(FW_TARGET_DIR)/debug ] || mkdir -p $(FW_TARGET_DIR)/debug

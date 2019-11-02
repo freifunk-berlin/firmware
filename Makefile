@@ -40,7 +40,7 @@ ifeq ($(IS_BUILDBOT),yes)
 $(info running on buildbot --> using make target "autobuild")
 default: autobuild
 else
-default: debug-files
+default: gluon-imagebuilder
 endif
 
 ## -- GLUON  -- ##

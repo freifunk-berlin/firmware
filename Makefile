@@ -144,7 +144,7 @@ $(LUA): $(OPENWRT_DIR)/feeds.conf
 	+$(OPENWRTMAKE) package/lua/host/compile
 
 gluon-config: .stamp-gluon-configured_$(TARGET)
-.stamp-gluon-configured_$(TARGET): .stamp-gluon-updated $(LUA)
+.stamp-gluon-configured_$(TARGET): .stamp-gluon-updated $(LUA) $(wildcard $(GLUON_TARGETSDIR)/*)
 	$(CheckExternal)
 	$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \

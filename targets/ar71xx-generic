@@ -62,9 +62,6 @@ device('avm-fritz-wlan-repeater-450e', 'fritz450e', {
 
 -- Buffalo
 
-device('buffalo-wzr-hp-g300nh', 'wzr-hp-g300nh', {
-	profile = 'WZRHPG300NH',
-})
 device('buffalo-wzr-hp-g300nh2', 'wzr-hp-g300nh2', {
 	profile = 'WZRHPG300NH2',
 })

@@ -38,14 +38,3 @@ device('zbt-wg3526-32m', 'zbt-wg3526-32M', {
 
 -- Devices without WLAN
 
--- Ubiquiti
-
-device('ubnt-erx', 'ubnt-erx', {
-	factory = false,
-	packages = {'-hostapd-mini'},
-})
-
-device('ubnt-erx-sfp', 'ubnt-erx-sfp', {
-	factory = false,
-	packages = {'-hostapd-mini'},
-})

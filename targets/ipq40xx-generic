@@ -63,7 +63,9 @@ device('openmesh-a62', 'openmesh_a62', {
 
 -- ZyXEL
 
-device('zyxel-nbg6617', 'zyxel_nbg6617')
+device('zyxel-nbg6617', 'zyxel_nbg6617', {
+	packages = {'uboot-envtools', 'kmod-usb-ledtrig-usbport', },
+})
 
 device('zyxel-wre6606', 'zyxel_wre6606', {
 	factory = false,

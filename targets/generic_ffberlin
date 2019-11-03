@@ -1,8 +1,6 @@
 
 config '# CONFIG_TARGET_ROOTFS_INITRAMFS is not set'
 
-config 'CONFIG_ALL_NONSHARED=y'
-
 config '# CONFIG_PACKAGE_usbip is not set' -- fails to build
 config '# CONFIG_PACKAGE_kmod-jool is not set' -- fails to build
 

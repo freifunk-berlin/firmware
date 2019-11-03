@@ -2,6 +2,7 @@
 
 device('asus-rt-ac57u', 'asus_rt-ac57u', {
 	factory = false,
+	packages = {'kmod-mt7603', 'kmod-mt76x2', 'kmod-usb-ledtrig-usbport', },
 })
 
 

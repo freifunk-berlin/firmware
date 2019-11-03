@@ -26,6 +26,7 @@ device('gl.inet-gl-ar150', 'glinet_gl-ar150', {
 
 device('gl.inet-gl-ar300m', 'glinet_gl-ar300m-nor', {
 	factory = false,
+	packages = {'kmod-usb2',},
 })
 
 device('gl.inet-gl-ar750', 'glinet_gl-ar750', {

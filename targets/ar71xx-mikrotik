@@ -17,7 +17,7 @@ defaults {
 }
 
 device('mikrotik-rb-nor-flash-16M-ac', 'rb-nor-flash-16M-ac', {
-        packages = ATH10K_PACKAGES,
+        packages = ATH10K_PACKAGES_QCA9887,
 })
 
 device('mikrotik-nand-64m', 'nand-64m')

@@ -1,3 +1,6 @@
+config 'CONFIG_PACKAGE_kmod-usb2=y'
+config 'CONFIG_PACKAGE_kmod-usb-storage=y'
+
 local ATH10K_PACKAGES_QCA9888 = {
 	'kmod-ath10k',
 	'-kmod-ath10k-ct',

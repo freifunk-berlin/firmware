@@ -13,7 +13,6 @@ defaults {
 	factory = false,
 }
 
-device('mikrotik-rb-nor-flash-16M', 'rb-nor-flash-16M')
 device('mikrotik-rb-nor-flash-16M-ac', 'rb-nor-flash-16M-ac', {
         packages = ATH10K_PACKAGES,
 })

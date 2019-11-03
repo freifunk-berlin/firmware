@@ -8,6 +8,9 @@ if env.GLUON_WLAN_MESH == '11s' then
         ATH10K_PACKAGES_QCA9888 = {'kmod-ath10k', '-kmod-ath10k-ct', 'ath10k-firmware-qca9888', '-ath10k-firmware-qca9888-ct'}
 end
 
+packages {
+	'rbcfg',
+}
 
 defaults {
 	factory = false,

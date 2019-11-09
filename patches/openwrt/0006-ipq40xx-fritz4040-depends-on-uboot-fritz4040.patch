@@ -1,0 +1,27 @@
+From bcc3226203166f99dfb32ed50231a6b8b9361809 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Sat, 9 Nov 2019 23:20:30 +0100
+Subject: [PATCH] ipq40xx: fritz4040 depends on uboot-fritz4040
+
+dd if=openwrt/staging_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/image/uboot-fritz4040.bin >> openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-ipq40xx_generic/tmp/openwrt-ipq40xx-generic-avm_fritzbox-4040-squashfs-eva.bin
+dd: failed to open 'openwrt/staging_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/image/uboot-fritz4040.bin': No such file or directory
+---
+ target/linux/ipq40xx/image/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/target/linux/ipq40xx/image/Makefile b/target/linux/ipq40xx/image/Makefile
+index 3a9b58de4f..f954085236 100644
+--- a/target/linux/ipq40xx/image/Makefile
++++ b/target/linux/ipq40xx/image/Makefile
+@@ -125,7 +125,7 @@ define Device/avm_fritzbox-4040
+ 	IMAGES = eva.bin sysupgrade.bin
+ 	IMAGE/eva.bin := append-uboot | pad-to $$$$(UBOOT_PARTITION_SIZE) | append-kernel | append-rootfs | pad-rootfs
+ 	IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata
+-	DEVICE_PACKAGES := fritz-tffs fritz-caldata
++	DEVICE_PACKAGES := fritz-tffs fritz-caldata u-boot-fritz4040
+ endef
+ TARGET_DEVICES += avm_fritzbox-4040
+ 
+-- 
+2.20.1
+

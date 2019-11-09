@@ -12,6 +12,10 @@ config 'CONFIG_PACKAGE_ATH_DEBUG=y'
 config '# CONFIG_KERNEL_IP_MROUTE is not set'
 config '# CONFIG_KERNEL_IPV6_MROUTE is not set'
 
+try_config 'CONFIG_TARGET_MULTI_PROFILE=y'
+try_config 'CONFIG_TARGET_ALL_PROFILES=y'
+try_config 'CONFIG_TARGET_PER_DEVICE_ROOTFS=y'
+
 config 'CONFIG_DEVEL=y'
 config 'CONFIG_TOOLCHAINOPTS=y'
 config 'CONFIG_ALFRED_NEEDS_lua=y'

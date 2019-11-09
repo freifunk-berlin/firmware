@@ -3,6 +3,6 @@ SHELL:=$(shell which bash)
 TARGET=ar71xx-generic
 PACKAGES_LIST_DEFAULT=notunnel tunnel-berlin-tunneldigger backbone
 OPENWRT_SRC=https://git.openwrt.org/openwrt/openwrt.git
-OPENWRT_COMMIT=22c443c20cab4760b201ccd9995a4ed6053aa810
+OPENWRT_COMMIT=d3e11e8ad85b9a51027174d5207e1e43a8c8fe94
 SET_BUILDBOT=env
 MAKE_ARGS=V=s

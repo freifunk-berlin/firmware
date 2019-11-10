@@ -215,8 +215,8 @@ $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-modul
 	echo >>$@ "OPENWRT_COMMIT=$(OPENWRT_COMMIT)"
 # set the $FEED-Branch
 	git clone $$(grep _REPO $@ | cut -d "=" -f 2) $(GLUON_TMPDIR)/gluon_$@
-	cd $(GLUON_TMPDIR)/gluon_$@; git name-rev --name-only --refs openwrt-* $$(grep _COMMIT $(FW_DIR)/$@ | \
-		cut -d "=" -f 2) | cut -d \~ -f 1 >branchname.txt
+	cd $(GLUON_TMPDIR)/gluon_$@; git name-rev --refs openwrt-* $$(grep _COMMIT $(FW_DIR)/$@ | \
+		cut -d "=" -f 2) | cut -d / -f 2 | cut -d \~ -f 1 >branchname.txt
 	cd $(GLUON_TMPDIR)/gluon_$@; grep -q master branchname.txt  || \
 		printf >>$(FW_DIR)/$@ "OPENWRT_BRANCH=%s\n" \
 			$$(echo $* | tr '[:lower:]' '[:upper:]') \

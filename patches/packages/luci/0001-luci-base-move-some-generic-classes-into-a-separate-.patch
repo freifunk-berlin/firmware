@@ -1,4 +1,4 @@
-From b58f8ca8112f13ae784245d17269c8faeea4d7b6 Mon Sep 17 00:00:00 2001
+From 310caa725e2d481bdca582df82a8c134334f7925 Mon Sep 17 00:00:00 2001
 From: Sven Roederer <freifunk@it-solutions.geroedel.de>
 Date: Mon, 1 Jul 2019 21:52:07 +0200
 Subject: [PATCH] luci-base: move some generic classes into a separate
@@ -11,30 +11,28 @@ This change was inspired by providing a shell-only interface for 4MB-flash
 devices, by keeping as much code common with a full install.
 
 * move pcdata() and striptags() from util- to xml-class
-* treewide: adapt to new luci.xml class
-* luci-base: update dependency to luci-lib-base
+* update luci-base dependency to luci-lib-base
 
-Signed-off-by: Sven Roederer <freifunk@it-solutions.geroedel.de>
+this is a squashed version of LuCI PR#2817 (https://github.com/openwrt/luci/pull/2817)
 ---
- .../luasrc/model/shadowsocks-libev.lua        |  4 ++--
+ .../luasrc/model/shadowsocks-libev.lua        |  4 +--
  .../luasrc/model/cbi/upnp/upnp.lua            |  2 +-
  .../luci-app-wol/luasrc/model/cbi/wol.lua     |  3 ++-
- libs/luci-lib-base/Makefile                   | 14 +++++++++++
+ libs/luci-lib-base/Makefile                   | 14 ++++++++++
  .../luci-lib-base}/luasrc/debug.lua           |  0
  .../luci-lib-base}/luasrc/http.lua            |  0
  .../luci-lib-base}/luasrc/http.luadoc         |  0
  .../luci-lib-base}/luasrc/ltn12.lua           |  0
- .../luci-lib-base}/luasrc/util.lua            | 10 --------
- .../luci-lib-base}/luasrc/util.luadoc         | 18 ---------------
+ .../luci-lib-base}/luasrc/util.lua            | 10 -------
+ .../luci-lib-base}/luasrc/util.luadoc         | 18 -------------
  libs/luci-lib-httpclient/Makefile             |  2 +-
  libs/luci-lib-httpprotoutils/Makefile         |  2 +-
  modules/luci-base/Makefile                    |  2 +-
- modules/luci-base/luasrc/dispatcher.lua       |  7 +++---
- modules/luci-base/luasrc/xml.lua              | 23 +++++++++++++++++++
- modules/luci-base/luasrc/xml.luadoc           | 23 +++++++++++++++++++
- .../luasrc/model/cbi/admin_network/wifi.lua   |  2 +-
+ modules/luci-base/luasrc/dispatcher.lua       |  7 ++---
+ modules/luci-base/luasrc/xml.lua              | 26 +++++++++++++++++++
+ modules/luci-base/luasrc/xml.luadoc           | 23 ++++++++++++++++
  .../model/cbi/admin_system/backupfiles.lua    |  2 +-
- 18 files changed, 74 insertions(+), 40 deletions(-)
+ 17 files changed, 76 insertions(+), 39 deletions(-)
  create mode 100644 libs/luci-lib-base/Makefile
  rename {modules/luci-base => libs/luci-lib-base}/luasrc/debug.lua (100%)
  rename {modules/luci-base => libs/luci-lib-base}/luasrc/http.lua (100%)
@@ -141,7 +139,7 @@ diff --git a/modules/luci-base/luasrc/util.lua b/libs/luci-lib-base/luasrc/util.
 similarity index 98%
 rename from modules/luci-base/luasrc/util.lua
 rename to libs/luci-lib-base/luasrc/util.lua
-index 1a329f3f2..d92a0b71b 100644
+index a30e8b72f..f3aa52603 100644
 --- a/modules/luci-base/luasrc/util.lua
 +++ b/libs/luci-lib-base/luasrc/util.lua
 @@ -159,10 +159,6 @@ end
@@ -166,7 +164,7 @@ index 1a329f3f2..d92a0b71b 100644
  function shellquote(value)
  	return string.format("'%s'", string.gsub(value or "", "'", "'\\''"))
  end
-@@ -344,8 +336,6 @@ function parse_units(ustr)
+@@ -343,8 +335,6 @@ function parse_units(ustr)
  end
  
  -- also register functions above in the central string class for convenience
@@ -241,20 +239,20 @@ index 851a362eb..95f45d200 100644
  include ../../luci.mk
  
 diff --git a/modules/luci-base/Makefile b/modules/luci-base/Makefile
-index 9bc8ec17a..5fd5302e0 100644
+index 92da37a22..52cb84e09 100644
 --- a/modules/luci-base/Makefile
 +++ b/modules/luci-base/Makefile
 @@ -12,7 +12,7 @@ LUCI_TYPE:=mod
  LUCI_BASENAME:=base
  
  LUCI_TITLE:=LuCI core libraries
--LUCI_DEPENDS:=+lua +luci-lib-nixio +luci-lib-ip +rpcd +libubus-lua +luci-lib-jsonc +liblucihttp-lua
-+LUCI_DEPENDS:=+lua +luci-lib-nixio +luci-lib-ip +rpcd +libubus-lua +luci-lib-jsonc +liblucihttp-lua +luci-lib-base
+-LUCI_DEPENDS:=+lua +luci-lib-nixio +luci-lib-ip +rpcd +libubus-lua +luci-lib-jsonc +liblucihttp-lua +rpcd-mod-file +cgi-io
++LUCI_DEPENDS:=+lua +luci-lib-nixio +luci-lib-ip +rpcd +libubus-lua +luci-lib-jsonc +liblucihttp-lua +luci-lib-base +rpcd-mod-file +cgi-io
  
  
  PKG_SOURCE:=v1.0.0.tar.gz
 diff --git a/modules/luci-base/luasrc/dispatcher.lua b/modules/luci-base/luasrc/dispatcher.lua
-index 787f59c2a..2cb6dafa4 100644
+index f57114456..50e7d8a8f 100644
 --- a/modules/luci-base/luasrc/dispatcher.lua
 +++ b/modules/luci-base/luasrc/dispatcher.lua
 @@ -5,6 +5,7 @@
@@ -287,7 +285,7 @@ index 787f59c2a..2cb6dafa4 100644
  		   resource    = luci.config.main.resourcebase;
 diff --git a/modules/luci-base/luasrc/xml.lua b/modules/luci-base/luasrc/xml.lua
 new file mode 100644
-index 000000000..9aeaef02a
+index 000000000..30b37210b
 --- /dev/null
 +++ b/modules/luci-base/luasrc/xml.lua
 @@ -0,0 +1,26 @@
@@ -346,19 +344,6 @@ index 000000000..58de53396
 +@return				String with HTML tags stripped of
 +]]
 +
-diff --git a/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua b/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
-index 6cf4bdd24..75d7ce241 100644
---- a/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
-+++ b/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
-@@ -133,7 +133,7 @@ function m.parse(map)
- 	end
- end
- 
--m.title = luci.util.pcdata(wnet:get_i18n())
-+m.title = luci.xml.pcdata(wnet:get_i18n())
- 
- s = m:section(NamedSection, wdev:name(), "wifi-device", translate("Device Configuration"))
- s.addremove = false
 diff --git a/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua b/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
 index c81466c87..91c654916 100644
 --- a/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua

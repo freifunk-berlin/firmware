@@ -141,10 +141,6 @@ device('meraki-mr16', 'mr16', {
 
 -- Netgear
 
-device('netgear-wndr3700', 'wndr3700', {
-	factory_ext = '.img',
-})
-
 device('netgear-wndr3700v2', 'wndr3700v2', {
 	factory_ext = '.img',
 })

@@ -26,9 +26,6 @@ device('avm-fritz-box-4040', 'avm_fritzbox-4040', {
 	extra_images = {
 		{'-squashfs-eva', '-bootloader', '.bin'},
 	},
-	packages = {
-		'fritz-caldata', 'fritz-tffs',
-	}
 })
 
 

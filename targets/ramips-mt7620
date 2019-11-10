@@ -18,7 +18,6 @@ device('gl-mt300n', 'gl-mt300n', {
 
 device('gl-mt750', 'gl-mt750', {
 	factory = false,
-	packages = {'kmod-mt76x0e', },
 })
 
 

@@ -18,7 +18,6 @@ device('mikrotik-rb-nor-flash-16M-ac', 'rb-nor-flash-16M-ac', {
 })
 
 device('mikrotik-nand-64m', 'nand-64m')
-device('mikrotik-nand-large', 'nand-large')
 device('mikrotik-nand-large-ac', 'nand-large-ac', {
         packages = ATH10K_PACKAGES,
 })

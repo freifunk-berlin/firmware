@@ -1,0 +1,17 @@
+defaults {
+	factory = '-ext4-sdcard',
+	factory_ext = '.img.gz',
+	sysupgrade = '-ext4-sdcard',
+	sysupgrade_ext = '.img.gz',
+}
+
+
+device('lemaker-banana-pi', 'sun7i-a20-bananapi')
+
+device('lemaker-banana-pro', 'sun7i-a20-bananapro', {
+	broken = true, -- WiFi chip not supported
+})
+
+device('lamobo-r1', 'sun7i-a20-lamobo-r1', {
+	broken = true, -- AP+11s not working
+})

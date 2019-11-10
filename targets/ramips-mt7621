@@ -1,0 +1,51 @@
+-- ASUS
+
+device('asus-rt-ac57u', 'asus_rt-ac57u', {
+	factory = false,
+})
+
+
+-- D-Link
+
+device('d-link-dir-860l-b1', 'dir-860l-b1')
+
+
+-- Netgear
+
+device('netgear-r6220', 'r6220', {
+	factory_ext = '.img',
+})
+
+device('netgear-wndr3700v5', 'wndr3700v5', {
+	factory = false,
+	broken = true, -- untested
+})
+
+
+-- ZBT
+
+device('zbt-wg3526-16m', 'zbt-wg3526-16M', {
+	factory = false,
+	manifest_aliases = {
+		'zbt-wg3526',
+	},
+})
+
+device('zbt-wg3526-32m', 'zbt-wg3526-32M', {
+	factory = false,
+})
+
+
+-- Devices without WLAN
+
+-- Ubiquiti
+
+device('ubnt-erx', 'ubnt-erx', {
+	factory = false,
+	packages = {'-hostapd-mini'},
+})
+
+device('ubnt-erx-sfp', 'ubnt-erx-sfp', {
+	factory = false,
+	packages = {'-hostapd-mini'},
+})

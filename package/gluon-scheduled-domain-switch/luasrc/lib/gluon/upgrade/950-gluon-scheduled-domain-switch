@@ -1,0 +1,18 @@
+#!/usr/bin/lua
+
+local site = require 'gluon.site'
+
+local cronfile = "/usr/lib/micron.d/gluon-scheduled-domain-switch"
+
+-- Check if domain switch is scheduled
+if site.domain_switch() == nil then
+	-- In case no domain switch is scheduled, remove cronfile
+	os.remove(cronfile)
+	os.exit(0)
+end
+
+-- Only in case domain switch is scheduled
+local f = io.open(cronfile, "w")
+f:write("* * * * *  /usr/bin/gluon-check-connection\n")
+f:write("*/5 * * * *  /usr/bin/gluon-switch-domain\n")
+f:close()

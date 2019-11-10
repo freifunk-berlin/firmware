@@ -1,0 +1,30 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+msgid "Advertise node position"
+msgstr ""
+
+msgid "Altitude"
+msgstr ""
+
+msgid ""
+"If you want the location of your node to be displayed on public maps, you "
+"can enter its coordinates here."
+msgstr ""
+
+msgid "Latitude"
+msgstr ""
+
+msgid "Longitude"
+msgstr ""
+
+msgid "Set node position"
+msgstr ""
+
+msgid ""
+"Specifying the altitude is optional; it should only be filled in if an "
+"accurate value is known."
+msgstr ""
+
+msgid "e.g. %s"
+msgstr ""

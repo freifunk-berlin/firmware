@@ -1,30 +1,21 @@
-From b0ea33ab7d2688c2015db23d8b11e67148ab67a8 Mon Sep 17 00:00:00 2001
-From: Yousong Zhou <yszhou4tech@gmail.com>
-Date: Fri, 6 Sep 2019 08:29:50 +0000
-Subject: add-glinet-ar750_for_ath79
+From 653a5fcf24fce4b11bb8704c016f9b93948c40a8 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Mon, 11 Nov 2019 21:32:50 +0100
+Subject: [PATCH] ath79: add support for gl-ar750
 
-Fixes: 853e4dd3 ("ipqx0xx: add Generic subtarget")
-Ref: https://forum.openwrt.org/t/ipq40xx-snapshot-not-updated-since-22nd-august/44126
-Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+this backports 921675a2d148330a7ec44f10ea4d583b8d7b5a44
 ---
- package/boot/uboot-fritz4040/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-This patch support gl-ar750 on ath79.
-
-Signed-off-by: Luo chongjun <luochongjun at gl-inet.com>
----
- .../etc/hotplug.d/firmware/11-ath10k-caldata       |   1 +
- target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts | 149 +++++++++++++++++++++
- target/linux/ath79/image/generic.mk                |   8 ++
- 3 files changed, 158 insertions(+)
+ .../etc/hotplug.d/firmware/11-ath10k-caldata  |   1 +
+ .../ath79/dts/qca9531_glinet_gl-ar750.dts     | 148 ++++++++++++++++++
+ target/linux/ath79/image/generic.mk           |   8 +
+ 3 files changed, 157 insertions(+)
  create mode 100644 target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts
 
 diff --git a/target/linux/ath79/base-files/etc/hotplug.d/firmware/11-ath10k-caldata b/target/linux/ath79/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
-index 8f0ea1d..6a9cb1c 100644
+index d1f529fde5..cf28c474b1 100644
 --- a/target/linux/ath79/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
 +++ b/target/linux/ath79/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
-@@ -116,6 +116,7 @@ case "$FIRMWARE" in
+@@ -117,6 +117,7 @@ case "$FIRMWARE" in
  		ath10kcal_extract "art" 20480 2116
  		ath10kcal_patch_mac $(macaddr_add $(cat /sys/class/net/eth0/address) +1)
  		;;
@@ -34,7 +25,7 @@ index 8f0ea1d..6a9cb1c 100644
  		ath10kcal_patch_mac $(macaddr_add $(mtd_get_mac_binary art 0) +1)
 diff --git a/target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts b/target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts
 new file mode 100644
-index 0000000..c173f0d
+index 0000000000..1a843344b2
 --- /dev/null
 +++ b/target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts
 @@ -0,0 +1,148 @@
@@ -187,12 +178,12 @@ index 0000000..c173f0d
 +	mtd-cal-data = <&art 0x1000>;
 +};
 diff --git a/target/linux/ath79/image/generic.mk b/target/linux/ath79/image/generic.mk
-index d5f67b8..033cfa3 100644
+index 625c2bdd05..08bdda0e20 100644
 --- a/target/linux/ath79/image/generic.mk
 +++ b/target/linux/ath79/image/generic.mk
-@@ -389,6 +389,14 @@ define Device/glinet_gl-ar300m-nor
+@@ -397,6 +397,14 @@ define Device/glinet_gl-ar300m-nor
  endef
- TARGET_DEVICES += glinet_gl-ar300m-nor
+ #TARGET_DEVICES += glinet_gl-ar300m-nor
  
 +define Device/glinet_gl-ar750
 +  ATH_SOC := qca9531
@@ -205,9 +196,6 @@ index d5f67b8..033cfa3 100644
  define Device/glinet_gl-ar750s
    ATH_SOC := qca9563
    DEVICE_TITLE := GL.iNet GL-AR750S
--- 
-2.7.4
-
 -- 
 2.20.1
 

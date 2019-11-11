@@ -168,7 +168,7 @@ $(OPENWRT_DIR)/feeds.conf: $(FW_DIR)/modules $(wildcard $(GLUON_SITEDIR)/site.mk
 	GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/patch.sh
 	GLUON_SITEDIR='$(GLUON_SITEDIR)' GLUON_FWTYPE=ffberlin scripts/feeds.sh
 
-gluon-update-patches: .FORCE
+gluon-update-patches: .FORCE $(wildcard $(GLUON_PATCHESDIR)/*/*)
 	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update.sh
 	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update-patches.sh
 	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh

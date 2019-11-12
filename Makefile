@@ -150,6 +150,9 @@ gluon-config: .stamp-gluon-configured_$(TARGET)
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 		> openwrt/.config
 	+$(OPENWRTMAKE) defconfig
+	
+	echo "Checking status of package u-boot-fritz4040"
+	grep u-boot-fritz4040 $(OPENWRT_DIR)/.config
 
 #	@$(GLUON_CONFIG_VARS) GLUON_FWTYPE=ffberlin \
 #		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
@@ -273,6 +276,8 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 # compile
 gluon-compile: .stamp-gluon-compiled_$(TARGET)
 .stamp-gluon-compiled_$(TARGET): .stamp-gluon-configured_$(TARGET)
+	echo "Checking status of package u-boot-fritz4040"
+	grep u-boot-fritz4040 $(OPENWRT_DIR)/.config
 	+$(OPENWRTMAKE)
 # check if running via buildbot and remove the build_dir folder to save some space
 ifdef IS_BUILDBOT

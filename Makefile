@@ -40,6 +40,10 @@ PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 
+define FEEDS
+ $(shell ./scripts/ffberlin_feeds.sh)
+endef
+
 default: firmwares
 
 # clone openwrt

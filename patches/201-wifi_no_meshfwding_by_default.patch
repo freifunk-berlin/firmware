@@ -1,12 +1,14 @@
-diff -ur modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua mod-patch/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
---- a/feeds/luci/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua	2018-07-22 03:35:34.309103302 +0200
-+++ b/feeds/luci/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua	2018-07-22 13:32:28.000000000 +0200
-@@ -370,7 +370,7 @@
+diff -ur openwrt.orig/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js openwrt/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+--- openwrt.orig/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js	2019-11-14 01:08:59.557322662 +0100
++++ openwrt/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js	2019-11-14 01:15:06.295988745 +0100
+@@ -812,7 +812,7 @@
  
- meshfwd = s:taboption("advanced", Flag, "mesh_fwding", translate("Forward mesh peer traffic"))
- meshfwd.rmempty = false
--meshfwd.default = "1"
-+meshfwd.default = "0"
- meshfwd:depends({mode="mesh"})
+ 				o = ss.taboption('advanced', form.Flag, 'mesh_fwding', _('Forward mesh peer traffic'));
+ 				o.rmempty = false;
+-				o.default = '1';
++				o.default = '0';
+ 				o.depends('mode', 'mesh');
  
- ssid = s:taboption("general", Value, "ssid", translate("<abbr title=\"Extended Service Set Identifier\">ESSID</abbr>"))
+ 				o = ss.taboption('advanced', form.Value, 'mesh_rssi_threshold', _('RSSI threshold for joining'), _('0 = not using RSSI threshold, 1 = do not change driver default'));
+Nur in openwrt/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network: wireless.js.orig.
+Nur in openwrt/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network: wireless.js.rej.

@@ -1,13 +1,13 @@
-diff --git a/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua b/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
-index c0bb38030..877395a36 100644
---- a/feeds/luci/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
-+++ b/feeds/luci/modules/luci-mod-network/luasrc/model/cbi/admin_network/wifi.lua
-@@ -230,7 +230,7 @@ if hwtype == "mac80211" then
+diff -ur openwrt.orig/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js openwrt/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+--- openwrt.orig/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js	2019-11-14 01:08:59.557322662 +0100
++++ openwrt/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js	2019-11-14 01:10:22.742834697 +0100
+@@ -769,7 +769,7 @@
+ 					o.wifiNetwork = radioNet;
  
- 	legacyrates = s:taboption("advanced", Flag, "legacy_rates", translate("Allow legacy 802.11b rates"))
- 	legacyrates.rmempty = false
--	legacyrates.default = "1"
-+	legacyrates.default = "0"
+ 					o = ss.taboption('advanced', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'));
+-					o.default = o.enabled;
++					o.default = o.disabled;
  
- 	s:taboption("advanced", Value, "distance", translate("Distance Optimization"),
- 		translate("Distance to farthest network member in meters."))
+ 					o = ss.taboption('advanced', form.Value, 'distance', _('Distance Optimization'), _('Distance to farthest network member in meters.'));
+ 					o.datatype = 'range(0,114750)';
+Nur in openwrt/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network: wireless.js.orig.

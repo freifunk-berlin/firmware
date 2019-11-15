@@ -10,3 +10,5 @@
 703-policyrouting_fix_bypass-vpn.patch
 704-policyrouting_ignore_ffuplink.patch
 800-mbedtls-accept-rsa-1024.patch
+0001-tools-mkimake-fix-handling-of-long-pathnames.patch
+0002-tools-u-boot-enlage-max-pathlength-for-mkimage.patch

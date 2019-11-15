@@ -1,7 +1,7 @@
 -ppp
 -ppp-mod-pppoe
 -wpad-mini
-wpad
+wpad-basic
 
 # Defaults
 freifunk-berlin-dhcp-defaults
@@ -34,6 +34,7 @@ libustream-mbedtls
 luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-olsr-services
+luci-app-opkg
 luci-app-owm
 luci-app-owm-ant
 luci-app-owm-cmd
@@ -60,7 +61,7 @@ kmod-ipip
 # BATMAN
 kmod-batman-adv
 alfred
-batctl
+batctl-default
 
 # Statistics
 luci-app-statistics

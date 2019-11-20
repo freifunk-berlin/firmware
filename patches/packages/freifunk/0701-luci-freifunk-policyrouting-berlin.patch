@@ -1,7 +1,32 @@
-Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
-===================================================================
---- openwrt.orig/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
-+++ openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
+From f717dc06d33edaf7b6304f15842ceea86066a923 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Wed, 20 Nov 2019 22:44:02 +0100
+Subject: [PATCH] policy-routing: modify default to berlin-specific version
+
+---
+ .../package/freifunk-policyrouting/Makefile   |   2 +-
+ .../files/etc/config/freifunk-policyrouting   |   6 +-
+ .../etc/hotplug.d/iface/30-policyrouting      |  90 +++++++--------
+ .../files/etc/init.d/freifunk-policyrouting   | 105 +++++++++++++++---
+ 4 files changed, 132 insertions(+), 71 deletions(-)
+
+diff --git a/contrib/package/freifunk-policyrouting/Makefile b/contrib/package/freifunk-policyrouting/Makefile
+index a9301cef3..3a92224ff 100644
+--- a/contrib/package/freifunk-policyrouting/Makefile
++++ b/contrib/package/freifunk-policyrouting/Makefile
+@@ -4,7 +4,7 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=freifunk-policyrouting
+-PKG_RELEASE:=6
++PKG_RELEASE:=7
+ 
+ PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
+ 
+diff --git a/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
+index 3dd2998f9..8a88d030c 100644
+--- a/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
++++ b/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
 @@ -1,7 +1,5 @@
 -
  config 'settings' 'pr'
@@ -12,10 +37,10 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/c
 -
 +	option 'fallback' '0'
 +	option 'zones' 'freifunk'
-Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
-===================================================================
---- openwrt.orig/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
-+++ openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+diff --git a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+index 327e8793b..fc5d80248 100644
+--- a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
++++ b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
 @@ -4,7 +4,7 @@
  . /lib/functions/network.sh
  
@@ -61,7 +86,7 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/h
  				$cmd
  				if [ "$?" = 0 ]; then
  					logger -s -t policyrouting "Add route: $cmd"
-@@ -33,7 +47,7 @@ if [ "$ACTION" = "ifup" ] && [ "$enable"
+@@ -33,7 +47,7 @@ if [ "$ACTION" = "ifup" ] && [ "$enable" = "1" ]; then
  		fi
  
  		if [ -n "$net6" ]; then
@@ -70,7 +95,7 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/h
  			$cmd 2>&1 > /dev/null
  			if [ "$?" = 0 ]; then
  				logger -s -t policyrouting "Add route: $cmd (IPv6)"
-@@ -52,51 +66,29 @@ if [ "$ACTION" = "ifup" ] && [ "$enable"
+@@ -52,51 +66,29 @@ if [ "$ACTION" = "ifup" ] && [ "$enable" = "1" ]; then
  		for n in $networks; do
  			if [ "$INTERFACE" = "$n" ]; then
  				for p in $proto; do
@@ -141,10 +166,10 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/h
  				done
  			fi
  		done
-Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
-===================================================================
---- openwrt.orig/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
-+++ openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
+diff --git a/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
+index 4c9172427..18c89f9bb 100755
+--- a/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
++++ b/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 @@ -5,7 +5,7 @@ START=15
  . /lib/functions.sh
  
@@ -154,7 +179,7 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/i
  [ -f /etc/config/olsrd ] && cfgs="olsrd"
  [ -f /etc/config/olsrd6 ] && cfgs="$cfgs olsrd6"
  
-@@ -92,6 +92,8 @@ add_lookup_rule() {
+@@ -103,6 +103,8 @@ add_lookup_rule() {
  	name=${1/-/_}
  	lookup=$2
  	prio=$3
@@ -163,7 +188,7 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/i
  
  	if [ -z "$name" -o -z "$lookup" -o -z "$prio" ]; then
  		logger -s -t policyrouting "Missing parameters for add_rule!"
-@@ -102,21 +104,57 @@ add_lookup_rule() {
+@@ -113,21 +115,57 @@ add_lookup_rule() {
  			else
  				rule="rule"
  			fi
@@ -179,19 +204,19 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/i
 +		done
 +	fi
 +}
-+
-+add_action_rule() {
-+	name=${1/-/_}
-+	action=$2
-+	prio=$3
-+	in=$4
-+	name=$name"_"${in:-allif}"_"
  
 -			uci batch <<- EOF
 -				set network.${name}ipv${p}="$rule"
 -				set network.${name}ipv${p}.lookup="$lookup"
 -				set network.${name}ipv${p}.priority="$prio"
 -			EOF
++add_action_rule() {
++	name=${1/-/_}
++	action=$2
++	prio=$3
++	in=$4
++	name=$name"_"${in:-allif}"_"
++
 +	if [ -z "$name" -o -z "$action" -o -z "$prio" ]; then
 +		logger -s -t policyrouting "Missing parameters for add_action!"
 +	else
@@ -227,7 +252,7 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/i
  }
  
  start() {
-@@ -124,7 +162,7 @@ start() {
+@@ -135,7 +173,7 @@ start() {
  		logger -s -t policyrouting "Starting policy routing."
  		rt_tables
  		olsrd_intalltables
@@ -236,7 +261,7 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/i
  
  		add_lookup_rule olsr olsr 1000
  		add_lookup_rule localnets localnets 2000
-@@ -132,6 +170,26 @@ start() {
+@@ -143,6 +181,26 @@ start() {
  		if [ "$fallback" = 1 ]; then
  			add_lookup_rule olsr-default olsr-default 100000
  		fi
@@ -263,7 +288,7 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/i
  	fi
  	uci commit network
  	if [ ! "$1" = "noservicerestart" ]; then
-@@ -142,20 +200,33 @@ start() {
+@@ -153,20 +211,33 @@ start() {
  stop() {
  	logger -s -t policyrouting "Stopping policy routing"
  	olsrd_rmtables
@@ -306,15 +331,6 @@ Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/files/etc/i
 -	uci commit network
  	start
  }
-Index: openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/Makefile
-===================================================================
---- openwrt.orig/feeds/freifunk/contrib/package/freifunk-policyrouting/Makefile
-+++ openwrt/feeds/freifunk/contrib/package/freifunk-policyrouting/Makefile
-@@ -4,7 +4,7 @@
- include $(TOPDIR)/rules.mk
- 
- PKG_NAME:=freifunk-policyrouting
--PKG_RELEASE:=6
-+PKG_RELEASE:=7
- 
- PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
+-- 
+2.20.1
+

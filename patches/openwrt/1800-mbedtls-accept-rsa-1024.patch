@@ -1,3 +1,10 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: mbedtls-accept-rsa-1024
+
+---
+
+
 Index: openwrt/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
 ===================================================================
 --- /dev/null
@@ -15,3 +22,7 @@ Index: openwrt/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
 + 
 + /*
 +
+-- 
+2.20.1
+
+

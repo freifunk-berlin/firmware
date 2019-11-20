@@ -1,3 +1,10 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: imagebuilder-custom-postinst-script
+
+---
+
+
 diff --git a/target/imagebuilder/files/Makefile b/target/imagebuilder/files/Makefile
 index 95df8bf113..0debd5a882 100644
 --- a/target/imagebuilder/files/Makefile
@@ -12,3 +19,7 @@ index 95df8bf113..0debd5a882 100644
  	$(MAKE) -s build_image
  	$(MAKE) -s checksum
  
+-- 
+2.20.1
+
+

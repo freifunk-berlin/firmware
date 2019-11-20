@@ -1,8 +1,6 @@
-commit 1dd4c2929696797625709537bc51f46f00999b6d
-Author: Sven Roederer <devel-sven@geroedel.de>
+From: Sven Roederer <devel-sven@geroedel.de>
 Date:   Tue May 3 11:31:49 2016 +0200
-
-    ramips: add target for Nexx WT3020-images
+Subject: ramips: add target for Nexx WT3020-images
 
 diff --git a/target/linux/ramips/mt7620/profiles/nexx.mk b/target/linux/ramips/mt7620/profiles/nexx.mk
 new file mode 100644
@@ -27,3 +25,7 @@ index 0000000..9c668c5
 +	Support for Nexx WT3020-series
 +endef
 +$(eval $(call Profile,WT3020))
+-- 
+2.20.1
+
+

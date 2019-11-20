@@ -1,5 +1,12 @@
---- a/feeds/luci/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
-+++ b/feeds/luci/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: split-luci-base_PR2817
+
+---
+
+
+--- luci/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
++++ luci/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
 @@ -2,7 +2,7 @@
  -- Copyright 2008-2011 Jo-Philipp Wich <jow@openwrt.org>
  -- Licensed to the public under the Apache License 2.0.
@@ -9,8 +16,8 @@
  	translate("UPnP allows clients in the local network to automatically configure the router."))
  
  m:section(SimpleSection).template  = "upnp_status"
---- a/feeds/luci/applications/luci-app-wol/luasrc/model/cbi/wol.lua
-+++ b/feeds/luci/applications/luci-app-wol/luasrc/model/cbi/wol.lua
+--- luci/applications/luci-app-wol/luasrc/model/cbi/wol.lua
++++ luci/applications/luci-app-wol/luasrc/model/cbi/wol.lua
 @@ -2,6 +2,7 @@
  -- Licensed to the public under the Apache License 2.0.
  
@@ -29,7 +36,7 @@
  
  		local p = io.popen(cmd .. " 2>&1")
 --- /dev/null
-+++ b/feeds/luci/libs/luci-lib-base/Makefile
++++ luci/libs/luci-lib-base/Makefile
 @@ -0,0 +1,14 @@
 +#
 +# Copyright (C) 2008-2014 The LuCI Team <luci@lists.subsignal.org>
@@ -46,7 +53,7 @@
 +
 +# call BuildPackage - OpenWrt buildroot signature
 --- /dev/null
-+++ b/feeds/luci/libs/luci-lib-base/luasrc/debug.lua
++++ luci/libs/luci-lib-base/luasrc/debug.lua
 @@ -0,0 +1,37 @@
 +local debug = require "debug"
 +local io = require "io"
@@ -86,7 +93,7 @@
 +end
 +
 --- /dev/null
-+++ b/feeds/luci/libs/luci-lib-base/luasrc/http.lua
++++ luci/libs/luci-lib-base/luasrc/http.lua
 @@ -0,0 +1,554 @@
 +-- Copyright 2008 Steven Barth <steven@midlink.org>
 +-- Copyright 2010-2018 Jo-Philipp Wich <jo@mein.io>
@@ -643,7 +650,7 @@
 +	return false
 +end
 --- /dev/null
-+++ b/feeds/luci/libs/luci-lib-base/luasrc/http.luadoc
++++ luci/libs/luci-lib-base/luasrc/http.luadoc
 @@ -0,0 +1,260 @@
 +---[[
 +LuCI Web Framework high-level HTTP functions.
@@ -906,7 +913,7 @@
 +@see			parse_message_header
 +]]
 --- /dev/null
-+++ b/feeds/luci/libs/luci-lib-base/luasrc/ltn12.lua
++++ luci/libs/luci-lib-base/luasrc/ltn12.lua
 @@ -0,0 +1,316 @@
 +--[[
 +LuaSocket 2.0.2 license
@@ -1225,7 +1232,7 @@
 +end
 +
 --- /dev/null
-+++ b/feeds/luci/libs/luci-lib-base/luasrc/util.lua
++++ luci/libs/luci-lib-base/luasrc/util.lua
 @@ -0,0 +1,766 @@
 +-- Copyright 2008 Steven Barth <steven@midlink.org>
 +-- Licensed to the public under the Apache License 2.0.
@@ -1994,7 +2001,7 @@
 +	return coxpcall(f, id, ...)
 +end
 --- /dev/null
-+++ b/feeds/luci/libs/luci-lib-base/luasrc/util.luadoc
++++ luci/libs/luci-lib-base/luasrc/util.luadoc
 @@ -0,0 +1,395 @@
 +---[[
 +LuCI utility functions.
@@ -2391,8 +2398,8 @@
 +--					values of the function or the error object
 +]]
 +
---- a/feeds/luci/libs/luci-lib-httpclient/Makefile
-+++ b/feeds/luci/libs/luci-lib-httpclient/Makefile
+--- luci/libs/luci-lib-httpclient/Makefile
++++ luci/libs/luci-lib-httpclient/Makefile
 @@ -7,7 +7,7 @@
  include $(TOPDIR)/rules.mk
  
@@ -2402,8 +2409,8 @@
  
  include ../../luci.mk
  
---- a/feeds/luci/libs/luci-lib-httpprotoutils/Makefile
-+++ b/feeds/luci/libs/luci-lib-httpprotoutils/Makefile
+--- luci/libs/luci-lib-httpprotoutils/Makefile
++++ luci/libs/luci-lib-httpprotoutils/Makefile
 @@ -7,7 +7,7 @@
  include $(TOPDIR)/rules.mk
  
@@ -2413,8 +2420,8 @@
  
  include ../../luci.mk
  
---- a/feeds/luci/modules/luci-base/Makefile
-+++ b/feeds/luci/modules/luci-base/Makefile
+--- luci/modules/luci-base/Makefile
++++ luci/modules/luci-base/Makefile
 @@ -12,7 +12,7 @@ LUCI_TYPE:=mod
  LUCI_BASENAME:=base
  
@@ -2424,7 +2431,7 @@
  
  
  PKG_SOURCE:=v1.0.0.tar.gz
---- a/feeds/luci/modules/luci-base/luasrc/debug.lua
+--- luci/modules/luci-base/luasrc/debug.lua
 +++ /dev/null
 @@ -1,37 +0,0 @@
 -local debug = require "debug"
@@ -2464,8 +2471,8 @@
 -	end
 -end
 -
---- a/feeds/luci/modules/luci-base/luasrc/dispatcher.lua
-+++ b/feeds/luci/modules/luci-base/luasrc/dispatcher.lua
+--- luci/modules/luci-base/luasrc/dispatcher.lua
++++ luci/modules/luci-base/luasrc/dispatcher.lua
 @@ -5,6 +5,7 @@
  local fs = require "nixio.fs"
  local sys = require "luci.sys"
@@ -2494,7 +2501,7 @@
  		   media       = media;
  		   theme       = fs.basename(media);
  		   resource    = luci.config.main.resourcebase;
---- a/feeds/luci/modules/luci-base/luasrc/http.lua
+--- luci/modules/luci-base/luasrc/http.lua
 +++ /dev/null
 @@ -1,554 +0,0 @@
 --- Copyright 2008 Steven Barth <steven@midlink.org>
@@ -3051,7 +3058,7 @@
 -
 -	return false
 -end
---- a/feeds/luci/modules/luci-base/luasrc/http.luadoc
+--- luci/modules/luci-base/luasrc/http.luadoc
 +++ /dev/null
 @@ -1,260 +0,0 @@
 ----[[
@@ -3314,7 +3321,7 @@
 -@return			String containing the error if unsuccessful
 -@see			parse_message_header
 -]]
---- a/feeds/luci/modules/luci-base/luasrc/ltn12.lua
+--- luci/modules/luci-base/luasrc/ltn12.lua
 +++ /dev/null
 @@ -1,316 +0,0 @@
 ---[[
@@ -3633,7 +3640,7 @@
 -    end
 -end
 -
---- a/feeds/luci/modules/luci-base/luasrc/util.lua
+--- luci/modules/luci-base/luasrc/util.lua
 +++ /dev/null
 @@ -1,776 +0,0 @@
 --- Copyright 2008 Steven Barth <steven@midlink.org>
@@ -4412,7 +4419,7 @@
 -function copcall(f, ...)
 -	return coxpcall(f, id, ...)
 -end
---- a/feeds/luci/modules/luci-base/luasrc/util.luadoc
+--- luci/modules/luci-base/luasrc/util.luadoc
 +++ /dev/null
 @@ -1,413 +0,0 @@
 ----[[
@@ -4829,7 +4836,7 @@
 -]]
 -
 --- /dev/null
-+++ b/feeds/luci/modules/luci-base/luasrc/xml.lua
++++ luci/modules/luci-base/luasrc/xml.lua
 @@ -0,0 +1,26 @@
 +-- Copyright 2008 Steven Barth <steven@midlink.org>
 +-- Licensed to the public under the Apache License 2.0.
@@ -4858,7 +4865,7 @@
 +string.pcdata      = pcdata
 +string.striptags   = striptags
 --- /dev/null
-+++ b/feeds/luci/modules/luci-base/luasrc/xml.luadoc
++++ luci/modules/luci-base/luasrc/xml.luadoc
 @@ -0,0 +1,23 @@
 +---[[
 +LuCI utility functions.
@@ -4883,8 +4890,8 @@
 +@return				String with HTML tags stripped of
 +]]
 +
---- a/feeds/luci/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
-+++ b/feeds/luci/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
+--- luci/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
++++ luci/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
 @@ -68,7 +68,7 @@ else
  					break
  				else
@@ -4894,3 +4901,7 @@
  					files[#files+1] = "</li>"
  				end
  			end
+-- 
+2.20.1
+
+

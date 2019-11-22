@@ -7,9 +7,9 @@ broken stuff in OpenWrt itself or for example LuCI) and additional default packa
 
 ## Contact / More information
 
-More user relevant information about the firmware are on the wiki page at: https://wiki.freifunk.net/Berlin:Firmware. There you can also find the 
+More user relevant information about the firmware are on the wiki page at: https://wiki.freifunk.net/Berlin:Firmware. There you can also find the
 * [ReleaseNotes](https://wiki.freifunk.net/Berlin:Firmware/v1.0.2)
-* a tutorial ([en](https://wiki.freifunk.net/Berlin:Firmware:En:Howto) / [de](https://wiki.freifunk.net/Berlin:Firmware:Howto)) on router configuration 
+* a tutorial ([en](https://wiki.freifunk.net/Berlin:Firmware:En:Howto) / [de](https://wiki.freifunk.net/Berlin:Firmware:Howto)) on router configuration
 
 For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
@@ -97,10 +97,10 @@ firmwares/
 As you notice there are several different image variants ("backbone", "default", etc.).
 These different *packages lists* are defined in `packages/`.
 See the "Features" section above for a description of the purpose of each package list.
-With the "OpenWrt-Imagebuilder" you can assemble your own image variant with your 
+With the "OpenWrt-Imagebuilder" you can assemble your own image variant with your
 *packages lists* without having to compile everything yourself. The "OpenWrt-SDK" is
 the fastest way to build your own packages or programs without compiling OpenWrt itself.
-The "initrd" directory contains some initrd-images for netboot, which are required on 
+The "initrd" directory contains some initrd-images for netboot, which are required on
 some boards to initially install OpenWrt.
 
 ### customizing make
@@ -122,9 +122,9 @@ Each of these targets need a matching file in `profiles/` with the profiles (boa
 
 additional options
 
-* IS_BUILDBOT : 
+* IS_BUILDBOT :
   * this will be "yes" when running on the buildbot farm and helps to save some disc-space by removing files not required anymore. On manual builds you should not set this to "yes", as you have to rebuild the whole toolchain each time.
-* SET_BUILDBOT : 
+* SET_BUILDBOT :
   * "env" the Makefile will honor the "IS_BUILDBOT" environment
   * "yes" the Makefile will always act as "IS_BUILDBOT" was set to "yes"
   * "no"  the Makefile will always act as "IS_BUILDBOT" was set to "no" / is unset. This way we can run builds on the buildbot like a local build.

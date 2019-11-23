@@ -111,11 +111,6 @@ $(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-modul
 
 ## Gluon - End
 
-# clone openwrt
-$(OPENWRT_DIR):
-	$(UMASK); \
-	  git clone $(OPENWRT_SRC) $(OPENWRT_DIR)
-
 # clean up openwrt working copy
 openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
 .stamp-openwrt-cleaned: config.mk | $(OPENWRT_DIR) openwrt-clean-bin
@@ -129,38 +124,22 @@ openwrt-clean-bin:
 	rm -rf $(OPENWRT_DIR)/bin
 	rm -rf $(OPENWRT_DIR)/build_dir/target-*/*-{imagebuilder,sdk}-*
 
-# update openwrt and checkout specified commit
-openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
-.stamp-openwrt-updated: .stamp-openwrt-cleaned
-	cd $(OPENWRT_DIR); git checkout --detach $(OPENWRT_COMMIT)
-	touch $@
-
-# patches require updated openwrt working copy
-$(OPENWRT_DIR)/patches: | .stamp-openwrt-updated
-	ln -s $(FW_DIR)/patches $@
-
-# feeds
-$(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated feeds.conf
-	cp $(FW_DIR)/feeds.conf $@
-
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
-.stamp-feeds-updated: $(OPENWRT_DIR)/feeds.conf unpatch
-	cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update
-	cd $(OPENWRT_DIR); ./scripts/feeds install -a
+.stamp-feeds-updated: .stamp-patched
+	@$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/feeds.sh
 	touch $@
 
 # prepare patch
 pre-patch: stamp-clean-pre-patch .stamp-pre-patch
-.stamp-pre-patch: .stamp-feeds-updated $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
+.stamp-pre-patch: $(FW_DIR)/modules
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update.sh
 	touch $@
 
-# patch openwrt working copy
+# patch openwrt and feeds working copy
 patch: stamp-clean-patched .stamp-patched
-.stamp-patched: .stamp-pre-patch
-	cd $(OPENWRT_DIR); quilt push -a
-	rm -rf $(OPENWRT_DIR)/tmp
+.stamp-patched: .stamp-pre-patch $(wildcard $(GLUON_PATCHESDIR)/openwrt/*) $(wildcard $(GLUON_PATCHESDIR)/packages/*/*)
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
 	touch $@
 
 .stamp-build_rev: .FORCE
@@ -185,7 +164,7 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
 
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
+$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
 ifdef IS_BUILDBOT
 	cat $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) >$(OPENWRT_DIR)/.config
 else
@@ -198,7 +177,7 @@ endif
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files
+.stamp-prepared: .stamp-feeds-updated $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files
 	touch $@
 
 # compile
@@ -304,17 +283,12 @@ stamp-clean-%:
 
 stamp-clean:
 	rm -f .stamp-*
-
-# unpatch needs "patches/" in openwrt
-unpatch: $(OPENWRT_DIR)/patches
-# RC = 2 of quilt --> nothing to be done
-	cd $(OPENWRT_DIR); quilt pop -a -f || [ $$? = 2 ] && true
-	rm -rf $(OPENWRT_DIR)/tmp
-	rm -f .stamp-patched
+	rm -f $(FW_DIR)/modules
+	rm -rf $(GLUON_TMPDIR)
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
-.PHONY: openwrt-clean openwrt-clean-bin openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
+.PHONY: openwrt-clean openwrt-clean-bin patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:
 .SUFFIXES:

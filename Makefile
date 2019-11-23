@@ -46,6 +46,29 @@ endef
 
 default: firmwares
 
+## Gluon - Begin
+# compatibility to Gluon.buildsystem
+# * setup required makros and variables
+
+# check for spaces & resolve possibly relative paths
+define mkabspath
+ ifneq (1,$(words [$($(1))]))
+  $$(error $(1) must not contain spaces)
+ endif
+ override $(1) := $(abspath $($(1)))
+endef
+
+# initialize (possibly already user set) directory variables
+GLUON_TMPDIR ?= tmp
+GLUON_PATCHESDIR ?= patches
+
+$(eval $(call mkabspath,GLUON_TMPDIR))
+$(eval $(call mkabspath,GLUON_PATCHESDIR))
+
+export GLUON_TMPDIR GLUON_PATCHESDIR
+
+## Gluon - End
+
 # clone openwrt
 $(OPENWRT_DIR):
 	$(UMASK); \

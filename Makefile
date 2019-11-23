@@ -49,6 +49,7 @@ default: firmwares
 ## Gluon - Begin
 # compatibility to Gluon.buildsystem
 # * setup required makros and variables
+# * create the modules-file from config.mk and feeds.conf
 
 # check for spaces & resolve possibly relative paths
 define mkabspath
@@ -66,6 +67,47 @@ $(eval $(call mkabspath,GLUON_TMPDIR))
 $(eval $(call mkabspath,GLUON_PATCHESDIR))
 
 export GLUON_TMPDIR GLUON_PATCHESDIR
+
+# use .stamp-gluon-module-openwrt and .stamp-gluon-module- of each feed to create modules-file
+$(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt
+	rm -f $@
+	cat >>$@ .stamp-gluon-module-openwrt
+	cat >>$@ $(addprefix .stamp-gluon-module-,$(FEEDS))
+	echo >>$@ GLUON_FEEDS=\'$(FEEDS)\'
+
+.stamp-gluon-module-openwrt: $(FW_DIR)/config.mk
+	rm -f $@
+	echo >>$@ "OPENWRT_REPO=$(OPENWRT_SRC)"
+	echo >>$@ "OPENWRT_COMMIT=$(OPENWRT_COMMIT)"
+# set the $FEED-Branch
+	git clone $$(grep _REPO $@ | cut -d "=" -f 2) $(GLUON_TMPDIR)/gluon_$@
+	cd $(GLUON_TMPDIR)/gluon_$@; git name-rev --refs openwrt-* $$(grep _COMMIT $(FW_DIR)/$@ | \
+		cut -d "=" -f 2) | cut -d / -f 2 | cut -d \~ -f 1 >branchname.txt
+	cd $(GLUON_TMPDIR)/gluon_$@; grep -q master branchname.txt  || \
+		printf >>$(FW_DIR)/$@ "OPENWRT_BRANCH=%s\n" \
+			$$(echo $* | tr '[:lower:]' '[:upper:]') \
+			$$(cat branchname.txt)
+	rm -rf $(GLUON_TMPDIR)/gluon_$@
+
+.stamp-gluon-module-%: $(FW_DIR)/feeds.conf
+	rm -f $@
+# set the $FEED-REPO
+	@echo -n "PACKAGES_$*_REPO=" | tr '[:lower:]' '[:upper:]' >>$@
+	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
+		awk -F '([[:space:]|^])' '{ print $$3 }' >>$@
+# set the $FEED-COMMIT
+	@echo -n "PACKAGES_$*_COMMIT=" | tr '[:lower:]' '[:upper:]' >>$@
+	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
+		awk -F '([[:space:]|^])' '{ print $$4 }' >>$@
+# set the $FEED-Branch
+	git clone $$(grep _REPO $@ | cut -d "=" -f 2) $(GLUON_TMPDIR)/gluon_$@
+	cd $(GLUON_TMPDIR)/gluon_$@; git name-rev $$(grep _COMMIT $(FW_DIR)/$@ | \
+		cut -d "=" -f 2) | cut -d / -f 3 | cut -d \~ -f 1 >branchname.txt
+	cd $(GLUON_TMPDIR)/gluon_$@; grep -q master branchname.txt  || \
+		printf >>$(FW_DIR)/$@ "PACKAGES_%s_BRANCH=%s\n" \
+			$$(echo $* | tr '[:lower:]' '[:upper:]') \
+			$$(cat branchname.txt)
+	rm -rf $(GLUON_TMPDIR)/gluon_$@
 
 ## Gluon - End
 

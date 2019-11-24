@@ -32,7 +32,7 @@ index 3dd2998f9..8a88d030c 100644
  config 'settings' 'pr'
  	option 'enable' '0'
  	option 'strict' '1'
--        option 'fallback' '1'
+-	option 'fallback' '1'
 -	option 'zones' ''
 -
 +	option 'fallback' '0'

@@ -1,5 +1,12 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: banner-info
+
+---
+
+
 --- lede/package/base-files/files/etc/banner	2017-12-10 21:27:21.352612551 +0100
-+++ /tmp/banner	2017-12-10 21:19:20.000000000 +0100
++++ new/package/base-files/files/etc/banner	2017-12-10 21:19:20.000000000 +0100
 @@ -1,8 +1,20 @@
 -  _______                     ________        __
 - |       |.-----.-----.-----.|  |  |  |.----.|  |_
@@ -28,3 +35,7 @@
 + For questions write a mail to <berlin@berlin.freifunk.net>
 + or check https://berlin.freifunk.net/contact for our weekly meetings.
 +
+-- 
+2.20.1
+
+

@@ -1,3 +1,10 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: hostapd_nolegacy_by_default
+
+---
+
+
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
 index 1f28661..378b114 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
@@ -11,3 +18,7 @@ index 1f28661..378b114 100644
  
  	[ "$hwmode" = "b" ] && legacy_rates=1
  
+-- 
+2.20.1
+
+

@@ -40,12 +40,76 @@ PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 
+define FEEDS
+ $(shell ./scripts/ffberlin_feeds.sh)
+endef
+
 default: firmwares
 
-# clone openwrt
-$(OPENWRT_DIR):
-	$(UMASK); \
-	  git clone $(OPENWRT_SRC) $(OPENWRT_DIR)
+## Gluon - Begin
+# compatibility to Gluon.buildsystem
+# * setup required makros and variables
+# * create the modules-file from config.mk and feeds.conf
+
+# check for spaces & resolve possibly relative paths
+define mkabspath
+ ifneq (1,$(words [$($(1))]))
+  $$(error $(1) must not contain spaces)
+ endif
+ override $(1) := $(abspath $($(1)))
+endef
+
+# initialize (possibly already user set) directory variables
+GLUON_TMPDIR ?= tmp
+GLUON_PATCHESDIR ?= patches
+
+$(eval $(call mkabspath,GLUON_TMPDIR))
+$(eval $(call mkabspath,GLUON_PATCHESDIR))
+
+export GLUON_TMPDIR GLUON_PATCHESDIR
+
+# use .stamp-gluon-module-openwrt and .stamp-gluon-module- of each feed to create modules-file
+$(FW_DIR)/modules: $(addprefix .stamp-gluon-module-,$(FEEDS)) .stamp-gluon-module-openwrt
+	rm -f $@
+	cat >>$@ .stamp-gluon-module-openwrt
+	cat >>$@ $(addprefix .stamp-gluon-module-,$(FEEDS))
+	echo >>$@ GLUON_FEEDS=\'$(FEEDS)\'
+
+.stamp-gluon-module-openwrt: $(FW_DIR)/config.mk
+	rm -f $@
+	echo >>$@ "OPENWRT_REPO=$(OPENWRT_SRC)"
+	echo >>$@ "OPENWRT_COMMIT=$(OPENWRT_COMMIT)"
+# set the $FEED-Branch
+	git clone $$(grep _REPO $@ | cut -d "=" -f 2) $(GLUON_TMPDIR)/gluon_$@
+	cd $(GLUON_TMPDIR)/gluon_$@; git name-rev --refs openwrt-* $$(grep _COMMIT $(FW_DIR)/$@ | \
+		cut -d "=" -f 2) | cut -d / -f 2 | cut -d \~ -f 1 >branchname.txt
+	cd $(GLUON_TMPDIR)/gluon_$@; grep -q master branchname.txt  || \
+		printf >>$(FW_DIR)/$@ "OPENWRT_BRANCH=%s\n" \
+			$$(echo $* | tr '[:lower:]' '[:upper:]') \
+			$$(cat branchname.txt)
+	rm -rf $(GLUON_TMPDIR)/gluon_$@
+
+.stamp-gluon-module-%: $(FW_DIR)/feeds.conf
+	rm -f $@
+# set the $FEED-REPO
+	@echo -n "PACKAGES_$*_REPO=" | tr '[:lower:]' '[:upper:]' >>$@
+	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
+		awk -F '([[:space:]|^])' '{ print $$3 }' >>$@
+# set the $FEED-COMMIT
+	@echo -n "PACKAGES_$*_COMMIT=" | tr '[:lower:]' '[:upper:]' >>$@
+	@grep -E "^src-(git|svn)[[:space:]]$*[[:space:]].*" $(FW_DIR)/feeds.conf | \
+		awk -F '([[:space:]|^])' '{ print $$4 }' >>$@
+# set the $FEED-Branch
+	git clone $$(grep _REPO $@ | cut -d "=" -f 2) $(GLUON_TMPDIR)/gluon_$@
+	cd $(GLUON_TMPDIR)/gluon_$@; git name-rev $$(grep _COMMIT $(FW_DIR)/$@ | \
+		cut -d "=" -f 2) | cut -d / -f 3 | cut -d \~ -f 1 >branchname.txt
+	cd $(GLUON_TMPDIR)/gluon_$@; grep -q master branchname.txt  || \
+		printf >>$(FW_DIR)/$@ "PACKAGES_%s_BRANCH=%s\n" \
+			$$(echo $* | tr '[:lower:]' '[:upper:]') \
+			$$(cat branchname.txt)
+	rm -rf $(GLUON_TMPDIR)/gluon_$@
+
+## Gluon - End
 
 # clean up openwrt working copy
 openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
@@ -60,38 +124,22 @@ openwrt-clean-bin:
 	rm -rf $(OPENWRT_DIR)/bin
 	rm -rf $(OPENWRT_DIR)/build_dir/target-*/*-{imagebuilder,sdk}-*
 
-# update openwrt and checkout specified commit
-openwrt-update: stamp-clean-openwrt-updated .stamp-openwrt-updated
-.stamp-openwrt-updated: .stamp-openwrt-cleaned
-	cd $(OPENWRT_DIR); git checkout --detach $(OPENWRT_COMMIT)
-	touch $@
-
-# patches require updated openwrt working copy
-$(OPENWRT_DIR)/patches: | .stamp-openwrt-updated
-	ln -s $(FW_DIR)/patches $@
-
-# feeds
-$(OPENWRT_DIR)/feeds.conf: .stamp-openwrt-updated feeds.conf
-	cp $(FW_DIR)/feeds.conf $@
-
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
-.stamp-feeds-updated: $(OPENWRT_DIR)/feeds.conf unpatch
-	cd $(OPENWRT_DIR); ./scripts/feeds uninstall -a
-	$(UMASK); cd $(OPENWRT_DIR); ./scripts/feeds update
-	cd $(OPENWRT_DIR); ./scripts/feeds install -a
+.stamp-feeds-updated: .stamp-patched
+	@$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/feeds.sh
 	touch $@
 
 # prepare patch
 pre-patch: stamp-clean-pre-patch .stamp-pre-patch
-.stamp-pre-patch: .stamp-feeds-updated $(wildcard $(FW_DIR)/patches/*) | $(OPENWRT_DIR)/patches
+.stamp-pre-patch: $(FW_DIR)/modules
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update.sh
 	touch $@
 
-# patch openwrt working copy
+# patch openwrt and feeds working copy
 patch: stamp-clean-patched .stamp-patched
-.stamp-patched: .stamp-pre-patch
-	cd $(OPENWRT_DIR); quilt push -a
-	rm -rf $(OPENWRT_DIR)/tmp
+.stamp-patched: .stamp-pre-patch $(wildcard $(GLUON_PATCHESDIR)/openwrt/*) $(wildcard $(GLUON_PATCHESDIR)/packages/*/*)
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
 	touch $@
 
 .stamp-build_rev: .FORCE
@@ -116,7 +164,7 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
 
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-patched $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
+$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
 ifdef IS_BUILDBOT
 	cat $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) >$(OPENWRT_DIR)/.config
 else
@@ -129,7 +177,7 @@ endif
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-patched $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files
+.stamp-prepared: .stamp-feeds-updated $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files
 	touch $@
 
 # compile
@@ -235,17 +283,12 @@ stamp-clean-%:
 
 stamp-clean:
 	rm -f .stamp-*
-
-# unpatch needs "patches/" in openwrt
-unpatch: $(OPENWRT_DIR)/patches
-# RC = 2 of quilt --> nothing to be done
-	cd $(OPENWRT_DIR); quilt pop -a -f || [ $$? = 2 ] && true
-	rm -rf $(OPENWRT_DIR)/tmp
-	rm -f .stamp-patched
+	rm -f $(FW_DIR)/modules
+	rm -rf $(GLUON_TMPDIR)
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
-.PHONY: openwrt-clean openwrt-clean-bin openwrt-update patch feeds-update prepare compile firmwares stamp-clean clean
+.PHONY: openwrt-clean openwrt-clean-bin patch feeds-update prepare compile firmwares stamp-clean clean
 .NOTPARALLEL:
 .FORCE:
 .SUFFIXES:

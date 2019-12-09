@@ -1,0 +1,59 @@
+From a4909c226365d0b2cdd13ef3cf886351a736562d Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Mon, 9 Dec 2019 22:26:20 +0100
+Subject: [PATCH] enable "sysupgrade -u" by default
+
+This enables the "-u" option of sysupgrade by default, as discussed in #641.
+To unset this default we add "-U" to revert to OpenWrt default.
+
+Having this option by default will avoid the putting files into the backup,
+which are unmodified from /rom. This way we can fix issue #637 (a race
+condition we have seen in our uplink-configuration).
+---
+ package/base-files/files/sbin/sysupgrade | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/package/base-files/files/sbin/sysupgrade b/package/base-files/files/sbin/sysupgrade
+index 935d08048e..1892204ff8 100755
+--- a/package/base-files/files/sbin/sysupgrade
++++ b/package/base-files/files/sbin/sysupgrade
+@@ -14,7 +14,7 @@ export SAVE_OVERLAY=0
+ export SAVE_OVERLAY_PATH=
+ export SAVE_PARTITIONS=1
+ export SAVE_INSTALLED_PKGS=0
+-export SKIP_UNCHANGED=0
++export SKIP_UNCHANGED=1
+ export CONF_IMAGE=
+ export CONF_BACKUP_LIST=0
+ export CONF_BACKUP=
+@@ -36,7 +36,7 @@ while [ -n "$1" ]; do
+ 		-o) export SAVE_OVERLAY=1 SAVE_OVERLAY_PATH=/;;
+ 		-p) export SAVE_PARTITIONS=0;;
+ 		-k) export SAVE_INSTALLED_PKGS=1;;
+-		-u) export SKIP_UNCHANGED=1;;
++		-U) export SKIP_UNCHANGED=0;;
+ 		-b|--create-backup) export CONF_BACKUP="$2" NEED_IMAGE=1; shift;;
+ 		-r|--restore-backup) export CONF_RESTORE="$2" NEED_IMAGE=1; shift;;
+ 		-l|--list-backup) export CONF_BACKUP_LIST=1;;
+@@ -63,7 +63,7 @@ IMAGE="$1"
+ [ -z "$IMAGE" -a -z "$NEED_IMAGE" -a $CONF_BACKUP_LIST -eq 0 -o $HELP -gt 0 ] && {
+ 	cat <<EOF
+ Usage: $0 [<upgrade-option>...] <image file or URL>
+-       $0 [-q] [-i] [-c] [-u] [-o] [-k] <backup-command> <file>
++       $0 [-q] [-i] [-c] [-U] [-o] [-k] <backup-command> <file>
+ 
+ upgrade-option:
+ 	-f <config>  restore configuration from .tar.gz (file or url)
+@@ -71,7 +71,8 @@ upgrade-option:
+ 	-c           attempt to preserve all changed files in /etc/
+ 	-o           attempt to preserve all changed files in /, except those
+ 	             from packages but including changed confs.
+-	-u           skip from backup files that are equal to those in /rom
++	-U           include files in backup which are equal to those in /rom
++	             (this is a modification of Freifunk Berlin to unset -u)
+ 	-n           do not save configuration over reflash
+ 	-p           do not attempt to restore the partition table after flash.
+ 	-k           include in backup a list of current installed packages at
+-- 
+2.20.1
+

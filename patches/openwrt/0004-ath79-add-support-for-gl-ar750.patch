@@ -1,0 +1,256 @@
+From 76a20dc00fb6889acac4bcd7daa58643014cb3f0 Mon Sep 17 00:00:00 2001
+From: Luochongjun <luochongjun@gl-inet.com>
+Date: Fri, 23 Aug 2019 17:05:57 +0800
+Subject: [PATCH 1/2] ath79: add support for gl-ar750
+
+This patch supports gl-ar750, which was previously supported by ar71xx.
+
+Specification:
+- SOC: QCA9531 (650MHz)
+- Flash: 16 MiB (W25Q128FVSG)
+- RAM: 128 MiB DDR2
+- Ethernet: 10/100: 2xLAN + 10/100: 1xWAN
+- Wireless: 2.4GHz (bgn) and 5GHz (ac)
+- USB: 1x USB 2.0 port
+- Switch: 1x switch
+- Button: 1x reset button
+- LED: 3x LEDS (white)
+
+Flash instruction:
+Support for sysupgrade directive upgrades, as well as luci upgrades.
+
+Signed-off-by: Luochongjun <luochongjun@gl-inet.com>
+---
+ .../ath79/base-files/etc/board.d/02_network   |   5 +
+ .../etc/hotplug.d/firmware/11-ath10k-caldata  |   1 +
+ .../ath79/dts/qca9531_glinet_gl-ar750.dts     | 142 ++++++++++++++++++
+ target/linux/ath79/image/generic.mk           |  10 ++
+ 4 files changed, 158 insertions(+)
+ create mode 100644 target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts
+
+diff --git a/target/linux/ath79/base-files/etc/board.d/02_network b/target/linux/ath79/base-files/etc/board.d/02_network
+index 746cb61588..7b8f2de49a 100755
+--- a/target/linux/ath79/base-files/etc/board.d/02_network
++++ b/target/linux/ath79/base-files/etc/board.d/02_network
+@@ -128,6 +128,11 @@ ath79_setup_interfaces()
+ 	etactica,eg200)
+ 		ucidef_set_interface_lan "eth0" "dhcp"
+ 		;;
++	glinet,gl-ar750)
++		ucidef_set_interface_wan "eth1"
++		ucidef_add_switch "switch0" \
++			"0@eth0" "1:lan" "2:lan"
++		;;
+ 	glinet,gl-ar750s)
+ 		ucidef_add_switch "switch0" \
+ 			"0@eth0" "2:lan:2" "3:lan:1" "1:wan"
+diff --git a/target/linux/ath79/base-files/etc/hotplug.d/firmware/11-ath10k-caldata b/target/linux/ath79/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
+index cbb50a8fc4..f5a2ac861e 100644
+--- a/target/linux/ath79/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
++++ b/target/linux/ath79/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
+@@ -117,6 +117,7 @@ case "$FIRMWARE" in
+ 		ath10kcal_extract "art" 20480 2116
+ 		ath10kcal_patch_mac $(macaddr_add $(cat /sys/class/net/eth0/address) +1)
+ 		;;
++	glinet,gl-ar750|\
+ 	glinet,gl-ar750s)
+ 		ath10kcal_extract "art" 20480 2116
+ 		ath10kcal_patch_mac $(macaddr_add $(mtd_get_mac_binary art 0) +1)
+diff --git a/target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts b/target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts
+new file mode 100644
+index 0000000000..54aad320f6
+--- /dev/null
++++ b/target/linux/ath79/dts/qca9531_glinet_gl-ar750.dts
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++#include "qca953x.dtsi"
++
++/ {
++	compatible = "glinet,gl-ar750", "qca,qca9531";
++	model = "GL.iNet GL-AR750";
++
++	keys {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&jtag_disable_pins>;
++
++		reset {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
++		};
++
++		mode {
++			label = "mode";
++			linux,code = <BTN_0>;
++			gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		power {
++			label = "gl-ar750:white:power";
++			gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++
++		wlan2g {
++			label = "gl-ar750:white:wlan2g";
++			gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "phy1tpt";
++		};
++
++		wlan5g {
++			label = "gl-ar750:white:wlan5g";
++			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "phy0tpt";
++		};
++
++	};
++
++	i2c {
++		compatible = "i2c-gpio";
++
++		sda-gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
++		scl-gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
++	};
++
++
++};
++
++&pcie0 {
++	status = "okay";
++
++	wifi@0,0 {
++		compatible = "qcom,ath10k";
++		reg = <0 0 0 0 0>;
++		device_type = "pci";
++	};
++};
++
++&uart {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb_phy {
++	status = "okay";
++};
++
++&spi {
++	status = "okay";
++	num-cs = <0>;
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <25000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "u-boot";
++				reg = <0x000000 0x040000>;
++				read-only;
++			};
++
++			partition@40000 {
++				label = "u-boot-env";
++				reg = <0x040000 0x010000>;
++				read-only;
++			};
++
++			art: partition@50000 {
++				label = "art";
++				reg = <0x050000 0x010000>;
++				read-only;
++			};
++
++			partition@60000 {
++				compatible = "denx,uimage";
++				label = "firmware";
++				reg = <0x060000 0xfa0000>;
++			};
++		};
++	};
++};
++
++&eth0 {
++	status = "okay";
++	mtd-mac-address = <&art 0x0>;
++	phy-handle = <&swphy4>;
++};
++
++&eth1 {
++	mtd-mac-address = <&art 0x0>;
++	mtd-mac-address-increment = <1>;
++};
++
++&wmac {
++	status = "okay";
++	mtd-cal-data = <&art 0x1000>;
++};
+diff --git a/target/linux/ath79/image/generic.mk b/target/linux/ath79/image/generic.mk
+index 29a67de816..af397b36a5 100644
+--- a/target/linux/ath79/image/generic.mk
++++ b/target/linux/ath79/image/generic.mk
+@@ -398,6 +398,16 @@ define Device/glinet_gl-ar300m-nor
+ endef
+ #TARGET_DEVICES += glinet_gl-ar300m-nor
+ 
++define Device/glinet_gl-ar750
++  ATH_SOC := qca9531
++  DEVICE_VENDOR := GL.iNet
++  DEVICE_MODEL := GL-AR750
++  DEVICE_PACKAGES := kmod-usb2 kmod-ath10k-ct ath10k-firmware-qca9887-ct
++  IMAGE_SIZE := 16000k
++  SUPPORTED_DEVICES += gl-ar750
++endef
++TARGET_DEVICES += glinet_gl-ar750
++
+ define Device/glinet_gl-ar750s
+   ATH_SOC := qca9563
+   DEVICE_TITLE := GL.iNet GL-AR750S
+-- 
+2.20.1
+
+From 642cda832786d686191df596f34b007c3575f92a Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Wed, 11 Dec 2019 08:34:12 +0100
+Subject: [PATCH 2/2] glinert ar750: backport for 1907
+
+---
+ target/linux/ath79/image/generic.mk | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/target/linux/ath79/image/generic.mk b/target/linux/ath79/image/generic.mk
+index af397b36a5..5e2eca1e44 100644
+--- a/target/linux/ath79/image/generic.mk
++++ b/target/linux/ath79/image/generic.mk
+@@ -400,8 +400,7 @@ endef
+ 
+ define Device/glinet_gl-ar750
+   ATH_SOC := qca9531
+-  DEVICE_VENDOR := GL.iNet
+-  DEVICE_MODEL := GL-AR750
++  DEVICE_TITLE := GL.iNet GL-AR750
+   DEVICE_PACKAGES := kmod-usb2 kmod-ath10k-ct ath10k-firmware-qca9887-ct
+   IMAGE_SIZE := 16000k
+   SUPPORTED_DEVICES += gl-ar750
+-- 
+2.20.1
+

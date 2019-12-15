@@ -1,37 +1,53 @@
-commit cad4132e003cecc386d791d552ddba42c182c216
-Author: Andrew Cameron <apcameron@softhome.net>
-Date:   Wed Jun 26 16:40:54 2019 -0500
+From 5cbd17dcae66b6aca28b89cf3c84d042c8af77be Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Sun, 15 Dec 2019 18:27:23 +0100
+Subject: [PATCH 1/2] ath79: add support for TP-Link CPE510-v2/v3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-    ath79: add support for TP-Link CPE510-v2/v3
-    
-    TP-Link CPE510-v2/v3 is an outdoor wireless CPE for 5 GHz with
-    one Ethernet port based on Atheros AR9344
-    
-    Specifications:
-     - Based on the same underlying hardware as the TP-Link CPE510
-     - Power, LAN, and 4 green LEDs
-     - 1 10/100Mbps Shielded Ethernet Port (Passive PoE in)
-     - Built-in 13dBi 2x2 dual-polarized directional MIMO antenna
-     - Adjustable transmission power from 0 to 23dBm/200mw
-    
-    Flashing instructions:
-     Flash factory image through stock firmware WEB UI
-     or through TFTP
-     To get to TFTP recovery just hold reset button while powering on for
-     around 4-5 seconds and release.
-     Rename factory image to recovery.bin
-     Stock TFTP server IP:192.168.0.100
-     Stock device TFTP adress:192.168.0.254
-    
-    Signed-off-by: Andrew Cameron <apcameron@softhome.net>
-    [whitespace fixes]
-    Signed-off-by: Petr Štetiar <ynezz@true.cz>
+TP-Link CPE510-v2/v3 is an outdoor wireless CPE for 5 GHz with
+one Ethernet port based on Atheros AR9344
+
+Specifications:
+ - Based on the same underlying hardware as the TP-Link CPE510
+ - Power, LAN, and 4 green LEDs
+ - 1 10/100Mbps Shielded Ethernet Port (Passive PoE in)
+ - Built-in 13dBi 2x2 dual-polarized directional MIMO antenna
+ - Adjustable transmission power from 0 to 23dBm/200mw
+
+Flashing instructions:
+ Flash factory image through stock firmware WEB UI
+ or through TFTP
+ To get to TFTP recovery just hold reset button while powering on for
+ around 4-5 seconds and release.
+ Rename factory image to recovery.bin
+ Stock TFTP server IP:192.168.0.100
+ Stock device TFTP adress:192.168.0.254
+
+Signed-off-by: Andrew Cameron <apcameron@softhome.net>
+[whitespace fixes]
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+(cherry picked from commit cad4132e003cecc386d791d552ddba42c182c216)
+[backported to 19.07]
+Signed-off-by: Sven Roederer <devel-sven@geroedel.de>
+---
+ .../ath79/base-files/etc/board.d/01_leds      |   9 ++
+ .../ath79/base-files/etc/board.d/02_network   |   2 +
+ .../ath79/dts/ar9344_tplink_cpe510-v2.dts     |   9 ++
+ .../ath79/dts/ar9344_tplink_cpe510-v3.dts     |   9 ++
+ .../linux/ath79/dts/ar9344_tplink_cpe510.dtsi | 152 ++++++++++++++++++
+ target/linux/ath79/image/generic-tp-link.mk   |  34 ++++
+ 6 files changed, 215 insertions(+)
+ create mode 100644 target/linux/ath79/dts/ar9344_tplink_cpe510-v2.dts
+ create mode 100644 target/linux/ath79/dts/ar9344_tplink_cpe510-v3.dts
+ create mode 100644 target/linux/ath79/dts/ar9344_tplink_cpe510.dtsi
 
 diff --git a/target/linux/ath79/base-files/etc/board.d/01_leds b/target/linux/ath79/base-files/etc/board.d/01_leds
-index 238dda18f6..0cb03db4be 100755
+index 41a4abae18..97a2c816a2 100755
 --- a/target/linux/ath79/base-files/etc/board.d/01_leds
 +++ b/target/linux/ath79/base-files/etc/board.d/01_leds
-@@ -158,6 +158,15 @@ tplink,cpe210-v3)
+@@ -155,6 +155,15 @@ tplink,cpe210-v3)
  	ucidef_set_led_rssi "rssimediumhigh" "RSSIMEDIUMHIGH" "tp-link:green:link3" "wlan0" "60" "100"
  	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "tp-link:green:link4" "wlan0" "80" "100"
  	;;
@@ -46,12 +62,12 @@ index 238dda18f6..0cb03db4be 100755
 +	;;
  tplink,re450-v2)
  	ucidef_set_led_netdev "lan_data" "LAN Data" "tp-link:green:lan_data" "eth0" "tx rx"
- 	ucidef_set_led_netdev "lan_link" "LAN Link" "tp-link:green:lan_link" "eth0" "link
+ 	ucidef_set_led_netdev "lan_link" "LAN Link" "tp-link:green:lan_link" "eth0" "link"
 diff --git a/target/linux/ath79/base-files/etc/board.d/02_network b/target/linux/ath79/base-files/etc/board.d/02_network
-index 2413b1f4bc..1d4cec025a 100755
+index 41c8e37e31..0deab84cb0 100755
 --- a/target/linux/ath79/base-files/etc/board.d/02_network
 +++ b/target/linux/ath79/base-files/etc/board.d/02_network
-@@ -28,6 +28,8 @@ ath79_setup_interfaces()
+@@ -26,6 +26,8 @@ ath79_setup_interfaces()
  	pqi,air-pen|\
  	tplink,cpe210-v2|\
  	tplink,cpe210-v3|\
@@ -249,10 +265,10 @@ index 0000000000..f19ef01d49
 +	compatible = "syscon", "simple-mfd";
 +};
 diff --git a/target/linux/ath79/image/generic-tp-link.mk b/target/linux/ath79/image/generic-tp-link.mk
-index f1424d02ee..312ce78f22 100644
+index d56e54ba1f..0caaaaa55b 100644
 --- a/target/linux/ath79/image/generic-tp-link.mk
 +++ b/target/linux/ath79/image/generic-tp-link.mk
-@@ -159,6 +159,40 @@ define Device/tplink_cpe210-v3
+@@ -146,6 +146,40 @@ define Device/tplink_cpe210-v3
  endef
  TARGET_DEVICES += tplink_cpe210-v3
  
@@ -293,3 +309,6 @@ index f1424d02ee..312ce78f22 100644
  define Device/tplink_archer-d50-v1
    ATH_SOC := qca9531
    DEVICE_TITLE := TP-Link Archer D50 v1
+-- 
+2.20.1
+

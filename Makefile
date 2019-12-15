@@ -247,13 +247,14 @@ $(VERSION_FILE): .stamp-prepared
 	  echo "Feed $$FEED: repository from $$FEED_GIT_REPO, git branch \"$$FEED_GIT_BRANCH_ESC\", revision $$FEED_REVISION" >> $(VERSION_FILE); \
 	done
 
-build-logs: .stamp-compiled
+build-logs: clean-build-logs .stamp-compiled
 	mkdir -p $(FW_TARGET_DIR)
 	[ -d $(OPENWRT_DIR)/logs ] && mv $(OPENWRT_DIR)/logs $(FW_TARGET_DIR)
 	touch .stamp-$@
 
 clean-build-logs:
 	rm -rf $(FW_TARGET_DIR)/logs
+	rm -rf .stamp-build-logs
 
 images: .stamp-images
 

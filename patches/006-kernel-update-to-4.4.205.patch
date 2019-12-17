@@ -1,0 +1,102 @@
+From ab0ce1a07f7b231b609b0516e408cc17813844b1 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <freifunk@it-solutions.geroedel.de>
+Date: Tue, 17 Dec 2019 12:39:39 +0100
+Subject: [PATCH] [17.01] kernel: update to 4.4.205
+
+update patches for kernel 4.4.205
+* mtd_fix_cfi_cmdset_0002_status_check: seems to be implemented upstream by 9ce51a5b414a42887505a6504a2f0273b89906a5
+* debloat_proc: was changed upstream in a6d17aa291cad1d36331ba17cbcacd045381a3f1
+x86: add TSX config-options
+* this options were added in 4.4.202, set defaults as for 4.9.x
+
+Compile tested: ar71xx-generic, ar71xx-mikrotik, mpc85xx-generic, ramips-mt7620,
+                ramips-mt7621, x86-generic (all buildbot-targets)
+
+Signed-off-by: Sven Roederer <freifunk@it-solutions.geroedel.de>
+---
+ include/kernel-version.mk                     |  4 ++--
+ ...mtd_fix_cfi_cmdset_0002_status_check.patch | 22 -------------------
+ .../patches-4.4/902-debloat_proc.patch        |  4 ++--
+ target/linux/x86/config-4.4                   |  3 +++
+ 4 files changed, 7 insertions(+), 26 deletions(-)
+ delete mode 100644 target/linux/ar71xx/patches-4.4/403-mtd_fix_cfi_cmdset_0002_status_check.patch
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index e68e01012b..13bea7bc18 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -3,10 +3,10 @@
+ LINUX_RELEASE?=1
+ 
+ LINUX_VERSION-3.18 = .43
+-LINUX_VERSION-4.4 = .194
++LINUX_VERSION-4.4 = .205
+ 
+ LINUX_KERNEL_HASH-3.18.43 = 1236e8123a6ce537d5029232560966feed054ae31776fe8481dd7d18cdd5492c
+-LINUX_KERNEL_HASH-4.4.194 = 7f63e893f1a178c25646a302ae7425423a3f1b72fc5d6895a2716e4bb6b8744f
++LINUX_KERNEL_HASH-4.4.205 = fa1f8fe9c12e18e5cda18cf759b77ae9e778e1e9006d837426c955b75bd4eaa6
+ 
+ ifdef KERNEL_PATCHVER
+   LINUX_VERSION:=$(KERNEL_PATCHVER)$(strip $(LINUX_VERSION-$(KERNEL_PATCHVER)))
+diff --git a/target/linux/ar71xx/patches-4.4/403-mtd_fix_cfi_cmdset_0002_status_check.patch b/target/linux/ar71xx/patches-4.4/403-mtd_fix_cfi_cmdset_0002_status_check.patch
+deleted file mode 100644
+index 040d83d4cb..0000000000
+--- a/target/linux/ar71xx/patches-4.4/403-mtd_fix_cfi_cmdset_0002_status_check.patch
++++ /dev/null
+@@ -1,22 +0,0 @@
+---- a/drivers/mtd/chips/cfi_cmdset_0002.c
+-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+-@@ -1633,8 +1633,8 @@ static int __xipram do_write_oneword(str
+- 			break;
+- 		}
+- 
+--		if (chip_ready(map, adr))
+--			break;
+-+		if (chip_good(map, adr, datum))
+-+			goto enable_xip;
+- 
+- 		/* Latency issues. Drop the lock, wait a while and retry */
+- 		UDELAY(map, chip, adr, 1);
+-@@ -1650,6 +1650,8 @@ static int __xipram do_write_oneword(str
+- 
+- 		ret = -EIO;
+- 	}
+-+
+-+ enable_xip:
+- 	xip_enable(map, chip, adr);
+-  op_done:
+- 	if (mode == FL_OTP_WRITE)
+diff --git a/target/linux/generic/patches-4.4/902-debloat_proc.patch b/target/linux/generic/patches-4.4/902-debloat_proc.patch
+index 7005280d6e..f98c31720b 100644
+--- a/target/linux/generic/patches-4.4/902-debloat_proc.patch
++++ b/target/linux/generic/patches-4.4/902-debloat_proc.patch
+@@ -138,10 +138,10 @@
+  #endif
+  #ifdef CONFIG_PROC_FS
+ -	proc_create("buddyinfo", S_IRUGO, NULL, &fragmentation_file_operations);
+--	proc_create("pagetypeinfo", S_IRUGO, NULL, &pagetypeinfo_file_ops);
++-	proc_create("pagetypeinfo", 0400, NULL, &pagetypeinfo_file_ops);
+ +	if (!IS_ENABLED(CONFIG_PROC_STRIPPED)) {
+ +		proc_create("buddyinfo", S_IRUGO, NULL, &fragmentation_file_operations);
+-+		proc_create("pagetypeinfo", S_IRUGO, NULL, &pagetypeinfo_file_ops);
+++		proc_create("pagetypeinfo", 0400, NULL, &pagetypeinfo_file_ops);
+ +		proc_create("zoneinfo", S_IRUGO, NULL, &proc_zoneinfo_file_operations);
+ +	}
+  	proc_create("vmstat", S_IRUGO, NULL, &proc_vmstat_file_operations);
+diff --git a/target/linux/x86/config-4.4 b/target/linux/x86/config-4.4
+index a4a83be24c..f96a91b722 100644
+--- a/target/linux/x86/config-4.4
++++ b/target/linux/x86/config-4.4
+@@ -422,6 +422,9 @@ CONFIG_X86_GENERIC=y
+ # CONFIG_X86_GX_SUSPMOD is not set
+ # CONFIG_X86_INTEL_MPX is not set
+ # CONFIG_X86_INTEL_PSTATE is not set
++CONFIG_X86_INTEL_TSX_MODE_OFF=y
++# CONFIG_X86_INTEL_TSX_MODE_ON is not set
++# CONFIG_X86_INTEL_TSX_MODE_AUTO is not set
+ CONFIG_X86_INTEL_USERCOPY=y
+ CONFIG_X86_INTERNODE_CACHE_SHIFT=6
+ CONFIG_X86_INVD_BUG=y
+-- 
+2.20.1
+

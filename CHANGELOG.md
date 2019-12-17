@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 1.0.5
+
+Improve support for generating firmware-images for unofficial boards
+with the imagebuilder, as mentioned in README.md#building-all-firmwares.
+WE now build all packages which are required by any board and avoid
+unmet dependencies (see issue#736, #738, PR#740).
+
+* 3d64405 locally update kernel to version 4.4.205
+  (https://github.com/freifunk-berlin/firmware/pull/749)
+
+__OpenWrt-core__
+```
+0082e90e4f openssl: bump to 1.0.2t, Makefile updates
+```
+
+__Routing-feed__
+```
+305cce9 batman-adv: Merge bugfixes from 2020.0
+```
+
 ## Version 1.0.4
 
 __OpenWrt-core__

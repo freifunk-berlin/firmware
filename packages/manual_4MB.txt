@@ -33,8 +33,6 @@ libiwinfo-lua
 
 # GUI
 luci-theme-bootstrap
-# Bug in LuCI (missing nixio dependency)
-luci-lib-nixio
 uhttpd
 uhttpd-mod-ubus
 #px5g-mbedtls

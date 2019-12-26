@@ -1,0 +1,25 @@
+From 73308be31a7311313646fdcfec03ffe1823dde97 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Thu, 26 Dec 2019 02:38:38 +0100
+Subject: [PATCH] generic.mk: include luci-common.mk
+
+---
+ freifunk-berlin-generic.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/freifunk-berlin-generic.mk b/freifunk-berlin-generic.mk
+index 82d5b60..a5dbd59 100644
+--- a/freifunk-berlin-generic.mk
++++ b/freifunk-berlin-generic.mk
+@@ -2,7 +2,7 @@
+ # This is free software, licensed under the GNU General Public License v3.0 .
+ #
+ 
+-LUCIMKFILE:=$(wildcard $(TOPDIR)/feeds/*/luci.mk)
++LUCIMKFILE:=$(wildcard $(TOPDIR)/feeds/*/luci-common.mk)
+ 
+ # verify that there is only one single file returned
+ ifneq (1,$(words $(LUCIMKFILE)))
+-- 
+2.20.1
+

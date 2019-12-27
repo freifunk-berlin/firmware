@@ -75,7 +75,7 @@ batctl-default
 # Uplink
 luci-app-openvpn
 openvpn-mbedtls
-freifunk-berlin-uplink-tunnelberlin-files
+freifunk-berlin-uplink-tunnelberlin-openvpn
 luci-app-vpnbypass
 
 # Statistics

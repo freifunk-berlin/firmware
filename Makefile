@@ -278,6 +278,10 @@ endif
 	for file in `find $(RELPATH) -name "freifunk-berlin-*-$(MAINTARGET)-$(SUBTARGET)-*.bin"` ; do mv $$file $${file/$(MAINTARGET)-$(SUBTARGET)-/}; done
 	touch $@
 
+stamp-clean-firmwares:
+	rm -f $(OPENWRT_DIR)/.config
+	rm -f .stamp-$*
+
 stamp-clean-%:
 	rm -f .stamp-$*
 

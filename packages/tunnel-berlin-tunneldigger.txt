@@ -71,7 +71,7 @@ alfred
 batctl-default
 
 # Uplink
-freifunk-berlin-uplink-tunnelberlin-tunneldigger-files
+freifunk-berlin-uplink-tunnelberlin-tunneldigger
 
 # Statistics
 luci-app-statistics

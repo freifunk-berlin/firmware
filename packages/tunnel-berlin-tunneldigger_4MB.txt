@@ -47,4 +47,4 @@ olsrd-mod-nameservice
 kmod-ipip
 
 # Uplink
-freifunk-berlin-uplink-tunnelberlin-tunneldigger-files
+freifunk-berlin-uplink-tunnelberlin-tunneldigger

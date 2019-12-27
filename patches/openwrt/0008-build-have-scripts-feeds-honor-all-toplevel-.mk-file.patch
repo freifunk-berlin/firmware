@@ -1,0 +1,53 @@
+From c5c64b847937315efc3881c66c39afc67cc97cea Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Sat, 9 Mar 2019 15:00:15 +0100
+Subject: [PATCH] build: have scripts/feeds honor all toplevel .mk-files of a
+ feed
+
+The luci and freifunk feed having a common Makefile included by the
+individual packages. Currently a change to this file will be ignored
+when running "scripts/feeds update".
+When we are updating for a feed, add a dependency for all .mk files
+in the root of it.
+
+Signed-off-by: Sven Roederer <devel-sven@geroedel.de>
+---
+ include/scan.mk | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/include/scan.mk b/include/scan.mk
+index d9cd4f7e8c..7df5dc6486 100644
+--- a/include/scan.mk
++++ b/include/scan.mk
+@@ -12,10 +12,17 @@ OVERRIDELIST:=$(TMP_DIR)/info/.overrides-$(SCAN_TARGET)-$(SCAN_COOKIE)
+ 
+ export PATH:=$(TOPDIR)/staging_dir/host/bin:$(PATH)
+ 
++define feedname
++$(if $(patsubst feeds/%,,$(1)),,$(word 2,$(subst /, ,$(1))))
++endef
++
+ ifeq ($(SCAN_NAME),target)
+   SCAN_DEPS=image/Makefile profiles/*.mk $(TOPDIR)/include/kernel*.mk $(TOPDIR)/include/target.mk image/*.mk
+ else
+   SCAN_DEPS=$(TOPDIR)/include/package*.mk
++ifneq ($(call feedname,$(SCAN_DIR)),)
++  SCAN_DEPS += $(TOPDIR)/feeds/$(call feedname,$(SCAN_DIR))/*.mk
++endif
+ endif
+ 
+ ifeq ($(IS_TTY),1)
+@@ -34,10 +41,6 @@ else
+   endef
+ endif
+ 
+-define feedname
+-$(if $(patsubst feeds/%,,$(1)),,$(word 2,$(subst /, ,$(1))))
+-endef
+-
+ define PackageDir
+   $(TMP_DIR)/.$(SCAN_TARGET): $(TMP_DIR)/info/.$(SCAN_TARGET)-$(1)
+   $(TMP_DIR)/info/.$(SCAN_TARGET)-$(1): $(SCAN_DIR)/$(2)/Makefile $(foreach DEP,$(DEPS_$(SCAN_DIR)/$(2)/Makefile) $(SCAN_DEPS),$(wildcard $(if $(filter /%,$(DEP)),$(DEP),$(SCAN_DIR)/$(2)/$(DEP))))
+-- 
+2.20.1
+

@@ -286,6 +286,29 @@ endif
 	for file in `find $(RELPATH) -name "freifunk-berlin-*-$(MAINTARGET)-$(SUBTARGET)-*.bin"` ; do mv $$file $${file/$(MAINTARGET)-$(SUBTARGET)-/}; done
 	touch $@
 
+setup-sdk: .stamp-patched
+	 @if [ -z "$(SDK_FILE)" ]; then \
+		echo Error: Please provide SDK-FILE by using "make SDK_FILE=<filename>"; \
+		exit 1; \
+	fi
+	@if [[ ! "$(SDK_FILE)" == *"$(MAINTARGET)-$(SUBTARGET)"* ]]; then \
+		echo Error: TARGET seems not to match SDK-Target; \
+		exit 1; \
+	fi
+	$(eval SDK_DIR=$(FW_DIR)/sdk-$(MAINTARGET)-$(SUBTARGET))
+	mkdir $(SDK_DIR)
+	tar -xJf $(SDK_FILE) --strip-components=1 -C $(SDK_DIR)
+	# generating feeds.conf
+	# replace src-git openwrt
+	sed -i -e "/^src-git base/d" $(SDK_DIR)/feeds.conf.default
+	echo "src-link base ../../openwrt/package" >> $(SDK_DIR)/feeds.conf.default
+#	# replace ../../ by ../ (for relative feeds-path)
+#	#sed -i -e "s/..\/..\//..\//" $(SDK_DIR)/feeds.conf.default
+	@$(SDK_DIR)/scripts/feeds update
+	@$(UMASK); $(SDK_DIR)/scripts/feeds install -a
+	cat $(TARGET_CONFIG) >$(SDK_DIR)/.config
+	$(UMASK); $(MAKE) -C $(SDK_DIR) defconfig
+
 stamp-clean-firmwares:
 	rm -f $(OPENWRT_DIR)/.config
 	rm -f .stamp-$*
@@ -300,7 +323,7 @@ stamp-clean:
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
-.PHONY: openwrt-clean openwrt-clean-bin clean-build-logs patch feeds-update prepare compile firmwares stamp-clean clean
+.PHONY: openwrt-clean openwrt-clean-bin clean-build-logs patch feeds-update prepare compile firmwares stamp-clean clean setup-sdk
 .NOTPARALLEL:
 .FORCE:
 .SUFFIXES:

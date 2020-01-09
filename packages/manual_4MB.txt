@@ -1,3 +1,60 @@
-# the images will be to large for 4MB flash
-# probably the "mesh" image is an alternative
-#
+-kmod-usb-core
+-kmod-usb2
+-kmod-usb-ledtrig-usbport
+-kmod-usb-ohci
+-kmod-ppp
+-kmod-usb-serial
+-ppp
+-ppp-mod-pppoe
+-wpad
+
+# Defaults
+freifunk-berlin-dhcp-defaults
+freifunk-berlin-freifunk-defaults
+freifunk-berlin-network-defaults
+freifunk-berlin-olsrd-defaults
+freifunk-berlin-statistics-defaults
+freifunk-berlin-system-defaults
+freifunk-berlin-uhttpd-defaults
+
+# Common
+dnsmasq
+
+# Utils
+#tcpdump
+mtr
+ip
+#iperf
+#tmux
+#vnstat
+#ethtool
+iwinfo
+libiwinfo-lua
+
+# GUI
+luci-theme-bootstrap
+uhttpd
+uhttpd-mod-ubus
+#px5g-mbedtls
+luci-mod-freifunk-ui
+luci-mod-admin-full
+luci-app-olsr
+luci-app-olsr-services
+luci-app-opkg
+luci-app-owm
+luci-app-owm-cmd
+
+# OLSR
+olsrd
+olsrd-mod-arprefresh
+olsrd-mod-dyn-gw
+olsrd-mod-jsoninfo
+olsrd-mod-nameservice
+kmod-ipip
+
+# BATMAN
+kmod-batman-adv
+alfred
+batctl-tiny
+
+# Statistics/collectd not included in 4MB image

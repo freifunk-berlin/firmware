@@ -155,34 +155,68 @@ the codename in the README and config files (./configs/*)
 The buildbot will build the release and place the files in the stable direcotry
 once you pushed the new branch to github.
 
-### Patches with quilt
+### Patches with "git format-patch"
 
 **Important:** all patches should be pushed upstream!
 
-If a patch is not yet included upstream, it can be placed in the `patches` directory with the `quilt` tool. Please configure `quilt` as described in the [OpenWrt wiki](https://openwrt.org/docs/guide-developer/patches) (which also provides a documentation of `quilt`).
+If a patch is not yet included upstream, it can be placed in the corresponding subdirectory below the`patches`
+directory. To create a correct patch-file just use the [`git format-patch`](https://git-scm.com/docs/git-format-patch) command.
 
-#### Add, modify or delete a patch
+#### Create a patch
 
-In order to add, modify or delete a patch run:
+In order to add a patch file update your build environment by running:
 
 ```bash
-make clean pre-patch
+make clean patch
 ```
 Then switch to the openwrt directory:
 
 ```bash
 cd openwrt
 ```
-Now you can use the `quilt` commands as described in the [OpenWrt wiki](https://openwrt.org/docs/guide-developer/build-system/use-patches-with-buildsystem).
 
-##### Example: add a patch
+or continue to the relevant feed directory:
 
 ```bash
-quilt push -a                 # apply all patches
-quilt new 008-awesome.patch   # tell quilt to create a new patch
-quilt edit somedir/somefile1  # edit files
-quilt edit somedir/somefile2
-quilt refresh                 # creates/updates the patch file
+cd feeds/luci
+```
+
+use the normal `git commit` workflow to apply your changes to the code. When done convert your last commit 
+into a patch by running:
+
+```bash
+git format-patch --start-number <n> HEAD^
+```
+where `n` is the next free number of the correlating patch-subdirectory. You can use something like `HEAD^^^^`
+to create patch-files from you last 4 commmits, or even use a git-rev directly. Feel free to squash multiple 
+commits into a single one before creating the patch-file or use something like 
+
+```bash
+git format-patch --stdout HEAD^^^^ > patches/routing/0008-awesome.patch
+```
+to create a single file of these 4 commits
+
+#### Modify a patch
+
+To update an existing patch do the same as above:
+
+```bash
+make clean patch
+cd openwrt
+cd feeds/luci
+```
+Then just add a new commit with your changes and squash it with the commit relating to the patch-file.
+To update the patch-file use the same `git format-patch` sequence as you did when creating the patch
+initially.
+
+#### Delete a patch
+
+To remove a patch-file you have to remove it from the patch-subdirectory and update the build-
+environment:
+
+```bash
+git rm patches/openwrt/0010-unrelevant-change.patch
+make patch
 ```
 
 ### Submitting patches

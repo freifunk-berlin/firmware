@@ -122,12 +122,12 @@ $(LUA):
 
 gluon-config: $(LUA)
 	@$(CheckExternal)
-	@$(GLUON_CONFIG_VARS) \
+	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
 		> openwrt/.config
 	+@$(OPENWRTMAKE) defconfig
 
-	@$(GLUON_CONFIG_VARS) \
+	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
 		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
 gluon-all: gluon-config

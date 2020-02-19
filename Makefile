@@ -51,6 +51,10 @@ default: firmwares
 # * setup required makros and variables
 # * create the modules-file from config.mk and feeds.conf
 
+LC_ALL:=C
+LANG:=C
+export LC_ALL LANG
+
 # check for spaces & resolve possibly relative paths
 define mkabspath
  ifneq (1,$(words [$($(1))]))

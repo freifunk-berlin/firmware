@@ -130,6 +130,9 @@ gluon-config: $(LUA)
 	@$(GLUON_CONFIG_VARS) \
 		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
+gluon-all: gluon-config
+	+@$(OPENWRTMAKE)
+
 ## Gluon - End
 
 # clean up openwrt working copy

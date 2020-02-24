@@ -120,7 +120,7 @@ $(LUA):
 	+@$(OPENWRTMAKE) tools/install
 	+@$(OPENWRTMAKE) package/lua/host/compile
 
-gluon-config: $(LUA)
+gluon-config: $(LUA) .stamp-feeds-updated $(OPENWRT_DIR)/dl
 	@$(CheckExternal)
 	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
 		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \

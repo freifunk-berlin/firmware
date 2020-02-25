@@ -75,6 +75,11 @@ $(eval $(call mkabspath,GLUON_PATCHESDIR))
 GLUON_SITEDIR ?= site
 $(eval $(call mkabspath,GLUON_SITEDIR))
 
+$(GLUON_SITEDIR)/site.mk:
+	$(error No site configuration was found. Please check out a site configuration to $(GLUON_SITEDIR))
+
+include $(GLUON_SITEDIR)/site.mk
+
 export GLUON_RELEASE GLUON_DEBUG GLUON_DEPRECATED GLUON_DEVICES \
 	 GLUON_TARGETSDIR GLUON_PATCHESDIR GLUON_TMPDIR GLUON_IMAGEDIR GLUON_PACKAGEDIR
 

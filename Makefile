@@ -114,7 +114,7 @@ endef
 $(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES) $(GLUON_SITE_PACKAGES)))
 
 $(info package-src: $(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES) $(GLUON_SITE_PACKAGES))
-$(info packages: $(GLUON_PACKAGES))
+$(info packages   : $(GLUON_PACKAGES))
 
 LUA := openwrt/staging_dir/hostpkg/bin/lua
 

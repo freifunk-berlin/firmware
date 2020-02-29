@@ -135,7 +135,7 @@ gluon-config: $(LUA) .stamp-feeds-updated $(OPENWRT_DIR)/dl
 	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
 		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
-gluon-all: gluon-config
+gluon-compile: gluon-config
 	+@$(OPENWRTMAKE)
 
 ## Gluon - End

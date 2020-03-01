@@ -128,12 +128,12 @@ $(LUA):
 gluon-config: $(LUA) .stamp-feeds-updated $(OPENWRT_DIR)/dl
 	@$(CheckExternal)
 	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
-		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' \
+		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' '$(GLUON_EXTRA_PACKAGES)'\
 		> openwrt/.config
 	+@$(OPENWRTMAKE) defconfig
 
-	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
-		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
+#	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
+#		$(LUA) scripts/target_config_check.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
 gluon-compile: gluon-config
 	+@$(OPENWRTMAKE)

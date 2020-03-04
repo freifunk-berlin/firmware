@@ -1,3 +1,0 @@
-# the images will be to large for 4MB flash
-# probably the "mesh" image is an alternative
-#

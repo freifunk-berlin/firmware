@@ -138,6 +138,11 @@ gluon-config: $(LUA) .stamp-feeds-updated $(OPENWRT_DIR)/dl
 gluon-compile: gluon-config
 	+@$(OPENWRTMAKE)
 
+gluon-profiles: $(LUA) .stamp-feeds-updated
+	@$(CheckExternal)
+	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
+		$(LUA) scripts/target_config_profile.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES) luci-app-ffwizard-berlin'
+
 ## Gluon - End
 
 # clean up openwrt working copy

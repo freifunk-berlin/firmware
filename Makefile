@@ -138,10 +138,18 @@ gluon-config: $(LUA) .stamp-feeds-updated $(OPENWRT_DIR)/dl
 gluon-compile: gluon-config
 	+@$(OPENWRTMAKE)
 
-gluon-profiles: $(LUA) .stamp-feeds-updated
+gluon-profiles: $(GLUON_TMPDIR)/$(GLUON_TARGET).packages
+$(GLUON_TMPDIR)/$(GLUON_TARGET).packages: $(LUA) .stamp-feeds-updated
 	@$(CheckExternal)
 	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
 		$(LUA) scripts/target_config_profile.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES) luci-app-ffwizard-berlin'
+
+gluon-images: $(GLUON_TMPDIR)/$(GLUON_TARGET).packages
+# taken from original images  target
+	$(eval IB_FILE := $(shell ls -tr $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
+	mkdir -p $(FW_TARGET_DIR)
+	./scripts/assemble_firmware.sh -b "$(GLUON_TMPDIR)/$(GLUON_TARGET).packages" -i $(IB_FILE) \
+		-e $(FW_DIR)/embedded-files -t $(FW_TARGET_DIR)
 
 ## Gluon - End
 

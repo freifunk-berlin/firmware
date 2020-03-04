@@ -28,7 +28,7 @@ $(info special actions apply to builds on this host ...)
 endif
 
 # test for existing $TARGET-config or abort
-ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
+ifeq ($(wildcard $(FW_DIR)/targets/$(TARGET)),)
 $(error config for $(TARGET) not defined)
 endif
 
@@ -92,6 +92,9 @@ GLUON_CONFIG_VARS := \
 	SUBTARGET='$(SUBTARGET)'
 
 
+CheckTarget := [ '$(BOARD)' ] \
+	|| (echo 'Please set GLUON_TARGET to a valid target. Gluon supports the following targets:'; $(foreach target,$(GLUON_TARGETS),echo ' * $(target)';) false)
+
 GLUON_TARGET := $(TARGET)
 
 
@@ -120,6 +123,7 @@ LUA := openwrt/staging_dir/hostpkg/bin/lua
 
 $(LUA):
 	@$(CheckExternal)
+	@$(CheckTarget)
 
 	+@[ -e openwrt/.config ] || $(OPENWRTMAKE) defconfig
 	+@$(OPENWRTMAKE) tools/install

@@ -1,0 +1,101 @@
+From c0a2397a7fba300c6d1efe301a1f300abc9ed4f3 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Thu, 5 Mar 2020 14:14:23 +0100
+Subject: [PATCH] fix Makefiles after luci-mk split
+
+---
+ freifunk-berlin-generic.mk              | 22 ++++++++++++++++++++
+ utils/luci-app-ffwizard-berlin/Makefile |  5 +++++
+ utils/luci-mod-freifunk-ui/Makefile     | 27 +++++++++++++++++++++++++
+ 3 files changed, 54 insertions(+)
+
+diff --git a/freifunk-berlin-generic.mk b/freifunk-berlin-generic.mk
+index a5dbd59..b8f4d1d 100644
+--- a/freifunk-berlin-generic.mk
++++ b/freifunk-berlin-generic.mk
+@@ -15,6 +15,17 @@ else
+ #$(info found luci.mk at $(LUCIMKFILE))
+ endif
+ 
++LUCI_NAME?=$(notdir ${CURDIR})
++LUCI_TYPE?=$(word 2,$(subst -, ,$(LUCI_NAME)))
++LUCI_BASENAME?=$(patsubst luci-$(LUCI_TYPE)-%,%,$(LUCI_NAME))
++LUCI_LANGUAGES:=$(sort $(filter-out templates,$(notdir $(wildcard ${CURDIR}/po/*))))
++LUCI_DEFAULTS:=$(notdir $(wildcard ${CURDIR}/root/etc/uci-defaults/*))
++LUCI_PKGARCH?=$(if $(realpath src/Makefile),,all)
++
++PKG_NAME?=$(LUCI_NAME)
++
++PKG_BUILD_DEPENDS += $(LUCI_BUILD_DEPENDS)
++
+ PKG_VERSION?=$(if $(DUMP),x,$(strip $(shell \
+ 	if svn info >/dev/null 2>/dev/null; then \
+ 		revision="svn-r$$(LC_ALL=C svn info | sed -ne 's/^Revision: //p')"; \
+@@ -33,3 +44,14 @@ PKG_VERSION?=$(if $(DUMP),x,$(strip $(shell \
+ )))
+ 
+ include $(LUCIMKFILE)
++
++define Package/$(PKG_NAME)
++  SECTION:=luci
++  CATEGORY:=LuCI
++  SUBMENU:=$(if $(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.app))
++  TITLE:=$(if $(LUCI_TITLE),$(LUCI_TITLE),LuCI $(LUCI_NAME) $(LUCI_TYPE))
++  DEPENDS:=$(LUCI_DEPENDS)
++  $(if $(LUCI_EXTRA_DEPENDS),EXTRA_DEPENDS:=$(LUCI_EXTRA_DEPENDS))
++  $(if $(LUCI_PKGARCH),PKGARCH:=$(LUCI_PKGARCH))
++endef
++
+diff --git a/utils/luci-app-ffwizard-berlin/Makefile b/utils/luci-app-ffwizard-berlin/Makefile
+index d5236c9..69b99da 100644
+--- a/utils/luci-app-ffwizard-berlin/Makefile
++++ b/utils/luci-app-ffwizard-berlin/Makefile
+@@ -10,4 +10,9 @@ include ../../freifunk-berlin-generic.mk
+ 
+ #  URL:=http://berlin.freifunk.net
+ 
++define Build/Compile
++endef
++
+ # call BuildPackage - OpenWrt buildroot signature
++$(eval $(call BuildPackage,$(PKG_NAME)))
++#$(eval $(call BuildPackage,luci-app-ffwizard-berlin))
+diff --git a/utils/luci-mod-freifunk-ui/Makefile b/utils/luci-mod-freifunk-ui/Makefile
+index cf56bde..e6217cf 100644
+--- a/utils/luci-mod-freifunk-ui/Makefile
++++ b/utils/luci-mod-freifunk-ui/Makefile
+@@ -14,4 +14,31 @@ PKG_RELEASE:=3
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
++define Build/Configure
++endef
++
++ifneq ($(wildcard ${CURDIR}/src/Makefile),)
++ MAKE_PATH := src/
++ MAKE_VARS += FPIC="$(FPIC)" LUCI_VERSION="$(PKG_VERSION)" LUCI_GITBRANCH="$(PKG_GITBRANCH)"
++
++ define Build/Compile
++        $(call Build/Compile/Default,clean compile)
++ endef
++else
++ define Build/Compile
++ endef
++endif
++
++ifneq ($(LUCI_DEFAULTS),)
++define Package/$(PKG_NAME)/postinst
++[ -n "$${IPKG_INSTROOT}" ] || {$(foreach script,$(LUCI_DEFAULTS),
++        (. /etc/uci-defaults/$(script)) && rm -f /etc/uci-defaults/$(script))
++        exit 0
++}
++endef
++endif
++
++
+ # call BuildPackage - OpenWrt buildroot signature
++#$(eval $(call BuildPackage,$(PKG_NAME)))
++$(eval $(call BuildPackage,luci-mod-freifunk-ui))
+-- 
+2.20.1
+

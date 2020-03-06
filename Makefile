@@ -11,8 +11,6 @@ REVISION=git describe --always
 # set dir and file names
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
-TARGET_CONFIG=$(FW_DIR)/configs/common.config $(FW_DIR)/configs/$(MAINTARGET)-$(SUBTARGET).config
-TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
@@ -34,9 +32,6 @@ endif
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) feeds.conf patches $(wildcard patches/*)
-
-# profiles to be built (router models)
-PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
 
 FW_REVISION=$(shell $(REVISION))
 
@@ -208,18 +203,6 @@ $(FW_DIR)/embedded-files:
 	mkdir $@
 $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
-
-# openwrt config
-$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
-ifdef IS_BUILDBOT
-	cat $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) >$(OPENWRT_DIR)/.config
-else
-	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
-endif
-	# always replace CONFIG_VERSION_CODE by FW_REVISION
-	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
-	$(UMASK); \
-	  $(MAKE) -C $(OPENWRT_DIR) defconfig
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared

@@ -92,5 +92,5 @@ packages {
 	'luci-mod-failsafe',
 	'luci-theme-bootstrap',
 	'uhttpd',
-	'freifunk-berlin-system-defaults'
+	'freifunk-berlin-network-defaults'
 }

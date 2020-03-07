@@ -142,7 +142,7 @@ gluon-profiles: $(GLUON_TMPDIR)/$(GLUON_TARGET).packages
 $(GLUON_TMPDIR)/$(GLUON_TARGET).packages: $(LUA) .stamp-feeds-updated $(GLUON_TARGETSDIR)/$(GLUON_TARGET)
 	@$(CheckExternal)
 	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
-		$(LUA) scripts/target_config_profile.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES) luci-app-ffwizard-berlin'
+		$(LUA) scripts/target_config_profile.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
 
 gluon-images: $(GLUON_TMPDIR)/$(GLUON_TARGET).packages
 # taken from original images  target

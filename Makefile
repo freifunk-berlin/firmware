@@ -53,10 +53,10 @@ default: firmwares
 
 # check for spaces & resolve possibly relative paths
 define mkabspath
- ifneq (1,$(words [$($(1))]))
-  $$(error $(1) must not contain spaces)
- endif
- override $(1) := $(abspath $($(1)))
+   ifneq (1,$(words [$($(1))]))
+     $$(error $(1) must not contain spaces)
+   endif
+   override $(1) := $(abspath $($(1)))
 endef
 
 # initialize (possibly already user set) directory variables

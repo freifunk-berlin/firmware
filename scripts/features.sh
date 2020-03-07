@@ -35,7 +35,7 @@ vars=()
 
 for feature in $1; do
 	if [ "$(type -t "gluon_feature_nodefault_${feature}")" != 'function' ]; then
-		echo "gluon-${feature}"
+		echo "freifunk-berlin-${feature}"
 	fi
 
 	vars+=("$(sanitize "$feature")=1")

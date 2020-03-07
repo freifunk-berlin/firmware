@@ -1,0 +1,75 @@
+From 4473a8e58cebae40499025dc898b7b658481d934 Mon Sep 17 00:00:00 2001
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Sat, 7 Mar 2020 18:56:32 +0100
+Subject: [PATCH] luci-packages: move package-definition to common into
+ individual package
+
+this fixes double definitions in packages-list
+---
+ freifunk-berlin-generic.mk              | 10 ----------
+ utils/luci-app-ffwizard-berlin/Makefile | 10 ++++++++++
+ utils/luci-mod-freifunk-ui/Makefile     |  9 ++++++++-
+ 3 files changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/freifunk-berlin-generic.mk b/freifunk-berlin-generic.mk
+index b8f4d1d..fa4d48b 100644
+--- a/freifunk-berlin-generic.mk
++++ b/freifunk-berlin-generic.mk
+@@ -45,13 +45,3 @@ PKG_VERSION?=$(if $(DUMP),x,$(strip $(shell \
+ 
+ include $(LUCIMKFILE)
+ 
+-define Package/$(PKG_NAME)
+-  SECTION:=luci
+-  CATEGORY:=LuCI
+-  SUBMENU:=$(if $(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.app))
+-  TITLE:=$(if $(LUCI_TITLE),$(LUCI_TITLE),LuCI $(LUCI_NAME) $(LUCI_TYPE))
+-  DEPENDS:=$(LUCI_DEPENDS)
+-  $(if $(LUCI_EXTRA_DEPENDS),EXTRA_DEPENDS:=$(LUCI_EXTRA_DEPENDS))
+-  $(if $(LUCI_PKGARCH),PKGARCH:=$(LUCI_PKGARCH))
+-endef
+-
+diff --git a/utils/luci-app-ffwizard-berlin/Makefile b/utils/luci-app-ffwizard-berlin/Makefile
+index 27bb77c..01fa759 100644
+--- a/utils/luci-app-ffwizard-berlin/Makefile
++++ b/utils/luci-app-ffwizard-berlin/Makefile
+@@ -10,6 +10,16 @@ include ../../freifunk-berlin-generic.mk
+ 
+ #  URL:=http://berlin.freifunk.net
+ 
++define Package/$(PKG_NAME)
++  SECTION:=luci
++  CATEGORY:=LuCI
++  SUBMENU:=$(if $(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.app))
++  TITLE:=$(if $(LUCI_TITLE),$(LUCI_TITLE),LuCI $(LUCI_NAME) $(LUCI_TYPE))
++  DEPENDS:=$(LUCI_DEPENDS)
++  $(if $(LUCI_EXTRA_DEPENDS),EXTRA_DEPENDS:=$(LUCI_EXTRA_DEPENDS))
++  $(if $(LUCI_PKGARCH),PKGARCH:=$(LUCI_PKGARCH))
++endef
++
+ define Build/Compile
+ endef
+ 
+diff --git a/utils/luci-mod-freifunk-ui/Makefile b/utils/luci-mod-freifunk-ui/Makefile
+index e6217cf..c29f9b7 100644
+--- a/utils/luci-mod-freifunk-ui/Makefile
++++ b/utils/luci-mod-freifunk-ui/Makefile
+@@ -14,7 +14,14 @@ PKG_RELEASE:=3
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Build/Configure
++define Package/$(PKG_NAME)
++  SECTION:=luci
++  CATEGORY:=LuCI
++  SUBMENU:=$(if $(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.app))
++  TITLE:=$(if $(LUCI_TITLE),$(LUCI_TITLE),LuCI $(LUCI_NAME) $(LUCI_TYPE))
++  DEPENDS:=$(LUCI_DEPENDS)
++  $(if $(LUCI_EXTRA_DEPENDS),EXTRA_DEPENDS:=$(LUCI_EXTRA_DEPENDS))
++  $(if $(LUCI_PKGARCH),PKGARCH:=$(LUCI_PKGARCH))
+ endef
+ 
+ ifneq ($(wildcard ${CURDIR}/src/Makefile),)
+-- 
+2.20.1
+

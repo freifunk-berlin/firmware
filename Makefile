@@ -35,6 +35,8 @@ default: firmwares
 # compatibility to Gluon.buildsystem
 # * setup required makros and variables
 
+.SHELLFLAGS = -ec
+
 # check for spaces & resolve possibly relative paths
 define mkabspath
    ifneq (1,$(words [$($(1))]))
@@ -55,10 +57,11 @@ export GLUON_TMPDIR GLUON_PATCHESDIR
 # restore .patch files from all commits between 
 # patched-branch and base-branch
 update-patches: .stamp-pre-patch .FORCE
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update-patches.sh
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
-	@git status $(GLUON_PATCHESDIR)
-	@echo "patches/ has been updated from the packages-repos. You probably need to rebuild."
+	@
+	GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update-patches.sh
+	GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
+	git status $(GLUON_PATCHESDIR)
+	echo "patches/ has been updated from the packages-repos. You probably need to rebuild."
 
 ## Gluon - End
 
@@ -78,19 +81,22 @@ openwrt-clean-bin:
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 .stamp-feeds-updated: .stamp-patched
-	@$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/feeds.sh
+	@
+	$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/feeds.sh
 	touch $@
 
 # prepare patch
 pre-patch: stamp-clean-pre-patch .stamp-pre-patch
 .stamp-pre-patch: $(FW_DIR)/modules
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update.sh
+	@
+	GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update.sh
 	touch $@
 
 # patch openwrt and feeds working copy
 patch: stamp-clean-patched .stamp-patched
 .stamp-patched: .stamp-pre-patch $(wildcard $(GLUON_PATCHESDIR)/openwrt/*) $(wildcard $(GLUON_PATCHESDIR)/packages/*/*)
-	@$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
+	@
+	$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
 	touch $@
 
 .stamp-build_rev: .FORCE
@@ -143,15 +149,15 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/*.tar.xz
-	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
-	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
+	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do
+	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi
 	done
 	# copy packages
-	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
-	rm -rf $$PACKAGES_DIR; \
-	mkdir -p $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
-	cp -a $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
-	# e.g. packages/packages/mips_34k the doublicated packages is correct! \
+	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"
+	rm -rf $$PACKAGES_DIR
+	mkdir -p $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages
+	cp -a $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages
+	# e.g. packages/packages/mips_34k the doublicated packages is correct!
 	cp -a $(OPENWRT_DIR)/bin/packages $$PACKAGES_DIR/
 	touch $@
 
@@ -163,11 +169,11 @@ initrd: .stamp-initrd
 	# remove old versions
 	rm -f $(INITRD_DIR)/*
 	# copy initrd images (if existing)
-	for file in $(TARGET_BINDIR)/*-vmlinux-initramfs.elf; do \
-	  if [ -e $$file ]; then mv $$file $(INITRD_DIR)/ ; fi \
+	for file in $(TARGET_BINDIR)/*-vmlinux-initramfs.elf; do
+	  if [ -e $$file ]; then mv $$file $(INITRD_DIR)/ ; fi
 	done
-	for profile in `cat profiles/$(MAINTARGET)-$(SUBTARGET).profiles`; do \
-	  if [ -e $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin ]; then mv $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin $(INITRD_DIR)/ ; fi \
+	for profile in `cat profiles/$(MAINTARGET)-$(SUBTARGET).profiles`; do
+	  if [ -e $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin ]; then mv $(TARGET_BINDIR)/*-$$profile-initramfs-kernel.bin $(INITRD_DIR)/ ; fi
 	done
 	touch $@
 
@@ -213,13 +219,13 @@ endif
 	touch $@
 
 setup-sdk: .stamp-patched
-	 @if [ -z "$(SDK_FILE)" ]; then \
-		echo Error: Please provide SDK-FILE by using "make SDK_FILE=<filename>"; \
-		exit 1; \
+	@if [ -z "$(SDK_FILE)" ]; then
+		echo Error: Please provide SDK-FILE by using "make SDK_FILE=<filename>"
+		exit 1
 	fi
-	@if [[ ! "$(SDK_FILE)" == *"$(MAINTARGET)-$(SUBTARGET)"* ]]; then \
-		echo Error: TARGET seems not to match SDK-Target; \
-		exit 1; \
+	@if [[ ! "$(SDK_FILE)" == *"$(MAINTARGET)-$(SUBTARGET)"* ]]; then
+		echo Error: TARGET seems not to match SDK-Target
+		exit 1
 	fi
 	$(eval SDK_DIR=$(FW_DIR)/sdk-$(MAINTARGET)-$(SUBTARGET))
 	mkdir $(SDK_DIR)
@@ -230,8 +236,8 @@ setup-sdk: .stamp-patched
 	echo "src-link base ../../openwrt/package" >> $(SDK_DIR)/feeds.conf.default
 #	# replace ../../ by ../ (for relative feeds-path)
 #	#sed -i -e "s/..\/..\//..\//" $(SDK_DIR)/feeds.conf.default
-	@$(SDK_DIR)/scripts/feeds update
-	@$(UMASK); $(SDK_DIR)/scripts/feeds install -a
+	$(SDK_DIR)/scripts/feeds update
+	$(UMASK); $(SDK_DIR)/scripts/feeds install -a
 	cat $(TARGET_CONFIG) >$(SDK_DIR)/.config
 	$(UMASK); $(MAKE) -C $(SDK_DIR) defconfig
 
@@ -255,3 +261,4 @@ clean: stamp-clean .stamp-openwrt-cleaned
 .NOTPARALLEL:
 .FORCE:
 .SUFFIXES:
+.ONESHELL:

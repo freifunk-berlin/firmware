@@ -110,7 +110,8 @@ define merge_packages
     GLUON_PACKAGES := $$(strip $$(filter-out -$$(patsubst -%,%,$(pkg)) $$(patsubst -%,%,$(pkg)),$$(GLUON_PACKAGES)) $(pkg))
   )
 endef
-$(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES) $(GLUON_SITE_PACKAGES)))
+#$(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES) $(GLUON_SITE_PACKAGES)))
+$(eval $(call merge_packages,$(GLUON_DEFAULT_PACKAGES) $(GLUON_SITE_PACKAGES)))
 
 $(info package-src: $(GLUON_DEFAULT_PACKAGES) $(GLUON_FEATURE_PACKAGES) $(GLUON_SITE_PACKAGES))
 $(info packages   : $(GLUON_PACKAGES))
@@ -128,7 +129,7 @@ $(LUA):
 gluon-config: $(LUA) .stamp-feeds-updated $(OPENWRT_DIR)/dl
 	@$(CheckExternal)
 	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
-		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' '$(GLUON_EXTRA_PACKAGES)'\
+		$(LUA) scripts/target_config.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)' '$(GLUON_EXTRA_PACKAGES) $(GLUON_FEATURE_PACKAGES)'\
 		> openwrt/.config
 	+@$(OPENWRTMAKE) defconfig
 
@@ -139,10 +140,10 @@ gluon-compile: gluon-config
 	+@$(OPENWRTMAKE)
 
 gluon-profiles: $(GLUON_TMPDIR)/$(GLUON_TARGET).packages
-$(GLUON_TMPDIR)/$(GLUON_TARGET).packages: $(LUA) .stamp-feeds-updated $(GLUON_TARGETSDIR)/$(GLUON_TARGET)
+$(GLUON_TMPDIR)/$(GLUON_TARGET).packages: $(LUA) .stamp-feeds-updated $(GLUON_TARGETSDIR)/$(GLUON_TARGET) $(GLUON_SITEDIR/site.mk)
 	@$(CheckExternal)
 	@$(GLUON_CONFIG_VARS) FOREIGN_BUILD=ffberlin \
-		$(LUA) scripts/target_config_profile.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES)'
+		$(LUA) scripts/target_config_profile.lua '$(GLUON_TARGET)' '$(GLUON_PACKAGES) $(GLUON_FEATURE_PACKAGES)'
 
 gluon-images: $(GLUON_TMPDIR)/$(GLUON_TARGET).packages
 # taken from original images  target

@@ -60,7 +60,29 @@ device('ocedo-raccoon', 'ocedo_raccoon', {
 
 -- TP-Link
 
+device('tp-link-archer-c59-v1', 'tplink_archer-c59-v1', {
+	packages = ATH10K_PACKAGES_QCA9888,
+})
+
 device('tp-link-archer-c6-v2', 'tplink_archer-c6-v2', {
 	packages = ATH10K_PACKAGES_QCA9888,
+})
+
+device('tp-link-archer-c7-v4', 'tplink_archer-c7-v4', {
+	packages = ATH10K_PACKAGES_QCA9880,
+})
+
+device('tp-link-archer-c7-v5', 'tplink_archer-c7-v5', {
+	packages = ATH10K_PACKAGES_QCA9880,
+})
+
+-- Ubiquiti
+
+device('ubnt_unifiac-mesh', 'ubnt_unifiac-mesh', {
+	packages = ATH10K_PACKAGES_QCA9880,
+})
+
+device('ubnt_unifiac-pro', 'ubnt_unifiac-pro', {
+	packages = ATH10K_PACKAGES_QCA9880,
 })
 

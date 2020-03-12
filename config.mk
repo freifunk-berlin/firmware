@@ -7,4 +7,4 @@ OPENWRT_COMMIT=beaa2ecc10b5a3d1ea95c95fe1ff4c32f5e88965
 SET_BUILDBOT=env
 MAKE_ARGS=
 #BUILDTYPE - unstable / release
-BUILDTYPE=unstable
+BUILDTYPE=release

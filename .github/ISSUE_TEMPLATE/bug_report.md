@@ -52,6 +52,14 @@ By using a Git reference:
 
 Or the URL to the relevant commit
     https://github.com/freifunk-berlin/firmware/commit/<commit hash here>
+
+Or look it up from the bottom of the routers Webpage 
+    e.g. Powered by LuCI branch (git-19.249.30590-0b5e6d7) / Freifunk Berlin Dev-daily-1907 009f2ea
+    the info after the "/" char
+
+Or on the routers console
+    - in the login-banner (1st line after the Freifunk-banner)
+    - from the file /etc/openwrt-version; line "DISTRIB_REVISION="
 -->
 
 **Site Configuration:**

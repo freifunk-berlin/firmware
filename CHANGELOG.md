@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.0.6
+
+Revert local switch to Linux kernel 4.4.205
+
 ## Version 1.0.5
 
 Improve support for generating firmware-images for unofficial boards

@@ -9,7 +9,7 @@ The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some 
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 1.0.5 "Hedy" - 2020-03-13
+## Release Note 1.0.6 "Hedy" - 2020-04-xx
 * a maintenance release for Hedy-1.0.x-series
 * brings the new feature of changing the uplink preset-type
 * a new uplink-preset "tunnelberlin-tunneldigger"
@@ -28,7 +28,7 @@ New features like a new network concept will be part of future releases.
 
 ## Features
 * based on [OpenWrt](https://openwrt.org/start) v17.01.7+ (lede-17.01 branch)
-  * Linux 4.4.205 (local patch, might cause reboot-loops triggered by wifi-errors, see https://github.com/freifunk-berlin/firmware/pull/749)
+  * Linux 4.4.194
   * OLSR 0.9.0.3 (downgraded for BBB-VPN compatibility)
   * B.A.T.M.A.N. 2016.5 (with patches of 2020.0)
 * custom package lists for different settings

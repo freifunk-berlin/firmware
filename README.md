@@ -11,7 +11,8 @@ More user relevant information about the firmware are on the wiki page at: https
 * [ReleaseNotes](https://wiki.freifunk.net/Berlin:Firmware/v1.0.2)
 * a tutorial ([en](https://wiki.freifunk.net/Berlin:Firmware:En:Howto) / [de](https://wiki.freifunk.net/Berlin:Firmware:Howto)) on router configuration
 
-For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
+For questions write a mail to <berlin@berlin.freifunk.net>, open a discussion with 
+@freifunk-berlin/firmware or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
 
 ## Development

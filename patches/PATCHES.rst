@@ -1,16 +1,16 @@
 PATCHES
 #######
 
-Please add patches in the folowing structure
+Please add patches in the corresponding folder and use the folowing nameing-structure
 
 
-- 0xx - OpenWRT / LEDE related (upstream)
-- 1xx - packages (upstream)
-- 2xx - LUCI (upstream)
-- 3xx - routing (upstream)
-- 4xx - Freifunk (upstream)
-- 5xx - reserved
-- 6xx - build system changes to support this build system
-- 7xx - freifunk-berlin specific
-- 8xx - other
-- 9xx - reserved
+- 0xxx - Upstream fixes
+- 1xxx - Upstream backports
+- 2xxx - Upstream improvments
+- 3xxx - reserved
+- 4xxx - reserved
+- 5xxx - reserved
+- 6xxx - build system changes to support this build system
+- 7xxx - freifunk-berlin specific
+- 8xxx - other
+- 9xxx - reserved

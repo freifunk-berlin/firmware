@@ -107,7 +107,7 @@ zypper install git subversion ncurses-devel zlib-devel gawk \
 On Arch/Antergos:
 ```
 pacman -S base-devel git ncurses lib32-zlib gawk time unzip perl-xml-libxml \
- flex wget gettext quilt python openssl
+ flex wget gettext quilt python2 openssl
 ```
 
 ### Building all firmwares

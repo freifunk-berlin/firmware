@@ -93,7 +93,7 @@ pre-patch: stamp-clean-pre-patch .stamp-pre-patch
 # patch openwrt and feeds working copy
 patch: stamp-clean-patched .stamp-patched
 .stamp-patched: .stamp-pre-patch $(wildcard $(GLUON_PATCHESDIR)/openwrt/*) $(wildcard $(GLUON_PATCHESDIR)/packages/*/*)
-	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
+	@$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
 	touch $@
 
 .stamp-build_rev: .FORCE

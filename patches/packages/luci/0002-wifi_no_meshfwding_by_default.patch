@@ -1,0 +1,17 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: wifi_no_meshfwding_by_default
+
+diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+index 388b18d27e123698d7bec49b6a2262e0455548f9..982151510ecb1caa14f72e18f41faca016f5e2a4 100644
+--- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
++++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+@@ -849,7 +849,7 @@ return L.view.extend({
+ 
+ 				o = ss.taboption('advanced', form.Flag, 'mesh_fwding', _('Forward mesh peer traffic'));
+ 				o.rmempty = false;
+-				o.default = '1';
++				o.default = '0';
+ 				o.depends('mode', 'mesh');
+ 
+ 				o = ss.taboption('advanced', form.Value, 'mesh_rssi_threshold', _('RSSI threshold for joining'), _('0 = not using RSSI threshold, 1 = do not change driver default'));

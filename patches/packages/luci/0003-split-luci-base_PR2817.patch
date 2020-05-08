@@ -2,11 +2,10 @@ From: template <nomail@local>
 Date: Fri, 6 Sep 2019 08:29:50 +0000
 Subject: split-luci-base_PR2817
 
----
-
-
---- luci/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
-+++ luci/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
+diff --git a/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua b/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
+index a2023926e060fd2651fe943d5c7d7b5b474e6f74..fa823a7a75018efa5b1779eea299f4fc7383443e 100644
+--- a/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
++++ b/applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua
 @@ -2,7 +2,7 @@
  -- Copyright 2008-2011 Jo-Philipp Wich <jow@openwrt.org>
  -- Licensed to the public under the Apache License 2.0.
@@ -16,8 +15,10 @@ Subject: split-luci-base_PR2817
  	translate("UPnP allows clients in the local network to automatically configure the router."))
  
  m:section(SimpleSection).template  = "upnp_status"
---- luci/applications/luci-app-wol/luasrc/model/cbi/wol.lua
-+++ luci/applications/luci-app-wol/luasrc/model/cbi/wol.lua
+diff --git a/applications/luci-app-wol/luasrc/model/cbi/wol.lua b/applications/luci-app-wol/luasrc/model/cbi/wol.lua
+index 43b87dda9c09e91261543441e826d3354c4428ed..f6471369307463619e88113c7b29883dae829468 100644
+--- a/applications/luci-app-wol/luasrc/model/cbi/wol.lua
++++ b/applications/luci-app-wol/luasrc/model/cbi/wol.lua
 @@ -2,6 +2,7 @@
  -- Licensed to the public under the Apache License 2.0.
  
@@ -35,8 +36,11 @@ Subject: split-luci-base_PR2817
  		}
  
  		local p = io.popen(cmd .. " 2>&1")
+diff --git a/libs/luci-lib-base/Makefile b/libs/luci-lib-base/Makefile
+new file mode 100644
+index 0000000000000000000000000000000000000000..35b1836ecd13c6a47123324f677f2f5a258e53c3
 --- /dev/null
-+++ luci/libs/luci-lib-base/Makefile
++++ b/libs/luci-lib-base/Makefile
 @@ -0,0 +1,14 @@
 +#
 +# Copyright (C) 2008-2014 The LuCI Team <luci@lists.subsignal.org>
@@ -52,8 +56,11 @@ Subject: split-luci-base_PR2817
 +include ../../luci.mk
 +
 +# call BuildPackage - OpenWrt buildroot signature
+diff --git a/libs/luci-lib-base/luasrc/debug.lua b/libs/luci-lib-base/luasrc/debug.lua
+new file mode 100644
+index 0000000000000000000000000000000000000000..8ff1bb69818ba411766c0d12a81924e0302ba254
 --- /dev/null
-+++ luci/libs/luci-lib-base/luasrc/debug.lua
++++ b/libs/luci-lib-base/luasrc/debug.lua
 @@ -0,0 +1,37 @@
 +local debug = require "debug"
 +local io = require "io"
@@ -92,8 +99,11 @@ Subject: split-luci-base_PR2817
 +	end
 +end
 +
+diff --git a/libs/luci-lib-base/luasrc/http.lua b/libs/luci-lib-base/luasrc/http.lua
+new file mode 100644
+index 0000000000000000000000000000000000000000..20b55f2854ff3304de29748131472a1419c66f4c
 --- /dev/null
-+++ luci/libs/luci-lib-base/luasrc/http.lua
++++ b/libs/luci-lib-base/luasrc/http.lua
 @@ -0,0 +1,554 @@
 +-- Copyright 2008 Steven Barth <steven@midlink.org>
 +-- Copyright 2010-2018 Jo-Philipp Wich <jo@mein.io>
@@ -649,8 +659,11 @@ Subject: split-luci-base_PR2817
 +
 +	return false
 +end
+diff --git a/libs/luci-lib-base/luasrc/http.luadoc b/libs/luci-lib-base/luasrc/http.luadoc
+new file mode 100644
+index 0000000000000000000000000000000000000000..8f6f380d8bda091324f242b9c137cd6ff4f6ce9d
 --- /dev/null
-+++ luci/libs/luci-lib-base/luasrc/http.luadoc
++++ b/libs/luci-lib-base/luasrc/http.luadoc
 @@ -0,0 +1,260 @@
 +---[[
 +LuCI Web Framework high-level HTTP functions.
@@ -912,8 +925,11 @@ Subject: split-luci-base_PR2817
 +@return			String containing the error if unsuccessful
 +@see			parse_message_header
 +]]
+diff --git a/libs/luci-lib-base/luasrc/ltn12.lua b/libs/luci-lib-base/luasrc/ltn12.lua
+new file mode 100644
+index 0000000000000000000000000000000000000000..3a7268ccaef6347fa5daccf9247c6ac6168ca683
 --- /dev/null
-+++ luci/libs/luci-lib-base/luasrc/ltn12.lua
++++ b/libs/luci-lib-base/luasrc/ltn12.lua
 @@ -0,0 +1,316 @@
 +--[[
 +LuaSocket 2.0.2 license
@@ -1231,8 +1247,11 @@ Subject: split-luci-base_PR2817
 +    end
 +end
 +
+diff --git a/libs/luci-lib-base/luasrc/util.lua b/libs/luci-lib-base/luasrc/util.lua
+new file mode 100644
+index 0000000000000000000000000000000000000000..f3aa52603f8d7d3960951feeacd4a727727c5d81
 --- /dev/null
-+++ luci/libs/luci-lib-base/luasrc/util.lua
++++ b/libs/luci-lib-base/luasrc/util.lua
 @@ -0,0 +1,766 @@
 +-- Copyright 2008 Steven Barth <steven@midlink.org>
 +-- Licensed to the public under the Apache License 2.0.
@@ -2000,8 +2019,11 @@ Subject: split-luci-base_PR2817
 +function copcall(f, ...)
 +	return coxpcall(f, id, ...)
 +end
+diff --git a/libs/luci-lib-base/luasrc/util.luadoc b/libs/luci-lib-base/luasrc/util.luadoc
+new file mode 100644
+index 0000000000000000000000000000000000000000..6ab130008a428a08b4939e84cec95de55b8330e3
 --- /dev/null
-+++ luci/libs/luci-lib-base/luasrc/util.luadoc
++++ b/libs/luci-lib-base/luasrc/util.luadoc
 @@ -0,0 +1,395 @@
 +---[[
 +LuCI utility functions.
@@ -2398,8 +2420,10 @@ Subject: split-luci-base_PR2817
 +--					values of the function or the error object
 +]]
 +
---- luci/libs/luci-lib-httpclient/Makefile
-+++ luci/libs/luci-lib-httpclient/Makefile
+diff --git a/libs/luci-lib-httpclient/Makefile b/libs/luci-lib-httpclient/Makefile
+index b8bd428b2838ef9a8cede83dc227ff0538a362b2..9c28c35d810593385ba10cb5208007d13f40e4ec 100644
+--- a/libs/luci-lib-httpclient/Makefile
++++ b/libs/luci-lib-httpclient/Makefile
 @@ -7,7 +7,7 @@
  include $(TOPDIR)/rules.mk
  
@@ -2409,8 +2433,10 @@ Subject: split-luci-base_PR2817
  
  include ../../luci.mk
  
---- luci/libs/luci-lib-httpprotoutils/Makefile
-+++ luci/libs/luci-lib-httpprotoutils/Makefile
+diff --git a/libs/luci-lib-httpprotoutils/Makefile b/libs/luci-lib-httpprotoutils/Makefile
+index 851a362eb70465420a6a173fb9eea88ccfe07fe4..95f45d200275945ca08c1e5c5b7f37482c6a7f73 100644
+--- a/libs/luci-lib-httpprotoutils/Makefile
++++ b/libs/luci-lib-httpprotoutils/Makefile
 @@ -7,7 +7,7 @@
  include $(TOPDIR)/rules.mk
  
@@ -2420,8 +2446,10 @@ Subject: split-luci-base_PR2817
  
  include ../../luci.mk
  
---- luci/modules/luci-base/Makefile
-+++ luci/modules/luci-base/Makefile
+diff --git a/modules/luci-base/Makefile b/modules/luci-base/Makefile
+index ea233091017d5e76c4147fb1e7c1bffec7bfcfc5..fde712a50bb93d7e6e73cf7c3e7063e2f0a3c6a3 100644
+--- a/modules/luci-base/Makefile
++++ b/modules/luci-base/Makefile
 @@ -12,7 +12,7 @@ LUCI_TYPE:=mod
  LUCI_BASENAME:=base
  
@@ -2431,7 +2459,10 @@ Subject: split-luci-base_PR2817
  
  
  PKG_SOURCE:=v1.0.0.tar.gz
---- luci/modules/luci-base/luasrc/debug.lua
+diff --git a/modules/luci-base/luasrc/debug.lua b/modules/luci-base/luasrc/debug.lua
+deleted file mode 100644
+index 8ff1bb69818ba411766c0d12a81924e0302ba254..0000000000000000000000000000000000000000
+--- a/modules/luci-base/luasrc/debug.lua
 +++ /dev/null
 @@ -1,37 +0,0 @@
 -local debug = require "debug"
@@ -2471,8 +2502,10 @@ Subject: split-luci-base_PR2817
 -	end
 -end
 -
---- luci/modules/luci-base/luasrc/dispatcher.lua
-+++ luci/modules/luci-base/luasrc/dispatcher.lua
+diff --git a/modules/luci-base/luasrc/dispatcher.lua b/modules/luci-base/luasrc/dispatcher.lua
+index 17228ac32fee8236c3f05db86d86541f4a8bebd3..68f1cc0f160819b1c1622021bfc718bd606e81a7 100644
+--- a/modules/luci-base/luasrc/dispatcher.lua
++++ b/modules/luci-base/luasrc/dispatcher.lua
 @@ -5,6 +5,7 @@
  local fs = require "nixio.fs"
  local sys = require "luci.sys"
@@ -2501,7 +2534,10 @@ Subject: split-luci-base_PR2817
  		   media       = media;
  		   theme       = fs.basename(media);
  		   resource    = luci.config.main.resourcebase;
---- luci/modules/luci-base/luasrc/http.lua
+diff --git a/modules/luci-base/luasrc/http.lua b/modules/luci-base/luasrc/http.lua
+deleted file mode 100644
+index 20b55f2854ff3304de29748131472a1419c66f4c..0000000000000000000000000000000000000000
+--- a/modules/luci-base/luasrc/http.lua
 +++ /dev/null
 @@ -1,554 +0,0 @@
 --- Copyright 2008 Steven Barth <steven@midlink.org>
@@ -3058,7 +3094,10 @@ Subject: split-luci-base_PR2817
 -
 -	return false
 -end
---- luci/modules/luci-base/luasrc/http.luadoc
+diff --git a/modules/luci-base/luasrc/http.luadoc b/modules/luci-base/luasrc/http.luadoc
+deleted file mode 100644
+index 8f6f380d8bda091324f242b9c137cd6ff4f6ce9d..0000000000000000000000000000000000000000
+--- a/modules/luci-base/luasrc/http.luadoc
 +++ /dev/null
 @@ -1,260 +0,0 @@
 ----[[
@@ -3321,7 +3360,10 @@ Subject: split-luci-base_PR2817
 -@return			String containing the error if unsuccessful
 -@see			parse_message_header
 -]]
---- luci/modules/luci-base/luasrc/ltn12.lua
+diff --git a/modules/luci-base/luasrc/ltn12.lua b/modules/luci-base/luasrc/ltn12.lua
+deleted file mode 100644
+index 3a7268ccaef6347fa5daccf9247c6ac6168ca683..0000000000000000000000000000000000000000
+--- a/modules/luci-base/luasrc/ltn12.lua
 +++ /dev/null
 @@ -1,316 +0,0 @@
 ---[[
@@ -3640,7 +3682,10 @@ Subject: split-luci-base_PR2817
 -    end
 -end
 -
---- luci/modules/luci-base/luasrc/util.lua
+diff --git a/modules/luci-base/luasrc/util.lua b/modules/luci-base/luasrc/util.lua
+deleted file mode 100644
+index a30e8b72f31466d28bec20792c6648c9b6989cb2..0000000000000000000000000000000000000000
+--- a/modules/luci-base/luasrc/util.lua
 +++ /dev/null
 @@ -1,776 +0,0 @@
 --- Copyright 2008 Steven Barth <steven@midlink.org>
@@ -4419,7 +4464,10 @@ Subject: split-luci-base_PR2817
 -function copcall(f, ...)
 -	return coxpcall(f, id, ...)
 -end
---- luci/modules/luci-base/luasrc/util.luadoc
+diff --git a/modules/luci-base/luasrc/util.luadoc b/modules/luci-base/luasrc/util.luadoc
+deleted file mode 100644
+index 4ec68dd1efc0ed356876d584e8dee1e5e0a67b77..0000000000000000000000000000000000000000
+--- a/modules/luci-base/luasrc/util.luadoc
 +++ /dev/null
 @@ -1,413 +0,0 @@
 ----[[
@@ -4835,8 +4883,11 @@ Subject: split-luci-base_PR2817
 ---					values of the function or the error object
 -]]
 -
+diff --git a/modules/luci-base/luasrc/xml.lua b/modules/luci-base/luasrc/xml.lua
+new file mode 100644
+index 0000000000000000000000000000000000000000..30b37210bd83e9dc91e131d9f4eac5c443bfaf6e
 --- /dev/null
-+++ luci/modules/luci-base/luasrc/xml.lua
++++ b/modules/luci-base/luasrc/xml.lua
 @@ -0,0 +1,26 @@
 +-- Copyright 2008 Steven Barth <steven@midlink.org>
 +-- Licensed to the public under the Apache License 2.0.
@@ -4864,8 +4915,11 @@ Subject: split-luci-base_PR2817
 +-- also register functions above in the central string class for convenience
 +string.pcdata      = pcdata
 +string.striptags   = striptags
+diff --git a/modules/luci-base/luasrc/xml.luadoc b/modules/luci-base/luasrc/xml.luadoc
+new file mode 100644
+index 0000000000000000000000000000000000000000..58de53396641ddf4f759d83456926f183260d566
 --- /dev/null
-+++ luci/modules/luci-base/luasrc/xml.luadoc
++++ b/modules/luci-base/luasrc/xml.luadoc
 @@ -0,0 +1,23 @@
 +---[[
 +LuCI utility functions.
@@ -4890,8 +4944,10 @@ Subject: split-luci-base_PR2817
 +@return				String with HTML tags stripped of
 +]]
 +
---- luci/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
-+++ luci/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
+diff --git a/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua b/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
+index c81466c87455dc66f0ac965015b7f3df397c582b..91c6549163aedda73b63d499bb9162b7b58f0234 100644
+--- a/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
++++ b/modules/luci-mod-system/luasrc/model/cbi/admin_system/backupfiles.lua
 @@ -68,7 +68,7 @@ else
  					break
  				else
@@ -4901,7 +4957,3 @@ Subject: split-luci-base_PR2817
  					files[#files+1] = "</li>"
  				end
  			end
--- 
-2.20.1
-
-

@@ -1,7 +1,6 @@
-From 07e1d88d7beb43a4152460b82976dbe49919b264 Mon Sep 17 00:00:00 2001
 From: Eneas U de Queiroz <cotequeiroz@gmail.com>
 Date: Tue, 18 Feb 2020 17:47:20 -0300
-Subject: [PATCH] kernel: avoid underscore in *6lowpan package names
+Subject: kernel: avoid underscore in *6lowpan package names
 
 Packages kmod-bluetooth_6lowpan and kmod-ieee802154_6lowpan contain an
 underscore in the package name.  This causes problems in package/install
@@ -25,16 +24,12 @@ format.
 Using a dash in place of the underscore avoids the issue.
 
 Signed-off-by: Eneas U de Queiroz <cotequeiroz@gmail.com>
----
- package/kernel/linux/modules/other.mk | 6 +++---
- package/kernel/linux/modules/wpan.mk  | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/package/kernel/linux/modules/other.mk b/package/kernel/linux/modules/other.mk
-index 7549542308..16907a7336 100644
+index 16b438461e58d4be1f190e3b49e363e690110515..0e3c98e40d5a1b936539a5c09bc6cd2f0d39fd93 100644
 --- a/package/kernel/linux/modules/other.mk
 +++ b/package/kernel/linux/modules/other.mk
-@@ -84,7 +84,7 @@ endef
+@@ -87,7 +87,7 @@ endef
  $(eval $(call KernelPackage,ath3k))
  
  
@@ -43,7 +38,7 @@ index 7549542308..16907a7336 100644
    SUBMENU:=$(OTHER_MENU)
    TITLE:=Bluetooth 6LoWPAN support
    DEPENDS:=+kmod-6lowpan +kmod-bluetooth
-@@ -93,11 +93,11 @@ define KernelPackage/bluetooth_6lowpan
+@@ -96,11 +96,11 @@ define KernelPackage/bluetooth_6lowpan
    AUTOLOAD:=$(call AutoProbe,bluetooth_6lowpan)
  endef
  
@@ -58,7 +53,7 @@ index 7549542308..16907a7336 100644
  
  define KernelPackage/btmrvl
 diff --git a/package/kernel/linux/modules/wpan.mk b/package/kernel/linux/modules/wpan.mk
-index b9e9fa5699..053fa1e4bf 100644
+index 1e986ee0ca8ebe663175ada97a839945736762c6..0c2b0136b79ccc661cb9af8e867ba2059b19fc95 100644
 --- a/package/kernel/linux/modules/wpan.mk
 +++ b/package/kernel/linux/modules/wpan.mk
 @@ -116,7 +116,7 @@ endef
@@ -70,7 +65,7 @@ index b9e9fa5699..053fa1e4bf 100644
    SUBMENU:=$(WPAN_MENU)
    TITLE:= 6LoWPAN support over IEEE-802.15.4
    DEPENDS:=+kmod-6lowpan +kmod-ieee802154
-@@ -126,8 +126,8 @@ define KernelPackage/ieee802154_6lowpan
+@@ -127,8 +127,8 @@ define KernelPackage/ieee802154_6lowpan
    AUTOLOAD:=$(call AutoLoad,91,ieee802154_6lowpan)
  endef
  
@@ -81,7 +76,3 @@ index b9e9fa5699..053fa1e4bf 100644
  
 -$(eval $(call KernelPackage,ieee802154_6lowpan))
 +$(eval $(call KernelPackage,ieee802154-6lowpan))
--- 
-2.20.1
-
-

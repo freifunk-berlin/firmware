@@ -1,7 +1,6 @@
-From 355af10dc8c147c120e6e8e6bb59d6ef11be0ed2 Mon Sep 17 00:00:00 2001
 From: Sven Roederer <devel-sven@geroedel.de>
 Date: Thu, 24 Oct 2019 17:46:28 +0200
-Subject: [PATCH] tools/mkimake: fix handling of long pathnames
+Subject: tools/mkimake: fix handling of long pathnames
 
 Current pathlength of cmd to call dtc is limited to 512 bytes. Using two 245 byte
 paths for itb and the required parameters go over this limit and will be cut off.
@@ -21,14 +20,10 @@ make[5]: *** [install] Error 2
 make[5]: Leaving directory `/var/lib/buildbot/slaves/slave/ipq40xx-generic/build/firmware/openwrt/target/linux/ipq40xx'
 make[4]: *** [install] Error 2
 make[4]: Leaving directory `/var/lib/buildbot/slaves/slave/ipq40xx-generic/build/firmware/openwrt/target/linux'
----
- .../110-fix-handling-of-long-pathnames.patch  | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 tools/mkimage/patches/110-fix-handling-of-long-pathnames.patch
 
 diff --git a/tools/mkimage/patches/110-fix-handling-of-long-pathnames.patch b/tools/mkimage/patches/110-fix-handling-of-long-pathnames.patch
 new file mode 100644
-index 0000000000..9b7febd489
+index 0000000000000000000000000000000000000000..9b7febd489c3415cccdf8e92ba8f4eede8c775a7
 --- /dev/null
 +++ b/tools/mkimage/patches/110-fix-handling-of-long-pathnames.patch
 @@ -0,0 +1,32 @@
@@ -64,6 +59,3 @@ index 0000000000..9b7febd489
 ++#define MKIMAGE_MAX_DTC_CMDLINE_LEN	2 * MKIMAGE_MAX_TMPFILE_LEN + 35 /* 35 bytes for quotes, space, -o, len(MKIMAGE_DEFAULT_DTC_OPTIONS), len(MKIMAGE_TMPFILE_SUFFIX) */
 + 
 + #endif /* _MKIIMAGE_H_ */
--- 
-2.20.1
-

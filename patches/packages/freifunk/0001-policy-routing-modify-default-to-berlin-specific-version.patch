@@ -1,17 +1,9 @@
-From f717dc06d33edaf7b6304f15842ceea86066a923 Mon Sep 17 00:00:00 2001
 From: Sven Roederer <devel-sven@geroedel.de>
 Date: Wed, 20 Nov 2019 22:44:02 +0100
-Subject: [PATCH] policy-routing: modify default to berlin-specific version
-
----
- .../package/freifunk-policyrouting/Makefile   |   2 +-
- .../files/etc/config/freifunk-policyrouting   |   6 +-
- .../etc/hotplug.d/iface/30-policyrouting      |  90 +++++++--------
- .../files/etc/init.d/freifunk-policyrouting   | 105 +++++++++++++++---
- 4 files changed, 132 insertions(+), 71 deletions(-)
+Subject: policy-routing: modify default to berlin-specific version
 
 diff --git a/contrib/package/freifunk-policyrouting/Makefile b/contrib/package/freifunk-policyrouting/Makefile
-index a9301cef3..3a92224ff 100644
+index a9301cef31e96b6ae9004b99a273ad215433f3c9..3a92224ffde20d1891580b416cb8ebe171c51798 100644
 --- a/contrib/package/freifunk-policyrouting/Makefile
 +++ b/contrib/package/freifunk-policyrouting/Makefile
 @@ -4,7 +4,7 @@
@@ -24,7 +16,7 @@ index a9301cef3..3a92224ff 100644
  PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
  
 diff --git a/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
-index 3dd2998f9..8a88d030c 100644
+index 3bdd20ea9344bbaf037c424d13163929770ce43d..8a88d030c0f3f716da91172b80192940c6dea370 100644
 --- a/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
 +++ b/contrib/package/freifunk-policyrouting/files/etc/config/freifunk-policyrouting
 @@ -1,7 +1,5 @@
@@ -38,7 +30,7 @@ index 3dd2998f9..8a88d030c 100644
 +	option 'fallback' '0'
 +	option 'zones' 'freifunk'
 diff --git a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
-index 327e8793b..fc5d80248 100644
+index 327e8793bed0981f4c1dfbecf22e13c6efab59f0..fc5d802486fda9f05dcc7614747a0d32fd622f86 100644
 --- a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
 +++ b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
 @@ -4,7 +4,7 @@
@@ -167,7 +159,7 @@ index 327e8793b..fc5d80248 100644
  			fi
  		done
 diff --git a/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
-index 4c9172427..18c89f9bb 100755
+index 4c9172427c6c30479b28b87da8892a43efc8b245..18c89f9bb9330102af5e4a4b0fa41e0b9666369b 100755
 --- a/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 +++ b/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 @@ -5,7 +5,7 @@ START=15
@@ -331,6 +323,3 @@ index 4c9172427..18c89f9bb 100755
 -	uci commit network
  	start
  }
--- 
-2.20.1
-

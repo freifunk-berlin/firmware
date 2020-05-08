@@ -1,0 +1,17 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: wifi_nolegacy_rates_by_default
+
+diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+index dc4fdca31be7d2400b7e1387446818b06b9022b8..388b18d27e123698d7bec49b6a2262e0455548f9 100644
+--- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
++++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+@@ -806,7 +806,7 @@ return L.view.extend({
+ 					o.wifiNetwork = radioNet;
+ 
+ 					o = ss.taboption('advanced', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'));
+-					o.default = o.enabled;
++					o.default = o.disabled;
+ 
+ 					o = ss.taboption('advanced', form.Value, 'distance', _('Distance Optimization'), _('Distance to farthest network member in meters.'));
+ 					o.datatype = 'range(0,114750)';

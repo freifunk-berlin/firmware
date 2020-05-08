@@ -1,0 +1,16 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: policyrouting_ignore_ffuplink
+
+diff --git a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+index 61830545d7074f47a21b93dbd11843b70705bbf8..34ab9eb76fc28d7417636f182b2c7d20edb05c92 100644
+--- a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
++++ b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+@@ -1,6 +1,7 @@
+ #!/bin/sh
+ 
+ [ "$INTERFACE" = wan ] && exit
++[ "$INTERFACE" = ffuplink ] && exit
+ 
+ . /lib/functions.sh
+ . /lib/functions/network.sh

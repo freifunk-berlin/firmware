@@ -2,13 +2,11 @@ From: template <nomail@local>
 Date: Fri, 6 Sep 2019 08:29:50 +0000
 Subject: mbedtls-accept-rsa-1024
 
----
-
-
-Index: openwrt/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
-===================================================================
+diff --git a/package/libs/mbedtls/patches/201-accept-rsa-1024.patch b/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
+new file mode 100644
+index 0000000000000000000000000000000000000000..d5f2bbea350e8daebdbbf84c80855b2e60e6b490
 --- /dev/null
-+++ openwrt/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
++++ b/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
 @@ -0,0 +1,12 @@
 +--- a/library/x509_crt.c
 ++++ b/library/x509_crt.c
@@ -22,7 +20,3 @@ Index: openwrt/package/libs/mbedtls/patches/201-accept-rsa-1024.patch
 + 
 + /*
 +
--- 
-2.20.1
-
-

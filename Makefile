@@ -68,6 +68,7 @@ export GLUON_TMPDIR GLUON_PATCHESDIR
 update-patches: .stamp-pre-patch .FORCE
 	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update-patches.sh
 	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
+	@git status $(GLUON_PATCHESDIR)
 	@echo "patches/ has been updated from the packages-repos. You probably need to rebuild."
 
 ## Gluon - End

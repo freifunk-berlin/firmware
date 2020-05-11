@@ -1,0 +1,78 @@
+include config.mk
+
+# get main- and subtarget name from TARGET
+MAINTARGET=$(word 1, $(subst -, ,$(TARGET)))
+SUBTARGET=$(word 2, $(subst -, ,$(TARGET)))
+
+# set dir and file names
+FW_DIR=$(shell pwd)
+OPENWRT_DIR=$(FW_DIR)/openwrt
+FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
+
+
+download: $(OPENWRT_DIR)/.config
+	$(MAKE) -C $(OPENWRT_DIR) download
+	touch .stamp-$@
+
+tools: .stamp-download
+	$(MAKE) -C $(OPENWRT_DIR) tools/install
+	touch .stamp-$@
+
+toolchain: 
+	$(MAKE) -C $(OPENWRT_DIR) toolchain/install
+	touch .stamp-$@
+
+kmods: 
+	$(MAKE) -C $(OPENWRT_DIR) target/compile
+	touch .stamp-$@
+
+packages:
+	$(MAKE) -C $(OPENWRT_DIR) package/compile
+	$(MAKE) -C $(OPENWRT_DIR) package/install
+	touch .stamp-$@
+
+linux:
+	$(MAKE) -C $(OPENWRT_DIR) target/linux/install
+	touch .stamp-$@
+
+imagebuilder:
+	$(MAKE) -C $(OPENWRT_DIR) target/imagebuilder/install
+	touch .stamp-$@
+
+sdk:
+	$(MAKE) -C $(OPENWRT_DIR) target/sdk/install
+	touch .stamp-$@
+
+travis: $(OPENWRT_DIR)/.config
+	travis_wait $(MAKE) -C $(OPENWRT_DIR) toolchain/install
+
+buildbot: $(OPENWRT_DIR)/.config
+	$(MAKE) compile
+	$(MAKE) version-file
+	# copy imagebuilder, sdk and toolchain (if existing)
+	# remove old versions
+	rm -rf $(FW_TARGET_DIR)
+	[ -d $(FW_TARGET_DIR) ] || mkdir -p $(FW_TARGET_DIR)
+	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
+	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
+	done
+	# copy packages
+	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
+	rm -rf $$PACKAGES_DIR; \
+	mkdir -p $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
+	cp -a $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
+	# e.g. packages/packages/mips_34k the doublicated packages is correct! \
+	cp -a $(OPENWRT_DIR)/bin/packages $$PACKAGES_DIR/
+	rm -rf $(OPENWRT_DIR)
+	rm -rf $(FW_DIR)/dl
+	$(MAKE) IB_FILE=$(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz images
+
+config: $(OPENWRT_DIR)/.config
+$(OPENWRT_DIR)/.config: $(FW_DIR)/configs/common-autobuild.config
+	TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
+	cat $(FW_DIR)/configs/common-autobuild.config >>$(FW_DIR)/configs/common.config
+	$(MAKE) prepare
+
+
+.FORCE:
+.SUFFIXES:

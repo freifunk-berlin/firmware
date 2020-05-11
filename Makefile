@@ -12,20 +12,9 @@ REVISION=git describe --always
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 TARGET_CONFIG=$(FW_DIR)/configs/common.config $(FW_DIR)/configs/$(MAINTARGET)-$(SUBTARGET).config
-TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
-
-ifeq ($(SET_BUILDBOT),no)
-override IS_BUILDBOT=no
-else ifeq ($(SET_BUILDBOT),yes)
-override IS_BUILDBOT=yes
-endif
-
-ifeq ($(IS_BUILDBOT),yes)
-$(info special actions apply to builds on this host ...)
-endif
 
 # test for existing $TARGET-config or abort
 ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
@@ -126,12 +115,8 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
 
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) .stamp-build_rev $(OPENWRT_DIR)/dl
-ifdef IS_BUILDBOT
-	cat $(TARGET_CONFIG) $(TARGET_CONFIG_AUTOBUILD) >$(OPENWRT_DIR)/.config
-else
+$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
-endif
 	# always replace CONFIG_VERSION_CODE by FW_REVISION
 	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
 	$(UMASK); \
@@ -147,10 +132,6 @@ compile: stamp-clean-compiled .stamp-compiled
 .stamp-compiled: .stamp-prepared openwrt-clean-bin
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
-# check if running via buildbot and remove the build_dir folder to save some space
-ifdef IS_BUILDBOT
-	rm -rf $(OPENWRT_DIR)/build_dir
-endif
 	touch $@
 
 # fill firmwares-directory with:

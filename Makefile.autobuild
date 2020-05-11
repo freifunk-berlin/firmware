@@ -8,8 +8,6 @@ SUBTARGET=$(word 2, $(subst -, ,$(TARGET)))
 FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
-BUILD_DURATION=$(FW_DIR)/build-times.txt
-TIMECMD=/usr/bin/time --append -o $(BUILD_DURATION) --format "step $(1):\t%e real,\t%U user,\t%S sys"
 
 # current_step:next_step ... last_step:
 BUILD_STEPS=config:download download:tools tools:toolchain toolchain:kmods kmods:packages packages:linux linux:images images:
@@ -21,11 +19,9 @@ ifeq ($(IS_BUILDBOT),yes)
 else
 	$(error This Makefile ist specialized to run on CI-builds. You might no want to use it for local builds.)
 endif
-	#MAKE=$(MAKE) -j$(shell nproc)
 
 download: info .autobuild_stamp-download .FORCE
 .autobuild_stamp-download: $(OPENWRT_DIR)/.config
-	echo $(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs download
 	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs download
 	touch $@
 
@@ -67,8 +63,7 @@ travis: $(OPENWRT_DIR)/.config
 	travis_wait $(MAKE) -C $(OPENWRT_DIR) toolchain/install
 
 buildbot: $(OPENWRT_DIR)/.config
-	$(call TIMECMD,compile) \
-	  $(MAKE) compile
+	$(MAKE) compile
 	$(MAKE) version-file
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
@@ -86,16 +81,13 @@ buildbot: $(OPENWRT_DIR)/.config
 	cp -a $(OPENWRT_DIR)/bin/packages $$PACKAGES_DIR/
 	rm -rf $(OPENWRT_DIR)
 	rm -rf $(FW_DIR)/dl
-	$(call TIMECMD,images) \
-	  $(MAKE) IB_FILE=$(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz images
-	mv $(BUILD_DURATION) $(FW_TARGET_DIR)
+	$(MAKE) IB_FILE=$(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz images
 
 config: info $(OPENWRT_DIR)/.config
 $(OPENWRT_DIR)/.config: $(FW_DIR)/configs/common-autobuild.config
 	TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
 	cat $(FW_DIR)/configs/common-autobuild.config >>$(FW_DIR)/configs/common.config
-	$(call TIMECMD,prepare) \
-	  $(MAKE) prepare
+	$(MAKE) prepare
 
 next-buildstep-for-%:
 #	@echo this step: $*

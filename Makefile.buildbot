@@ -1,0 +1,35 @@
+include config.mk
+
+# get main- and subtarget name from TARGET
+MAINTARGET=$(word 1, $(subst -, ,$(TARGET)))
+SUBTARGET=$(word 2, $(subst -, ,$(TARGET)))
+
+# set dir and file names
+FW_DIR=$(shell pwd)
+OPENWRT_DIR=$(FW_DIR)/openwrt
+FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
+
+autobuild:
+	TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
+	$(MAKE) -f Makefile.buildlocal prepare
+	$(MAKE) -f Makefile.buildlocal compile
+	# copy imagebuilder, sdk and toolchain (if existing)
+	# remove old versions
+	rm -rf $(FW_TARGET_DIR)
+	[ -d $(FW_TARGET_DIR) ] || mkdir -p $(FW_TARGET_DIR)
+	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
+	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
+	done
+	# copy packages
+	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
+	rm -rf $$PACKAGES_DIR; \
+	mkdir -p $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
+	cp -a $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
+	# e.g. packages/packages/mips_34k the doublicated packages is correct! \
+	cp -a $(OPENWRT_DIR)/bin/packages $$PACKAGES_DIR/
+	rm -rf $(OPENWRT_DIR)
+	rm -rf $(FW_DIR)/dl
+	$(MAKE) -f Makefile.buildlocal IB_FILE=$(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz images
+
+.FORCE:
+.SUFFIXES:

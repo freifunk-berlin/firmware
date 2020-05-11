@@ -11,6 +11,7 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 
 autobuild:
 	TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
+	cat $(FW_DIR)/configs/common-autobuild.config >>$(FW_DIR)/configs/common.config
 	$(MAKE) -f Makefile.buildlocal prepare
 	$(MAKE) -f Makefile.buildlocal compile
 	# copy imagebuilder, sdk and toolchain (if existing)

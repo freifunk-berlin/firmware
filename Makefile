@@ -227,6 +227,9 @@ stamp-clean-firmwares:
 	rm -f $(OPENWRT_DIR)/.config
 	rm -f .stamp-$*
 
+stamp-clean-$(VERSION_FILE):
+	rm -f $(VERSION_FILE)
+
 stamp-clean-%:
 	rm -f .stamp-$*
 

@@ -1,4 +1,4 @@
-From 81a5e3578f9e351de0740ac2cbfec77f7a1e8637 Mon Sep 17 00:00:00 2001
+From 47b14b662412deb55fd089b9677ef8c75bef047c Mon Sep 17 00:00:00 2001
 From: template <nomail@local>
 Date: Fri, 6 Sep 2019 08:29:50 +0000
 Subject: [PATCH] split-luci-base_PR2817
@@ -16,11 +16,11 @@ Subject: [PATCH] split-luci-base_PR2817
  libs/luci-lib-httpclient/Makefile             |  2 +-
  libs/luci-lib-httpprotoutils/Makefile         |  2 +-
  modules/luci-base/Makefile                    |  2 +-
- modules/luci-base/luasrc/dispatcher.lua       |  7 ++---
+ modules/luci-base/luasrc/dispatcher.lua       | 11 ++++----
  modules/luci-base/luasrc/xml.lua              | 26 +++++++++++++++++++
  modules/luci-base/luasrc/xml.luadoc           | 23 ++++++++++++++++
  .../model/cbi/admin_system/backupfiles.lua    |  2 +-
- 16 files changed, 74 insertions(+), 37 deletions(-)
+ 16 files changed, 76 insertions(+), 39 deletions(-)
  create mode 100644 libs/luci-lib-base/Makefile
  rename {modules/luci-base => libs/luci-lib-base}/luasrc/debug.lua (100%)
  rename {modules/luci-base => libs/luci-lib-base}/luasrc/http.lua (100%)
@@ -218,7 +218,7 @@ index ea2330910..fde712a50 100644
  
  PKG_SOURCE:=v1.0.0.tar.gz
 diff --git a/modules/luci-base/luasrc/dispatcher.lua b/modules/luci-base/luasrc/dispatcher.lua
-index 1eeffb2b6..dee58e43f 100644
+index d14a86673..050e656b5 100644
 --- a/modules/luci-base/luasrc/dispatcher.lua
 +++ b/modules/luci-base/luasrc/dispatcher.lua
 @@ -5,6 +5,7 @@
@@ -229,7 +229,22 @@ index 1eeffb2b6..dee58e43f 100644
  local http = require "luci.http"
  local nixio = require "nixio", require "nixio.util"
  
-@@ -700,7 +701,7 @@ local function init_template_engine(ctx)
+@@ -271,12 +272,12 @@ end
+ 
+ local function tree_to_json(node, json)
+ 	local fs = require "nixio.fs"
+-	local util = require "luci.util"
++	local xml = require "luci.xml"
+ 
+ 	if type(node.nodes) == "table" then
+ 		for subname, subnode in pairs(node.nodes) do
+ 			local spec = {
+-				title = util.striptags(subnode.title),
++				title = xml.striptags(subnode.title),
+ 				order = subnode.order
+ 			}
+ 
+@@ -741,7 +742,7 @@ local function init_template_engine(ctx)
  				(scope and type(scope[key]) ~= "function" and scope[key]) or "")
  
  			if noescape ~= true then
@@ -238,7 +253,7 @@ index 1eeffb2b6..dee58e43f 100644
  			end
  
  			return string.format(' %s="%s"', tostring(key), val)
-@@ -715,8 +716,8 @@ local function init_template_engine(ctx)
+@@ -756,8 +757,8 @@ local function init_template_engine(ctx)
  		translate   = i18n.translate;
  		translatef  = i18n.translatef;
  		export      = function(k, v) if tpl.context.viewns[k] == nil then tpl.context.viewns[k] = v end end;

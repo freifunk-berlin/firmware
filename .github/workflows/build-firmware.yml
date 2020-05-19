@@ -18,7 +18,7 @@ jobs:
           - brcm2708-bcm2710
           - ipq40xx-generic
           - lantiq-xrx200
-          - mpc85xx-generic
+          - mpc85xx-p1010
           - mvebu-cortexa9
           - ramips-mt7620
           - ramips-mt7621

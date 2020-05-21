@@ -43,3 +43,9 @@ jobs:
       run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} imagebuilder
     - name: build openwrt images
       run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} images
+    - name: Archive build logs
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{matrix.target}}_logs
+        path: openwrt/logs

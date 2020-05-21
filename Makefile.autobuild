@@ -31,6 +31,10 @@ packages:
 	$(MAKE) -C $(OPENWRT_DIR) package/install
 	touch .stamp-$@
 
+images:
+	$(MAKE) -C $(OPENWRT_DIR) target/install
+	touch .stamp-$@
+
 linux:
 	$(MAKE) -C $(OPENWRT_DIR) target/linux/install
 	touch .stamp-$@

@@ -12,40 +12,40 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 
 download: $(OPENWRT_DIR)/.config
 	$(MAKE) -C $(OPENWRT_DIR) download
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
-tools: .stamp-download
+tools: .autobuild_stamp-download
 	$(MAKE) -C $(OPENWRT_DIR) tools/install
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
 toolchain: 
 	$(MAKE) -C $(OPENWRT_DIR) toolchain/install
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
 kmods: 
 	$(MAKE) -C $(OPENWRT_DIR) target/compile
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
 packages:
 	$(MAKE) -C $(OPENWRT_DIR) package/compile
 	$(MAKE) -C $(OPENWRT_DIR) package/install
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
 images:
 	$(MAKE) -C $(OPENWRT_DIR) target/install
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
 linux:
 	$(MAKE) -C $(OPENWRT_DIR) target/linux/install
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
 imagebuilder:
 	$(MAKE) -C $(OPENWRT_DIR) target/imagebuilder/install
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
 sdk:
 	$(MAKE) -C $(OPENWRT_DIR) target/sdk/install
-	touch .stamp-$@
+	touch .autobuild_stamp-$@
 
 travis: $(OPENWRT_DIR)/.config
 	travis_wait $(MAKE) -C $(OPENWRT_DIR) toolchain/install

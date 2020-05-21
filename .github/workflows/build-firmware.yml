@@ -1,0 +1,38 @@
+name: Build Firmware
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        target: [ath79-generic, ramips-mt7620]
+
+    env:
+      IS_BUILDBOT: yes
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install dependencies
+      run: sudo apt-get --quiet --assume-yes --no-install-recommends --no-show-upgraded install git build-essential libncurses5-dev zlib1g-dev gawk time unzip libxml-perl flex wget gawk gettext quilt python libssl-dev
+    - name: configure build
+      run: make -f Makefile.autobuild TARGET=${{matrix.target}} config
+    - name: download openwrt packages
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} download
+    - name: build openwrt tools
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} tools
+    - name: build openwrt toolchain
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} toolchain
+    - name: build openwrt kmods
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} kmods
+    - name: build openwrt packages
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} packages
+    - name: build openwrt imagebuilder
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} imagebuilder

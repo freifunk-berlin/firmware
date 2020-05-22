@@ -28,6 +28,8 @@ jobs:
       run: mkdir logs
     - name: configure build
       run: make -f Makefile.autobuild TARGET=${{matrix.target}} config
+    - name: OpenWrt-config to artifacts
+      run: cp openwrt/.config logs/openwrt.config
     - name: download openwrt packages
       run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} download
     - name: build openwrt tools

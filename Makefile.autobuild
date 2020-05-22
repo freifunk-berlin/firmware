@@ -10,9 +10,10 @@ OPENWRT_DIR=$(FW_DIR)/openwrt
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 
 
-download: $(OPENWRT_DIR)/.config
+download: .autobuild_stamp-download .FORCE
+.autobuild_stamp-download: $(OPENWRT_DIR)/.config
 	$(MAKE) -C $(OPENWRT_DIR) download
-	touch .autobuild_stamp-$@
+	touch $@
 
 tools: .autobuild_stamp-download
 	$(MAKE) -C $(OPENWRT_DIR) tools/install
@@ -26,12 +27,13 @@ kmods:
 	$(MAKE) -C $(OPENWRT_DIR) target/compile
 	touch .autobuild_stamp-$@
 
-packages:
+packages: .autobuild_stamp-packages .FORCE
+.autobuild_stamp-packages:
 	$(MAKE) -C $(OPENWRT_DIR) package/compile
 	$(MAKE) -C $(OPENWRT_DIR) package/install
-	touch .autobuild_stamp-$@
+	touch $@
 
-images:
+images: .autobuild_stamp-packages
 	$(MAKE) -C $(OPENWRT_DIR) target/install
 	touch .autobuild_stamp-$@
 
@@ -77,6 +79,6 @@ $(OPENWRT_DIR)/.config: $(FW_DIR)/configs/common-autobuild.config
 	cat $(FW_DIR)/configs/common-autobuild.config >>$(FW_DIR)/configs/common.config
 	$(MAKE) prepare
 
-
+.PHONY: download packages
 .FORCE:
 .SUFFIXES:

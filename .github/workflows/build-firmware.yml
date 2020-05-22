@@ -23,6 +23,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: install dependencies
       run: sudo apt-get --quiet --assume-yes --no-install-recommends --no-show-upgraded install git build-essential libncurses5-dev zlib1g-dev gawk time unzip libxml-perl flex wget gawk gettext quilt python libssl-dev
+    - name: setup folders
+      run: mkdir openwrt && ln -s ../logs openwrt/logs
     - name: configure build
       run: make -f Makefile.autobuild TARGET=${{matrix.target}} config
     - name: download openwrt packages
@@ -48,4 +50,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: ${{matrix.target}}_logs
-        path: openwrt/logs
+        path: logs

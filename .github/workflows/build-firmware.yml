@@ -35,7 +35,11 @@ jobs:
       run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} kmods
     - name: build openwrt packages
       run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} packages
-    - name: build openwrt images
-      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} images
+    - name: build openwrt linux
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} linux
+    - name: build openwrt sdk
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} sdk
     - name: build openwrt imagebuilder
       run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} imagebuilder
+    - name: build openwrt images
+      run: make -f Makefile.autobuild -j$(nproc) TARGET=${{matrix.target}} images

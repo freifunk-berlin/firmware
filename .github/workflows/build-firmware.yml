@@ -18,13 +18,14 @@ jobs:
 
     env:
       IS_BUILDBOT: yes
+      BUILD_LOG_DIR: logs
 
     steps:
     - uses: actions/checkout@v2
     - name: install dependencies
       run: sudo apt-get --quiet --assume-yes --no-install-recommends --no-show-upgraded install git build-essential libncurses5-dev zlib1g-dev gawk time unzip libxml-perl flex wget gawk gettext quilt python libssl-dev
     - name: setup folders
-      run: mkdir openwrt && ln -s ../logs openwrt/logs
+      run: mkdir logs
     - name: configure build
       run: make -f Makefile.autobuild TARGET=${{matrix.target}} config
     - name: download openwrt packages

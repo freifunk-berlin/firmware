@@ -26,6 +26,7 @@ jobs:
       run: sudo apt-get --quiet --assume-yes --no-install-recommends --no-show-upgraded install git build-essential libncurses5-dev zlib1g-dev gawk time unzip libxml-perl flex wget gawk gettext quilt python libssl-dev
     - name: setup build-environment
       run: |
+        df -h
         mkdir logs
         echo "::set-env name=MAKE_OPTS:: -j$(nproc) TARGET=${{matrix.target}} IS_BUILDBOT=${IS_BUILDBOT} "
         echo "::set-env name=next_buildstep::config"
@@ -34,6 +35,7 @@ jobs:
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-config)
         echo "::set-env name=next_buildstep::${nextstep}"
+        df -h
     - name: OpenWrt-config to artifacts
       run: cp openwrt/.config logs/openwrt.config
     - name: openwrt ${{ env.next_buildstep }}
@@ -121,3 +123,5 @@ jobs:
       with:
         name: ${{ matrix.target }}_bins
         path: openwrt/bin/
+    - run: df -h
+      if: ${{ !cancelled() }}

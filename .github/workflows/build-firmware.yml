@@ -14,6 +14,7 @@ jobs:
     strategy:
       matrix:
         target: [ath79-generic, ramips-mt7620]
+      fail-fast: false
 
     env:
       IS_BUILDBOT: yes

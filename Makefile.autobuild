@@ -9,6 +9,8 @@ FW_DIR=$(shell pwd)
 OPENWRT_DIR=$(FW_DIR)/openwrt
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 
+# current_step:next_step ... last_step:
+BUILD_STEPS=config:download download:tools tools:toolchain toolchain:kmods kmods:packages packages:linux linux:sdk sdk:imagebuilder imagebuilder:images images:
 
 download: .autobuild_stamp-download .FORCE
 .autobuild_stamp-download: $(OPENWRT_DIR)/.config
@@ -79,6 +81,16 @@ $(OPENWRT_DIR)/.config: $(FW_DIR)/configs/common-autobuild.config
 	cat $(FW_DIR)/configs/common-autobuild.config >>$(FW_DIR)/configs/common.config
 	$(MAKE) prepare
 
-.PHONY: download packages
+next-buildstep-for-%:
+#	@echo this step: $*
+#	@echo all steps: $(BUILD_STEPS)
+	@for step in $(BUILD_STEPS); do \
+	  curr_step=$$(echo $$step | cut -d : -f 1); \
+	  next_step=$$(echo $$step | cut -d : -f 2); \
+	  [[ $$curr_step = $* ]] && break; \
+	done; \
+	echo $$next_step
+
+.PHONY: download packages next-buildstep-for-%
 .FORCE:
 .SUFFIXES:

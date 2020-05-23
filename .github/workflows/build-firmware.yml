@@ -51,3 +51,9 @@ jobs:
       with:
         name: ${{matrix.target}}_logs
         path: logs
+    - name: Archive binaries
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ matrix.target }}_bins
+        path: openwrt/bin/

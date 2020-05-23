@@ -53,6 +53,7 @@ jobs:
         path: logs
     - name: Archive binaries
       if: ${{ !cancelled() }}
+      continue-on-error: true
       uses: actions/upload-artifact@v1
       with:
         name: ${{ matrix.target }}_bins

@@ -18,7 +18,6 @@ jobs:
 
     env:
       IS_BUILDBOT: yes
-      MAKE_OPTS: -j$(nproc) TARGET=${{matrix.target}}
       BUILD_LOG_DIR: logs
 
     steps:
@@ -28,6 +27,7 @@ jobs:
     - name: setup build-environment
       run: |
         mkdir logs
+        echo "::set-env name=MAKE_OPTS:: -j$(nproc) TARGET=${{matrix.target}} IS_BUILDBOT=${IS_BUILDBOT} "
         echo "::set-env name=next_buildstep::config"
     - name: OpenWrt ${{ env.next_buildstep }}
       run: |

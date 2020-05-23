@@ -12,7 +12,15 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 # current_step:next_step ... last_step:
 BUILD_STEPS=config:download download:tools tools:toolchain toolchain:kmods kmods:packages packages:linux linux:images images:
 
-download: .autobuild_stamp-download .FORCE
+info:
+ifeq ($(IS_BUILDBOT),yes)
+	$(info IS_BUILDBOT is $(IS_BUILDBOT))
+	$(info This is a CI-build with options $(MAKEFLAGS))
+else
+	$(error This Makefile ist specialized to run on CI-builds. You might no want to use it for local builds.)
+endif
+
+download: info .autobuild_stamp-download .FORCE
 .autobuild_stamp-download: $(OPENWRT_DIR)/.config
 	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs download
 	touch $@
@@ -75,7 +83,7 @@ buildbot: $(OPENWRT_DIR)/.config
 	rm -rf $(FW_DIR)/dl
 	$(MAKE) IB_FILE=$(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz images
 
-config: $(OPENWRT_DIR)/.config
+config: info $(OPENWRT_DIR)/.config
 $(OPENWRT_DIR)/.config: $(FW_DIR)/configs/common-autobuild.config
 	TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
 	cat $(FW_DIR)/configs/common-autobuild.config >>$(FW_DIR)/configs/common.config
@@ -91,6 +99,6 @@ next-buildstep-for-%:
 	done; \
 	echo $$next_step
 
-.PHONY: download packages next-buildstep-for-%
+.PHONY: download packages info next-buildstep-for-%
 .FORCE:
 .SUFFIXES:

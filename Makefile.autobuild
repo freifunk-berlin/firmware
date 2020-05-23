@@ -10,7 +10,7 @@ OPENWRT_DIR=$(FW_DIR)/openwrt
 FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 
 # current_step:next_step ... last_step:
-BUILD_STEPS=config:download download:tools tools:toolchain toolchain:kmods kmods:packages packages:linux linux:sdk sdk:imagebuilder imagebuilder:images images:
+BUILD_STEPS=config:download download:tools tools:toolchain toolchain:kmods kmods:packages packages:linux linux:images images:
 
 download: .autobuild_stamp-download .FORCE
 .autobuild_stamp-download: $(OPENWRT_DIR)/.config

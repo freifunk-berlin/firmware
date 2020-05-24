@@ -9,9 +9,11 @@ The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some 
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 New features like a new network concept will be part of future releases.
 
-## Release Note 1.0.6 "Hedy" - 2020-04-xx
+## Release Note 1.0.6 "Hedy" - 2020-05-26
 * a maintenance release for Hedy-1.0.x-series
 * removes the problematic kernel-update and reverts back to 4.4.194
+
+This release is based on OpenWrt-code which is EndOfLife and was last updated on September 2019. So it might contain known security issues.
 
 ## Features
 * based on [OpenWrt](https://openwrt.org/start) v17.01.7+ (lede-17.01 branch)

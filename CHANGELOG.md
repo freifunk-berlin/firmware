@@ -2,7 +2,8 @@
 
 ## Version 1.0.6
 
-Revert local switch to Linux kernel 4.4.205
+* Revert local switch to Linux kernel 4.4.205 to match OpenWrt (4.4.194)
+* Fix build with non 0022 umask
 
 ## Version 1.0.5
 

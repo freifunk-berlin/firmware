@@ -11,20 +11,7 @@ New features like a new network concept will be part of future releases.
 
 ## Release Note 1.0.6 "Hedy" - 2020-04-xx
 * a maintenance release for Hedy-1.0.x-series
-* brings the new feature of changing the uplink preset-type
-* a new uplink-preset "tunnelberlin-tunneldigger"
-* updates to fix security-problems and minor functional problems 
-* images for 
-  * Ubiquiti ERX SFP, TP-Link WR1043ND-v4
-  * TP-Link MR3020-v1, TP-Link MR3020, TP-Link Archer C50v1
-  * support for RaspberryPi and RaspberryPi3 (compile yourself)
-* introduces interface "ffuplink" for a flexible configuration of the wired uplink
-* improved support of 802.11s mesh in LuCI
-* disabling of 802.11b wifi-rates by default
-* in preinit and failsafe the IP-address is 192.168.42.1/24 (like an unconfigured node)
-* the LAN-interface (br-lan) is not providing a default route on a unconfigured node, so manual reconfiguration is required when not using the assistent
-* the assistent will not offer the setup of a private AP anymore
-* when changing or initially confiuring VLANs (via LuCI) the interfacenames will also be changed (should fix #388)
+* removes the problematic kernel-update and reverts back to 4.4.194
 
 ## Features
 * based on [OpenWrt](https://openwrt.org/start) v17.01.7+ (lede-17.01 branch)
@@ -51,6 +38,7 @@ New features like a new network concept will be part of future releases.
   * "br-dhcp" for all client-traffic
   * "wlan0-adhoc-2" and "wlan1-adhoc-5" for AdHoc-meshing between nodes in 2.4GHz and 5GHz
   * "ffuplink" for all traffic sent via the uplink of the node-operator, in case "share traffic" is set up
+    * this allows a flexible configuration of the wired uplink
     * freifunk-policyrouting fixed/patched for ffuplink-interface
 * frei.funk as local DNS entry for your router
   * you do not have to remember your IP to get access
@@ -58,6 +46,7 @@ New features like a new network concept will be part of future releases.
   * avoids network collisions
   * this is also used in OpenWrt failsafe
 * one dhcp network for APs and lan (bridged)
+* disabled 802.11b wifi-rates by default
 * remove of autoipv6 and use of ULA ipv6 prefixes
 * default dns servers:
   * 85.214.20.141 (FoeBud / Digital Courage)

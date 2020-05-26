@@ -102,6 +102,18 @@ jobs:
       with:
         name: ${{matrix.target}}_logs
         path: logs
+    - name: prepare upload of imagebuilder and sdk
+      run: |
+       mkdir tmp_build-tools
+       find openwrt/bin -name *imagebuilder*.tar.xz -exec mv '{}' tmp_build-tools/ \;
+       find openwrt/bin -name *sdk*.tar.xz -exec mv '{}' tmp_build-tools/ \;
+    - name: Archive imagebuilder and sdk
+      if: ${{ !cancelled() }}
+      continue-on-error: true
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ matrix.target }}_build-tools
+        path: tmp_build-tools
     - name: Archive binaries
       if: ${{ !cancelled() }}
       continue-on-error: true

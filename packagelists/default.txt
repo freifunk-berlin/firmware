@@ -1,0 +1,30 @@
+-ppp
+-ppp-mod-pppoe
+-wpad-mini
+wpad-basic
+
+# Common
+mtr
+ip
+iperf
+ethtool
+dnsmasq
+qos-scripts
+firewall
+iwinfo
+libiwinfo-lua
+tcpdump
+
+# GUI-basics
+uhttpd
+uhttpd-mod-ubus
+px5g-mbedtls
+libustream-mbedtls
+luci-app-firewall
+luci-app-opkg
+luci-theme-bootstrap
+# GUI addon
+luci-i18n-base-de
+luci-i18n-base-en
+luci-i18n-firewall-de
+luci-i18n-firewall-en

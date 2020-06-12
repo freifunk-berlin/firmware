@@ -22,8 +22,7 @@ automates firmware creation and applies the patches. All custom patches are loca
 ### Build Prerequisites
 
 Please take a look at the [OpenWrt documentation](https://openwrt.org/docs/guide-developer/build-system/install-buildsystem?s[]=prerequisites#prerequisites)
-for a complete and uptodate list of packages for your operating system. Make
-sure the list contains `quilt`. We use it for patch management.
+for a complete and uptodate list of packages for your operating system. 
 
 On Ubuntu/Debian:
 ```

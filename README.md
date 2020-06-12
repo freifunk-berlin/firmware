@@ -1,15 +1,13 @@
-# Freifunk Berlin Firmware
-https://wiki.freifunk.net/Berlin:Firmware
+# OpenWrt Firmware Builder
 
-This is the build-system for the Firmware of Freifunk Berlin.
-The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some modifications (to fix
-broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
+This is a build-system for OpenWrt based Firmwares. The Code is the core used for the Firmware of Freifunk Berlin.
+The build-system consists of some scripts to easily manage the creation of different types of firmware images
+for different target-architectures. It is based on vanilla [OpenWrt](https://openwrt.org/start) but can use 
+patches also to modify or fix individual aspects of OpenWrt.
 
 ## Contact / More information
 
-More user relevant information about the firmware are on the wiki page at: https://wiki.freifunk.net/Berlin:Firmware. There you can also find the
-* [ReleaseNotes](https://wiki.freifunk.net/Berlin:Firmware/v1.0.2)
-* a tutorial ([en](https://wiki.freifunk.net/Berlin:Firmware:En:Howto) / [de](https://wiki.freifunk.net/Berlin:Firmware:Howto)) on router configuration
+As this software has its roots in the Freifunk Community of Berlin, they are the best ressource to contact.
 
 For questions write a mail to <berlin@berlin.freifunk.net> or come to our weekly meetings.
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
@@ -18,11 +16,8 @@ If you find bugs please report them at: https://github.com/freifunk-berlin/firmw
 
 ### Info
 
-For the Berlin Freifunk firmware we use vanilla OpenWrt with additional patches
-and packages. The Makefile automates firmware
-creation and apply patches / integrates custom freifunk packages. All custom
-patches are located in *patches/* and all additional packages can be found at
-http://github.com/freifunk-berlin/packages_berlin.
+The build-system uses vanilla OpenWrt with optional additional patches and a custom list of feeds. The Makefile 
+automates firmware creation and applies the patches. All custom patches are located in *patches/*.
 
 ### Build Prerequisites
 
@@ -128,32 +123,6 @@ additional options
   * "env" the Makefile will honor the "IS_BUILDBOT" environment
   * "yes" the Makefile will always act as "IS_BUILDBOT" was set to "yes"
   * "no"  the Makefile will always act as "IS_BUILDBOT" was set to "no" / is unset. This way we can run builds on the buildbot like a local build.
-
-### Continuous integration / Buildbot
-
-The firmware is [built
-automatically](http://buildbot.berlin.freifunk.net/one_line_per_build) by our [buildbot farm](http://buildbot.berlin.freifunk.net/buildslaves). If you have a bit of CPU+RAM+storage capacity on one of your servers, you can provide a buildbot slave (see [berlin-buildbot](https://github.com/freifunk/berlin-buildbot)).
-
-All branches whose name complies to the "X.Y.Z" pattern are built and put into the "stable" downloads directory:
-[http://buildbot.berlin.freifunk.net/buildbot/stable/](http://buildbot.berlin.freifunk.net/buildbot/stable/)
-
-All branches with names not fitting the "X.Y.Z" pattern are built and put into the "unstable" directory:
-[http://buildbot.berlin.freifunk.net/buildbot/unstable/](http://buildbot.berlin.freifunk.net/buildbot/unstable/)
-Note that in the directory there is no reference to the branch name; unstable builds can be identified by build number only.
-
-#### Creating a release
-
-Every release has a [semantic version number](http://semver.org); each major version has its own codename.
-We name our releases after important female computer scientists, hackers, etc.
-For inspiration please take a look at the related
-[ticket](https://github.com/freifunk-berlin/firmware/issues/24).
-
-For a new release, create a new branch. The branch name must be a semantic version
-number. Make sure you change the semantic version number and, for major releases,
-the codename in the README and config files (./configs/*)
-
-The buildbot will build the release and place the files in the stable direcotry
-once you pushed the new branch to github.
 
 ### Patches with "git format-patch"
 

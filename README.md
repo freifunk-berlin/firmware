@@ -14,8 +14,13 @@ https://wiki.freifunk.net/Berlin:Firmware. There you can also find the
 * a tutorial ([en](https://wiki.freifunk.net/Berlin:Firmware:En:Howto) /
 [de](https://wiki.freifunk.net/Berlin:Firmware:Howto)) on router configuration.
 
-For questions write a mail to <berlin@berlin.freifunk.net>, open a discussion with 
-@freifunk-berlin/firmware or come to our weekly meetings.
+For questions write a mail to our public mailinglist
+<berlin@berlin.freifunk.net>, open a discussion with @freifunk-berlin/firmware
+or come to our weekly meetings. For further contact information have a look at
+https://berlin.freifunk.net/contact/
+
+### Bug Reports
+
 If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
 
 

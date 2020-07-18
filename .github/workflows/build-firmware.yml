@@ -32,6 +32,7 @@ jobs:
         echo "::set-env name=next_buildstep::config"
     - name: OpenWrt ${{ env.next_buildstep }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-config)
         echo "::set-env name=next_buildstep::${nextstep}"
@@ -41,60 +42,70 @@ jobs:
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"
     - name: openwrt ${{ env.next_buildstep }}
       if: ${{ env.next_buildstep != null }}
       run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
         make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
         nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
         echo "::set-env name=next_buildstep::${nextstep}"

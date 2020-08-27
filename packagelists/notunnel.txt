@@ -1,6 +1,7 @@
 -ppp
 -ppp-mod-pppoe
 -wpad-mini
+-wpad-basic-wolfssl
 wpad-basic
 
 # Defaults

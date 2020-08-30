@@ -29,11 +29,11 @@ ubnt-air-gateway
 ubnt-air-gateway-pro
 ubnt-airrouter
 ubnt-bullet-m:tiny
-ubnt-loco-m-xw:tiny
-ubnt-nano-m-xw:tiny
+ubnt-loco-m-xw
+ubnt-nano-m-xw
 ubnt-nano-m:tiny
 ubnt-rocket-m-ti:tiny
-ubnt-rocket-m-xw:tiny
+ubnt-rocket-m-xw
 ubnt-rocket-m:tiny
 ubnt-rs
 ubnt-rspro

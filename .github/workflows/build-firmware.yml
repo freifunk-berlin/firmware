@@ -15,6 +15,7 @@ jobs:
       matrix:
         target: 
           - ath79-generic
+          - ath79-mikrotik
           - bcm27xx-bcm2710
           - ipq40xx-generic
           - lantiq-xrx200

@@ -10,8 +10,8 @@ index a9301cef31e96b6ae9004b99a273ad215433f3c9..3a92224ffde20d1891580b416cb8ebe1
  include $(TOPDIR)/rules.mk
  
  PKG_NAME:=freifunk-policyrouting
--PKG_RELEASE:=6
-+PKG_RELEASE:=7
+-PKG_RELEASE:=7
++PKG_RELEASE:=8
  
  PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
  
@@ -163,7 +163,7 @@ index 4c9172427c6c30479b28b87da8892a43efc8b245..18c89f9bb9330102af5e4a4b0fa41e0b
 --- a/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 +++ b/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 @@ -5,7 +5,7 @@ START=15
- . /lib/functions.sh
+ . $IPKG_INSTROOT/lib/functions.sh
  
  proto="4"
 -[ -f /proc/net/ipv6_route ] && proto="4 6"

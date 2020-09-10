@@ -14,4 +14,4 @@ index c25acf40c4412e0bd66a10f32b1965d5d9095a4b..5ac35323daaf762b9e5e3be7ba91ddc9
 +					o.default = o.disabled;
  
  					o = ss.taboption('advanced', form.Value, 'distance', _('Distance Optimization'), _('Distance to farthest network member in meters.'));
- 					o.datatype = 'range(0,114750)';
+ 					o.datatype = 'or(range(0,114750),"auto")';

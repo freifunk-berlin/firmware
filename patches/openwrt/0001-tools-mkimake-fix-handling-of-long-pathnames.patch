@@ -26,7 +26,7 @@ new file mode 100644
 index 0000000000000000000000000000000000000000..9b7febd489c3415cccdf8e92ba8f4eede8c775a7
 --- /dev/null
 +++ b/tools/mkimage/patches/110-fix-handling-of-long-pathnames.patch
-@@ -0,0 +1,32 @@
+@@ -0,0 +1,21 @@
 +diff -ur u-boot-2018.03.orig/tools/fit_image.c u-boot-2018.03/tools/fit_image.c
 +--- u-boot-2018.03.orig/tools/fit_image.c	2018-03-13 13:02:19.000000000 +0100
 ++++ u-boot-2018.03/tools/fit_image.c	2019-10-24 17:16:23.914656651 +0200
@@ -38,24 +38,15 @@ index 0000000000000000000000000000000000000000..9b7febd489c3415cccdf8e92ba8f4eed
 + #include <version.h>
 + #include <u-boot/crc.h>
 + 
-+@@ -658,6 +659,9 @@
++@@ -735,6 +735,9 @@
 + 		snprintf(cmd, sizeof(cmd), "cp \"%s\" \"%s\"",
 + 			 params->imagefile, tmpfile);
 + 	}
 ++	if (strlen(cmd) >= MKIMAGE_MAX_DTC_CMDLINE_LEN - 1) {
-++		fprintf(stderr, "WARNING: command-line for FIT creation might be truncated.\n");
+++		fprintf(stderr, "WARNING: command-line for FIT creation might be truncated and will probably fail.\n");
 ++	}
++ 
 + 	if (*cmd && system(cmd) == -1) {
 + 		fprintf (stderr, "%s: system(%s) failed: %s\n",
-+ 				params->cmdname, cmd, strerror(errno));
-+diff -ur u-boot-2018.03.orig/tools/mkimage.h u-boot-2018.03/tools/mkimage.h
-+--- u-boot-2018.03.orig/tools/mkimage.h	2019-10-24 16:07:20.643345838 +0200
-++++ u-boot-2018.03/tools/mkimage.h	2019-10-24 17:27:38.682921690 +0200
-+@@ -43,6 +43,6 @@
-+ #define MKIMAGE_TMPFILE_SUFFIX		".tmp"
-+ #define MKIMAGE_MAX_TMPFILE_LEN		256
-+ #define MKIMAGE_DEFAULT_DTC_OPTIONS	"-I dts -O dtb -p 500"
-+-#define MKIMAGE_MAX_DTC_CMDLINE_LEN	512
-++#define MKIMAGE_MAX_DTC_CMDLINE_LEN	2 * MKIMAGE_MAX_TMPFILE_LEN + 35 /* 35 bytes for quotes, space, -o, len(MKIMAGE_DEFAULT_DTC_OPTIONS), len(MKIMAGE_TMPFILE_SUFFIX) */
-+ 
-+ #endif /* _MKIIMAGE_H_ */
+-- 
+2.20.1

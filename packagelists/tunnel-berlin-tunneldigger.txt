@@ -33,8 +33,7 @@ tcpdump
 # GUI-basics
 uhttpd
 uhttpd-mod-ubus
-px5g-mbedtls
-libustream-mbedtls
+px5g-wolfssl
 luci-app-ffwizard-berlin
 luci-mod-freifunk-ui
 luci-app-olsr

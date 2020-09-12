@@ -12,6 +12,6 @@ index 79e71616dcfd5af0d2396ed1db2202836c80c3f0..4327a715d803b923fcbb647389980de9
  	set_default doth 1
 -	set_default legacy_rates 1
 +	set_default legacy_rates 0
+ 	set_default airtime_mode 0
  
  	[ "$hwmode" = "b" ] && legacy_rates=1
- 

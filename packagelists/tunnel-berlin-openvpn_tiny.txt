@@ -1,3 +1,0 @@
-# "Tiny"-devices have to less hardware-capabilities for this package-collection
-#
-# so disable 4MB ...

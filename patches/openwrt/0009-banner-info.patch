@@ -2,11 +2,10 @@ From: template <nomail@local>
 Date: Fri, 6 Sep 2019 08:29:50 +0000
 Subject: banner-info
 
----
-
-
---- lede/package/base-files/files/etc/banner	2017-12-10 21:27:21.352612551 +0100
-+++ new/package/base-files/files/etc/banner	2017-12-10 21:19:20.000000000 +0100
+diff --git a/package/base-files/files/etc/banner b/package/base-files/files/etc/banner
+index f3af3c014f20f1b1157bde1cadae64cab0189c9f..c91c7e89d0a8cbe7aaefa3fb7e8e997f16b2f29a 100644
+--- a/package/base-files/files/etc/banner
++++ b/package/base-files/files/etc/banner
 @@ -1,8 +1,20 @@
 -  _______                     ________        __
 - |       |.-----.-----.-----.|  |  |  |.----.|  |_
@@ -35,7 +34,3 @@ Subject: banner-info
 + For questions write a mail to <berlin@berlin.freifunk.net>
 + or check https://berlin.freifunk.net/contact for our weekly meetings.
 +
--- 
-2.20.1
-
-

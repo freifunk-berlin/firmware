@@ -1,7 +1,6 @@
-From a4909c226365d0b2cdd13ef3cf886351a736562d Mon Sep 17 00:00:00 2001
 From: Sven Roederer <devel-sven@geroedel.de>
 Date: Mon, 9 Dec 2019 22:26:20 +0100
-Subject: [PATCH] enable "sysupgrade -u" by default
+Subject: enable "sysupgrade -u" by default
 
 This enables the "-u" option of sysupgrade by default, as discussed in #641.
 To unset this default we add "-U" to revert to OpenWrt default.
@@ -9,12 +8,9 @@ To unset this default we add "-U" to revert to OpenWrt default.
 Having this option by default will avoid the putting files into the backup,
 which are unmodified from /rom. This way we can fix issue #637 (a race
 condition we have seen in our uplink-configuration).
----
- package/base-files/files/sbin/sysupgrade | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/package/base-files/files/sbin/sysupgrade b/package/base-files/files/sbin/sysupgrade
-index 935d08048e..1892204ff8 100755
+index 6c518b780eddd973966537b50d8f7c82539bb1e1..8010d9682a6574aad783d2ab208a2b5eea34d3b5 100755
 --- a/package/base-files/files/sbin/sysupgrade
 +++ b/package/base-files/files/sbin/sysupgrade
 @@ -14,7 +14,7 @@ export SAVE_OVERLAY=0
@@ -54,6 +50,3 @@ index 935d08048e..1892204ff8 100755
  	-n           do not save configuration over reflash
  	-p           do not attempt to restore the partition table after flash.
  	-k           include in backup a list of current installed packages at
--- 
-2.20.1
-

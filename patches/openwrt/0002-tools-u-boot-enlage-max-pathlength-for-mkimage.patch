@@ -1,19 +1,14 @@
-From 3aaac29f3f64cb46ca6bd04d6ec3dc59fb92da99 Mon Sep 17 00:00:00 2001
 From: Sven Roederer <devel-sven@geroedel.de>
 Date: Fri, 25 Oct 2019 12:15:30 +0200
-Subject: [PATCH] tools/u-boot: enlage max pathlength for mkimage
+Subject: tools/u-boot: enlage max pathlength for mkimage
 
 this prevents build-errors as of "Image file name (mkimage) too long, can't create tmpfile"
 On Freifunk-Berlins buildbots such errors have been triggered by depth of directories and
 long imagenames.
----
- .../patches/900-mkimage-enlarge-max-pathlen.patch    | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 tools/mkimage/patches/900-mkimage-enlarge-max-pathlen.patch
 
 diff --git a/tools/mkimage/patches/900-mkimage-enlarge-max-pathlen.patch b/tools/mkimage/patches/900-mkimage-enlarge-max-pathlen.patch
 new file mode 100644
-index 0000000000..2a76893854
+index 0000000000000000000000000000000000000000..2a76893854e02300f3f466616e450d7041f33807
 --- /dev/null
 +++ b/tools/mkimage/patches/900-mkimage-enlarge-max-pathlen.patch
 @@ -0,0 +1,12 @@
@@ -29,6 +24,3 @@ index 0000000000..2a76893854
 + #define MKIMAGE_DEFAULT_DTC_OPTIONS	"-I dts -O dtb -p 500"
 + #define MKIMAGE_MAX_DTC_CMDLINE_LEN	2 * MKIMAGE_MAX_TMPFILE_LEN + 35 /* 35 bytes for quotes, space, -o, len(MKIMAGE_DEFAULT_DTC_OPTIONS), len(MKIMAGE_TMPFILE_SUFFIX) */
 + 
--- 
-2.20.1
-

@@ -1,0 +1,16 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: policyrouting_fix_bypass-vpn
+
+diff --git a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+index fc5d802486fda9f05dcc7614747a0d32fd622f86..61830545d7074f47a21b93dbd11843b70705bbf8 100644
+--- a/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
++++ b/contrib/package/freifunk-policyrouting/files/etc/hotplug.d/iface/30-policyrouting
+@@ -1,5 +1,7 @@
+ #!/bin/sh
+ 
++[ "$INTERFACE" = wan ] && exit
++
+ . /lib/functions.sh
+ . /lib/functions/network.sh
+ 

@@ -63,6 +63,14 @@ $(eval $(call mkabspath,GLUON_PATCHESDIR))
 
 export GLUON_TMPDIR GLUON_PATCHESDIR
 
+# restore .patch files from all commits between 
+# patched-branch and base-branch
+update-patches: .stamp-pre-patch .FORCE
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update-patches.sh
+	@GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
+	@git status $(GLUON_PATCHESDIR)
+	@echo "patches/ has been updated from the packages-repos. You probably need to rebuild."
+
 ## Gluon - End
 
 # clean up openwrt working copy

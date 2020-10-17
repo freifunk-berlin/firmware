@@ -1,0 +1,138 @@
+name: Build Firmware
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        target: [ath79-generic, ramips-mt7620]
+      fail-fast: false
+
+    env:
+      IS_BUILDBOT: yes
+      BUILD_LOG_DIR: logs
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install dependencies
+      run: sudo apt-get --quiet --assume-yes --no-install-recommends --no-show-upgraded install git build-essential libncurses5-dev zlib1g-dev gawk time unzip libxml-perl flex wget gawk gettext quilt python libssl-dev
+    - name: setup build-environment
+      run: |
+        df -h
+        mkdir logs
+        echo "::set-env name=MAKE_OPTS:: -j$(nproc) TARGET=${{matrix.target}} IS_BUILDBOT=${IS_BUILDBOT} "
+        echo "::set-env name=next_buildstep::config"
+    - name: OpenWrt ${{ env.next_buildstep }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-config)
+        echo "::set-env name=next_buildstep::${nextstep}"
+        df -h
+    - name: OpenWrt-config to artifacts
+      run: cp openwrt/.config logs/openwrt.config
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: openwrt ${{ env.next_buildstep }}
+      if: ${{ env.next_buildstep != null }}
+      run: |
+        echo "running: make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}"
+        make -f Makefile.autobuild ${MAKE_OPTS} ${next_buildstep}
+        nextstep=$(make -f Makefile.autobuild next-buildstep-for-${next_buildstep})
+        echo "::set-env name=next_buildstep::${nextstep}"
+    - name: Archive build logs
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{matrix.target}}_logs
+        path: logs
+    - name: prepare upload of imagebuilder and sdk
+      run: |
+       mkdir tmp_build-tools
+       find openwrt/bin -name *imagebuilder*.tar.xz -exec mv '{}' tmp_build-tools/ \;
+       find openwrt/bin -name *sdk*.tar.xz -exec mv '{}' tmp_build-tools/ \;
+    - name: Archive imagebuilder and sdk
+      if: ${{ !cancelled() }}
+      continue-on-error: true
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ matrix.target }}_build-tools
+        path: tmp_build-tools
+    - name: Archive binaries
+      if: ${{ !cancelled() }}
+      continue-on-error: true
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ matrix.target }}_bins
+        path: openwrt/bin/
+    - run: df -h
+      if: ${{ !cancelled() }}

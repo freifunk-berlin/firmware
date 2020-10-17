@@ -1,0 +1,104 @@
+include config.mk
+
+# get main- and subtarget name from TARGET
+MAINTARGET=$(word 1, $(subst -, ,$(TARGET)))
+SUBTARGET=$(word 2, $(subst -, ,$(TARGET)))
+
+# set dir and file names
+FW_DIR=$(shell pwd)
+OPENWRT_DIR=$(FW_DIR)/openwrt
+FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
+
+# current_step:next_step ... last_step:
+BUILD_STEPS=config:download download:tools tools:toolchain toolchain:kmods kmods:packages packages:linux linux:images images:
+
+info:
+ifeq ($(IS_BUILDBOT),yes)
+	$(info IS_BUILDBOT is $(IS_BUILDBOT))
+	$(info This is a CI-build with options $(MAKEFLAGS))
+else
+	$(error This Makefile ist specialized to run on CI-builds. You might no want to use it for local builds.)
+endif
+
+download: info .autobuild_stamp-download .FORCE
+.autobuild_stamp-download: $(OPENWRT_DIR)/.config
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs download
+	touch $@
+
+tools: .autobuild_stamp-download
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs tools/install
+	touch .autobuild_stamp-$@
+
+toolchain: 
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs toolchain/install
+	touch .autobuild_stamp-$@
+
+kmods: 
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/compile
+	touch .autobuild_stamp-$@
+
+packages: .autobuild_stamp-packages .FORCE
+.autobuild_stamp-packages:
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs package/compile
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs package/install
+	touch $@
+
+images: .autobuild_stamp-packages
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/install
+	touch .autobuild_stamp-$@
+
+linux:
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/linux/install
+	touch .autobuild_stamp-$@
+
+imagebuilder:
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/imagebuilder/install
+	touch .autobuild_stamp-$@
+
+sdk:
+	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/sdk/install
+	touch .autobuild_stamp-$@
+
+travis: $(OPENWRT_DIR)/.config
+	travis_wait $(MAKE) -C $(OPENWRT_DIR) toolchain/install
+
+buildbot: $(OPENWRT_DIR)/.config
+	$(MAKE) compile
+	$(MAKE) version-file
+	# copy imagebuilder, sdk and toolchain (if existing)
+	# remove old versions
+	rm -rf $(FW_TARGET_DIR)
+	[ -d $(FW_TARGET_DIR) ] || mkdir -p $(FW_TARGET_DIR)
+	for file in $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*{imagebuilder,sdk,toolchain}*.tar.xz; do \
+	  if [ -e $$file ]; then mv $$file $(FW_TARGET_DIR)/ ; fi \
+	done
+	# copy packages
+	PACKAGES_DIR="$(FW_TARGET_DIR)/packages"; \
+	rm -rf $$PACKAGES_DIR; \
+	mkdir -p $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
+	cp -a $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/packages/* $$PACKAGES_DIR/targets/$(MAINTARGET)/$(SUBTARGET)/packages; \
+	# e.g. packages/packages/mips_34k the doublicated packages is correct! \
+	cp -a $(OPENWRT_DIR)/bin/packages $$PACKAGES_DIR/
+	rm -rf $(OPENWRT_DIR)
+	rm -rf $(FW_DIR)/dl
+	$(MAKE) IB_FILE=$(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz images
+
+config: info $(OPENWRT_DIR)/.config
+$(OPENWRT_DIR)/.config: $(FW_DIR)/configs/common-autobuild.config
+	TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
+	cat $(FW_DIR)/configs/common-autobuild.config >>$(FW_DIR)/configs/common.config
+	$(MAKE) prepare
+
+next-buildstep-for-%:
+#	@echo this step: $*
+#	@echo all steps: $(BUILD_STEPS)
+	@for step in $(BUILD_STEPS); do \
+	  curr_step=$$(echo $$step | cut -d : -f 1); \
+	  next_step=$$(echo $$step | cut -d : -f 2); \
+	  [[ $$curr_step = $* ]] && break; \
+	done; \
+	echo $$next_step
+
+.PHONY: download packages info next-buildstep-for-%
+.FORCE:
+.SUFFIXES:

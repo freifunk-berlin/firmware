@@ -145,26 +145,22 @@ make images IB_FILE=<file> TARGET=... PACKAGES_LIST_DEFAULT=...
 The default target is `ar71xx-generic`. For a complete list of supported targets look in `configs/` for the target-specific configs.
 Each of these targets need a matching file in `profiles/` with the profiles (boards) that should be build with the imagebuilder.
 
-additional options
-
-* IS_BUILDBOT :
-  * this will be "yes" when running on the buildbot farm and helps to save some disc-space by removing files not required anymore. On manual builds you should not set this to "yes", as you have to rebuild the whole toolchain each time.
-* SET_BUILDBOT :
-  * "env" the Makefile will honor the "IS_BUILDBOT" environment
-  * "yes" the Makefile will always act as "IS_BUILDBOT" was set to "yes"
-  * "no"  the Makefile will always act as "IS_BUILDBOT" was set to "no" / is unset. This way we can run builds on the buildbot like a local build.
-
-### Continuous integration / Buildbot
+### Continuous integration / GitHubActions
 
 The firmware is [built
-automatically](http://buildbot.berlin.freifunk.net/one_line_per_build) by our [buildbot farm](http://buildbot.berlin.freifunk.net/buildslaves). If you have a bit of CPU+RAM+storage capacity on one of your servers, you can provide a buildbot slave (see [berlin-buildbot](https://github.com/freifunk/berlin-buildbot)).
+automatically](https://github.com/freifunk-berlin/firmware/actions) via a [GitHubActions workflow](https://github.com/freifunk-berlin/firmware/blob/master/.github/workflows/build-firmware.yml). 
+A build is triggered by any PR or commit to the master branch. We switched from a selfhosted 
+[Buildbot-setup](https://buildbot.net/) to GitHubActions because this reduced the maintenance we need.
 
-All branches whose name complies to the "X.Y.Z" pattern are built and put into the "stable" downloads directory:
-[http://buildbot.berlin.freifunk.net/buildbot/stable/](http://buildbot.berlin.freifunk.net/buildbot/stable/)
+Since the switch to GitHubActions nobody reimplemented a way of deploying / publishing the builds, so 
+the following sentences are just some kind of reminder for this ToDo.
 
-All branches with names not fitting the "X.Y.Z" pattern are built and put into the "unstable" directory:
+~~All branches whose name complies to the "X.Y.Z" pattern are built and put into the "stable" downloads directory:
+[http://buildbot.berlin.freifunk.net/buildbot/stable/](http://buildbot.berlin.freifunk.net/buildbot/stable/)~~
+
+~~All branches with names not fitting the "X.Y.Z" pattern are built and put into the "unstable" directory:
 [http://buildbot.berlin.freifunk.net/buildbot/unstable/](http://buildbot.berlin.freifunk.net/buildbot/unstable/)
-Note that in the directory there is no reference to the branch name; unstable builds can be identified by build number only.
+Note that in the directory there is no reference to the branch name; unstable builds can be identified by build number only.~~
 
 #### Creating a release
 
@@ -177,8 +173,8 @@ For a new release, create a new branch. The branch name must be a semantic versi
 number. Make sure you change the semantic version number and, for major releases,
 the codename in the README and config files (./configs/*)
 
-The buildbot will build the release and place the files in the stable direcotry
-once you pushed the new branch to github.
+~~The buildbot will build the release and place the files in the stable direcotry
+once you pushed the new branch to github.~~
 
 ### Patches with "git format-patch"
 

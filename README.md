@@ -180,8 +180,11 @@ once you pushed the new branch to github.~~
 
 **Important:** all patches should be pushed upstream!
 
-If a patch is not yet included upstream, it can be placed in the corresponding subdirectory below the`patches`
-directory. To create a correct patch-file just use the [`git format-patch`](https://git-scm.com/docs/git-format-patch) command.
+If a patch is not yet included upstream, it can be placed in the corresponding subdirectory below the `patches`
+directory. To create a correct patch-file just use the `make update-patches` command. It's a wrapper around 
+[`git format-patch`](https://git-scm.com/docs/git-format-patch) to transform local-changes into .patch files.
+This wrapper is borrowed from the [Freifunk Gluon buildsystem](https://github.com/freifunk-gluon/gluon), so 
+check their [documentation](https://gluon.readthedocs.io/en/latest/dev/basics.html#working-with-repositories).
 
 #### Create a patch
 
@@ -195,27 +198,19 @@ Then switch to the openwrt directory:
 ```bash
 cd openwrt
 ```
-
 or continue to the relevant feed directory:
 
 ```bash
 cd feeds/luci
 ```
-
-use the normal `git commit` workflow to apply your changes to the code. When done convert your last commit 
-into a patch by running:
-
-```bash
-git format-patch --start-number <n> HEAD^
-```
-where `n` is the next free number of the correlating patch-subdirectory. You can use something like `HEAD^^^^`
-to create patch-files from you last 4 commmits, or even use a git-rev directly. Feel free to squash multiple 
-commits into a single one before creating the patch-file or use something like 
+use the normal `git commit` workflow to apply your changes to the code of the `patched` branch. When done convert
+change back to the root folder and run:
 
 ```bash
-git format-patch --stdout HEAD^^^^ > patches/routing/0008-awesome.patch
+make update-patches
 ```
-to create a single file of these 4 commits
+This will update all patches and show the changes by `git status patches/`. Mannually review them and commit the requred
+changes. Your new patch should show up as an untracked file in the relating subfolder.
 
 #### Modify a patch
 
@@ -226,9 +221,11 @@ make clean patch
 cd openwrt
 cd feeds/luci
 ```
-Then just add a new commit with your changes and squash it with the commit relating to the patch-file.
-To update the patch-file use the same `git format-patch` sequence as you did when creating the patch
-initially.
+Then just add a new commit with your changes and squash it or rebase it to the originating commit. To update the 
+patch-file use the same `make update-patches` sequence as you did when creating the patch initially.
+
+By squashing / rebasing you ensure, that your changes will not become a separate patch-file, but stays just a clean
+patch-file.
 
 #### Delete a patch
 
@@ -237,7 +234,7 @@ environment:
 
 ```bash
 git rm patches/openwrt/0010-unrelevant-change.patch
-make patch
+make update-patches
 ```
 
 ### Submitting patches

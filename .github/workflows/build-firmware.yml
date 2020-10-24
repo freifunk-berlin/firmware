@@ -13,7 +13,11 @@ jobs:
 
     strategy:
       matrix:
-        target: [ath79-generic, ath79-tiny, ramips-mt7620, mvebu-cortexa9]
+        target: 
+          - ath79-generic
+          - ath79-tiny
+          - ramips-mt7620
+          - mvebu-cortexa9
       fail-fast: false
 
     env:

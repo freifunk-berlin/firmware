@@ -13,7 +13,17 @@ jobs:
 
     strategy:
       matrix:
-        target: [ath79-generic, brcm2708-bcm2710, ipq40xx-generic, lantiq-xrx200, mpc85xx-generic, mvebu-cortexa9, ramips-mt7620, ramips-mt7621, ramips-mt76x8, x86-generic]
+        target: 
+          - ath79-generic
+          - brcm2708-bcm2710
+          - ipq40xx-generic
+          - lantiq-xrx200
+          - mpc85xx-generic
+          - mvebu-cortexa9
+          - ramips-mt7620
+          - ramips-mt7621
+          - ramips-mt76x8
+          - x86-generic
       fail-fast: false
 
     env:

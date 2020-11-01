@@ -23,7 +23,7 @@ make[4]: Leaving directory `/var/lib/buildbot/slaves/slave/ipq40xx-generic/build
 
 diff --git a/tools/mkimage/patches/110-fix-handling-of-long-pathnames.patch b/tools/mkimage/patches/110-fix-handling-of-long-pathnames.patch
 new file mode 100644
-index 0000000000000000000000000000000000000000..9b7febd489c3415cccdf8e92ba8f4eede8c775a7
+index 0000000000000000000000000000000000000000..d8a05115a7bb3b0a622c12cb25d151d726a7a20e
 --- /dev/null
 +++ b/tools/mkimage/patches/110-fix-handling-of-long-pathnames.patch
 @@ -0,0 +1,21 @@
@@ -48,5 +48,3 @@ index 0000000000000000000000000000000000000000..9b7febd489c3415cccdf8e92ba8f4eed
 + 
 + 	if (*cmd && system(cmd) == -1) {
 + 		fprintf (stderr, "%s: system(%s) failed: %s\n",
--- 
-2.20.1

@@ -3,7 +3,7 @@ Date: Wed, 20 Nov 2019 22:44:02 +0100
 Subject: policy-routing: modify default to berlin-specific version
 
 diff --git a/contrib/package/freifunk-policyrouting/Makefile b/contrib/package/freifunk-policyrouting/Makefile
-index a9301cef31e96b6ae9004b99a273ad215433f3c9..3a92224ffde20d1891580b416cb8ebe171c51798 100644
+index 1b44ac321bd4f226068d3048033d6de80aa2764c..748e6071f7d6a80bd902c7957486f682441d0f6f 100644
 --- a/contrib/package/freifunk-policyrouting/Makefile
 +++ b/contrib/package/freifunk-policyrouting/Makefile
 @@ -4,7 +4,7 @@
@@ -159,7 +159,7 @@ index 327e8793bed0981f4c1dfbecf22e13c6efab59f0..fc5d802486fda9f05dcc7614747a0d32
  			fi
  		done
 diff --git a/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting b/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
-index 4c9172427c6c30479b28b87da8892a43efc8b245..18c89f9bb9330102af5e4a4b0fa41e0b9666369b 100755
+index c46de07d05e0bf82128528f31f758cd3600fecc3..1f105e3f9b584e6327826d84b4cea3286aa96b53 100755
 --- a/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 +++ b/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
 @@ -5,7 +5,7 @@ START=15

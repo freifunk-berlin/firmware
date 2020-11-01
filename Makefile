@@ -16,9 +16,26 @@ FW_TARGET_DIR=$(FW_DIR)/firmwares/$(MAINTARGET)-$(SUBTARGET)
 VERSION_FILE=$(FW_TARGET_DIR)/VERSION.txt
 UMASK=umask 022
 
+define newline
+
+
+endef
+
+
+define listtargets
+$(error $(1) TARGET defined ! $(newline) \
+  $(addprefix $(newline) * ,$(VALID_TARGETS)) \
+  $(newline)Please specify one from the list above via 'TARGET' environment or in config.mk)
+endef
+
 # test for existing $TARGET-config or abort
+VALID_TARGETS=$(sort $(notdir $(basename $(wildcard $(FW_DIR)/profiles/*.profiles))))
+ifdef TARGET
 ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
-$(error config for $(TARGET) not defined)
+$(call listtargets,Invalid)
+endif
+else
+$(call listtargets,No)
 endif
 
 # if any of the following files have been changed: clean up openwrt dir

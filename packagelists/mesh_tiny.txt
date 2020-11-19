@@ -7,6 +7,8 @@
 -ppp
 -ppp-mod-pppoe
 -wpad
+-wpad-basic-wolfssl
+wpad-mini
 opkg
 -usign
 

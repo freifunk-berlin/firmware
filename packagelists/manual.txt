@@ -1,6 +1,7 @@
 -ppp
 -ppp-mod-pppoe
 -wpad-mini
+-wpad-basic-wolfssl
 wpad-basic
 
 # Defaults
@@ -29,8 +30,7 @@ libiwinfo-lua
 # GUI-basics
 uhttpd
 uhttpd-mod-ubus
-px5g-mbedtls
-libustream-mbedtls
+px5g-wolfssl
 luci-mod-freifunk-ui
 luci-app-olsr
 luci-app-olsr-services

@@ -6,12 +6,12 @@ diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network
 index 3290358ed21ea571ac7b7683f6900b749064b1b9..1667f737361715936c6d4dbbf737091ee2f1d1bb 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -120,7 +120,7 @@ hostapd_prepare_device_config() {
+@@ -123,7 +123,7 @@ hostapd_prepare_device_config() {
  	set_default country_ie 1
  	set_default spectrum_mgmt_required 0
  	set_default doth 1
 -	set_default legacy_rates 1
 +	set_default legacy_rates 0
  	set_default airtime_mode 0
+ 	set_default cell_density 0
  
- 	[ "$hwmode" = "b" ] && legacy_rates=1

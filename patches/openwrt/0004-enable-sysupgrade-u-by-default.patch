@@ -10,7 +10,7 @@ which are unmodified from /rom. This way we can fix issue #637 (a race
 condition we have seen in our uplink-configuration).
 
 diff --git a/package/base-files/files/sbin/sysupgrade b/package/base-files/files/sbin/sysupgrade
-index ca2eb298dccdb8053d0b69e7068691027005b976..9c6bfd546dbd62703226cf71fcc7e67a8a1325d1 100755
+index 7e0a00e13b8ee4be7163936fd01a7beff0ce5c99..503ce7ea46a68d1727525b4e17b1d343d19e4c35 100755
 --- a/package/base-files/files/sbin/sysupgrade
 +++ b/package/base-files/files/sbin/sysupgrade
 @@ -14,7 +14,7 @@ export SAVE_OVERLAY=0

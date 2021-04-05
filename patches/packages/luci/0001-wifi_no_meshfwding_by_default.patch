@@ -3,10 +3,10 @@ Date: Fri, 6 Sep 2019 08:29:50 +0000
 Subject: wifi_no_meshfwding_by_default
 
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-index 25e59de8e7950a209db48a0bf7507ea1767f11b2..876be2730045a366c9a89659d7388b7df4758add 100644
+index c8a8e5c213b22175f1195a59a8de44dd1b98735e..1fd4bb3d5c5a52de828c3a36bac8d2f2edd8e2a0 100644
 --- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-@@ -933,7 +933,7 @@ return view.extend({
+@@ -943,7 +943,7 @@ return view.extend({
  
  				o = ss.taboption('advanced', form.Flag, 'mesh_fwding', _('Forward mesh peer traffic'));
  				o.rmempty = false;

@@ -72,7 +72,7 @@ alfred
 batctl-default
 
 # Uplink
-freifunk-berlin-uplink-notunnel-files
+freifunk-berlin-uplink-notunnel
 
 # Statistics
 luci-app-statistics

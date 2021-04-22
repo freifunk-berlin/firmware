@@ -1,0 +1,45 @@
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Thu, 22 Apr 2021 22:35:58 +0200
+Subject: luci.mk: make SUBMENU package define customizable and optional
+
+When including luci.mk in external repos it's sometimes usefull to not use
+the default LuCI-submenu hierarchy.
+This change defines the LUCI_SUBMENU_FORCED variable which completely overrides
+the default submenu of the LuCI config-section. When LUCI_SUBMENU_FORCED is not
+defined, the default submenu derrived from LUCI_TYPE or "Application" fallback
+is used.
+Defining LUCI_SUBMENU_FORCED in the package Makefile will just use this value.
+Setting it to "none" will not define a submenu at all.
+Together with LUCI_SECTION and LUCI_CATEGORY menu items can now created at any
+place in the menu structure.
+
+Signed-off-by: Sven Roederer <devel-sven@geroedel.de>
+
+diff --git a/luci.mk b/luci.mk
+index 319551789f221630c574c190babab05cfe8a040c..636cf316ec3fdaf154685750760210a447e46969 100644
+--- a/luci.mk
++++ b/luci.mk
+@@ -123,10 +123,22 @@ PKG_GITBRANCH?=$(if $(DUMP),x,$(strip $(shell \
+ 
+ include $(INCLUDE_DIR)/package.mk
+ 
++# LUCI_SUBMENU: the submenu-item below the LuCI top-level menu inside OpoenWrt menuconfig
++#               usually one of the LUCI_MENU.* definitions
++# LUCI_SUBMENU_DEFAULT: the regular SUBMENU defined by LUCI_TYPE or derrived from the packagename
++# LUCI_SUBMENU_FORCED: manually forced value SUBMENU to set to by explicit definiton
++#                      can be any string, "none" disables the creation of a submenu 
++#                      most usefull in combination with LUCI_CATEGORY, to make the package appear
++#                      anywhere in the menu structure
++LUCI_SUBMENU_DEFAULT=$(if $(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.app))
++LUCI_SUBMENU=$(if $(LUCI_SUBMENU_FORCED),$(LUCI_SUBMENU_FORCED),$(LUCI_SUBMENU_DEFAULT))
++
+ define Package/$(PKG_NAME)
+   SECTION:=$(LUCI_SECTION)
+   CATEGORY:=$(LUCI_CATEGORY)
+-  SUBMENU:=$(if $(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.$(LUCI_TYPE)),$(LUCI_MENU.app))
++ifneq ($(LUCI_SUBMENU),none)
++  SUBMENU:=$(LUCI_SUBMENU)
++endif
+   TITLE:=$(if $(LUCI_TITLE),$(LUCI_TITLE),LuCI $(LUCI_NAME) $(LUCI_TYPE))
+   DEPENDS:=$(LUCI_DEPENDS)
+   VERSION:=$(if $(PKG_VERSION),$(PKG_VERSION),$(PKG_SRC_VERSION))

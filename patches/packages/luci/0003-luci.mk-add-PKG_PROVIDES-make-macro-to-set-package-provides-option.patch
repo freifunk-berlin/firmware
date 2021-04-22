@@ -1,0 +1,20 @@
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Sat, 17 Apr 2021 22:38:24 +0200
+Subject: luci.mk: add PKG_PROVIDES make-macro to set package/provides option
+
+Add PKG_PROVIDES macro to be passed down to buildpackage defines as  PROVIDES variable.
+
+Signed-off-by: Sven Roederer <devel-sven@geroedel.de>
+
+diff --git a/luci.mk b/luci.mk
+index cb53aa2bbd7715ceb38dd7180f7979b76c10cc55..319551789f221630c574c190babab05cfe8a040c 100644
+--- a/luci.mk
++++ b/luci.mk
+@@ -132,6 +132,7 @@ define Package/$(PKG_NAME)
+   VERSION:=$(if $(PKG_VERSION),$(PKG_VERSION),$(PKG_SRC_VERSION))
+   $(if $(LUCI_EXTRA_DEPENDS),EXTRA_DEPENDS:=$(LUCI_EXTRA_DEPENDS))
+   $(if $(LUCI_PKGARCH),PKGARCH:=$(LUCI_PKGARCH))
++  $(if $(PKG_PROVIDES),PROVIDES:=$(PKG_PROVIDES))
+   URL:=$(LUCI_URL)
+   MAINTAINER:=$(LUCI_MAINTAINER)
+ endef

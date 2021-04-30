@@ -1,0 +1,50 @@
+From: David Bauer <mail@david-bauer.net>
+Date: Thu, 1 Apr 2021 01:20:45 +0200
+Subject: ath79: force SGMII SerDes mode to MAC operation
+
+The mode on the SGMII SerDes on the QCA9563 is 1000 Base-X by default.
+This only allows for 1000 Mbit/s links, however when used with an SGMII
+PHY in 100 Mbit/s link mode, the link remains dead.
+
+This strictly has nothing to do with the SerDes calibration, however it
+is done at the same point in the QCA reference U-Boot which is the
+blueprint for everything happening here. As the current state is more or
+less a hack, this should be fine.
+
+This fixes the issues outlined above on a TP-Link EAP-225 Outdoor.
+
+Reported-by: Tom Herbers <freifunk@tomherbers.de>
+Tested-by: Tom Herbers <freifunk@tomherbers.de>
+Signed-off-by: David Bauer <mail@david-bauer.net>
+
+diff --git a/target/linux/ath79/files/drivers/net/ethernet/atheros/ag71xx/ag71xx_main.c b/target/linux/ath79/files/drivers/net/ethernet/atheros/ag71xx/ag71xx_main.c
+index 07d9992ca7c91a8a6ebeb957284ebb94c89183cb..84b0f9e4ac87e1443d2c2b7ecf038ee90ebe29de 100644
+--- a/target/linux/ath79/files/drivers/net/ethernet/atheros/ag71xx/ag71xx_main.c
++++ b/target/linux/ath79/files/drivers/net/ethernet/atheros/ag71xx/ag71xx_main.c
+@@ -602,6 +602,11 @@ static void ag71xx_sgmii_serdes_init_qca956x(struct device_node *np)
+ 		goto err_iomap;
+ 	}
+ 
++	t = __raw_readl(gmac_base + QCA956X_GMAC_REG_SGMII_CONFIG);
++	t &= ~(QCA956X_SGMII_CONFIG_MODE_CTRL_MASK << QCA956X_SGMII_CONFIG_MODE_CTRL_SHIFT);
++	t |= QCA956X_SGMII_CONFIG_MODE_CTRL_SGMII_MAC;
++	__raw_writel(t, gmac_base + QCA956X_GMAC_REG_SGMII_CONFIG);
++
+ 	pr_debug("%pOF: fixup SERDES calibration to value %i\n",
+ 		np_dev, serdes_cal);
+ 	t = __raw_readl(gmac_base + QCA956X_GMAC_REG_SGMII_SERDES);
+diff --git a/target/linux/ath79/patches-5.4/0040-ath79-sgmii-config.patch b/target/linux/ath79/patches-5.4/0040-ath79-sgmii-config.patch
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf7cbf2716adcee93b3e5518558c7ec51742307e
+--- /dev/null
++++ b/target/linux/ath79/patches-5.4/0040-ath79-sgmii-config.patch
+@@ -0,0 +1,9 @@
++--- a/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
+++++ b/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
++@@ -1376,5 +1376,6 @@
++ 
++ #define QCA956X_SGMII_CONFIG_MODE_CTRL_SHIFT	0
++ #define QCA956X_SGMII_CONFIG_MODE_CTRL_MASK	0x7
+++#define QCA956X_SGMII_CONFIG_MODE_CTRL_SGMII_MAC	0x2
++ 
++ #endif /* __ASM_MACH_AR71XX_REGS_H */

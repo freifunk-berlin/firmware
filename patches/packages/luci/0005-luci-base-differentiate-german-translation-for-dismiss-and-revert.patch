@@ -1,0 +1,20 @@
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Sat, 1 May 2021 01:12:02 +0200
+Subject: luci-base: differentiate german translation for dismiss and revert
+
+Change the german translation for "Dismiss" to "Abbrechen" to differentiate with "Revert". Currently both are translated to "Verwerfen". This is confusing at least in the uci-apply dialog, which shows "Verwerfen" - "Speichern & Anwenden" - "Verwerfen".
+
+Signed-off-by: Sven Roederer <devel-sven@geroedel.de>
+diff --git a/modules/luci-base/po/de/base.po b/modules/luci-base/po/de/base.po
+index e544cd1b05b875cfc6171d9e00c68a97cfa059bb..746e4846a3b4d9a14a2143652f81befbdecb751d 100644
+--- a/modules/luci-base/po/de/base.po
++++ b/modules/luci-base/po/de/base.po
+@@ -1882,7 +1882,7 @@ msgstr "Trennungsversuch fehlgeschlagen."
+ #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1696
+ #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:330
+ msgid "Dismiss"
+-msgstr "Verwerfen"
++msgstr "Abbrechen"
+ 
+ #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:905
+ msgid "Distance Optimization"

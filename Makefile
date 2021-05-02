@@ -193,7 +193,7 @@ images: .stamp-images
 #                  gets created during build, in this case a
 #                  prerequirement is a build OpenWRT
 ifeq ($(origin IB_FILE),command line)
-.stamp-images: .FORCE
+.stamp-images: $(FW_DIR)/embedded-files .FORCE
 	$(info IB_FILE explicitly defined; using it for building firmware-images)
 else
 .stamp-images: .stamp-compiled

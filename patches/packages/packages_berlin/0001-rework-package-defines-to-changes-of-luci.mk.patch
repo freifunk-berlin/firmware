@@ -1,0 +1,2691 @@
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Sat, 17 Apr 2021 14:37:12 +0200
+Subject: rework package defines to changes of luci.mk
+
+LuCI-PR https://github.com/openwrt/luci/pull/2637 was rewritten, so update our packages to this implementation.
+Even it's still in PR-state let's use the new LuCI-code, as it makes our package-definitions quite short and provides automatic versioning.
+
+* adapt freifunk.mk to override LuCI defaults with our requirements
+* change most of the simple Makefiles to use LuCI-wrapper
+* move files of package in correct location to match LuCI-wrappers requirements
+
+diff --git a/addons/freifunk-berlin-lib-guard/Makefile b/addons/freifunk-berlin-lib-guard/Makefile
+index 0ba782ca6ff0017ff8899ce0bbe11487d5f7c0a9..0ec7247b54e4904ad618f72928cb7a787e5115d9 100644
+--- a/addons/freifunk-berlin-lib-guard/Makefile
++++ b/addons/freifunk-berlin-lib-guard/Makefile
+@@ -1,34 +1,10 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-lib-guard
+ PKG_RELEASE:=2
+ 
+-include ../../freifunk-berlin-generic.mk
+-
+-define Package/freifunk-berlin-lib-guard
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin guard function
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-lib-guard/description
+-  Freifunk Berlin guard function
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
++LUCI_TITLE:=Freifunk Berlin guard function
++LUCI_DESCRIPTION:=Freifunk Berlin guard function
+ 
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-lib-guard/install
+-	$(CP) ./files/* $(1)/
+-endef
++include ../../freifunk-berlin-generic.mk
+ 
+-$(eval $(call BuildPackage,freifunk-berlin-lib-guard))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/addons/freifunk-berlin-lib-guard/files/lib/functions/guard.sh b/addons/freifunk-berlin-lib-guard/files/lib/functions/guard.sh
+deleted file mode 100644
+index ef407a4d1b9f577fa2c7219b6ff119bc17f36ff0..0000000000000000000000000000000000000000
+--- a/addons/freifunk-berlin-lib-guard/files/lib/functions/guard.sh
++++ /dev/null
+@@ -1,34 +0,0 @@
+-#!/bin/sh
+-
+-CFG="defaults"
+-CFG_FILE="/etc/config/$CFG"
+-SECTION="packages"
+-NAME="default"
+-
+-# check if defaults have already been set
+-guard() {
+-  OPTION=$1
+-
+-  [ ! -f $CFG_FILE ] && touch $CFG_FILE && uci set $CFG.$NAME=$SECTION
+-  [ "$(uci -q get $CFG.$NAME.$OPTION)" == "1" ] && exit 0
+-  uci set $CFG.$NAME.$OPTION=1
+-  uci commit $CFG
+-}
+-
+-guard_rename() {
+-  SRC=$1
+-  DEST=$2
+-
+-  # get current setting or exit when not defined
+-  cur_set=$(uci -q get $CFG.$NAME.$SRC) || return 0
+-  uci delete $CFG.$NAME.$SRC
+-  uci set $CFG.$NAME.$DEST=$cur_set
+-  uci commit $CFG
+-}
+-
+-guard_delete() {
+-  OPTION=$1
+-
+-  uci -q delete $CFG.$NAME.$OPTION || return 0
+-  uci commit $CFG
+-}
+diff --git a/addons/freifunk-berlin-lib-guard/root/lib/functions/guard.sh b/addons/freifunk-berlin-lib-guard/root/lib/functions/guard.sh
+new file mode 100644
+index 0000000000000000000000000000000000000000..ef407a4d1b9f577fa2c7219b6ff119bc17f36ff0
+--- /dev/null
++++ b/addons/freifunk-berlin-lib-guard/root/lib/functions/guard.sh
+@@ -0,0 +1,34 @@
++#!/bin/sh
++
++CFG="defaults"
++CFG_FILE="/etc/config/$CFG"
++SECTION="packages"
++NAME="default"
++
++# check if defaults have already been set
++guard() {
++  OPTION=$1
++
++  [ ! -f $CFG_FILE ] && touch $CFG_FILE && uci set $CFG.$NAME=$SECTION
++  [ "$(uci -q get $CFG.$NAME.$OPTION)" == "1" ] && exit 0
++  uci set $CFG.$NAME.$OPTION=1
++  uci commit $CFG
++}
++
++guard_rename() {
++  SRC=$1
++  DEST=$2
++
++  # get current setting or exit when not defined
++  cur_set=$(uci -q get $CFG.$NAME.$SRC) || return 0
++  uci delete $CFG.$NAME.$SRC
++  uci set $CFG.$NAME.$DEST=$cur_set
++  uci commit $CFG
++}
++
++guard_delete() {
++  OPTION=$1
++
++  uci -q delete $CFG.$NAME.$OPTION || return 0
++  uci commit $CFG
++}
+diff --git a/defaults/freifunk-berlin-dhcp-defaults/Makefile b/defaults/freifunk-berlin-dhcp-defaults/Makefile
+index f1232b1a2233ecb1aba5af992e8c1569f7c59827..4a648c76aa067448243f0a7b7366942d36351f2c 100644
+--- a/defaults/freifunk-berlin-dhcp-defaults/Makefile
++++ b/defaults/freifunk-berlin-dhcp-defaults/Makefile
+@@ -1,37 +1,9 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-dhcp-defaults
++LUCI_TITLE:=Freifunk Berlin dhcp default configuration
++LUCI_DEPENDS:=+dnsmasq +freifunk-berlin-lib-guard
++LUCI_DESCRIPTION:=Freifunk Berlin configuration files for dhcp
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-dhcp-defaults
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin dhcp default configuration
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+= +dnsmasq +freifunk-berlin-lib-guard
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-dhcp-defaults/description
+-  Freifunk Berlin configuration files for dhcp
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-dhcp-defaults/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-	$(CP) ./files/* $(1)/
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-dhcp-defaults))
+-
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-dhcp-defaults/files/etc/init.d/ff_dnsmasq_reload b/defaults/freifunk-berlin-dhcp-defaults/files/etc/init.d/ff_dnsmasq_reload
+deleted file mode 100755
+index 95a31215318973c800f53cd2de55faec1b8dcb18..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-dhcp-defaults/files/etc/init.d/ff_dnsmasq_reload
++++ /dev/null
+@@ -1,14 +0,0 @@
+-#!/bin/sh /etc/rc.common
+-
+-START=88
+-
+-boot() {
+-	test -f /etc/crontabs/root || touch /etc/crontabs/root
+-
+-	grep -q 'killall -HUP dnsmasq' /etc/crontabs/root || {
+-		echo "*/5 * * * *	killall -HUP dnsmasq" >> /etc/crontabs/root
+-	}
+-
+-	/etc/init.d/cron restart &
+-}
+-
+diff --git a/defaults/freifunk-berlin-dhcp-defaults/root/etc/init.d/ff_dnsmasq_reload b/defaults/freifunk-berlin-dhcp-defaults/root/etc/init.d/ff_dnsmasq_reload
+new file mode 100755
+index 0000000000000000000000000000000000000000..95a31215318973c800f53cd2de55faec1b8dcb18
+--- /dev/null
++++ b/defaults/freifunk-berlin-dhcp-defaults/root/etc/init.d/ff_dnsmasq_reload
+@@ -0,0 +1,14 @@
++#!/bin/sh /etc/rc.common
++
++START=88
++
++boot() {
++	test -f /etc/crontabs/root || touch /etc/crontabs/root
++
++	grep -q 'killall -HUP dnsmasq' /etc/crontabs/root || {
++		echo "*/5 * * * *	killall -HUP dnsmasq" >> /etc/crontabs/root
++	}
++
++	/etc/init.d/cron restart &
++}
++
+diff --git a/defaults/freifunk-berlin-dhcp-defaults/root/etc/uci-defaults/freifunk-berlin-dhcp-defaults b/defaults/freifunk-berlin-dhcp-defaults/root/etc/uci-defaults/freifunk-berlin-dhcp-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..0a23e1dde66e801df13a1053fad5bd75b807a43b
+--- /dev/null
++++ b/defaults/freifunk-berlin-dhcp-defaults/root/etc/uci-defaults/freifunk-berlin-dhcp-defaults
+@@ -0,0 +1,35 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++guard "dhcp"
++
++# quieten down dnsmasq a bit (do not log lease-mgmt)
++uci set dhcp.@dnsmasq[0].quietdhcp=1
++
++# enable DHCP-rapidcommit (RFC4039)
++uci set dhcp.@dnsmasq[0].rapidcommit=1
++
++# dnsmasq should not care for 'br-wan ffuplink_wan', prevents: daemon.warn dnsmasq-dhcp: DHCP packet received on wan which has no address
++uci add_list dhcp.@dnsmasq[0].notinterface='br-wan'
++uci add_list dhcp.@dnsmasq[0].notinterface='ffuplink_wan'
++
++# on IPv6-islands we also should give a default-route to the clients,
++# so they can also reach IPv6-neighbours. 
++uci set dhcp.dhcp.ra_default=1
++
++# add dns entry frei.funk
++uci set dhcp.frei_funk=domain
++uci set dhcp.frei_funk.name=frei.funk
++uci set dhcp.frei_funk.ip=192.168.42.1
++
++# add dns entry frei.funk for ipv6
++router_ula=$(uci get network.globals.ula_prefix | sed -e 's/\/48/1/')
++uci set dhcp.frei_funk_ipv6=domain
++uci set dhcp.frei_funk_ipv6.name=frei.funk
++uci set dhcp.frei_funk_ipv6.ip=$router_ula
++
++# don't send default-route to clients to prevent them sending pakets
++# to us, that we can't forward now
++uci add_list dhcp.lan.dhcp_option='3'
++
++uci commit dhcp
+diff --git a/defaults/freifunk-berlin-dhcp-defaults/uci-defaults/freifunk-berlin-dhcp-defaults b/defaults/freifunk-berlin-dhcp-defaults/uci-defaults/freifunk-berlin-dhcp-defaults
+deleted file mode 100644
+index 0a23e1dde66e801df13a1053fad5bd75b807a43b..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-dhcp-defaults/uci-defaults/freifunk-berlin-dhcp-defaults
++++ /dev/null
+@@ -1,35 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-guard "dhcp"
+-
+-# quieten down dnsmasq a bit (do not log lease-mgmt)
+-uci set dhcp.@dnsmasq[0].quietdhcp=1
+-
+-# enable DHCP-rapidcommit (RFC4039)
+-uci set dhcp.@dnsmasq[0].rapidcommit=1
+-
+-# dnsmasq should not care for 'br-wan ffuplink_wan', prevents: daemon.warn dnsmasq-dhcp: DHCP packet received on wan which has no address
+-uci add_list dhcp.@dnsmasq[0].notinterface='br-wan'
+-uci add_list dhcp.@dnsmasq[0].notinterface='ffuplink_wan'
+-
+-# on IPv6-islands we also should give a default-route to the clients,
+-# so they can also reach IPv6-neighbours. 
+-uci set dhcp.dhcp.ra_default=1
+-
+-# add dns entry frei.funk
+-uci set dhcp.frei_funk=domain
+-uci set dhcp.frei_funk.name=frei.funk
+-uci set dhcp.frei_funk.ip=192.168.42.1
+-
+-# add dns entry frei.funk for ipv6
+-router_ula=$(uci get network.globals.ula_prefix | sed -e 's/\/48/1/')
+-uci set dhcp.frei_funk_ipv6=domain
+-uci set dhcp.frei_funk_ipv6.name=frei.funk
+-uci set dhcp.frei_funk_ipv6.ip=$router_ula
+-
+-# don't send default-route to clients to prevent them sending pakets
+-# to us, that we can't forward now
+-uci add_list dhcp.lan.dhcp_option='3'
+-
+-uci commit dhcp
+diff --git a/defaults/freifunk-berlin-firewall-defaults/Makefile b/defaults/freifunk-berlin-firewall-defaults/Makefile
+index 3f2ec54cd934b3c4b74e76c25bf169f4f4a990bf..20feac3dc2b650a6916bca9e3f6d4d0553f7ffb6 100644
+--- a/defaults/freifunk-berlin-firewall-defaults/Makefile
++++ b/defaults/freifunk-berlin-firewall-defaults/Makefile
+@@ -1,35 +1,9 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-firewall-defaults
++LUCI_TITLE:=Freifunk Berlin firewall default configuration
++LUCI_DEPENDS= +firewall +freifunk-berlin-lib-guard
++LUCI_DESCRIPTION:=Freifunk Berlin configuration files for firewall
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-firewall-defaults
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin firewall default configuration
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+= +firewall +freifunk-berlin-lib-guard
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-firewall-defaults/description
+-  Freifunk Berlin configuration files for firewall
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-firewall-defaults/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-firewall-defaults))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-firewall-defaults/root/etc/uci-defaults/freifunk-berlin-firewall-defaults b/defaults/freifunk-berlin-firewall-defaults/root/etc/uci-defaults/freifunk-berlin-firewall-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..1d6dc3ee80d3d8916c74c2aa77e6db1c424ce595
+--- /dev/null
++++ b/defaults/freifunk-berlin-firewall-defaults/root/etc/uci-defaults/freifunk-berlin-firewall-defaults
+@@ -0,0 +1,134 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++guard "firewall"
++
++# reset firewall config
++uci import firewall <<EOF
++EOF
++
++SECTION="$(uci add firewall defaults)"
++uci set firewall.$SECTION.syn_flood=1
++uci set firewall.$SECTION.input=ACCEPT
++uci set firewall.$SECTION.output=ACCEPT
++uci set firewall.$SECTION.forward=REJECT
++uci set firewall.$SECTION.drop_invalid=0
++
++ZONE="$(uci add firewall zone)"
++uci set firewall.$ZONE.name=wan
++uci set firewall.$ZONE.masq=1
++uci set firewall.$ZONE.network=wan
++uci set firewall.$ZONE.forward=REJECT
++uci set firewall.$ZONE.output=ACCEPT
++uci set firewall.$ZONE.local_restrict=1
++uci set firewall.$ZONE.input=ACCEPT
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.name=Allow-DHCP-Renew
++uci set firewall.$RULE.src=wan
++uci set firewall.$RULE.proto=udp
++uci set firewall.$RULE.dest_port=68
++uci set firewall.$RULE.target=ACCEPT
++uci set firewall.$RULE.family=ipv4
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.name=Allow-Ping
++uci set firewall.$RULE.src=wan
++uci set firewall.$RULE.proto=icmp
++uci set firewall.$RULE.icmp_type=echo-request
++uci set firewall.$RULE.family=ipv4
++uci set firewall.$RULE.target=ACCEPT
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.name=Allow-DHCPv6
++uci set firewall.$RULE.src=wan
++uci set firewall.$RULE.proto=udp
++uci set firewall.$RULE.src_ip=fe80::/10
++uci set firewall.$RULE.src_port=547
++uci set firewall.$RULE.dest_ip=fe80::/10
++uci set firewall.$RULE.dest_port=546
++uci set firewall.$RULE.family=ipv6
++uci set firewall.$RULE.target=ACCEPT
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.name=Allow-ICMPv6-Input
++uci set firewall.$RULE.src=wan
++uci set firewall.$RULE.proto=icmp
++uci set firewall.$RULE.icmp_type="echo-request echo-reply destination-unreachable packet-too-big time-exceeded bad-header unknown-header-type router-solicitation neighbour-solicitation router-advertisement neighbour-advertisement"
++uci set firewall.$RULE.limit=1000/sec
++uci set firewall.$RULE.family=ipv6
++uci set firewall.$RULE.target=ACCEPT
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.name=Allow-ICMPv6-Forward
++uci set firewall.$RULE.src=wan
++uci set firewall.$RULE.dest=*
++uci set firewall.$RULE.proto=icmp
++uci set firewall.$RULE.icmp_type="echo-request echo-reply destination-unreachable packet-too-big time-exceeded bad-header unknown-header-type"
++uci set firewall.$RULE.limit=1000/sec
++uci set firewall.$RULE.family=ipv6
++uci set firewall.$RULE.target=ACCEPT
++
++INCLUDE="$(uci add firewall include)"
++uci set firewall.$INCLUDE.path=/etc/firewall.user
++
++uci commit firewall
++
++# add named freifunk zone section
++uci set firewall.zone_freifunk=zone
++uci set firewall.zone_freifunk.input=ACCEPT
++uci set firewall.zone_freifunk.forward=REJECT
++uci set firewall.zone_freifunk.name=freifunk
++uci set firewall.zone_freifunk.output=ACCEPT
++uci set firewall.zone_freifunk.network=tunl0
++uci set firewall.zone_freifunk.device=tnl_+
++
++# add named zone section for the uplink of client-traffic
++uci set firewall.zone_ffuplink=zone
++uci set firewall.zone_ffuplink.name=ffuplink
++uci set firewall.zone_ffuplink.input=REJECT
++uci set firewall.zone_ffuplink.forward=ACCEPT
++uci set firewall.zone_ffuplink.output=ACCEPT
++uci set firewall.zone_ffuplink.network=ffuplink
++uci set firewall.zone_ffuplink.masq=1
++
++FORWARDING="$(uci add firewall forwarding)"
++uci set firewall.$FORWARDING.dest=freifunk
++uci set firewall.$FORWARDING.src=freifunk
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.proto=icmp
++uci set firewall.$RULE.target=ACCEPT
++uci set firewall.$RULE.src=freifunk
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.dest_port=80
++uci set firewall.$RULE.proto=tcp
++uci set firewall.$RULE.target=ACCEPT
++uci set firewall.$RULE.src=freifunk
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.dest_port=443
++uci set firewall.$RULE.proto=tcp
++uci set firewall.$RULE.target=ACCEPT
++uci set firewall.$RULE.src=freifunk
++
++RULE="$(uci add firewall rule)"
++uci set firewall.$RULE.dest_port=22
++uci set firewall.$RULE.proto=tcp
++uci set firewall.$RULE.target=ACCEPT
++uci set firewall.$RULE.src=freifunk
++
++FORWARDING="$(uci add firewall forwarding)"
++uci set firewall.$FORWARDING.dest=wan
++uci set firewall.$FORWARDING.src=freifunk
++
++FORWARDING="$(uci add firewall forwarding)"
++uci set firewall.$FORWARDING.dest=freifunk
++uci set firewall.$FORWARDING.src=wan
++
++uci set firewall.fwd_ff_ffuplink=forwarding
++uci set firewall.fwd_ff_ffuplink.src=freifunk
++uci set firewall.fwd_ff_ffuplink.dest=ffuplink
++
++uci commit firewall
+diff --git a/defaults/freifunk-berlin-firewall-defaults/uci-defaults/freifunk-berlin-firewall-defaults b/defaults/freifunk-berlin-firewall-defaults/uci-defaults/freifunk-berlin-firewall-defaults
+deleted file mode 100644
+index 1d6dc3ee80d3d8916c74c2aa77e6db1c424ce595..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-firewall-defaults/uci-defaults/freifunk-berlin-firewall-defaults
++++ /dev/null
+@@ -1,134 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-guard "firewall"
+-
+-# reset firewall config
+-uci import firewall <<EOF
+-EOF
+-
+-SECTION="$(uci add firewall defaults)"
+-uci set firewall.$SECTION.syn_flood=1
+-uci set firewall.$SECTION.input=ACCEPT
+-uci set firewall.$SECTION.output=ACCEPT
+-uci set firewall.$SECTION.forward=REJECT
+-uci set firewall.$SECTION.drop_invalid=0
+-
+-ZONE="$(uci add firewall zone)"
+-uci set firewall.$ZONE.name=wan
+-uci set firewall.$ZONE.masq=1
+-uci set firewall.$ZONE.network=wan
+-uci set firewall.$ZONE.forward=REJECT
+-uci set firewall.$ZONE.output=ACCEPT
+-uci set firewall.$ZONE.local_restrict=1
+-uci set firewall.$ZONE.input=ACCEPT
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.name=Allow-DHCP-Renew
+-uci set firewall.$RULE.src=wan
+-uci set firewall.$RULE.proto=udp
+-uci set firewall.$RULE.dest_port=68
+-uci set firewall.$RULE.target=ACCEPT
+-uci set firewall.$RULE.family=ipv4
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.name=Allow-Ping
+-uci set firewall.$RULE.src=wan
+-uci set firewall.$RULE.proto=icmp
+-uci set firewall.$RULE.icmp_type=echo-request
+-uci set firewall.$RULE.family=ipv4
+-uci set firewall.$RULE.target=ACCEPT
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.name=Allow-DHCPv6
+-uci set firewall.$RULE.src=wan
+-uci set firewall.$RULE.proto=udp
+-uci set firewall.$RULE.src_ip=fe80::/10
+-uci set firewall.$RULE.src_port=547
+-uci set firewall.$RULE.dest_ip=fe80::/10
+-uci set firewall.$RULE.dest_port=546
+-uci set firewall.$RULE.family=ipv6
+-uci set firewall.$RULE.target=ACCEPT
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.name=Allow-ICMPv6-Input
+-uci set firewall.$RULE.src=wan
+-uci set firewall.$RULE.proto=icmp
+-uci set firewall.$RULE.icmp_type="echo-request echo-reply destination-unreachable packet-too-big time-exceeded bad-header unknown-header-type router-solicitation neighbour-solicitation router-advertisement neighbour-advertisement"
+-uci set firewall.$RULE.limit=1000/sec
+-uci set firewall.$RULE.family=ipv6
+-uci set firewall.$RULE.target=ACCEPT
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.name=Allow-ICMPv6-Forward
+-uci set firewall.$RULE.src=wan
+-uci set firewall.$RULE.dest=*
+-uci set firewall.$RULE.proto=icmp
+-uci set firewall.$RULE.icmp_type="echo-request echo-reply destination-unreachable packet-too-big time-exceeded bad-header unknown-header-type"
+-uci set firewall.$RULE.limit=1000/sec
+-uci set firewall.$RULE.family=ipv6
+-uci set firewall.$RULE.target=ACCEPT
+-
+-INCLUDE="$(uci add firewall include)"
+-uci set firewall.$INCLUDE.path=/etc/firewall.user
+-
+-uci commit firewall
+-
+-# add named freifunk zone section
+-uci set firewall.zone_freifunk=zone
+-uci set firewall.zone_freifunk.input=ACCEPT
+-uci set firewall.zone_freifunk.forward=REJECT
+-uci set firewall.zone_freifunk.name=freifunk
+-uci set firewall.zone_freifunk.output=ACCEPT
+-uci set firewall.zone_freifunk.network=tunl0
+-uci set firewall.zone_freifunk.device=tnl_+
+-
+-# add named zone section for the uplink of client-traffic
+-uci set firewall.zone_ffuplink=zone
+-uci set firewall.zone_ffuplink.name=ffuplink
+-uci set firewall.zone_ffuplink.input=REJECT
+-uci set firewall.zone_ffuplink.forward=ACCEPT
+-uci set firewall.zone_ffuplink.output=ACCEPT
+-uci set firewall.zone_ffuplink.network=ffuplink
+-uci set firewall.zone_ffuplink.masq=1
+-
+-FORWARDING="$(uci add firewall forwarding)"
+-uci set firewall.$FORWARDING.dest=freifunk
+-uci set firewall.$FORWARDING.src=freifunk
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.proto=icmp
+-uci set firewall.$RULE.target=ACCEPT
+-uci set firewall.$RULE.src=freifunk
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.dest_port=80
+-uci set firewall.$RULE.proto=tcp
+-uci set firewall.$RULE.target=ACCEPT
+-uci set firewall.$RULE.src=freifunk
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.dest_port=443
+-uci set firewall.$RULE.proto=tcp
+-uci set firewall.$RULE.target=ACCEPT
+-uci set firewall.$RULE.src=freifunk
+-
+-RULE="$(uci add firewall rule)"
+-uci set firewall.$RULE.dest_port=22
+-uci set firewall.$RULE.proto=tcp
+-uci set firewall.$RULE.target=ACCEPT
+-uci set firewall.$RULE.src=freifunk
+-
+-FORWARDING="$(uci add firewall forwarding)"
+-uci set firewall.$FORWARDING.dest=wan
+-uci set firewall.$FORWARDING.src=freifunk
+-
+-FORWARDING="$(uci add firewall forwarding)"
+-uci set firewall.$FORWARDING.dest=freifunk
+-uci set firewall.$FORWARDING.src=wan
+-
+-uci set firewall.fwd_ff_ffuplink=forwarding
+-uci set firewall.fwd_ff_ffuplink.src=freifunk
+-uci set firewall.fwd_ff_ffuplink.dest=ffuplink
+-
+-uci commit firewall
+diff --git a/defaults/freifunk-berlin-freifunk-defaults/Makefile b/defaults/freifunk-berlin-freifunk-defaults/Makefile
+index 3fcccfa414fad1ba96311ccf4bf58c71c5763ffa..e63f7ac9ea43c89a03c4890826ba2060a068a87e 100644
+--- a/defaults/freifunk-berlin-freifunk-defaults/Makefile
++++ b/defaults/freifunk-berlin-freifunk-defaults/Makefile
+@@ -1,34 +1,8 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-freifunk-defaults
++LUCI_TITLE:=Freifunk Berlin freifunk default configuration
++LUCI_DESCRIPTION:=Freifunk Berlin configuration files for freifunk
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-freifunk-defaults
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin freifunk default configuration
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-freifunk-defaults/description
+-  Freifunk Berlin configuration files for freifunk
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-freifunk-defaults/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-freifunk-defaults))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-freifunk-defaults/root/etc/uci-defaults/freifunk-berlin-freifunk-defaults b/defaults/freifunk-berlin-freifunk-defaults/root/etc/uci-defaults/freifunk-berlin-freifunk-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..4fff0f2797c30515089d1c5be5342c8082268cff
+--- /dev/null
++++ b/defaults/freifunk-berlin-freifunk-defaults/root/etc/uci-defaults/freifunk-berlin-freifunk-defaults
+@@ -0,0 +1,23 @@
++#!/bin/sh
++
++uci set freifunk.community.name='berlin'
++uci set freifunk.community.homepage='http://berlin.freifunk.net'
++
++uci set freifunk.wifi_device=defaults
++uci set freifunk.wifi_device.diversity='1'
++uci set freifunk.wifi_device.disabled='0'
++uci set freifunk.wifi_device.country='DE'
++uci set freifunk.wifi_device.channel='13'
++uci delete freifunk.wifi_device.distance
++
++uci set freifunk.wifi_device_5=defaults
++uci set freifunk.wifi_device_5.diversity='1'
++uci set freifunk.wifi_device_5.disabled='0'
++uci set freifunk.wifi_device_5.country='DE'
++
++uci set freifunk.olsr_interface=defaults
++uci set freifunk.olsr_interface.Ip4Broadcast='255.255.255.255'
++
++uci set freifunk.dhcp.leasetime='5m'
++
++uci commit freifunk
+diff --git a/defaults/freifunk-berlin-freifunk-defaults/uci-defaults/freifunk-berlin-freifunk-defaults b/defaults/freifunk-berlin-freifunk-defaults/uci-defaults/freifunk-berlin-freifunk-defaults
+deleted file mode 100644
+index 4fff0f2797c30515089d1c5be5342c8082268cff..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-freifunk-defaults/uci-defaults/freifunk-berlin-freifunk-defaults
++++ /dev/null
+@@ -1,23 +0,0 @@
+-#!/bin/sh
+-
+-uci set freifunk.community.name='berlin'
+-uci set freifunk.community.homepage='http://berlin.freifunk.net'
+-
+-uci set freifunk.wifi_device=defaults
+-uci set freifunk.wifi_device.diversity='1'
+-uci set freifunk.wifi_device.disabled='0'
+-uci set freifunk.wifi_device.country='DE'
+-uci set freifunk.wifi_device.channel='13'
+-uci delete freifunk.wifi_device.distance
+-
+-uci set freifunk.wifi_device_5=defaults
+-uci set freifunk.wifi_device_5.diversity='1'
+-uci set freifunk.wifi_device_5.disabled='0'
+-uci set freifunk.wifi_device_5.country='DE'
+-
+-uci set freifunk.olsr_interface=defaults
+-uci set freifunk.olsr_interface.Ip4Broadcast='255.255.255.255'
+-
+-uci set freifunk.dhcp.leasetime='5m'
+-
+-uci commit freifunk
+diff --git a/defaults/freifunk-berlin-network-defaults/Makefile b/defaults/freifunk-berlin-network-defaults/Makefile
+index d26c2e8ff4a1e218c13d0cc699a8655e94415906..c2d60b9a956eab61c8e626178ecc27cb9dcf771e 100644
+--- a/defaults/freifunk-berlin-network-defaults/Makefile
++++ b/defaults/freifunk-berlin-network-defaults/Makefile
+@@ -1,43 +1,9 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-network-defaults
++LUCI_TITLE:=Freifunk Berlin network default configuration
++LUCI_DEPENDS:= +freifunk-berlin-lib-guard +iwinfo +pingcheck
++LUCI_DESCRIPTION:=Freifunk Berlin configuration files for network
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-network-defaults
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin network default configuration
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+= +freifunk-berlin-lib-guard +iwinfo +pingcheck
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-network-defaults/description
+-  Freifunk Berlin configuration files for network
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-network-defaults/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
+-	$(CP) ./hotplug.d/iface/* $(1)/etc/hotplug.d/iface/
+-	$(INSTALL_DIR) $(1)/lib/functions
+-	$(CP) ./lib/functions/* $(1)/lib/functions/
+-	$(INSTALL_DIR) $(1)/etc/pingcheck/online.d
+-	$(CP) ./pingcheck/online.d/* $(1)/etc/pingcheck/online.d/
+-	$(INSTALL_DIR) $(1)/etc/pingcheck/offline.d
+-	$(CP) ./pingcheck/offline.d/* $(1)/etc/pingcheck/offline.d/
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-network-defaults))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-network-defaults/hotplug.d/iface/60-ffuplink_policyrouting b/defaults/freifunk-berlin-network-defaults/hotplug.d/iface/60-ffuplink_policyrouting
+deleted file mode 100755
+index 2aaf2f82fe033677496f000134da58beb09ea924..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/hotplug.d/iface/60-ffuplink_policyrouting
++++ /dev/null
+@@ -1,51 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions.sh
+-. /lib/functions/network.sh
+-
+-[ "$INTERFACE" = ffuplink ] || exit
+-
+-config_load ffwizard
+-config_get sharenet settings sharenet
+-[ "$sharenet" = 1 ] || exit
+-
+-config_load freifunk-policyrouting
+-config_get pr_enable pr enable
+-config_get fallback pr fallback
+-config_get strict pr strict
+-config_get zones pr zones
+-[ "$pr_enable" = 1 ] || exit
+-
+-if [ "$ACTION" = ifup ]; then
+-  logger -t ff-userlog "ffuplink interface is up"
+-  logger -t ff-userlog "creating ffuplink ip-rules"
+-  ifaces=$(uci -q get firewall.zone_freifunk.network) 
+-  network_get_subnet uplink_net ffuplink
+-  if [ -z $uplink_net ]; then
+-    logger -t ff-userlog "UCI did not return a valid IP-net for ffuplink; querying directly with ip-tool"
+-    uplink_net=$(ip -4 -o addr show dev ffuplink|awk '{print $4}')
+-  fi
+-  if [ -z $uplink_net ]; then
+-    logger -t ff-userlog "no valid IP-net found for ffuplink; TRAFFIC FOR UPLINK-NETWORK WILL NOT BE BLOCKED"
+-  fi
+-  eval $(/bin/ipcalc.sh $uplink_net)
+-  for iface in $ifaces; do
+-    network_get_physdev netdev $iface
+-    [ ! '0.0.0.0' = $NETWORK ] && ip rule add prio 19989 to $NETWORK/$PREFIX iif $netdev prohibit
+-    ip rule add prio 19990 iif $netdev lookup ffuplink
+-  done
+-  logger -t ff-userlog "ffuplink-interface is setup"
+-fi
+-
+-if [ "$ACTION" = ifdown ]; then
+-  logger -t ff-userlog "ffuplink interface going down"
+-  ip route flush table ffuplink
+-  while true; do
+-    ip rule show | grep -q "^19990:" || break
+-    ip rule del prio 19990
+-  done
+-  while true; do
+-    ip rule show | grep -q "^19989:" || break
+-    ip rule del prio 19989
+-  done
+-fi
+diff --git a/defaults/freifunk-berlin-network-defaults/lib/functions/freifunk-berlin-network.sh b/defaults/freifunk-berlin-network-defaults/lib/functions/freifunk-berlin-network.sh
+deleted file mode 100644
+index baf91e1d383802c38d672406f1ad7a110327a4e9..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/lib/functions/freifunk-berlin-network.sh
++++ /dev/null
+@@ -1,35 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-
+-create_ffuplink() {
+-  uci -q delete network.ffuplink
+-  # create a very basic ffuplink interface
+-  uci set network.ffuplink=interface
+-  uci set network.ffuplink.ifname=ffuplink
+-  # see https://github.com/freifunk-berlin/firmware/issues/561
+-  uci set network.ffuplink.ip4table=ffuplink
+-  uci set network.ffuplink.ip6table=ffuplink
+-  # the following options need to be set by the individual uplink-package
+-  uci set network.ffuplink.proto=none
+-  uci commit network.ffuplink
+-
+-  guard_delete notunnel
+-  guard_delete tunnelberlin_openvpn
+-  guard_delete tunnelberlin_tunneldigger
+-  guard_delete vpn03_openvpn
+-}
+-
+-generate_random_mac_hex() {
+-  local prefix=$1
+-
+-  [ -n "$prefix" ] || return
+-  local macaddr
+-  # Create a static macaddr starting with "prefix" for ffuplink devices
+-  # See the website https://www.itwissen.info/MAC-Adresse-MAC-address.html
+-  for byte in 2 3 4 5 6; do
+-    macaddr=$macaddr`dd if=/dev/urandom bs=1 count=1 2> /dev/null | hexdump -e '1/1 ":%02x"'`
+-  done
+-
+-  echo $prefix$macaddr
+-}
+diff --git a/defaults/freifunk-berlin-network-defaults/pingcheck/offline.d/60-freifunk-wan b/defaults/freifunk-berlin-network-defaults/pingcheck/offline.d/60-freifunk-wan
+deleted file mode 100755
+index 743c0c2bc6fea7fd0d614404c5f4d217df7c268c..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/pingcheck/offline.d/60-freifunk-wan
++++ /dev/null
+@@ -1,10 +0,0 @@
+-#!/bin/sh
+-
+-[ "$INTERFACE" = wan ] || exit
+-
+-# Internet connectivity via WAN is down, reroute all locally generated traffic
+-# over the mesh network.
+-logger -t freifunk-pingcheck "WAN is down, rerouting all local traffic over the mesh network"
+-ip rule add prio 3000 iif lo lookup olsr-tunnel
+-ip rule add prio 3001 iif lo lookup olsr-default
+-
+diff --git a/defaults/freifunk-berlin-network-defaults/pingcheck/online.d/60-freifunk-wan b/defaults/freifunk-berlin-network-defaults/pingcheck/online.d/60-freifunk-wan
+deleted file mode 100755
+index e6bb2ad36b0905b0976d264daa165e34de1f8f1f..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/pingcheck/online.d/60-freifunk-wan
++++ /dev/null
+@@ -1,10 +0,0 @@
+-#!/bin/sh
+-
+-[ "$INTERFACE" = wan ] || exit
+-
+-# Internet connectivity via WAN is up, reroute all locally generated traffic
+-# over WAN.
+-logger -t freifunk-pingcheck "WAN connectivity is up, routing all local traffic through WAN"
+-ip rule del prio 3000 iif lo lookup olsr-tunnel
+-ip rule del prio 3001 iif lo lookup olsr-default
+-
+diff --git a/defaults/freifunk-berlin-network-defaults/root/etc/hotplug.d/iface/60-ffuplink_policyrouting b/defaults/freifunk-berlin-network-defaults/root/etc/hotplug.d/iface/60-ffuplink_policyrouting
+new file mode 100755
+index 0000000000000000000000000000000000000000..2aaf2f82fe033677496f000134da58beb09ea924
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/etc/hotplug.d/iface/60-ffuplink_policyrouting
+@@ -0,0 +1,51 @@
++#!/bin/sh
++
++. /lib/functions.sh
++. /lib/functions/network.sh
++
++[ "$INTERFACE" = ffuplink ] || exit
++
++config_load ffwizard
++config_get sharenet settings sharenet
++[ "$sharenet" = 1 ] || exit
++
++config_load freifunk-policyrouting
++config_get pr_enable pr enable
++config_get fallback pr fallback
++config_get strict pr strict
++config_get zones pr zones
++[ "$pr_enable" = 1 ] || exit
++
++if [ "$ACTION" = ifup ]; then
++  logger -t ff-userlog "ffuplink interface is up"
++  logger -t ff-userlog "creating ffuplink ip-rules"
++  ifaces=$(uci -q get firewall.zone_freifunk.network) 
++  network_get_subnet uplink_net ffuplink
++  if [ -z $uplink_net ]; then
++    logger -t ff-userlog "UCI did not return a valid IP-net for ffuplink; querying directly with ip-tool"
++    uplink_net=$(ip -4 -o addr show dev ffuplink|awk '{print $4}')
++  fi
++  if [ -z $uplink_net ]; then
++    logger -t ff-userlog "no valid IP-net found for ffuplink; TRAFFIC FOR UPLINK-NETWORK WILL NOT BE BLOCKED"
++  fi
++  eval $(/bin/ipcalc.sh $uplink_net)
++  for iface in $ifaces; do
++    network_get_physdev netdev $iface
++    [ ! '0.0.0.0' = $NETWORK ] && ip rule add prio 19989 to $NETWORK/$PREFIX iif $netdev prohibit
++    ip rule add prio 19990 iif $netdev lookup ffuplink
++  done
++  logger -t ff-userlog "ffuplink-interface is setup"
++fi
++
++if [ "$ACTION" = ifdown ]; then
++  logger -t ff-userlog "ffuplink interface going down"
++  ip route flush table ffuplink
++  while true; do
++    ip rule show | grep -q "^19990:" || break
++    ip rule del prio 19990
++  done
++  while true; do
++    ip rule show | grep -q "^19989:" || break
++    ip rule del prio 19989
++  done
++fi
+diff --git a/defaults/freifunk-berlin-network-defaults/root/etc/pingcheck/offline.d/60-freifunk-wan b/defaults/freifunk-berlin-network-defaults/root/etc/pingcheck/offline.d/60-freifunk-wan
+new file mode 100755
+index 0000000000000000000000000000000000000000..743c0c2bc6fea7fd0d614404c5f4d217df7c268c
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/etc/pingcheck/offline.d/60-freifunk-wan
+@@ -0,0 +1,10 @@
++#!/bin/sh
++
++[ "$INTERFACE" = wan ] || exit
++
++# Internet connectivity via WAN is down, reroute all locally generated traffic
++# over the mesh network.
++logger -t freifunk-pingcheck "WAN is down, rerouting all local traffic over the mesh network"
++ip rule add prio 3000 iif lo lookup olsr-tunnel
++ip rule add prio 3001 iif lo lookup olsr-default
++
+diff --git a/defaults/freifunk-berlin-network-defaults/root/etc/pingcheck/online.d/60-freifunk-wan b/defaults/freifunk-berlin-network-defaults/root/etc/pingcheck/online.d/60-freifunk-wan
+new file mode 100755
+index 0000000000000000000000000000000000000000..e6bb2ad36b0905b0976d264daa165e34de1f8f1f
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/etc/pingcheck/online.d/60-freifunk-wan
+@@ -0,0 +1,10 @@
++#!/bin/sh
++
++[ "$INTERFACE" = wan ] || exit
++
++# Internet connectivity via WAN is up, reroute all locally generated traffic
++# over WAN.
++logger -t freifunk-pingcheck "WAN connectivity is up, routing all local traffic through WAN"
++ip rule del prio 3000 iif lo lookup olsr-tunnel
++ip rule del prio 3001 iif lo lookup olsr-default
++
+diff --git a/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-correct-nsm2-txpower b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-correct-nsm2-txpower
+new file mode 100755
+index 0000000000000000000000000000000000000000..65714e275481ba90046a0485fb39791dd9cc31aa
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-correct-nsm2-txpower
+@@ -0,0 +1,31 @@
++#!/bin/ash
++#
++# For Ubiquiti the default TX-power on OpenWrt is above regulatory limits.
++# see https://github.com/freifunk-berlin/firmware/issues/381
++#
++
++iwinfo|grep -q 'NanoStation M2\|NanoStation Loco M2' || exit 0
++
++. /lib/functions/guard.sh
++guard "NSm2_txpower"
++
++set_default_txpower() {
++ echo "setting txpower value to $1 dBm"
++ uci set wireless.radio0.txpower=$1
++ uci commit wireless
++}
++
++MAX_TX_2G=20
++# get "TX offset" of 1st interface, if this is unknown set it to 0dB
++# then only return the numerical value
++ANT_GAIN=$(iwinfo |grep -m 1 "TX power offset:" |sed -e "s/unknown/0 dB/" |tr -dc '0-9')
++NEW_TX=$(echo $(($MAX_TX_2G - $ANT_GAIN)))
++
++CURR_TX=$(uci -q get wireless.radio0.txpower)
++# check if txpower is defined in config
++if [ $? -ne 0 ]; then
++  echo -n "txpower not defined - "
++  set_default_txpower $NEW_TX
++elif [ $CURR_TX -gt $NEW_TX ]; then
++  set_default_txpower $NEW_TX
++fi
+diff --git a/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-ffuplink-defaults b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-ffuplink-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..f31bdbb8b8abc3e6509a01d3b3e2defad2a962fd
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-ffuplink-defaults
+@@ -0,0 +1,19 @@
++#!/bin/sh
++
++. /lib/functions/freifunk-berlin-network.sh
++. /lib/functions/guard.sh
++guard "ffberlin_uplink"
++
++# create ffberlin-uplink file an fill with basic settings
++uci import ffberlin-uplink <<EOF
++EOF
++
++uci set ffberlin-uplink.preset=settings
++uci set ffberlin-uplink.preset.current="undefined"
++uci set ffberlin-uplink.uplink=settings
++uci set ffberlin-uplink.uplink.auth=none
++uci commit ffberlin-uplink
++
++create_ffuplink
++uci set network.ffuplink.disabled=1
++uci commit network.ffuplink
+diff --git a/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-network-defaults b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-network-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..f670dca4fe16e08da264ff686a7471841c419b43
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-network-defaults
+@@ -0,0 +1,23 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++guard "network"
++
++# change default ip to avoid collision with user's local network
++uci set network.lan.ipaddr=192.168.42.1
++
++# do not use dns servers provided by dhcp - we maintain a static list of 
++# dns servers instead
++uci set network.wan.peerdns=0
++uci set network.wan6.peerdns=0
++
++# setup wan as bridge
++uci set network.wan.type=bridge
++
++# add tunl0 interface - tunl0 is the ipip tunnel interface for the olsr
++# SmartGateway plugin
++uci set network.tunl0=interface
++uci set network.tunl0.ifname=tunl0
++uci set network.tunl0.proto=none
++
++uci commit network
+diff --git a/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-network-ip-route b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-network-ip-route
+new file mode 100644
+index 0000000000000000000000000000000000000000..681849dff07df34fab05d5ad601e34c3fae568a5
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-network-ip-route
+@@ -0,0 +1,6 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++guard "iproute"
++
++echo 120 ffuplink >>/etc/iproute2/rt_tables
+diff --git a/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-pingcheck-defaults b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-pingcheck-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..0e762e202082231fd964db35a49cbb4491502bf4
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/etc/uci-defaults/freifunk-berlin-pingcheck-defaults
+@@ -0,0 +1,15 @@
++#!/bin/sh
++
++. /lib/functions.sh
++
++# remove the sta interface, leaving only wan
++uci del pingcheck.@interface\[1\]
++
++# set the host to the anycast host livecheck.berlin.freifunk.net
++uci set pingcheck.@default\[0\].host=livecheck.berlin.freifunk.net
++
++# set the default timeout to 60 seconds
++uci set pingcheck.@default\[0\].timeout=60
++
++uci commit pingcheck
++
+diff --git a/defaults/freifunk-berlin-network-defaults/root/lib/functions/freifunk-berlin-network.sh b/defaults/freifunk-berlin-network-defaults/root/lib/functions/freifunk-berlin-network.sh
+new file mode 100644
+index 0000000000000000000000000000000000000000..baf91e1d383802c38d672406f1ad7a110327a4e9
+--- /dev/null
++++ b/defaults/freifunk-berlin-network-defaults/root/lib/functions/freifunk-berlin-network.sh
+@@ -0,0 +1,35 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++
++create_ffuplink() {
++  uci -q delete network.ffuplink
++  # create a very basic ffuplink interface
++  uci set network.ffuplink=interface
++  uci set network.ffuplink.ifname=ffuplink
++  # see https://github.com/freifunk-berlin/firmware/issues/561
++  uci set network.ffuplink.ip4table=ffuplink
++  uci set network.ffuplink.ip6table=ffuplink
++  # the following options need to be set by the individual uplink-package
++  uci set network.ffuplink.proto=none
++  uci commit network.ffuplink
++
++  guard_delete notunnel
++  guard_delete tunnelberlin_openvpn
++  guard_delete tunnelberlin_tunneldigger
++  guard_delete vpn03_openvpn
++}
++
++generate_random_mac_hex() {
++  local prefix=$1
++
++  [ -n "$prefix" ] || return
++  local macaddr
++  # Create a static macaddr starting with "prefix" for ffuplink devices
++  # See the website https://www.itwissen.info/MAC-Adresse-MAC-address.html
++  for byte in 2 3 4 5 6; do
++    macaddr=$macaddr`dd if=/dev/urandom bs=1 count=1 2> /dev/null | hexdump -e '1/1 ":%02x"'`
++  done
++
++  echo $prefix$macaddr
++}
+diff --git a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-correct-nsm2-txpower b/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-correct-nsm2-txpower
+deleted file mode 100755
+index 65714e275481ba90046a0485fb39791dd9cc31aa..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-correct-nsm2-txpower
++++ /dev/null
+@@ -1,31 +0,0 @@
+-#!/bin/ash
+-#
+-# For Ubiquiti the default TX-power on OpenWrt is above regulatory limits.
+-# see https://github.com/freifunk-berlin/firmware/issues/381
+-#
+-
+-iwinfo|grep -q 'NanoStation M2\|NanoStation Loco M2' || exit 0
+-
+-. /lib/functions/guard.sh
+-guard "NSm2_txpower"
+-
+-set_default_txpower() {
+- echo "setting txpower value to $1 dBm"
+- uci set wireless.radio0.txpower=$1
+- uci commit wireless
+-}
+-
+-MAX_TX_2G=20
+-# get "TX offset" of 1st interface, if this is unknown set it to 0dB
+-# then only return the numerical value
+-ANT_GAIN=$(iwinfo |grep -m 1 "TX power offset:" |sed -e "s/unknown/0 dB/" |tr -dc '0-9')
+-NEW_TX=$(echo $(($MAX_TX_2G - $ANT_GAIN)))
+-
+-CURR_TX=$(uci -q get wireless.radio0.txpower)
+-# check if txpower is defined in config
+-if [ $? -ne 0 ]; then
+-  echo -n "txpower not defined - "
+-  set_default_txpower $NEW_TX
+-elif [ $CURR_TX -gt $NEW_TX ]; then
+-  set_default_txpower $NEW_TX
+-fi
+diff --git a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-ffuplink-defaults b/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-ffuplink-defaults
+deleted file mode 100644
+index f31bdbb8b8abc3e6509a01d3b3e2defad2a962fd..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-ffuplink-defaults
++++ /dev/null
+@@ -1,19 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/freifunk-berlin-network.sh
+-. /lib/functions/guard.sh
+-guard "ffberlin_uplink"
+-
+-# create ffberlin-uplink file an fill with basic settings
+-uci import ffberlin-uplink <<EOF
+-EOF
+-
+-uci set ffberlin-uplink.preset=settings
+-uci set ffberlin-uplink.preset.current="undefined"
+-uci set ffberlin-uplink.uplink=settings
+-uci set ffberlin-uplink.uplink.auth=none
+-uci commit ffberlin-uplink
+-
+-create_ffuplink
+-uci set network.ffuplink.disabled=1
+-uci commit network.ffuplink
+diff --git a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-network-defaults b/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-network-defaults
+deleted file mode 100644
+index f670dca4fe16e08da264ff686a7471841c419b43..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-network-defaults
++++ /dev/null
+@@ -1,23 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-guard "network"
+-
+-# change default ip to avoid collision with user's local network
+-uci set network.lan.ipaddr=192.168.42.1
+-
+-# do not use dns servers provided by dhcp - we maintain a static list of 
+-# dns servers instead
+-uci set network.wan.peerdns=0
+-uci set network.wan6.peerdns=0
+-
+-# setup wan as bridge
+-uci set network.wan.type=bridge
+-
+-# add tunl0 interface - tunl0 is the ipip tunnel interface for the olsr
+-# SmartGateway plugin
+-uci set network.tunl0=interface
+-uci set network.tunl0.ifname=tunl0
+-uci set network.tunl0.proto=none
+-
+-uci commit network
+diff --git a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-network-ip-route b/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-network-ip-route
+deleted file mode 100644
+index 681849dff07df34fab05d5ad601e34c3fae568a5..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-network-ip-route
++++ /dev/null
+@@ -1,6 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-guard "iproute"
+-
+-echo 120 ffuplink >>/etc/iproute2/rt_tables
+diff --git a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-pingcheck-defaults b/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-pingcheck-defaults
+deleted file mode 100644
+index 0e762e202082231fd964db35a49cbb4491502bf4..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-network-defaults/uci-defaults/freifunk-berlin-pingcheck-defaults
++++ /dev/null
+@@ -1,15 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions.sh
+-
+-# remove the sta interface, leaving only wan
+-uci del pingcheck.@interface\[1\]
+-
+-# set the host to the anycast host livecheck.berlin.freifunk.net
+-uci set pingcheck.@default\[0\].host=livecheck.berlin.freifunk.net
+-
+-# set the default timeout to 60 seconds
+-uci set pingcheck.@default\[0\].timeout=60
+-
+-uci commit pingcheck
+-
+diff --git a/defaults/freifunk-berlin-olsrd-defaults/Makefile b/defaults/freifunk-berlin-olsrd-defaults/Makefile
+index 87f442e58d03e12d52c8a8db80bf8026de937907..24945d331a18100518b382b98060e2560e49eacf 100644
+--- a/defaults/freifunk-berlin-olsrd-defaults/Makefile
++++ b/defaults/freifunk-berlin-olsrd-defaults/Makefile
+@@ -1,35 +1,9 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-olsrd-defaults
++LUCI_TITLE:=Freifunk Berlin olsrd default configuration
++LUCI_DEPENDS:=+olsrd +freifunk-berlin-lib-guard
++LUCI_DESCRIPTION:=Freifunk Berlin configuration files for olsrd and olsrd6
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-olsrd-defaults
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin olsrd default configuration
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+= +olsrd +freifunk-berlin-lib-guard
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-olsrd-defaults/description
+-  Freifunk Berlin configuration files for olsrd and olsrd6
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-olsrd-defaults/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-olsrd-defaults))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-olsrd-defaults/root/etc/uci-defaults/freifunk-berlin-olsrd-defaults b/defaults/freifunk-berlin-olsrd-defaults/root/etc/uci-defaults/freifunk-berlin-olsrd-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..8e1ff45406eaf27baeaf9fcdc75ef0296554e57d
+--- /dev/null
++++ b/defaults/freifunk-berlin-olsrd-defaults/root/etc/uci-defaults/freifunk-berlin-olsrd-defaults
+@@ -0,0 +1,147 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++guard "olsrd"
++
++# reset olsrd config
++uci import olsrd <<EOF
++EOF
++
++# add txtinfo plugin - needed for collectd-mod-txtinfo
++PLUGIN="$(uci add olsrd LoadPlugin)"
++uci set olsrd.$PLUGIN.accept=0.0.0.0
++uci set olsrd.$PLUGIN.library=olsrd_txtinfo
++uci set olsrd.$PLUGIN.port=2006
++
++# add arprefresh plugin
++PLUGIN="$(uci add olsrd LoadPlugin)"
++uci set olsrd.$PLUGIN.library=olsrd_arprefresh
++
++# add nameservice plugin
++PLUGIN="$(uci add olsrd LoadPlugin)"
++uci set olsrd.$PLUGIN.library=olsrd_nameservice
++uci set olsrd.$PLUGIN.suffix=.olsr
++uci set olsrd.$PLUGIN.hosts_file=/tmp/hosts/olsr
++uci set olsrd.$PLUGIN.latlon_file=/var/run/latlon.js
++uci set olsrd.$PLUGIN.services_file=/var/etc/services.olsr
++
++# add jsoninfo plugin
++PLUGIN="$(uci add olsrd LoadPlugin)"
++uci set olsrd.$PLUGIN.accept=0.0.0.0
++uci set olsrd.$PLUGIN.library=olsrd_jsoninfo
++uci set olsrd.$PLUGIN.ignore=0
++
++# add watchdog plugin
++PLUGIN="$(uci add olsrd LoadPlugin)"
++uci set olsrd.$PLUGIN.library=olsrd_watchdog
++uci set olsrd.$PLUGIN.file=/var/run/olsrd.watchdog
++uci set olsrd.$PLUGIN.interval=30
++
++# add dyngw plain plugin - it is ipv4 only
++PLUGIN="$(uci add olsrd LoadPlugin)"
++uci set olsrd.$PLUGIN.library=olsrd_dyn_gw
++uci add_list olsrd.$PLUGIN.Ping=46.182.19.48      # dns.digitalcourage.de
++uci add_list olsrd.$PLUGIN.Ping=80.67.169.40      # www.fdn.fr/actions/dns
++uci add_list olsrd.$PLUGIN.Ping=194.150.168.168   # dns.as250.net
++uci set olsrd.$PLUGIN.ignore=0
++
++# set olsrd defaults
++OLSRD="$(uci add olsrd olsrd)"
++uci set olsrd.$OLSRD.IpVersion=4
++uci set olsrd.$OLSRD.FIBMetric=flat
++uci set olsrd.$OLSRD.AllowNoInt=yes
++uci set olsrd.$OLSRD.TcRedundancy=2
++uci set olsrd.$OLSRD.NatThreshold=0.75
++uci set olsrd.$OLSRD.LinkQualityAlgorithm=etx_ff
++uci set olsrd.$OLSRD.SmartGateway=yes
++uci set olsrd.$OLSRD.SmartGatewayThreshold=50
++uci set olsrd.$OLSRD.Pollrate=0.025
++uci set olsrd.$OLSRD.RtTable=111
++uci set olsrd.$OLSRD.RtTableDefault=112
++uci set olsrd.$OLSRD.RtTableTunnel=113
++uci set olsrd.$OLSRD.RtTableTunnelPriority=100000
++uci set olsrd.$OLSRD.RtTableDefaultOlsrPriority=20000
++
++# set InterfaceDefaults parameters
++INTERFACES="$(uci add olsrd InterfaceDefaults)"
++uci set olsrd.$INTERFACES.MidValidityTime=500.0
++uci set olsrd.$INTERFACES.TcInterval=2.0
++uci set olsrd.$INTERFACES.HnaValidityTime=125.0
++uci set olsrd.$INTERFACES.HelloValidityTime=125.0
++uci set olsrd.$INTERFACES.TcValidityTime=500.0
++uci set olsrd.$INTERFACES.Ip4Broadcast=255.255.255.255
++uci set olsrd.$INTERFACES.MidInterval=25.0
++uci set olsrd.$INTERFACES.HelloInterval=3.0
++uci set olsrd.$INTERFACES.HnaInterval=10.0
++
++uci commit olsrd
++
++
++##########
++# OLSRD6 #
++##########
++
++# reset olsrd6 config
++uci import olsrd6 <<EOF
++EOF
++
++# add txtinfo plugin - needed for collectd-mod-olsrd
++PLUGIN="$(uci add olsrd6 LoadPlugin)"
++uci set olsrd6.$PLUGIN.accept=0::
++uci set olsrd6.$PLUGIN.library=olsrd_txtinfo
++uci set olsrd6.$PLUGIN.port=2006
++uci set olsrd6.$PLUGIN.ipv6only=true
++
++# add nameservice plugin
++PLUGIN="$(uci add olsrd6 LoadPlugin)"
++uci set olsrd6.$PLUGIN.library=olsrd_nameservice
++uci set olsrd6.$PLUGIN.suffix=.olsr
++uci set olsrd6.$PLUGIN.hosts_file=/tmp/hosts/olsr.ipv6
++uci set olsrd6.$PLUGIN.latlon_file=/var/run/latlon.js.ipv6
++uci set olsrd6.$PLUGIN.services_file=/var/etc/services.olsr.ipv6
++
++# add jsoninfo plugin
++PLUGIN="$(uci add olsrd6 LoadPlugin)"
++uci set olsrd6.$PLUGIN.accept=0::
++uci set olsrd6.$PLUGIN.library=olsrd_jsoninfo
++uci set olsrd6.$PLUGIN.ignore=0
++uci set olsrd6.$PLUGIN.ipv6only=true
++
++# add watchdog plugin
++PLUGIN="$(uci add olsrd6 LoadPlugin)"
++uci set olsrd6.$PLUGIN.library=olsrd_watchdog
++uci set olsrd6.$PLUGIN.file=/var/run/olsrd6.watchdog
++uci set olsrd6.$PLUGIN.interval=30
++
++# set olsrd defaults
++OLSRD="$(uci add olsrd6 olsrd)"
++uci set olsrd6.$OLSRD.IpVersion=6
++uci set olsrd6.$OLSRD.FIBMetric=flat
++uci set olsrd6.$OLSRD.AllowNoInt=yes
++uci set olsrd6.$OLSRD.TcRedundancy=2
++uci set olsrd6.$OLSRD.LinkQualityAlgorithm=etx_ffeth
++uci set olsrd6.$OLSRD.Pollrate=0.025
++uci set olsrd6.$OLSRD.RtTable=111
++uci set olsrd6.$OLSRD.RtTableDefault=112
++uci set olsrd6.$OLSRD.RtTablePriority=1000
++uci set olsrd6.$OLSRD.RtTableDefaultOlsrPriority=20000
++
++# set InterfaceDefaults parameters
++INTERFACES="$(uci add olsrd6 InterfaceDefaults)"
++uci set olsrd6.$INTERFACES.MidValidityTime=500.0
++uci set olsrd6.$INTERFACES.TcInterval=2.0
++uci set olsrd6.$INTERFACES.HnaValidityTime=125.0
++uci set olsrd6.$INTERFACES.HelloValidityTime=125.0
++uci set olsrd6.$INTERFACES.TcValidityTime=500.0
++uci set olsrd6.$INTERFACES.MidInterval=25.0
++uci set olsrd6.$INTERFACES.HelloInterval=3.0
++uci set olsrd6.$INTERFACES.HnaInterval=10.0
++
++uci commit olsrd6
++
++# add routing tables
++tables="/etc/iproute2/rt_tables"
++test -d /etc/iproute2/ || mkdir -p /etc/iproute2/
++grep -q "111 olsr" $tables || echo "111 olsr" >> $tables
++grep -q "112 olsr-default" $tables || echo "112 olsr-default" >> $tables
++grep -q "113 olsr-tunnel" $tables || echo "113 olsr-tunnel" >> $tables
+diff --git a/defaults/freifunk-berlin-olsrd-defaults/uci-defaults/freifunk-berlin-olsrd-defaults b/defaults/freifunk-berlin-olsrd-defaults/uci-defaults/freifunk-berlin-olsrd-defaults
+deleted file mode 100644
+index 8e1ff45406eaf27baeaf9fcdc75ef0296554e57d..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-olsrd-defaults/uci-defaults/freifunk-berlin-olsrd-defaults
++++ /dev/null
+@@ -1,147 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-guard "olsrd"
+-
+-# reset olsrd config
+-uci import olsrd <<EOF
+-EOF
+-
+-# add txtinfo plugin - needed for collectd-mod-txtinfo
+-PLUGIN="$(uci add olsrd LoadPlugin)"
+-uci set olsrd.$PLUGIN.accept=0.0.0.0
+-uci set olsrd.$PLUGIN.library=olsrd_txtinfo
+-uci set olsrd.$PLUGIN.port=2006
+-
+-# add arprefresh plugin
+-PLUGIN="$(uci add olsrd LoadPlugin)"
+-uci set olsrd.$PLUGIN.library=olsrd_arprefresh
+-
+-# add nameservice plugin
+-PLUGIN="$(uci add olsrd LoadPlugin)"
+-uci set olsrd.$PLUGIN.library=olsrd_nameservice
+-uci set olsrd.$PLUGIN.suffix=.olsr
+-uci set olsrd.$PLUGIN.hosts_file=/tmp/hosts/olsr
+-uci set olsrd.$PLUGIN.latlon_file=/var/run/latlon.js
+-uci set olsrd.$PLUGIN.services_file=/var/etc/services.olsr
+-
+-# add jsoninfo plugin
+-PLUGIN="$(uci add olsrd LoadPlugin)"
+-uci set olsrd.$PLUGIN.accept=0.0.0.0
+-uci set olsrd.$PLUGIN.library=olsrd_jsoninfo
+-uci set olsrd.$PLUGIN.ignore=0
+-
+-# add watchdog plugin
+-PLUGIN="$(uci add olsrd LoadPlugin)"
+-uci set olsrd.$PLUGIN.library=olsrd_watchdog
+-uci set olsrd.$PLUGIN.file=/var/run/olsrd.watchdog
+-uci set olsrd.$PLUGIN.interval=30
+-
+-# add dyngw plain plugin - it is ipv4 only
+-PLUGIN="$(uci add olsrd LoadPlugin)"
+-uci set olsrd.$PLUGIN.library=olsrd_dyn_gw
+-uci add_list olsrd.$PLUGIN.Ping=46.182.19.48      # dns.digitalcourage.de
+-uci add_list olsrd.$PLUGIN.Ping=80.67.169.40      # www.fdn.fr/actions/dns
+-uci add_list olsrd.$PLUGIN.Ping=194.150.168.168   # dns.as250.net
+-uci set olsrd.$PLUGIN.ignore=0
+-
+-# set olsrd defaults
+-OLSRD="$(uci add olsrd olsrd)"
+-uci set olsrd.$OLSRD.IpVersion=4
+-uci set olsrd.$OLSRD.FIBMetric=flat
+-uci set olsrd.$OLSRD.AllowNoInt=yes
+-uci set olsrd.$OLSRD.TcRedundancy=2
+-uci set olsrd.$OLSRD.NatThreshold=0.75
+-uci set olsrd.$OLSRD.LinkQualityAlgorithm=etx_ff
+-uci set olsrd.$OLSRD.SmartGateway=yes
+-uci set olsrd.$OLSRD.SmartGatewayThreshold=50
+-uci set olsrd.$OLSRD.Pollrate=0.025
+-uci set olsrd.$OLSRD.RtTable=111
+-uci set olsrd.$OLSRD.RtTableDefault=112
+-uci set olsrd.$OLSRD.RtTableTunnel=113
+-uci set olsrd.$OLSRD.RtTableTunnelPriority=100000
+-uci set olsrd.$OLSRD.RtTableDefaultOlsrPriority=20000
+-
+-# set InterfaceDefaults parameters
+-INTERFACES="$(uci add olsrd InterfaceDefaults)"
+-uci set olsrd.$INTERFACES.MidValidityTime=500.0
+-uci set olsrd.$INTERFACES.TcInterval=2.0
+-uci set olsrd.$INTERFACES.HnaValidityTime=125.0
+-uci set olsrd.$INTERFACES.HelloValidityTime=125.0
+-uci set olsrd.$INTERFACES.TcValidityTime=500.0
+-uci set olsrd.$INTERFACES.Ip4Broadcast=255.255.255.255
+-uci set olsrd.$INTERFACES.MidInterval=25.0
+-uci set olsrd.$INTERFACES.HelloInterval=3.0
+-uci set olsrd.$INTERFACES.HnaInterval=10.0
+-
+-uci commit olsrd
+-
+-
+-##########
+-# OLSRD6 #
+-##########
+-
+-# reset olsrd6 config
+-uci import olsrd6 <<EOF
+-EOF
+-
+-# add txtinfo plugin - needed for collectd-mod-olsrd
+-PLUGIN="$(uci add olsrd6 LoadPlugin)"
+-uci set olsrd6.$PLUGIN.accept=0::
+-uci set olsrd6.$PLUGIN.library=olsrd_txtinfo
+-uci set olsrd6.$PLUGIN.port=2006
+-uci set olsrd6.$PLUGIN.ipv6only=true
+-
+-# add nameservice plugin
+-PLUGIN="$(uci add olsrd6 LoadPlugin)"
+-uci set olsrd6.$PLUGIN.library=olsrd_nameservice
+-uci set olsrd6.$PLUGIN.suffix=.olsr
+-uci set olsrd6.$PLUGIN.hosts_file=/tmp/hosts/olsr.ipv6
+-uci set olsrd6.$PLUGIN.latlon_file=/var/run/latlon.js.ipv6
+-uci set olsrd6.$PLUGIN.services_file=/var/etc/services.olsr.ipv6
+-
+-# add jsoninfo plugin
+-PLUGIN="$(uci add olsrd6 LoadPlugin)"
+-uci set olsrd6.$PLUGIN.accept=0::
+-uci set olsrd6.$PLUGIN.library=olsrd_jsoninfo
+-uci set olsrd6.$PLUGIN.ignore=0
+-uci set olsrd6.$PLUGIN.ipv6only=true
+-
+-# add watchdog plugin
+-PLUGIN="$(uci add olsrd6 LoadPlugin)"
+-uci set olsrd6.$PLUGIN.library=olsrd_watchdog
+-uci set olsrd6.$PLUGIN.file=/var/run/olsrd6.watchdog
+-uci set olsrd6.$PLUGIN.interval=30
+-
+-# set olsrd defaults
+-OLSRD="$(uci add olsrd6 olsrd)"
+-uci set olsrd6.$OLSRD.IpVersion=6
+-uci set olsrd6.$OLSRD.FIBMetric=flat
+-uci set olsrd6.$OLSRD.AllowNoInt=yes
+-uci set olsrd6.$OLSRD.TcRedundancy=2
+-uci set olsrd6.$OLSRD.LinkQualityAlgorithm=etx_ffeth
+-uci set olsrd6.$OLSRD.Pollrate=0.025
+-uci set olsrd6.$OLSRD.RtTable=111
+-uci set olsrd6.$OLSRD.RtTableDefault=112
+-uci set olsrd6.$OLSRD.RtTablePriority=1000
+-uci set olsrd6.$OLSRD.RtTableDefaultOlsrPriority=20000
+-
+-# set InterfaceDefaults parameters
+-INTERFACES="$(uci add olsrd6 InterfaceDefaults)"
+-uci set olsrd6.$INTERFACES.MidValidityTime=500.0
+-uci set olsrd6.$INTERFACES.TcInterval=2.0
+-uci set olsrd6.$INTERFACES.HnaValidityTime=125.0
+-uci set olsrd6.$INTERFACES.HelloValidityTime=125.0
+-uci set olsrd6.$INTERFACES.TcValidityTime=500.0
+-uci set olsrd6.$INTERFACES.MidInterval=25.0
+-uci set olsrd6.$INTERFACES.HelloInterval=3.0
+-uci set olsrd6.$INTERFACES.HnaInterval=10.0
+-
+-uci commit olsrd6
+-
+-# add routing tables
+-tables="/etc/iproute2/rt_tables"
+-test -d /etc/iproute2/ || mkdir -p /etc/iproute2/
+-grep -q "111 olsr" $tables || echo "111 olsr" >> $tables
+-grep -q "112 olsr-default" $tables || echo "112 olsr-default" >> $tables
+-grep -q "113 olsr-tunnel" $tables || echo "113 olsr-tunnel" >> $tables
+diff --git a/defaults/freifunk-berlin-openvpn-files/Makefile b/defaults/freifunk-berlin-openvpn-files/Makefile
+index 8c8f4cc5ab3fc2a8b8dc339cdb762cd848b4cc3f..fe07be10723e6315dba27c0969d4e3d579f28c59 100644
+--- a/defaults/freifunk-berlin-openvpn-files/Makefile
++++ b/defaults/freifunk-berlin-openvpn-files/Makefile
+@@ -1,41 +1,9 @@
+-# $Id: Makefile 2010-02-04 23:25:21Z pg $
+-
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-openvpn-files
++LUCI_TITLE:=Freifunk Berlin openVPN files (commmon)
++LUCI_DEPENDS:=+openvpn +freifunk-berlin-lib-guard +freifunk-berlin-network-defaults
++LUCI_DESCRIPTION:=Freifunk Berlin openVPN files
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-openvpn-files
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin openVPN files (commmon)
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+= +openvpn +freifunk-berlin-lib-guard +freifunk-berlin-network-defaults
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-openvpn-files/description
+-  Freifunk Berlin openVPN files
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-openvpn-files/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-	$(INSTALL_DIR) $(1)/lib/freifunk
+-	$(CP) ./openvpn/ffvpn-up.sh $(1)/lib/freifunk
+-	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
+-	$(CP) ./openvpn/60-ffopenvpn $(1)/etc/hotplug.d/iface
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-openvpn-files))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-openvpn-files/openvpn/60-ffopenvpn b/defaults/freifunk-berlin-openvpn-files/openvpn/60-ffopenvpn
+deleted file mode 100755
+index 16e3dafb2bf0d3d415983306477df2283850f089..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-openvpn-files/openvpn/60-ffopenvpn
++++ /dev/null
+@@ -1,40 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions.sh
+-. /lib/functions/network.sh
+-
+-config_load ffwizard
+-config_get sharenet settings sharenet
+-
+-[ "$sharenet" = 1 ] || exit
+-
+-[ "$INTERFACE" = ffuplink ] && [ "$ACTION" = ifup ] && logger -t ff-userlog "OpenVPN connection has been established"
+-[ "$INTERFACE" = ffuplink ] && [ "$ACTION" = ifdown ] && logger -t ff-userlog "OpenVPN connection went down"
+-
+-[ "$INTERFACE" = wan ] || exit
+-
+-config_load openvpn
+-config_get uci_vpn_enabled ffuplink enabled
+-
+-if [ "$ACTION" = ifup ]; then
+-  logger -t ff-userlog "WAN interface is up"
+-  if [ "$uci_vpn_enabled" = 1 ]; then
+-    logger -t ff-vpn-hotplug "Starting OpenVPN on WAN interface"
+-    # Make sure OpenVPN connects only through WAN: set "local" option with WAN IP
+-    network_get_ipaddr wanip "wan"
+-    uci set openvpn.ffuplink.local=$wanip
+-    uci commit openvpn
+-    /etc/init.d/openvpn start
+-    exit
+-  fi
+-fi
+-
+-if [ "$ACTION" = ifdown ]; then
+-  logger -t ff-userlog "WAN interface went down"
+-    if [ "$uci_vpn_enabled" = 1 ]; then
+-      logger -t ff-vpn-hotplug "Stopping OpenVPN"
+-      /etc/init.d/openvpn stop
+-    exit
+-  fi
+-fi
+-
+diff --git a/defaults/freifunk-berlin-openvpn-files/openvpn/ffvpn-up.sh b/defaults/freifunk-berlin-openvpn-files/openvpn/ffvpn-up.sh
+deleted file mode 100755
+index ba05ec0f5c53caa5e73a548bb68cfd57cf7fd3fe..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-openvpn-files/openvpn/ffvpn-up.sh
++++ /dev/null
+@@ -1,59 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions.sh
+-if [ -z $route_net_gateway ] ; then
+-	logger -p debug -t up-down-ffvpn "no route_net_gateway env var from openvpn!"
+-	route_net_gateway=$(ip route show table main | grep default | cut -d ' ' -f 3)
+-	if [ -z "$route_net_gateway" ] ; then
+-		logger -p debug -t up-down-ffvpn "no gateway ip in main routing table!"
+-		route_net_gateway=$(ip route show table default | grep default | cut -d ' ' -f 3)
+-		if [ -z "$route_net_gateway" ] ; then
+-			logger -p err -t up-down-ffvpn "no gateway ip in main or default routing table!"
+-			exit 1
+-		fi
+-	fi
+-fi
+-
+-config_load freifunk-policyrouting
+-
+-config_get enable pr enable
+-if [ $enable != 1 ] ; then
+-	logger -t up-down-ffvpn "no policy routing freifunk-policyrouting.pr.enable=0"
+-	ip route add 0.0.0.0/1 via $route_net_gateway
+-	ip route add 128.0.0.0/1 via $route_net_gateway
+-	exit 0
+-fi
+-
+-config_get strict pr strict
+-table="ffuplink"
+-dev="$1"
+-remote="$5"
+-
+-(
+-	sysctl -w "net.ipv6.conf.$dev.disable_ipv6=1"
+-	if [ -n "$table" ] ; then
+-		sleep 2
+-		ugw="$route_net_gateway"
+-		gw="$route_vpn_gateway"
+-		src="$ifconfig_local"
+-		mask="$ifconfig_netmask"
+-		eval $(ipcalc.sh "$src" "$mask")
+-		net="$NETWORK/$PREFIX"
+-		if [ -z "$gw" ]; then
+-			gw="$(echo $NETWORK|cut -d '.' -f -3)"".1"
+-		fi
+-		logger -t up-down-ffvpn "ugw: $ugw dev: $dev remote: $remote gw: $gw src: $src mask: $mask"
+-		ip route add "$net" dev "$dev" src "$src" table "$table"
+-		ip route add default via "$gw" dev "$dev" table "$table"
+-		ip route del 0.0.0.0/1 via "$gw" dev "$dev"
+-		ip route del 128.0.0.0/1 via "$gw" dev "$dev"
+-		ip rule list | grep -q "iif $dev lookup $table" || \
+-		ip rule add pref 20000 iif "$dev" lookup "$table"
+-		if [ "$strict" != 0 ]; then
+-			ip rule list | grep -q "iif $dev unreachable" || \
+-			ip rule add pref 20001 iif "$dev" unreachable
+-		fi
+-	fi
+-) >/tmp/ffvpn-up.log 2>&1 &
+-
+-exit 0
+diff --git a/defaults/freifunk-berlin-openvpn-files/root/etc/hotplug.d/iface/60-ffopenvpn b/defaults/freifunk-berlin-openvpn-files/root/etc/hotplug.d/iface/60-ffopenvpn
+new file mode 100755
+index 0000000000000000000000000000000000000000..16e3dafb2bf0d3d415983306477df2283850f089
+--- /dev/null
++++ b/defaults/freifunk-berlin-openvpn-files/root/etc/hotplug.d/iface/60-ffopenvpn
+@@ -0,0 +1,40 @@
++#!/bin/sh
++
++. /lib/functions.sh
++. /lib/functions/network.sh
++
++config_load ffwizard
++config_get sharenet settings sharenet
++
++[ "$sharenet" = 1 ] || exit
++
++[ "$INTERFACE" = ffuplink ] && [ "$ACTION" = ifup ] && logger -t ff-userlog "OpenVPN connection has been established"
++[ "$INTERFACE" = ffuplink ] && [ "$ACTION" = ifdown ] && logger -t ff-userlog "OpenVPN connection went down"
++
++[ "$INTERFACE" = wan ] || exit
++
++config_load openvpn
++config_get uci_vpn_enabled ffuplink enabled
++
++if [ "$ACTION" = ifup ]; then
++  logger -t ff-userlog "WAN interface is up"
++  if [ "$uci_vpn_enabled" = 1 ]; then
++    logger -t ff-vpn-hotplug "Starting OpenVPN on WAN interface"
++    # Make sure OpenVPN connects only through WAN: set "local" option with WAN IP
++    network_get_ipaddr wanip "wan"
++    uci set openvpn.ffuplink.local=$wanip
++    uci commit openvpn
++    /etc/init.d/openvpn start
++    exit
++  fi
++fi
++
++if [ "$ACTION" = ifdown ]; then
++  logger -t ff-userlog "WAN interface went down"
++    if [ "$uci_vpn_enabled" = 1 ]; then
++      logger -t ff-vpn-hotplug "Stopping OpenVPN"
++      /etc/init.d/openvpn stop
++    exit
++  fi
++fi
++
+diff --git a/defaults/freifunk-berlin-openvpn-files/root/etc/hotplug.d/iface/ffvpn-up.sh b/defaults/freifunk-berlin-openvpn-files/root/etc/hotplug.d/iface/ffvpn-up.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..ba05ec0f5c53caa5e73a548bb68cfd57cf7fd3fe
+--- /dev/null
++++ b/defaults/freifunk-berlin-openvpn-files/root/etc/hotplug.d/iface/ffvpn-up.sh
+@@ -0,0 +1,59 @@
++#!/bin/sh
++
++. /lib/functions.sh
++if [ -z $route_net_gateway ] ; then
++	logger -p debug -t up-down-ffvpn "no route_net_gateway env var from openvpn!"
++	route_net_gateway=$(ip route show table main | grep default | cut -d ' ' -f 3)
++	if [ -z "$route_net_gateway" ] ; then
++		logger -p debug -t up-down-ffvpn "no gateway ip in main routing table!"
++		route_net_gateway=$(ip route show table default | grep default | cut -d ' ' -f 3)
++		if [ -z "$route_net_gateway" ] ; then
++			logger -p err -t up-down-ffvpn "no gateway ip in main or default routing table!"
++			exit 1
++		fi
++	fi
++fi
++
++config_load freifunk-policyrouting
++
++config_get enable pr enable
++if [ $enable != 1 ] ; then
++	logger -t up-down-ffvpn "no policy routing freifunk-policyrouting.pr.enable=0"
++	ip route add 0.0.0.0/1 via $route_net_gateway
++	ip route add 128.0.0.0/1 via $route_net_gateway
++	exit 0
++fi
++
++config_get strict pr strict
++table="ffuplink"
++dev="$1"
++remote="$5"
++
++(
++	sysctl -w "net.ipv6.conf.$dev.disable_ipv6=1"
++	if [ -n "$table" ] ; then
++		sleep 2
++		ugw="$route_net_gateway"
++		gw="$route_vpn_gateway"
++		src="$ifconfig_local"
++		mask="$ifconfig_netmask"
++		eval $(ipcalc.sh "$src" "$mask")
++		net="$NETWORK/$PREFIX"
++		if [ -z "$gw" ]; then
++			gw="$(echo $NETWORK|cut -d '.' -f -3)"".1"
++		fi
++		logger -t up-down-ffvpn "ugw: $ugw dev: $dev remote: $remote gw: $gw src: $src mask: $mask"
++		ip route add "$net" dev "$dev" src "$src" table "$table"
++		ip route add default via "$gw" dev "$dev" table "$table"
++		ip route del 0.0.0.0/1 via "$gw" dev "$dev"
++		ip route del 128.0.0.0/1 via "$gw" dev "$dev"
++		ip rule list | grep -q "iif $dev lookup $table" || \
++		ip rule add pref 20000 iif "$dev" lookup "$table"
++		if [ "$strict" != 0 ]; then
++			ip rule list | grep -q "iif $dev unreachable" || \
++			ip rule add pref 20001 iif "$dev" unreachable
++		fi
++	fi
++) >/tmp/ffvpn-up.log 2>&1 &
++
++exit 0
+diff --git a/defaults/freifunk-berlin-openvpn-files/root/etc/uci-defaults/freifunk-berlin-z90_openvpn b/defaults/freifunk-berlin-openvpn-files/root/etc/uci-defaults/freifunk-berlin-z90_openvpn
+new file mode 100644
+index 0000000000000000000000000000000000000000..103b710bbd6c60401b967fe3ee0dedbe97e06273
+--- /dev/null
++++ b/defaults/freifunk-berlin-openvpn-files/root/etc/uci-defaults/freifunk-berlin-z90_openvpn
+@@ -0,0 +1,35 @@
++#!/bin/sh
++
++. /lib/functions/freifunk-berlin-network.sh
++
++# in case we are called to recreate the instance-configuration we preserve 
++# the state of ffuplink and restore it later
++ffuplink_state=$(uci -q get openvpn.ffuplink.enabled)
++
++# set set auth-type required for this uplink-type, e.g. for freifunk-wizard
++uci set ffberlin-uplink.uplink.auth=x509
++uci commit ffberlin-uplink.uplink
++
++uci -q delete openvpn.custom_config
++uci -q delete openvpn.sample_server
++uci -q delete openvpn.sample_client
++# (re)create the openvpn-config for the ffuplink
++# we delete the current config, as this script will run after every
++# installation / upgrade. So we startover with a clean setup.
++uci -q delete openvpn.ffuplink
++uci set openvpn.ffuplink=openvpn
++if [ -z ${ffuplink_state} ]; then
++  uci set openvpn.ffuplink.enabled=0
++else
++  uci set openvpn.ffuplink.enabled=${ffuplink_state}
++fi
++uci set openvpn.ffuplink.client=1
++uci set openvpn.ffuplink.dev=ffuplink
++uci set openvpn.ffuplink.status="/var/log/openvpn-status-ffuplink.log"
++uci set openvpn.ffuplink.up="/lib/freifunk/ffvpn-up.sh"
++uci set openvpn.ffuplink.route_nopull=1
++uci commit openvpn
++
++# reconfigure ffuplink interface
++uci -q delete network.ffuplink_dev
++create_ffuplink
+diff --git a/defaults/freifunk-berlin-openvpn-files/uci-defaults/freifunk-berlin-z90_openvpn b/defaults/freifunk-berlin-openvpn-files/uci-defaults/freifunk-berlin-z90_openvpn
+deleted file mode 100644
+index 103b710bbd6c60401b967fe3ee0dedbe97e06273..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-openvpn-files/uci-defaults/freifunk-berlin-z90_openvpn
++++ /dev/null
+@@ -1,35 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/freifunk-berlin-network.sh
+-
+-# in case we are called to recreate the instance-configuration we preserve 
+-# the state of ffuplink and restore it later
+-ffuplink_state=$(uci -q get openvpn.ffuplink.enabled)
+-
+-# set set auth-type required for this uplink-type, e.g. for freifunk-wizard
+-uci set ffberlin-uplink.uplink.auth=x509
+-uci commit ffberlin-uplink.uplink
+-
+-uci -q delete openvpn.custom_config
+-uci -q delete openvpn.sample_server
+-uci -q delete openvpn.sample_client
+-# (re)create the openvpn-config for the ffuplink
+-# we delete the current config, as this script will run after every
+-# installation / upgrade. So we startover with a clean setup.
+-uci -q delete openvpn.ffuplink
+-uci set openvpn.ffuplink=openvpn
+-if [ -z ${ffuplink_state} ]; then
+-  uci set openvpn.ffuplink.enabled=0
+-else
+-  uci set openvpn.ffuplink.enabled=${ffuplink_state}
+-fi
+-uci set openvpn.ffuplink.client=1
+-uci set openvpn.ffuplink.dev=ffuplink
+-uci set openvpn.ffuplink.status="/var/log/openvpn-status-ffuplink.log"
+-uci set openvpn.ffuplink.up="/lib/freifunk/ffvpn-up.sh"
+-uci set openvpn.ffuplink.route_nopull=1
+-uci commit openvpn
+-
+-# reconfigure ffuplink interface
+-uci -q delete network.ffuplink_dev
+-create_ffuplink
+diff --git a/defaults/freifunk-berlin-statistics-defaults/Makefile b/defaults/freifunk-berlin-statistics-defaults/Makefile
+index 831bfb1103d22cd0426960dc78541e16de9eff36..9ee45d1081db0e36b27a45083e3ae03391f45636 100644
+--- a/defaults/freifunk-berlin-statistics-defaults/Makefile
++++ b/defaults/freifunk-berlin-statistics-defaults/Makefile
+@@ -1,35 +1,9 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-statistics-defaults
++LUCI_TITLE:=Freifunk Berlin statistics default configuration
++LUCI_DEPENDS:=+olsrd-mod-txtinfo +freifunk-berlin-lib-guard
++LUCI_DESCRIPTION:=Freifunk Berlin configuration files for statistics
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-statistics-defaults
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin statistics default configuration
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+= +olsrd-mod-txtinfo +freifunk-berlin-lib-guard
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-statistics-defaults/description
+-  Freifunk Berlin configuration files for statistics
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-statistics-defaults/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-statistics-defaults))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-statistics-defaults/root/etc/uci-defaults/freifunk-berlin-statistics-defaults b/defaults/freifunk-berlin-statistics-defaults/root/etc/uci-defaults/freifunk-berlin-statistics-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..3af4332b29e371af94c0575daa090b077a9c1dba
+--- /dev/null
++++ b/defaults/freifunk-berlin-statistics-defaults/root/etc/uci-defaults/freifunk-berlin-statistics-defaults
+@@ -0,0 +1,81 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++guard "luci_statistics"
++
++# reset luci_statistics config
++uci import luci_statistics <<EOF
++EOF
++
++# mod_ping and collectd_rrdtool use a lot of RAM, disable on 32MB routers
++if [ "$(cat /proc/meminfo |grep MemTotal:|awk {'print $2'})" -gt "65536" ]; then
++  HAVE_PLENTY_RAM=1
++else
++  HAVE_PLENTY_RAM=0
++fi
++
++# rrdtool
++uci set luci_statistics.rrdtool=statistics
++uci set luci_statistics.rrdtool.default_timespan=1hour
++uci set luci_statistics.rrdtool.image_width=600
++uci set luci_statistics.rrdtool.image_path=/tmp/rrdimg
++
++# collectd
++uci set luci_statistics.collectd=statistics
++uci set luci_statistics.collectd.BaseDir=/var/run/collectd
++uci set luci_statistics.collectd.Include=/etc/collectd/conf.d
++uci set luci_statistics.collectd.PIDFile=/var/run/collectd.pid
++uci set luci_statistics.collectd.PluginDir=/usr/lib/collectd
++uci set luci_statistics.collectd.TypesDB=/usr/share/collectd/types.db
++uci set luci_statistics.collectd.Interval=30
++uci set luci_statistics.collectd.ReadThreads=2
++
++# mod ping
++uci set luci_statistics.collectd_ping=statistics
++uci set luci_statistics.collectd_ping.enable=$HAVE_PLENTY_RAM
++uci set luci_statistics.collectd_ping.TTL=127
++uci set luci_statistics.collectd_ping.Interval=10
++uci set luci_statistics.collectd_ping.Hosts=ping.berlin.freifunk.net
++
++# mod interface
++uci set luci_statistics.collectd_interface=statistics
++uci set luci_statistics.collectd_interface.Interfaces=ffuplink
++uci set luci_statistics.collectd_interface.enable=1
++
++# mod load
++uci set luci_statistics.collectd_load=statistics
++uci set luci_statistics.collectd_load.enable=1
++
++# collectd_rrdtool
++uci set luci_statistics.collectd_rrdtool=statistics
++uci set luci_statistics.collectd_rrdtool.enable=$HAVE_PLENTY_RAM
++uci set luci_statistics.collectd_rrdtool.DataDir=/tmp/rrd
++uci set luci_statistics.collectd_rrdtool.RRARows=100
++uci set luci_statistics.collectd_rrdtool.RRASingle=1
++uci set luci_statistics.collectd_rrdtool.RRATimespans="1hour 1day 1week 1month 1year"
++
++# mod memory
++uci set luci_statistics.collectd_memory=statistics
++uci set luci_statistics.collectd_memory.enable=1
++
++# mod olsrd - depends on olsrd-plugin-txtinfo
++uci set luci_statistics.collectd_olsrd=statistics
++uci set luci_statistics.collectd_olsrd.enable=1
++uci set luci_statistics.collectd_olsrd.Port=2006
++uci set luci_statistics.collectd_olsrd.Host=127.0.0.1
++
++# mod iwinfo
++uci set luci_statistics.collectd_iwinfo=statistics
++uci set luci_statistics.collectd_iwinfo.enable=1
++
++# mod uptime
++uci set luci_statistics.collectd_uptime=statistics
++uci set luci_statistics.collectd_uptime.enable=1
++
++# network - push data to monitor server
++NETWORK="$(uci add luci_statistics collectd_network_server)" 
++uci set luci_statistics.$NETWORK.host=monitor.berlin.freifunk.net
++uci set luci_statistics.collectd_network=statistics
++uci set luci_statistics.collectd_network.enable=1
++
++uci commit luci_statistics
+diff --git a/defaults/freifunk-berlin-statistics-defaults/uci-defaults/freifunk-berlin-statistics-defaults b/defaults/freifunk-berlin-statistics-defaults/uci-defaults/freifunk-berlin-statistics-defaults
+deleted file mode 100644
+index 3af4332b29e371af94c0575daa090b077a9c1dba..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-statistics-defaults/uci-defaults/freifunk-berlin-statistics-defaults
++++ /dev/null
+@@ -1,81 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-guard "luci_statistics"
+-
+-# reset luci_statistics config
+-uci import luci_statistics <<EOF
+-EOF
+-
+-# mod_ping and collectd_rrdtool use a lot of RAM, disable on 32MB routers
+-if [ "$(cat /proc/meminfo |grep MemTotal:|awk {'print $2'})" -gt "65536" ]; then
+-  HAVE_PLENTY_RAM=1
+-else
+-  HAVE_PLENTY_RAM=0
+-fi
+-
+-# rrdtool
+-uci set luci_statistics.rrdtool=statistics
+-uci set luci_statistics.rrdtool.default_timespan=1hour
+-uci set luci_statistics.rrdtool.image_width=600
+-uci set luci_statistics.rrdtool.image_path=/tmp/rrdimg
+-
+-# collectd
+-uci set luci_statistics.collectd=statistics
+-uci set luci_statistics.collectd.BaseDir=/var/run/collectd
+-uci set luci_statistics.collectd.Include=/etc/collectd/conf.d
+-uci set luci_statistics.collectd.PIDFile=/var/run/collectd.pid
+-uci set luci_statistics.collectd.PluginDir=/usr/lib/collectd
+-uci set luci_statistics.collectd.TypesDB=/usr/share/collectd/types.db
+-uci set luci_statistics.collectd.Interval=30
+-uci set luci_statistics.collectd.ReadThreads=2
+-
+-# mod ping
+-uci set luci_statistics.collectd_ping=statistics
+-uci set luci_statistics.collectd_ping.enable=$HAVE_PLENTY_RAM
+-uci set luci_statistics.collectd_ping.TTL=127
+-uci set luci_statistics.collectd_ping.Interval=10
+-uci set luci_statistics.collectd_ping.Hosts=ping.berlin.freifunk.net
+-
+-# mod interface
+-uci set luci_statistics.collectd_interface=statistics
+-uci set luci_statistics.collectd_interface.Interfaces=ffuplink
+-uci set luci_statistics.collectd_interface.enable=1
+-
+-# mod load
+-uci set luci_statistics.collectd_load=statistics
+-uci set luci_statistics.collectd_load.enable=1
+-
+-# collectd_rrdtool
+-uci set luci_statistics.collectd_rrdtool=statistics
+-uci set luci_statistics.collectd_rrdtool.enable=$HAVE_PLENTY_RAM
+-uci set luci_statistics.collectd_rrdtool.DataDir=/tmp/rrd
+-uci set luci_statistics.collectd_rrdtool.RRARows=100
+-uci set luci_statistics.collectd_rrdtool.RRASingle=1
+-uci set luci_statistics.collectd_rrdtool.RRATimespans="1hour 1day 1week 1month 1year"
+-
+-# mod memory
+-uci set luci_statistics.collectd_memory=statistics
+-uci set luci_statistics.collectd_memory.enable=1
+-
+-# mod olsrd - depends on olsrd-plugin-txtinfo
+-uci set luci_statistics.collectd_olsrd=statistics
+-uci set luci_statistics.collectd_olsrd.enable=1
+-uci set luci_statistics.collectd_olsrd.Port=2006
+-uci set luci_statistics.collectd_olsrd.Host=127.0.0.1
+-
+-# mod iwinfo
+-uci set luci_statistics.collectd_iwinfo=statistics
+-uci set luci_statistics.collectd_iwinfo.enable=1
+-
+-# mod uptime
+-uci set luci_statistics.collectd_uptime=statistics
+-uci set luci_statistics.collectd_uptime.enable=1
+-
+-# network - push data to monitor server
+-NETWORK="$(uci add luci_statistics collectd_network_server)" 
+-uci set luci_statistics.$NETWORK.host=monitor.berlin.freifunk.net
+-uci set luci_statistics.collectd_network=statistics
+-uci set luci_statistics.collectd_network.enable=1
+-
+-uci commit luci_statistics
+diff --git a/defaults/freifunk-berlin-system-defaults/Makefile b/defaults/freifunk-berlin-system-defaults/Makefile
+index adeb567a53a6764763bc0045e11a71eaac7dcb4b..07b20b1e5a8f61d9d51854889dd39fc9b3b6034a 100644
+--- a/defaults/freifunk-berlin-system-defaults/Makefile
++++ b/defaults/freifunk-berlin-system-defaults/Makefile
+@@ -1,35 +1,9 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-system-defaults
++LUCI_TITLE:=Freifunk Berlin system default configuration
++LUCI_DEPENDS:=+freifunk-berlin-lib-guard
++LUCI_DESCRIPTION:=Freifunk Berlin configuration files for basic system-files
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-system-defaults
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin system default configuration
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+= +freifunk-berlin-lib-guard
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-system-defaults/description
+-  Freifunk Berlin configuration files for basic system-files
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-system-defaults/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-system-defaults))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-system-defaults/root/etc/uci-defaults/freifunk-berlin-system-defaults b/defaults/freifunk-berlin-system-defaults/root/etc/uci-defaults/freifunk-berlin-system-defaults
+new file mode 100755
+index 0000000000000000000000000000000000000000..85774f4dcf9f92392fa6dcf948279a7f87229899
+--- /dev/null
++++ b/defaults/freifunk-berlin-system-defaults/root/etc/uci-defaults/freifunk-berlin-system-defaults
+@@ -0,0 +1,25 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++. /etc/openwrt_release
++
++# change default hostname
++if [ $(uci get system.@system[0].hostname) = OpenWrt ]; then
++  uci set system.@system[0].hostname=gib-mir-einen-namen
++  uci commit system
++fi
++
++# set system.was_development flag if running non-releasecode was detected
++SEMVER=$(echo ${DISTRIB_RELEASE%%-*} | \
++  grep -E "^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$")
++if [ -z ${SEMVER} ] && [ "$(uci -q get system.@system[0].was_development)" != "1" ]; then
++  uci set system.@system[0].was_development=1
++  uci commit system
++fi
++
++
++guard "system"
++
++uci set system.ntp.use_dhcp='0'
++
++uci commit system
+diff --git a/defaults/freifunk-berlin-system-defaults/uci-defaults/freifunk-berlin-system-defaults b/defaults/freifunk-berlin-system-defaults/uci-defaults/freifunk-berlin-system-defaults
+deleted file mode 100755
+index 85774f4dcf9f92392fa6dcf948279a7f87229899..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-system-defaults/uci-defaults/freifunk-berlin-system-defaults
++++ /dev/null
+@@ -1,25 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-. /etc/openwrt_release
+-
+-# change default hostname
+-if [ $(uci get system.@system[0].hostname) = OpenWrt ]; then
+-  uci set system.@system[0].hostname=gib-mir-einen-namen
+-  uci commit system
+-fi
+-
+-# set system.was_development flag if running non-releasecode was detected
+-SEMVER=$(echo ${DISTRIB_RELEASE%%-*} | \
+-  grep -E "^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$")
+-if [ -z ${SEMVER} ] && [ "$(uci -q get system.@system[0].was_development)" != "1" ]; then
+-  uci set system.@system[0].was_development=1
+-  uci commit system
+-fi
+-
+-
+-guard "system"
+-
+-uci set system.ntp.use_dhcp='0'
+-
+-uci commit system
+diff --git a/defaults/freifunk-berlin-uhttpd-defaults/Makefile b/defaults/freifunk-berlin-uhttpd-defaults/Makefile
+index df98843b1511e6c4ce722dcee501e7ce06624232..76451605f3a24b40bf67e7f55e68c9eeb631eaea 100644
+--- a/defaults/freifunk-berlin-uhttpd-defaults/Makefile
++++ b/defaults/freifunk-berlin-uhttpd-defaults/Makefile
+@@ -1,35 +1,9 @@
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-uhttpd-defaults
++LUCI_TITLE:=Freifunk Berlin uhttpd default configuration
++LUCI_DEPENDS:=+uhttpd +freifunk-berlin-lib-guard
++LUCI_DESCRIPTION:=Freifunk Berlin configuration files for uhttpd
+ 
+ include ../../freifunk-berlin-generic.mk
+ 
+-define Package/freifunk-berlin-uhttpd-defaults
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin uhttpd default configuration
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+= +uhttpd +freifunk-berlin-lib-guard
+-  PKGARCH:=all
+-endef
+-
+-define Package/freifunk-berlin-uhttpd-defaults/description
+-  Freifunk Berlin configuration files for uhttpd
+-endef
+-
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/freifunk-berlin-uhttpd-defaults/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-endef
+-
+-$(eval $(call BuildPackage,freifunk-berlin-uhttpd-defaults))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/defaults/freifunk-berlin-uhttpd-defaults/root/etc/uci-defaults/freifunk-berlin-uhttpd-defaults b/defaults/freifunk-berlin-uhttpd-defaults/root/etc/uci-defaults/freifunk-berlin-uhttpd-defaults
+new file mode 100644
+index 0000000000000000000000000000000000000000..8428893fc519bce190731cc785aad1ba66fa72bc
+--- /dev/null
++++ b/defaults/freifunk-berlin-uhttpd-defaults/root/etc/uci-defaults/freifunk-berlin-uhttpd-defaults
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++. /lib/functions/guard.sh
++guard "uhttpd"
++
++# insert a random part into commonname (Freifunk Berlin - <random>)
++# this should help us to avoid different certificates with same
++# commonname/issuer id
++uci set uhttpd.px5g.commonname="Freifunk Berlin - $(dd if=/dev/urandom bs=4 count=1 | hexdump -e '1/1 "%02x"')"
++# do not force redirect to https
++uci set uhttpd.main.redirect_https=0
++uci commit
+diff --git a/defaults/freifunk-berlin-uhttpd-defaults/uci-defaults/freifunk-berlin-uhttpd-defaults b/defaults/freifunk-berlin-uhttpd-defaults/uci-defaults/freifunk-berlin-uhttpd-defaults
+deleted file mode 100644
+index 8428893fc519bce190731cc785aad1ba66fa72bc..0000000000000000000000000000000000000000
+--- a/defaults/freifunk-berlin-uhttpd-defaults/uci-defaults/freifunk-berlin-uhttpd-defaults
++++ /dev/null
+@@ -1,12 +0,0 @@
+-#!/bin/sh
+-
+-. /lib/functions/guard.sh
+-guard "uhttpd"
+-
+-# insert a random part into commonname (Freifunk Berlin - <random>)
+-# this should help us to avoid different certificates with same
+-# commonname/issuer id
+-uci set uhttpd.px5g.commonname="Freifunk Berlin - $(dd if=/dev/urandom bs=4 count=1 | hexdump -e '1/1 "%02x"')"
+-# do not force redirect to https
+-uci set uhttpd.main.redirect_https=0
+-uci commit
+diff --git a/freifunk-berlin-generic.mk b/freifunk-berlin-generic.mk
+index 82d5b602561d9ed3bf229f9f27b6e354eddf9f04..5d749f243baec15e77d7fd67a981897509c4a959 100644
+--- a/freifunk-berlin-generic.mk
++++ b/freifunk-berlin-generic.mk
+@@ -15,6 +15,12 @@ else
+ #$(info found luci.mk at $(LUCIMKFILE))
+ endif
+ 
++LUCI_SECTION?=freifunk-berlin
++LUCI_CATEGORY?=freifunk-berlin
++LUCI_MAINTAINER?=Freifunk Berlin community
++LUCI_URL?=http://github.com/freifunk-berlin/packages_berlin
++LUCI_MENU?=none
++
+ PKG_VERSION?=$(if $(DUMP),x,$(strip $(shell \
+ 	if svn info >/dev/null 2>/dev/null; then \
+ 		revision="svn-r$$(LC_ALL=C svn info | sed -ne 's/^Revision: //p')"; \
+diff --git a/uplinks/freifunk-berlin-uplink-notunnel/Makefile b/uplinks/freifunk-berlin-uplink-notunnel/Makefile
+index 2d128f70b09681aa7316e557389c1f17a97631fa..ec9c2c222e77634471197d135faab110ffbf851d 100644
+--- a/uplinks/freifunk-berlin-uplink-notunnel/Makefile
++++ b/uplinks/freifunk-berlin-uplink-notunnel/Makefile
+@@ -1,43 +1,13 @@
+-
+ include $(TOPDIR)/rules.mk
+ 
+-PKG_NAME:=freifunk-berlin-uplink-notunnel-files
+-
+-include ../../freifunk-berlin-generic.mk
+-
+-define Package/$(PKG_NAME)
+-  SECTION:=freifunk-berlin
+-  CATEGORY:=freifunk-berlin
+-  TITLE:=Freifunk Berlin no tunnel files
+-  URL:=http://github.com/freifunk-berlin/packages_berlin
+-  DEPENDS+=+freifunk-berlin-lib-guard +kmod-veth +freifunk-berlin-network-defaults +pingcheck
+-  PROVIDES:=freifunk-berlin-uplink
+-  PKGARCH:=all
+-endef
++LUCI_TITLE:=Freifunk Berlin no tunnel files
++LUCI_DEPENDS:=+freifunk-berlin-lib-guard +kmod-veth +freifunk-berlin-network-defaults +pingcheck
++PKG_PROVIDES:=freifunk-berlin-uplink
+ 
+-define Package/$(PKG_NAME)/description
+-  Freifunk Berlin files to setup a uplink without any
++LUCI_DESCRIPTION:=Freifunk Berlin files to setup a uplink without any
+   tunnel.
+   upstream traffic will be directly routed via your network
+-endef
+ 
+-define Build/Prepare
+-	mkdir -p $(PKG_BUILD_DIR)
+-endef
+-
+-define Build/Configure
+-endef
+-
+-define Build/Compile
+-endef
+-
+-define Package/$(PKG_NAME)/install
+-	$(INSTALL_DIR) $(1)/etc/uci-defaults
+-	$(CP) ./uci-defaults/* $(1)/etc/uci-defaults
+-	$(INSTALL_DIR) $(1)/etc/pingcheck/online.d
+-	$(CP) ./files/etc/pingcheck/online.d/* $(1)/etc/pingcheck/online.d
+-	$(INSTALL_DIR) $(1)/etc/pingcheck/offline.d
+-	$(CP) ./files/etc/pingcheck/offline.d/* $(1)/etc/pingcheck/offline.d
+-endef
++include ../../freifunk-berlin-generic.mk
+ 
+-$(eval $(call BuildPackage,$(PKG_NAME)))
++# call BuildPackage - is done via freifunk-berlin-generic.mk --> luci.mk
+diff --git a/uplinks/freifunk-berlin-uplink-notunnel/files/etc/pingcheck/offline.d/60-freifunk-notunnel b/uplinks/freifunk-berlin-uplink-notunnel/files/etc/pingcheck/offline.d/60-freifunk-notunnel
+deleted file mode 100755
+index fa7fd796bd3072a82f7fd4a096bdc916f1df2494..0000000000000000000000000000000000000000
+--- a/uplinks/freifunk-berlin-uplink-notunnel/files/etc/pingcheck/offline.d/60-freifunk-notunnel
++++ /dev/null
+@@ -1,15 +0,0 @@
+-#!/bin/sh
+-
+-[ "$INTERFACE" = wan ] || exit
+-
+-. /lib/functions.sh
+-
+-config_load ffberlin-uplink
+-config_get ffuplink preset current
+-
+-[ "$ffuplink" = notunnel ] || exit
+-
+-# Internet connectivity via WAN is up, start the ffuplink interface
+-logger -t freifunk-pingcheck "WAN is down, stopping ffuplink"
+-ifdown ffuplink
+-
+diff --git a/uplinks/freifunk-berlin-uplink-notunnel/files/etc/pingcheck/online.d/60-freifunk-notunnel b/uplinks/freifunk-berlin-uplink-notunnel/files/etc/pingcheck/online.d/60-freifunk-notunnel
+deleted file mode 100755
+index 9c1d140308ccce39b6123ea5be667f8a87c3d635..0000000000000000000000000000000000000000
+--- a/uplinks/freifunk-berlin-uplink-notunnel/files/etc/pingcheck/online.d/60-freifunk-notunnel
++++ /dev/null
+@@ -1,22 +0,0 @@
+-#!/bin/sh
+-
+-[ "$INTERFACE" = wan ] || exit
+-
+-. /lib/functions.sh
+-
+-config_load ffberlin-uplink
+-config_get ffuplink preset current
+-
+-[ "$ffuplink" = notunnel ] || exit
+-
+-# Make sure ffuplink is not already up
+-. /usr/share/libubox/jshn.sh
+-json_load "$(ubus call network.interface.ffuplink status)"
+-json_select $1
+-json_get_vars up
+-[ "$up" == "0" ] || exit
+-
+-# Internet connectivity via WAN is up, start the ffuplink interface
+-# In the case where ffuplink is set disabled '1', then ifup dies quietly
+-logger -t freifunk-pingcheck "WAN is up, starting ffuplink"
+-ifup ffuplink
+diff --git a/uplinks/freifunk-berlin-uplink-notunnel/root/etc/pingcheck/offline.d/60-freifunk-notunnel b/uplinks/freifunk-berlin-uplink-notunnel/root/etc/pingcheck/offline.d/60-freifunk-notunnel
+new file mode 100755
+index 0000000000000000000000000000000000000000..fa7fd796bd3072a82f7fd4a096bdc916f1df2494
+--- /dev/null
++++ b/uplinks/freifunk-berlin-uplink-notunnel/root/etc/pingcheck/offline.d/60-freifunk-notunnel
+@@ -0,0 +1,15 @@
++#!/bin/sh
++
++[ "$INTERFACE" = wan ] || exit
++
++. /lib/functions.sh
++
++config_load ffberlin-uplink
++config_get ffuplink preset current
++
++[ "$ffuplink" = notunnel ] || exit
++
++# Internet connectivity via WAN is up, start the ffuplink interface
++logger -t freifunk-pingcheck "WAN is down, stopping ffuplink"
++ifdown ffuplink
++
+diff --git a/uplinks/freifunk-berlin-uplink-notunnel/root/etc/pingcheck/online.d/60-freifunk-notunnel b/uplinks/freifunk-berlin-uplink-notunnel/root/etc/pingcheck/online.d/60-freifunk-notunnel
+new file mode 100755
+index 0000000000000000000000000000000000000000..9c1d140308ccce39b6123ea5be667f8a87c3d635
+--- /dev/null
++++ b/uplinks/freifunk-berlin-uplink-notunnel/root/etc/pingcheck/online.d/60-freifunk-notunnel
+@@ -0,0 +1,22 @@
++#!/bin/sh
++
++[ "$INTERFACE" = wan ] || exit
++
++. /lib/functions.sh
++
++config_load ffberlin-uplink
++config_get ffuplink preset current
++
++[ "$ffuplink" = notunnel ] || exit
++
++# Make sure ffuplink is not already up
++. /usr/share/libubox/jshn.sh
++json_load "$(ubus call network.interface.ffuplink status)"
++json_select $1
++json_get_vars up
++[ "$up" == "0" ] || exit
++
++# Internet connectivity via WAN is up, start the ffuplink interface
++# In the case where ffuplink is set disabled '1', then ifup dies quietly
++logger -t freifunk-pingcheck "WAN is up, starting ffuplink"
++ifup ffuplink
+diff --git a/uplinks/freifunk-berlin-uplink-notunnel/root/etc/uci-defaults/freifunk-berlin-z95_notunnel b/uplinks/freifunk-berlin-uplink-notunnel/root/etc/uci-defaults/freifunk-berlin-z95_notunnel
+new file mode 100644
+index 0000000000000000000000000000000000000000..0e6a3ef2dbd7d1905f7f7f45bd682ae4020f879e
+--- /dev/null
++++ b/uplinks/freifunk-berlin-uplink-notunnel/root/etc/uci-defaults/freifunk-berlin-z95_notunnel
+@@ -0,0 +1,51 @@
++#!/bin/sh
++
++THIS_UPLINKNAME="notunnel"
++
++. /lib/functions/freifunk-berlin-network.sh 
++. /lib/functions/guard.sh
++. /lib/functions.sh
++
++# always set correct masquerading, regardless of guard
++uci set firewall.zone_ffuplink.masq=1
++uci commit firewall
++
++current_preset=$(uci get ffberlin-uplink.preset.current)
++if [ ${current_preset} != ${THIS_UPLINKNAME} ]; then
++  # do not track preset when it was 'undefined', aka never configured
++  if [ ${current_preset} != "undefined" ]; then
++    logger -t "ffuplink" "uplink-preset has been changed."
++    uci set ffberlin-uplink.preset.previous=${current_preset}
++    create_ffuplink
++  fi
++  uci set ffberlin-uplink.preset.current=${THIS_UPLINKNAME}
++fi
++# set set auth-type required for this uplink-type, e.g. for freifunk-wizard
++uci set ffberlin-uplink.uplink.auth=none
++
++macaddr=$(uci -q get ffberlin-uplink.uplink.macaddr)
++if [ -z "$macaddr" ]; then
++  macaddr=$(generate_random_mac_hex "fe")
++  uci set ffberlin-uplink.uplink.macaddr=$macaddr
++fi
++
++uci commit ffberlin-uplink
++
++guard "notunnel"
++
++uci -q delete network.ffuplink_dev
++uci set network.ffuplink_dev=device
++uci set network.ffuplink_dev.type=veth
++uci set network.ffuplink_dev.name=ffuplink
++uci set network.ffuplink_dev.peer_name=ffuplink_wan
++uci set network.ffuplink_dev.macaddr=$macaddr
++uci commit network.ffuplink_dev
++
++# add ffuplink_dev to br-wan if not there
++ifnames=$(uci get network.wan.ifname)
++list_contains ifnames ffuplink_wan || uci set network.wan.ifname="${ifnames} ffuplink_wan"
++uci commit network.wan
++
++uci set network.ffuplink.proto=dhcp
++uci set network.ffuplink.hostname=freifunk-$(echo $macaddr|tr -d :)-uplink
++uci commit network.ffuplink
+diff --git a/uplinks/freifunk-berlin-uplink-notunnel/uci-defaults/freifunk-berlin-z95_notunnel b/uplinks/freifunk-berlin-uplink-notunnel/uci-defaults/freifunk-berlin-z95_notunnel
+deleted file mode 100644
+index 0e6a3ef2dbd7d1905f7f7f45bd682ae4020f879e..0000000000000000000000000000000000000000
+--- a/uplinks/freifunk-berlin-uplink-notunnel/uci-defaults/freifunk-berlin-z95_notunnel
++++ /dev/null
+@@ -1,51 +0,0 @@
+-#!/bin/sh
+-
+-THIS_UPLINKNAME="notunnel"
+-
+-. /lib/functions/freifunk-berlin-network.sh 
+-. /lib/functions/guard.sh
+-. /lib/functions.sh
+-
+-# always set correct masquerading, regardless of guard
+-uci set firewall.zone_ffuplink.masq=1
+-uci commit firewall
+-
+-current_preset=$(uci get ffberlin-uplink.preset.current)
+-if [ ${current_preset} != ${THIS_UPLINKNAME} ]; then
+-  # do not track preset when it was 'undefined', aka never configured
+-  if [ ${current_preset} != "undefined" ]; then
+-    logger -t "ffuplink" "uplink-preset has been changed."
+-    uci set ffberlin-uplink.preset.previous=${current_preset}
+-    create_ffuplink
+-  fi
+-  uci set ffberlin-uplink.preset.current=${THIS_UPLINKNAME}
+-fi
+-# set set auth-type required for this uplink-type, e.g. for freifunk-wizard
+-uci set ffberlin-uplink.uplink.auth=none
+-
+-macaddr=$(uci -q get ffberlin-uplink.uplink.macaddr)
+-if [ -z "$macaddr" ]; then
+-  macaddr=$(generate_random_mac_hex "fe")
+-  uci set ffberlin-uplink.uplink.macaddr=$macaddr
+-fi
+-
+-uci commit ffberlin-uplink
+-
+-guard "notunnel"
+-
+-uci -q delete network.ffuplink_dev
+-uci set network.ffuplink_dev=device
+-uci set network.ffuplink_dev.type=veth
+-uci set network.ffuplink_dev.name=ffuplink
+-uci set network.ffuplink_dev.peer_name=ffuplink_wan
+-uci set network.ffuplink_dev.macaddr=$macaddr
+-uci commit network.ffuplink_dev
+-
+-# add ffuplink_dev to br-wan if not there
+-ifnames=$(uci get network.wan.ifname)
+-list_contains ifnames ffuplink_wan || uci set network.wan.ifname="${ifnames} ffuplink_wan"
+-uci commit network.wan
+-
+-uci set network.ffuplink.proto=dhcp
+-uci set network.ffuplink.hostname=freifunk-$(echo $macaddr|tr -d :)-uplink
+-uci commit network.ffuplink
+diff --git a/utils/luci-mod-freifunk-ui/Makefile b/utils/luci-mod-freifunk-ui/Makefile
+index cf56bde94eebf446617a08ae5bda2cacd6d580db..45ab0a6d20b04edb0dfb80cb16f57d6fcdef4c56 100644
+--- a/utils/luci-mod-freifunk-ui/Makefile
++++ b/utils/luci-mod-freifunk-ui/Makefile
+@@ -8,6 +8,9 @@
+ include $(TOPDIR)/rules.mk
+ 
+ LUCI_TITLE:=Freifunk Public and Admin LuCI UI
++LUCI_SECTION:=luci
++LUCI_CATEGORY:=LuCI
++LUCI_MENU:=2. Modules
+ LUCI_DEPENDS:=+luci-mod-admin-full +luci-lib-json +community-profiles +luci-lib-ipkg
+ LUCI_PKGARCH:=all
+ PKG_RELEASE:=3

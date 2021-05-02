@@ -2,7 +2,7 @@ From: Sven Roederer <devel-sven@geroedel.de>
 Date: Sat, 17 Apr 2021 14:37:12 +0200
 Subject: rework package defines to changes of luci.mk
 
-LuCI-PR https://github.com/openwrt/luci/pull/2637 was rewritten, so update our packages to this implementation.
+LuCI-PR https://github.com/openwrt/luci/pull/2637 was rewritten, so update our packages to this implementation and make them build again.
 Even it's still in PR-state let's use the new LuCI-code, as it makes our package-definitions quite short and provides automatic versioning.
 
 * adapt freifunk.mk to override LuCI defaults with our requirements
@@ -2393,7 +2393,7 @@ index 8428893fc519bce190731cc785aad1ba66fa72bc..00000000000000000000000000000000
 -uci set uhttpd.main.redirect_https=0
 -uci commit
 diff --git a/freifunk-berlin-generic.mk b/freifunk-berlin-generic.mk
-index 82d5b602561d9ed3bf229f9f27b6e354eddf9f04..5d749f243baec15e77d7fd67a981897509c4a959 100644
+index 82d5b602561d9ed3bf229f9f27b6e354eddf9f04..32ffbd1f877246015625d60fbc0a66436e2d7e6f 100644
 --- a/freifunk-berlin-generic.mk
 +++ b/freifunk-berlin-generic.mk
 @@ -15,6 +15,12 @@ else
@@ -2404,7 +2404,7 @@ index 82d5b602561d9ed3bf229f9f27b6e354eddf9f04..5d749f243baec15e77d7fd67a9818975
 +LUCI_CATEGORY?=freifunk-berlin
 +LUCI_MAINTAINER?=Freifunk Berlin community
 +LUCI_URL?=http://github.com/freifunk-berlin/packages_berlin
-+LUCI_MENU?=none
++LUCI_SUBMENU_FORCED?=none
 +
  PKG_VERSION?=$(if $(DUMP),x,$(strip $(shell \
  	if svn info >/dev/null 2>/dev/null; then \
@@ -2676,7 +2676,7 @@ index 0e6a3ef2dbd7d1905f7f7f45bd682ae4020f879e..00000000000000000000000000000000
 -uci set network.ffuplink.hostname=freifunk-$(echo $macaddr|tr -d :)-uplink
 -uci commit network.ffuplink
 diff --git a/utils/luci-mod-freifunk-ui/Makefile b/utils/luci-mod-freifunk-ui/Makefile
-index cf56bde94eebf446617a08ae5bda2cacd6d580db..45ab0a6d20b04edb0dfb80cb16f57d6fcdef4c56 100644
+index cf56bde94eebf446617a08ae5bda2cacd6d580db..7d5d933885c30ebe6947d0de5b6202aab6733d15 100644
 --- a/utils/luci-mod-freifunk-ui/Makefile
 +++ b/utils/luci-mod-freifunk-ui/Makefile
 @@ -8,6 +8,9 @@
@@ -2685,7 +2685,7 @@ index cf56bde94eebf446617a08ae5bda2cacd6d580db..45ab0a6d20b04edb0dfb80cb16f57d6f
  LUCI_TITLE:=Freifunk Public and Admin LuCI UI
 +LUCI_SECTION:=luci
 +LUCI_CATEGORY:=LuCI
-+LUCI_MENU:=2. Modules
++LUCI_SUBMENU_FORCED:=2. Modules
  LUCI_DEPENDS:=+luci-mod-admin-full +luci-lib-json +community-profiles +luci-lib-ipkg
  LUCI_PKGARCH:=all
  PKG_RELEASE:=3

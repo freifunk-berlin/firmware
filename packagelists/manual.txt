@@ -33,6 +33,7 @@ uhttpd-mod-ubus
 px5g-wolfssl
 luci-mod-freifunk-ui
 luci-app-olsr
+freifunk-common-olsr
 luci-app-olsr-services
 luci-app-opkg
 luci-app-owm

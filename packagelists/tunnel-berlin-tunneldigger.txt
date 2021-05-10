@@ -37,6 +37,7 @@ px5g-wolfssl
 luci-app-ffwizard-berlin
 luci-mod-freifunk-ui
 luci-app-olsr
+freifunk-common-olsr
 luci-app-firewall
 luci-app-olsr-services
 luci-app-opkg

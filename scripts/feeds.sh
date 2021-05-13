@@ -11,7 +11,7 @@ rm -rf openwrt/feeds
 rm -rf openwrt/package/feeds
 
 (
-	[ -n "${FOREIGN_BUILD}" ] || echo 'src-link gluon_base ../../package'
+	echo 'src-link gluon_base ../../package'
 	for feed in $FEEDS; do
 		echo "src-link $feed ../../packages/$feed"
 	done

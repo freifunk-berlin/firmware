@@ -78,7 +78,7 @@ openwrt-clean-bin:
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 .stamp-feeds-updated: .stamp-patched
-	@$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' FOREIGN_BUILD=1 scripts/feeds.sh
+	@$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/feeds.sh
 	touch $@
 
 # prepare patch

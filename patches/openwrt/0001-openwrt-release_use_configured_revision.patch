@@ -1,0 +1,16 @@
+From: template <nomail@local>
+Date: Fri, 6 Sep 2019 08:29:50 +0000
+Subject: openwrt-release_use_configured_revision
+
+diff --git a/package/base-files/files/etc/openwrt_release b/package/base-files/files/etc/openwrt_release
+index d03400ca05306d2ad7eef66a219f3290da0309f1..8e51829e88207811dd609aa1ae9632cd19229874 100644
+--- a/package/base-files/files/etc/openwrt_release
++++ b/package/base-files/files/etc/openwrt_release
+@@ -1,6 +1,6 @@
+ DISTRIB_ID='%D'
+ DISTRIB_RELEASE='%V'
+-DISTRIB_REVISION='%R'
++DISTRIB_REVISION='%C'
+ DISTRIB_TARGET='%S'
+ DISTRIB_ARCH='%A'
+ DISTRIB_DESCRIPTION='%D %V %C'

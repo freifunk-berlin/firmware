@@ -68,6 +68,7 @@ update-patches: .stamp-pre-patch .FORCE
 # clean up openwrt working copy
 openwrt-clean: stamp-clean-openwrt-cleaned .stamp-openwrt-cleaned
 .stamp-openwrt-cleaned: config.mk | $(OPENWRT_DIR) openwrt-clean-bin
+	+
 	cd $(OPENWRT_DIR); \
 	  ./scripts/feeds clean && \
 	  git clean -dff && git fetch && git reset --hard HEAD && \
@@ -81,7 +82,7 @@ openwrt-clean-bin:
 # update feeds
 feeds-update: stamp-clean-feeds-updated .stamp-feeds-updated
 .stamp-feeds-updated: .stamp-patched
-	@
+	@+
 	$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/feeds.sh
 	touch $@
 
@@ -122,6 +123,7 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 
 # openwrt config
 $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
+	+
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
 	# always replace CONFIG_VERSION_CODE by FW_REVISION
 	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
@@ -136,6 +138,7 @@ prepare: stamp-clean-prepared .stamp-prepared
 # compile
 compile: stamp-clean-compiled .stamp-compiled
 .stamp-compiled: .stamp-prepared openwrt-clean-bin
+	+
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 	touch $@
@@ -200,9 +203,11 @@ images: .stamp-images
 #                  prerequirement is a build OpenWRT
 ifeq ($(origin IB_FILE),command line)
 .stamp-images: $(FW_DIR)/embedded-files .FORCE
+	+
 	$(info IB_FILE explicitly defined; using it for building firmware-images)
 else
 .stamp-images: .stamp-compiled
+	+
 	$(info IB_FILE not defined; assuming called from inside regular build)
 	$(eval IB_FILE := $(shell ls -tr $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
 endif
@@ -219,6 +224,7 @@ endif
 	touch $@
 
 setup-sdk: .stamp-patched
+	+
 	@if [ -z "$(SDK_FILE)" ]; then
 		echo Error: Please provide SDK-FILE by using "make SDK_FILE=<filename>"
 		exit 1

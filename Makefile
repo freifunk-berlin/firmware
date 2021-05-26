@@ -21,22 +21,13 @@ define newline
 
 endef
 
+VALID_TARGETS=$(sort $(notdir $(basename $(wildcard $(FW_DIR)/profiles/*.profiles))))
 
 define listtargets
 $(error $(1) TARGET defined ! $(newline) \
   $(addprefix $(newline) * ,$(VALID_TARGETS)) \
   $(newline)Please specify one from the list above via 'TARGET' environment or in config.mk)
 endef
-
-# test for existing $TARGET-config or abort
-VALID_TARGETS=$(sort $(notdir $(basename $(wildcard $(FW_DIR)/profiles/*.profiles))))
-ifdef TARGET
-ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
-$(call listtargets,Invalid)
-endif
-else
-$(call listtargets,No)
-endif
 
 # if any of the following files have been changed: clean up openwrt dir
 DEPS=$(TARGET_CONFIG) modules patches $(wildcard patches/*)
@@ -47,6 +38,24 @@ PROFILES=$(shell cat $(FW_DIR)/profiles/$(MAINTARGET)-$(SUBTARGET).profiles)
 FW_REVISION=$(shell $(REVISION))
 
 default: firmwares
+
+test-target:
+# test for existing $TARGET-config or abort
+#	@#echo $$TARGET
+#	$(info print TARGET: "$(TARGET)")
+#	$(info test1)
+#ifndef $(TARGET)
+#	$(info case1)
+#	$(call listtargets,No)
+#endif
+#	$(info test2)
+ifeq ($(TARGET),)
+$(call listtargets,No)
+endif
+$(info ifeq-test)
+ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
+$(call listtargets,Invalid)
+endif
 
 ## Gluon - Begin
 # compatibility to Gluon.buildsystem
@@ -132,7 +141,7 @@ $(OPENWRT_DIR)/files: $(FW_DIR)/embedded-files
 	ln -s $(FW_DIR)/embedded-files $(OPENWRT_DIR)/files
 
 # openwrt config
-$(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
+$(OPENWRT_DIR)/.config: test-target .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev $(OPENWRT_DIR)/dl
 	cat $(TARGET_CONFIG) >$(OPENWRT_DIR)/.config
 	# always replace CONFIG_VERSION_CODE by FW_REVISION
 	sed -i "/^CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$(FW_REVISION)\"" $(OPENWRT_DIR)/.config
@@ -141,12 +150,12 @@ $(OPENWRT_DIR)/.config: .stamp-feeds-updated $(TARGET_CONFIG) .stamp-build_rev $
 
 # prepare openwrt working copy
 prepare: stamp-clean-prepared .stamp-prepared
-.stamp-prepared: .stamp-feeds-updated $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files
+.stamp-prepared: test-target .stamp-feeds-updated $(OPENWRT_DIR)/.config $(OPENWRT_DIR)/files
 	touch $@
 
 # compile
 compile: stamp-clean-compiled .stamp-compiled
-.stamp-compiled: .stamp-prepared openwrt-clean-bin
+.stamp-compiled: test-target .stamp-prepared openwrt-clean-bin
 	$(UMASK); \
 	  $(MAKE) -C $(OPENWRT_DIR) $(MAKE_ARGS)
 	touch $@
@@ -156,7 +165,7 @@ compile: stamp-clean-compiled .stamp-compiled
 #  * packages directory
 #  * firmware-images are already in place (target images)
 firmwares: stamp-clean-firmwares .stamp-firmwares
-.stamp-firmwares: .stamp-images $(VERSION_FILE) .stamp-initrd
+.stamp-firmwares: test-target .stamp-images $(VERSION_FILE) .stamp-initrd
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -f $(FW_TARGET_DIR)/*.tar.xz
@@ -173,7 +182,7 @@ firmwares: stamp-clean-firmwares .stamp-firmwares
 	touch $@
 
 initrd: .stamp-initrd
-.stamp-initrd: .stamp-compiled
+.stamp-initrd: test-target .stamp-compiled
 	$(eval TARGET_BINDIR := $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET))
 	$(eval INITRD_DIR := $(FW_TARGET_DIR)/initrd)
 	[ -d $(INITRD_DIR) ] || mkdir -p $(INITRD_DIR)
@@ -210,10 +219,10 @@ images: .stamp-images
 #                  gets created during build, in this case a
 #                  prerequirement is a build OpenWRT
 ifeq ($(origin IB_FILE),command line)
-.stamp-images: .FORCE
+.stamp-images: test-target .FORCE
 	$(info IB_FILE explicitly defined; using it for building firmware-images)
 else
-.stamp-images: .stamp-compiled
+.stamp-images: test-target .stamp-compiled
 	$(info IB_FILE not defined; assuming called from inside regular build)
 	$(eval IB_FILE := $(shell ls -tr $(OPENWRT_DIR)/bin/targets/$(MAINTARGET)/$(SUBTARGET)/*-imagebuilder-*.tar.xz | tail -n1))
 endif
@@ -229,7 +238,7 @@ endif
 	for file in `find $(RELPATH) -name "freifunk-berlin-*-$(MAINTARGET)-$(SUBTARGET)-*.bin"` ; do mv $$file $${file/$(MAINTARGET)-$(SUBTARGET)-/}; done
 	touch $@
 
-setup-sdk: .stamp-patched
+setup-sdk: test-target .stamp-patched
 	 @if [ -z "$(SDK_FILE)" ]; then \
 		echo Error: Please provide SDK-FILE by using "make SDK_FILE=<filename>"; \
 		exit 1; \
@@ -268,7 +277,7 @@ stamp-clean:
 
 clean: stamp-clean .stamp-openwrt-cleaned
 
-.PHONY: openwrt-clean openwrt-clean-bin patch feeds-update prepare compile firmwares stamp-clean clean setup-sdk
+.PHONY: openwrt-clean openwrt-clean-bin test-target patch feeds-update prepare compile firmwares stamp-clean clean setup-sdk
 .NOTPARALLEL:
 .FORCE:
 .SUFFIXES:

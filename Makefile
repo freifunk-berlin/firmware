@@ -41,18 +41,9 @@ default: firmwares
 
 test-target:
 # test for existing $TARGET-config or abort
-#	@#echo $$TARGET
-#	$(info print TARGET: "$(TARGET)")
-#	$(info test1)
-#ifndef $(TARGET)
-#	$(info case1)
-#	$(call listtargets,No)
-#endif
-#	$(info test2)
 ifeq ($(TARGET),)
 $(call listtargets,No)
 endif
-$(info ifeq-test)
 ifeq ($(wildcard $(FW_DIR)/configs/$(TARGET).config),)
 $(call listtargets,Invalid)
 endif

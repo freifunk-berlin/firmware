@@ -3,7 +3,7 @@ Date: Wed, 20 Nov 2019 22:44:02 +0100
 Subject: policy-routing: modify default to berlin-specific version
 
 diff --git a/contrib/package/freifunk-policyrouting/Makefile b/contrib/package/freifunk-policyrouting/Makefile
-index 1b44ac321bd4f226068d3048033d6de80aa2764c..748e6071f7d6a80bd902c7957486f682441d0f6f 100644
+index 1b44ac321bd4f226068d3048033d6de80aa2764c..db3017f661d02a3a38a25e6ad6bd1d5d446892de 100644
 --- a/contrib/package/freifunk-policyrouting/Makefile
 +++ b/contrib/package/freifunk-policyrouting/Makefile
 @@ -4,7 +4,7 @@
@@ -11,7 +11,7 @@ index 1b44ac321bd4f226068d3048033d6de80aa2764c..748e6071f7d6a80bd902c7957486f682
  
  PKG_NAME:=freifunk-policyrouting
 -PKG_RELEASE:=7
-+PKG_RELEASE:=8
++PKG_RELEASE:=7.berlin1
  
  PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
  

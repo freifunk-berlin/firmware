@@ -139,7 +139,12 @@ info "Extract image builder $IB_FILE"
 tar xf "$IB_FILE" --strip-components=1 -C "$TEMP_DIR"
 
 for profile in $PROFILES ; do
-	info "Building a profile for $profile"
+	info "Building an image for $profile"
+
+	if [ -e "${PKGLIST_DIR}/profile-packages.txt" ] ; then
+		model_packages="$(grep $profile ${PKGLIST_DIR}/profile-packages.txt | cut -d':' -s -f 2)"
+		info "we include these extra packages: $model_packages"
+	fi
 
 	# profiles can have a suffix. like 4mb devices get a smaller package list pro use case
 	# UBNT:4MB -> profile "UBNT" suffix "4MB"
@@ -168,6 +173,7 @@ for profile in $PROFILES ; do
 		info "Using package list $package_list"
 
 		packages=$(parse_pkg_list_file "${PKGLIST_DIR}/${package_list}.txt")
+		packages="${packages} ${model_packages}"
 
 		if [ -z "${packages}" ] ; then
 			info "skipping this usecase, as package list is empty"

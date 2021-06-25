@@ -1,0 +1,7 @@
+# this file lists a profile which should get special modules installed / removed 
+# this will usually apply only to hardware drivers
+# profiles not listed here, will get the 
+# * default packages based on OpenWrts device-specific choice
+# * the packagelist we a currently building for
+#
+# Format: <boardname>:[-]package [package ...]

@@ -48,5 +48,9 @@ ubnt_unifiac-mesh-pro;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k at
 yuncore_a770;-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
 yuncore_a782;-kmod-ath10k-ct -ath10k-firmware-qca9888-ct kmod-ath10k ath10k-firmware-qca9888
 
+# boards with mass-storage (SATA, SD-cards) will benefit from additional packages
+mikrotik_routerboard-750gr3:block-mount kmod-fs-f2fs kmod-sdhci-mt7620
+
 # boards with integrated DSL-port need additional hardware-support (see Issue #838)
 avm_fritz7360sl:luci-proto-ipv6 luci-proto-ppp ppp ppp-mod-pppoe
+

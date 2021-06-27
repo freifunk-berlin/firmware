@@ -141,6 +141,11 @@ tar xf "$IB_FILE" --strip-components=1 -C "$TEMP_DIR"
 for profile in $PROFILES ; do
 	info "Building an image for $profile"
 
+	# profiles can have a suffix. like 4mb devices get a smaller package list pro use case
+	# UBNT:4MB -> profile "UBNT" suffix "4MB"
+	suffix="$(echo $profile | cut -d':' -f 2)"
+	profile="$(echo $profile | cut -d':' -f 1)"
+
 	if [ -e "${PKGLIST_DIR}/profile-packages.txt" ] ; then
 		model_packages="$(grep $profile ${PKGLIST_DIR}/profile-packages.txt | cut -d':' -s -f 2)"
 		# this is compatibility for WeimarNetz-stype definitons
@@ -149,11 +154,6 @@ for profile in $PROFILES ; do
 		fi
 		info "we include these extra packages: $model_packages"
 	fi
-
-	# profiles can have a suffix. like 4mb devices get a smaller package list pro use case
-	# UBNT:4MB -> profile "UBNT" suffix "4MB"
-	suffix="$(echo $profile | cut -d':' -f 2)"
-	profile="$(echo $profile | cut -d':' -f 1)"
 
 	for usecase in $USECASES ; do
 		package_list=""

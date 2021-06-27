@@ -147,10 +147,10 @@ for profile in $PROFILES ; do
 	profile="$(echo $profile | cut -d':' -f 1)"
 
 	if [ -e "${PKGLIST_DIR}/profile-packages.txt" ] ; then
-		model_packages="$(grep $profile ${PKGLIST_DIR}/profile-packages.txt | cut -d':' -s -f 2)"
+		model_packages="$(grep $profile ${PKGLIST_DIR}/profile-packages.txt | cut -d':' -s -f 2 | tr -t '\n' ' ')"
 		# this is compatibility for WeimarNetz-stype definitons
 		if [ -z "${model_packages}" ]; then
-			model_packages="$(grep $profile ${PKGLIST_DIR}/profile-packages.txt | cut -d';' -s -f 2)"
+			model_packages="$(grep $profile ${PKGLIST_DIR}/profile-packages.txt | cut -d';' -s -f 2| tr -t '\n' ' ')"
 		fi
 		info "we include these extra packages: $model_packages"
 	fi

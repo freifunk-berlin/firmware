@@ -32,6 +32,7 @@ tplink_archer-c60-v3;-kmod-ath10k-ct-smallbuffers kmod-ath10k -ath10k-firmware-q
 tplink_archer-c7-v2;-kmod-ath10k-ct kmod-ath10k -ath10k-firmware-qca988x-ct ath10k-firmware-qca988x
 tplink_archer-c7-v5;-kmod-ath10k-ct kmod-ath10k -ath10k-firmware-qca988x-ct ath10k-firmware-qca988x
 tplink_archer-d50-v1;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+tplink_eap225-outdoor-v1:-kmod-ath10k-ct kmod-ath10k -ath10k-firmware-qca9888-ct ath10k-firmware-qca9888
 tplink_re350k-v1;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
 tplink_re450-v2;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
 ubnt_nanobeam-ac;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x

@@ -12,8 +12,10 @@ elecom_wrc-1750ghbk2-i;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k a
 engenius_ecb1750;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
 engenius_epg5000;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
 engenius_ews511ap;-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+glinet_gl-ar750:-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
 glinet_gl-ar750s-nor:-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
 glinet_gl-ar750s-nor-nand:-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+glinet_gl-e750:-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
 glinet_gl-x750;-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
 iodata_wn-ac1167dgr;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
 iodata_wn-ac1600dgr;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x

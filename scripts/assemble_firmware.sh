@@ -139,12 +139,21 @@ info "Extract image builder $IB_FILE"
 tar xf "$IB_FILE" --strip-components=1 -C "$TEMP_DIR"
 
 for profile in $PROFILES ; do
-	info "Building a profile for $profile"
+	info "Building an image for $profile"
 
 	# profiles can have a suffix. like 4mb devices get a smaller package list pro use case
 	# UBNT:4MB -> profile "UBNT" suffix "4MB"
 	suffix="$(echo $profile | cut -d':' -f 2)"
 	profile="$(echo $profile | cut -d':' -f 1)"
+
+	if [ -e "${PKGLIST_DIR}/profile-packages.txt" ] ; then
+		model_packages="$(grep $profile ${PKGLIST_DIR}/profile-packages.txt | cut -d':' -s -f 2 | tr -t '\n' ' ')"
+		# this is compatibility for WeimarNetz-stype definitons
+		if [ -z "${model_packages}" ]; then
+			model_packages="$(grep $profile ${PKGLIST_DIR}/profile-packages.txt | cut -d';' -s -f 2| tr -t '\n' ' ')"
+		fi
+		info "we include these extra packages: $model_packages"
+	fi
 
 	for usecase in $USECASES ; do
 		package_list=""
@@ -168,6 +177,7 @@ for profile in $PROFILES ; do
 		info "Using package list $package_list"
 
 		packages=$(parse_pkg_list_file "${PKGLIST_DIR}/${package_list}.txt")
+		packages="${packages} ${model_packages}"
 
 		if [ -z "${packages}" ] ; then
 			info "skipping this usecase, as package list is empty"

@@ -22,49 +22,49 @@ endif
 
 download: info .autobuild_stamp-download .FORCE
 .autobuild_stamp-download: $(OPENWRT_DIR)/.config
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs download
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs download
 	touch $@
 
 tools: .autobuild_stamp-download
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs tools/install
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs tools/install
 	touch .autobuild_stamp-$@
 
 toolchain: 
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs toolchain/install
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs toolchain/install
 	touch .autobuild_stamp-$@
 
 kmods: 
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/compile
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/compile
 	touch .autobuild_stamp-$@
 
 packages: .autobuild_stamp-packages .FORCE
 .autobuild_stamp-packages:
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs package/compile
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs package/install
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs package/compile
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs package/install
 	touch $@
 
 images: .autobuild_stamp-packages
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/install
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/install
 	touch .autobuild_stamp-$@
 
 linux:
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/linux/install
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/linux/install
 	touch .autobuild_stamp-$@
 
 imagebuilder:
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/imagebuilder/install
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/imagebuilder/install
 	touch .autobuild_stamp-$@
 
 sdk:
-	$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/sdk/install
+	+$(MAKE) -C $(OPENWRT_DIR) BUILD_LOG_DIR=$(FW_DIR)/logs target/sdk/install
 	touch .autobuild_stamp-$@
 
 travis: $(OPENWRT_DIR)/.config
-	travis_wait $(MAKE) -C $(OPENWRT_DIR) toolchain/install
+	+travis_wait $(MAKE) -C $(OPENWRT_DIR) toolchain/install
 
 buildbot: $(OPENWRT_DIR)/.config
-	$(MAKE) compile
-	$(MAKE) version-file
+	+$(MAKE) compile
+	+$(MAKE) version-file
 	# copy imagebuilder, sdk and toolchain (if existing)
 	# remove old versions
 	rm -rf $(FW_TARGET_DIR)
@@ -81,13 +81,13 @@ buildbot: $(OPENWRT_DIR)/.config
 	cp -a $(OPENWRT_DIR)/bin/packages $$PACKAGES_DIR/
 	rm -rf $(OPENWRT_DIR)
 	rm -rf $(FW_DIR)/dl
-	$(MAKE) IB_FILE=$(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz images
+	+$(MAKE) IB_FILE=$(FW_TARGET_DIR)/*-imagebuilder-*.tar.xz images
 
 config: info $(OPENWRT_DIR)/.config
 $(OPENWRT_DIR)/.config: $(FW_DIR)/configs/common-autobuild.config
 	TARGET_CONFIG_AUTOBUILD=$(FW_DIR)/configs/common-autobuild.config
 	cat $(FW_DIR)/configs/common-autobuild.config >>$(FW_DIR)/configs/common.config
-	$(MAKE) prepare
+	+$(MAKE) prepare
 
 next-buildstep-for-%:
 #	@echo this step: $*

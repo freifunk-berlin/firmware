@@ -19,11 +19,14 @@ If you find bugs please report them at: https://github.com/freifunk-berlin/firmw
 
 ### Info
 
-For the Berlin Freifunk firmware we use vanilla OpenWrt with additional patches
-and packages. The Makefile automates firmware
-creation and apply patches / integrates custom freifunk packages. All custom
-patches are located in *patches/* and all additional packages can be found at
-http://github.com/freifunk-berlin/packages_berlin.
+For the Berlin Freifunk firmware we use vanilla OpenWrt with additional patches and packages.
+The Makefile automates firmware creation (applies patches, integrates custom packages and uses
+the Imagebuilder of OpenWrt).
+
+The idea is to download OpenWrt via git, patch it with all patches in the `patches/` folder
+and configure it according to the configuration snippets in `configs/`. Then use the OpenWrt
+buildsystem to build all packages and the Imagebuilder. The packages to assemble into the final
+image for the router are taken from the imageflavors defined in `packagelist/`.
 
 ### Build Prerequisites
 
@@ -144,6 +147,31 @@ make images IB_FILE=<file> TARGET=... PACKAGES_LIST_DEFAULT=...
 
 The default target is `ar71xx-generic`. For a complete list of supported targets look in `configs/` for the target-specific configs.
 Each of these targets need a matching file in `profiles/` with the profiles (boards) that should be build with the imagebuilder.
+
+### Build-System-Structure  
+
+Where can I change something? What does these files do? 
+
+```
+config.mk                    - generic build-parameters, default target to build, select what 
+                               packagelists to build
+modules                      - defines all external repositories to use 
+                               (see https://gluon.readthedocs.io/en/latest/dev/build.html#feed-management)
+configs/                     - target-specific configuration snippets passed to OpenWrt buildsystem
+  common.config              - OpenWrt config-parameters for all targets
+  $(TARGET).config           - target-specific config. Gets added to common.config. 
+                               Options from target.config overwrite those from common.config.
+  common-autobuild.config    - gets added on top, when building via Makefile.autobuild
+patches/                     - patches against OpenWrt / individual feeds
+  openwrt                    - patches for OpenWrt-core
+  packages/$(FEED)           - patches for each feed used (closely relates to definitons in modules)
+packagelists/                - Package Lists 
+profiles/                    - List of router profiles for each target - profile names match the OpenWrt
+                               board definition
+Makefile                     - Does all the stuff. Cloning and Updating OpenWrt, patching, running make
+Makefile.autobuild           - slightly reduced Makefile for CI builds (more granular steps, ...)
+scripts/assemble_firmware.sh - Script for running the Imagebuilder for a target
+```
 
 ### Continuous integration / GitHubActions
 

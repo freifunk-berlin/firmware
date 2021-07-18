@@ -45,6 +45,7 @@ luci-app-owm
 luci-app-owm-ant
 luci-app-owm-cmd
 luci-app-owm-gui
+luci-proto-ipv6
 luci-theme-bootstrap
 luci-theme-freifunk-generic
 # GUI addon

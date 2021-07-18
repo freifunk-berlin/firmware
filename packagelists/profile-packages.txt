@@ -1,0 +1,58 @@
+# this file lists a profile which should get special modules installed / removed 
+# this will usually apply only to hardware drivers
+# profiles not listed here, will get the 
+# * default packages based on OpenWrts device-specific choice
+# * the packagelist we a currently building for
+#
+# Format: <boardname>:[-]package [package ...]
+
+# ath10k Wave1 chips (AP and 802.11s in parallel with Caldera Tech drivers - Issue #696)
+dlink_dir-859-a1;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+elecom_wrc-1750ghbk2-i;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+engenius_ecb1750;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+engenius_epg5000;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+engenius_ews511ap;-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+glinet_gl-ar750:-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+glinet_gl-ar750s-nor:-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+glinet_gl-ar750s-nor-nand:-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+glinet_gl-e750:-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+glinet_gl-x750;-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+iodata_wn-ac1167dgr;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+iodata_wn-ac1600dgr;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+iodata_wn-ac1600dgr2;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+netgear_r7800:kmod-ath10k -kmod-ath10k-ct ath10k-firmware-qca9984 -ath10k-firmware-qca9984-ct
+nec_wg1200cr;-kmod-ath10k-ct -ath10k-firmware-qca9888-ct kmod-ath10k ath10k-firmware-qca9888
+nec_wg800hp;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+ocedo_koala;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+openmesh_om5p-ac-v2;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+tplink_archer-a7-v5;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+tplink_archer-c2-v3;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+tplink_archer-c25-v1;-kmod-ath10k-ct-smallbuffers kmod-ath10k -ath10k-firmware-qca9887-ct ath10k-firmware-qca9887
+tplink_archer-c5-v1;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+tplink_archer-c58-v1;-kmod-ath10k-ct-smallbuffers kmod-ath10k -ath10k-firmware-qca9888-ct ath10k-firmware-qca9888
+tplink_archer-c6-v2;-kmod-ath10k-ct kmod-ath10k -ath10k-firmware-qca9888-ct ath10k-firmware-qca9888
+tplink_archer-c60-v1;-kmod-ath10k-ct-smallbuffers kmod-ath10k -ath10k-firmware-qca9888-ct ath10k-firmware-qca9888
+tplink_archer-c60-v2;-kmod-ath10k-ct-smallbuffers kmod-ath10k -ath10k-firmware-qca9888-ct ath10k-firmware-qca9888
+tplink_archer-c60-v3;-kmod-ath10k-ct-smallbuffers kmod-ath10k -ath10k-firmware-qca9888-ct ath10k-firmware-qca9888
+tplink_archer-c7-v2;-kmod-ath10k-ct kmod-ath10k -ath10k-firmware-qca988x-ct ath10k-firmware-qca988x
+tplink_archer-c7-v5;-kmod-ath10k-ct kmod-ath10k -ath10k-firmware-qca988x-ct ath10k-firmware-qca988x
+tplink_archer-d50-v1;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+tplink_eap225-outdoor-v1:-kmod-ath10k-ct kmod-ath10k -ath10k-firmware-qca9888-ct ath10k-firmware-qca9888
+tplink_re350k-v1;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+tplink_re450-v2;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+ubnt_nanobeam-ac;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+ubnt_nanostation-ac;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+ubnt_nanostation-ac-loco;-kmod-ath10k-ct-smallbuffers -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+ubnt_unifiac-lr;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+ubnt_unifiac-lite;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+ubnt_unifiac-mesh;-kmod-ath10k-ct kmod-ath10k -ath10k-firmware-qca988x-ct ath10k-firmware-qca988x
+ubnt_unifiac-mesh-pro;-kmod-ath10k-ct -ath10k-firmware-qca988x-ct kmod-ath10k ath10k-firmware-qca988x
+yuncore_a770;-kmod-ath10k-ct -ath10k-firmware-qca9887-ct kmod-ath10k ath10k-firmware-qca9887
+yuncore_a782;-kmod-ath10k-ct -ath10k-firmware-qca9888-ct kmod-ath10k ath10k-firmware-qca9888
+
+# boards with mass-storage (SATA, SD-cards) will benefit from additional packages
+mikrotik_routerboard-750gr3:block-mount kmod-fs-f2fs kmod-sdhci-mt7620
+
+# boards with integrated DSL-port need additional hardware-support (see Issue #838)
+avm_fritz7360sl:luci-proto-ipv6 luci-proto-ppp ppp ppp-mod-pppoe
+

@@ -166,6 +166,8 @@ patches/                     - patches against OpenWrt / individual feeds
   openwrt                    - patches for OpenWrt-core
   packages/$(FEED)           - patches for each feed used (closely relates to definitons in modules)
 packagelists/                - Package Lists 
+  profile-packages.txt       - allows to specify packages on a per router basis. Allows to add and remove
+                               packages defined by default OpenWrt list and out package list.
 profiles/                    - List of router profiles for each target - profile names match the OpenWrt
                                board definition
 Makefile                     - Does all the stuff. Cloning and Updating OpenWrt, patching, running make

@@ -1,0 +1,73 @@
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+Date: Wed, 10 Feb 2021 22:53:00 +0100
+Subject: mac80211: add back ath10k_pci memory hacks
+
+These hacks have been removed in commit 1e27befe63ff ("mac80211: remove
+ath10k_pci memory hacks").
+
+However, since we still use mainline ath10k, we will need them.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+
+diff --git a/package/kernel/mac80211/patches/ath/960-ath10k-limit-htt-rx-ring-size.patch b/package/kernel/mac80211/patches/ath/960-ath10k-limit-htt-rx-ring-size.patch
+new file mode 100644
+index 0000000000000000000000000000000000000000..e907c7ab73677a3db928ef3620d77bf22a4d752a
+--- /dev/null
++++ b/package/kernel/mac80211/patches/ath/960-ath10k-limit-htt-rx-ring-size.patch
+@@ -0,0 +1,11 @@
++--- a/drivers/net/wireless/ath/ath10k/htt.h
+++++ b/drivers/net/wireless/ath/ath10k/htt.h
++@@ -236,7 +236,7 @@ enum htt_rx_ring_flags {
++ };
++ 
++ #define HTT_RX_RING_SIZE_MIN 128
++-#define HTT_RX_RING_SIZE_MAX 2048
+++#define HTT_RX_RING_SIZE_MAX 512
++ #define HTT_RX_RING_SIZE HTT_RX_RING_SIZE_MAX
++ #define HTT_RX_RING_FILL_LEVEL (((HTT_RX_RING_SIZE) / 2) - 1)
++ #define HTT_RX_RING_FILL_LEVEL_DUAL_MAC (HTT_RX_RING_SIZE - 1)
+diff --git a/package/kernel/mac80211/patches/ath/961-ath10k-limit-pci-buffer-size.patch b/package/kernel/mac80211/patches/ath/961-ath10k-limit-pci-buffer-size.patch
+new file mode 100644
+index 0000000000000000000000000000000000000000..b5e5c3a9bb00a407096936ece1916e331e0164f5
+--- /dev/null
++++ b/package/kernel/mac80211/patches/ath/961-ath10k-limit-pci-buffer-size.patch
+@@ -0,0 +1,38 @@
++--- a/drivers/net/wireless/ath/ath10k/pci.c
+++++ b/drivers/net/wireless/ath/ath10k/pci.c
++@@ -131,7 +131,7 @@ static const struct ce_attr pci_host_ce_
++ 		.flags = CE_ATTR_FLAGS,
++ 		.src_nentries = 0,
++ 		.src_sz_max = 2048,
++-		.dest_nentries = 512,
+++		.dest_nentries = 128,
++ 		.recv_cb = ath10k_pci_htt_htc_rx_cb,
++ 	},
++ 
++@@ -140,7 +140,7 @@ static const struct ce_attr pci_host_ce_
++ 		.flags = CE_ATTR_FLAGS,
++ 		.src_nentries = 0,
++ 		.src_sz_max = 2048,
++-		.dest_nentries = 128,
+++		.dest_nentries = 64,
++ 		.recv_cb = ath10k_pci_htc_rx_cb,
++ 	},
++ 
++@@ -167,7 +167,7 @@ static const struct ce_attr pci_host_ce_
++ 		.flags = CE_ATTR_FLAGS,
++ 		.src_nentries = 0,
++ 		.src_sz_max = 512,
++-		.dest_nentries = 512,
+++		.dest_nentries = 128,
++ 		.recv_cb = ath10k_pci_htt_rx_cb,
++ 	},
++ 
++@@ -192,7 +192,7 @@ static const struct ce_attr pci_host_ce_
++ 		.flags = CE_ATTR_FLAGS,
++ 		.src_nentries = 0,
++ 		.src_sz_max = 2048,
++-		.dest_nentries = 128,
+++		.dest_nentries = 96,
++ 		.recv_cb = ath10k_pci_pktlog_rx_cb,
++ 	},
++ 
+

@@ -219,18 +219,7 @@ scripts/assemble_firmware.sh - Script to run the ImageBuilder for a target
 
 The firmware is [built
 automatically](https://github.com/freifunk-berlin/firmware/actions) via a [GitHub Actions workflow](https://github.com/freifunk-berlin/firmware/blob/master/.github/workflows/build-firmware.yml). 
-A build is triggered by any PR or commit to the master branch. We switched from a self-hosted 
-[Buildbot setup](https://buildbot.net/) to GitHub Actions because it reduced the amount of maintenance we had to do.
-
-Since the switch to GitHub Actions, no one has implemented a way to deploy / publish the builds, so the 
-the following sentences are just a kind of reminder for this to-do.
-
-~~All branches whose name matches the pattern "X.Y.Z" are built and placed in the "stable" download directory:
-[https://buildbot.berlin.freifunk.net/buildbot/stable/](https://buildbot.berlin.freifunk.net/buildbot/stable/)~~
-
-~~All branches with names that do not match the pattern "X.Y.Z" are built and placed in the "unstable" directory:
-[https://buildbot.berlin.freifunk.net/buildbot/unstable/](https://buildbot.berlin.freifunk.net/buildbot/unstable/)
-Note that there is no reference to the branch name in the directory; unstable builds can only be identified by the build number.~~
+A build is triggered by any PR or commit to the master branch.
 
 #### Creating a release
 
@@ -242,9 +231,6 @@ For inspiration, please see the related
 A new branch must be created for a new release. The branch name must be a semantic version number.
 Make sure that you include the semantic version number and, for major releases
 the codename in the README and configuration files (./configs/*).
-
-~~The buildbot creates the version and puts the files in the stable directory
-once you have published the new branch on GitHub.~~
 
 ### Patches with "git format-patch"
 

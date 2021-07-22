@@ -20,13 +20,10 @@ If you find bugs, please report them at: https://github.com/freifunk-berlin/firm
 ### Info
 
 For the Berlin Freifunk firmware we use vanilla OpenWrt with additional patches and packages.
-The Makefile automates the build of the firmware (applies patches, integrates custom packages and uses the
-the ImageBuilder of OpenWrt).
+The Makefile automates the build of the firmware (applies patches, integrates custom packages and uses the ImageBuilder of OpenWrt).
 
-The idea is to download OpenWrt via git, patch it with all patches in the `patches/` folder
-patch it and configure it according to the configuration snippets in `configs/`. Then use the OpenWrt
-build system to build all packages and the image builder. The packages that will be assembled to the final image for the router
-image for the router are taken from the image flavors defined in `packagelist/`.
+The idea is to download OpenWrt via git, patch it with all the patches in the `patches/` folder and configure it according to the configuration snippets in `configs/`. Then use the OpenWrt
+build system to build all packages and the ImageBuilder. The packages that will be assembled into the final firmware image are taken from the image flavors defined in `packagelist/`.
 
 ### Build prerequisites
 
@@ -45,7 +42,7 @@ Arch / Manjaro:
 ```
 # Essential prerequisites
 pacman -S --needed base-devel bash bzip2 git libelf libxslt ncurses \
-openssl python2 time unzip util-linux wget zlib
+openssl python time unzip util-linux wget zlib
  
 # Optional prerequisites, depend on the package selection
 pacman -S --needed asciidoc help2man intltool perl-extutils-makemaker
@@ -163,7 +160,7 @@ firmwares/
 ```
 
 As you notice, there are several different image variants ("backbone", "default", etc.).
-These different *package lists* are defined in `packages/`.
+These different *package lists* are defined in `packagelists/`.
 For a description of the purpose of each package list, see the "Features" section above.
 With the "OpenWrt-ImageBuilder" you can assemble your own image variant with your
 *package lists* without having to compile everything yourself. The "OpenWrt-SDK" is
@@ -224,7 +221,7 @@ A build is triggered by any PR or commit to the master branch.
 #### Creating a release
 
 Each release has a [semantic version number] (https://semver.org/); each major release has its own code name.
-We name our releases after important computer scientists, hackers, etc.
+We name our releases after important female computer scientists, hackers, etc.
 For inspiration, please see the related
 [ticket](https://github.com/freifunk-berlin/firmware/issues/24).
 
@@ -236,7 +233,7 @@ the codename in the README and configuration files (./configs/*).
 
 **Important:** All patches should be pushed upstream!
 
-If a patch is not yet included in the upstream, it can be placed in the appropriate subdirectory below the `patches`
+If a patch is not yet included in the upstream, it can be placed in the appropriate subdirectory below the `patches/`
 directory. To create a correct patch file, simply use the `make update-patches` command. It is a wrapper around 
 [`git format-patch`](https://git-scm.com/docs/git-format-patch) to convert local changes to .patch files.
 This wrapper is borrowed from the [Freifunk Gluon build system](https://github.com/freifunk-gluon/gluon), so 

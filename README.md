@@ -35,7 +35,7 @@ Alpine:
 apk add asciidoc bash bc binutils bzip2 cdrkit coreutils diffutils \
 findutils flex g++ gawk gcc gettext git grep intltool libxslt \
 linux-headers make ncurses-dev openssl-dev patch perl \
-python2-dev python3-dev rsync tar unzip util-linux wget zlib-dev
+python3 rsync tar unzip util-linux wget zlib-dev
 ```
 
 Arch / Manjaro:
@@ -44,7 +44,7 @@ Arch / Manjaro:
 pacman -S --needed base-devel bash bzip2 git libelf libxslt ncurses \
 openssl python time unzip util-linux wget zlib
  
-# Optional prerequisites, depend on the package selection
+# Optional prerequisites, depends on the package selection
 pacman -S --needed asciidoc help2man intltool perl-extutils-makemaker
 ```
 
@@ -58,11 +58,8 @@ perl-File-Copy perl-FindBin diffutils which
 
 Debian / Ubuntu:
 ```
-sudo apt install build-essential ccache ecj fastjar file g++ gawk \
-gettext git java-propose-classpath libelf-dev libncurses5-dev \
-libncursesw5-dev libssl-dev python python2.7-dev python3 unzip wget \
-python3-distutils python3-setuptools python3-dev rsync subversion swig time \
-xsltproc zlib1g-dev 
+sudo apt install build-essential flex gawk gawk gettext git \
+libncurses5-dev libssl-dev libxml-perl python quilt time unzip wget zlib1g-dev 
 ```
 
 Gentoo:
@@ -71,7 +68,7 @@ echo \
 app-arch/{bzip2,sharutils,unzip,zip} sys-process/time \
 app-text/asciidoc \
 dev-libs/{libusb-compat,libxslt,openssl} dev-util/intltool \
-dev-vcs/{git,mercurial} net-misc/{rsync,wget} \
+dev-vcs/git net-misc/{rsync,wget} \
 sys-apps/util-linux sys-devel/{bc,bin86,dev86} \
 sys-libs/{ncurses,zlib} virtual/perl-ExtUtils-MakeMaker \
 | sed "s/\s/\n/g" \
@@ -83,8 +80,8 @@ sys-libs/{ncurses,zlib} virtual/perl-ExtUtils-MakeMaker \
 On openSUSE:
 ```
 sudo zypper install --no-recommends asciidoc bash bc binutils bzip2 \
-fastjar flex gawk gcc gcc-c++ gettext-tools git git-core intltool \
-libopenssl-devel libxslt-tools make mercurial ncurses-devel patch \
+flex gawk gcc gcc-c++ gettext-tools git git-core intltool \
+libopenssl-devel libxslt-tools make ncurses-devel patch \
 perl-ExtUtils-MakeMaker python-devel rsync sdcc unzip util-linux \
 wget zlib-devel
 ```

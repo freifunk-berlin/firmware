@@ -156,9 +156,9 @@ firmwares/
               *.ipk
 ```
 
-As you notice, there are several different image variants ("backbone", "default", etc.).
+As you notice, there are several different image variants ("notunnel", "manual", etc.).
 These different *package lists* are defined in `packagelists/`.
-For a description of the purpose of each package list, see the "Features" section above.
+For a description of the purpose of each packagelist, have a look at the Freifunk-Wiki.
 With the "OpenWrt-ImageBuilder" you can assemble your own image variant with your
 *package lists* without having to compile everything yourself. The "OpenWrt-SDK" is
 the fastest way to build your own packages or programs without compiling OpenWrt yourself.
@@ -171,7 +171,7 @@ By default `make` uses `TARGET` and `PACKAGES_LIST_DEFAULT` which are defined in
 `config.mk`. You can customize this by overriding them:
 
 ```
-make TARGET=mpc85xx PACKAGES_LIST_DEFAULT=backbone
+make TARGET=mpc85xx PACKAGES_LIST_DEFAULT=manual
 ```
 Additionally, you can create your own image from a pre-built ImageBuilder by doing something like:
 

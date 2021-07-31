@@ -1,59 +1,94 @@
 # Freifunk Berlin Firmware
 https://wiki.freifunk.net/Berlin:Firmware
 
-This is the build-system for the Firmware of Freifunk Berlin.
+This is the build system for the firmware of Freifunk Berlin.
 The firmware is based on vanilla [OpenWrt](https://openwrt.org/start) with some modifications (to fix
 broken stuff in OpenWrt itself or for example LuCI) and additional default packages/configuration settings.
 
 ## Contact / More information
 
-More user relevant information about the firmware are on the wiki page at: https://wiki.freifunk.net/Berlin:Firmware. There you can also find the
-* [ReleaseNotes](https://wiki.freifunk.net/Berlin:Firmware/v1.0.2)
+More user-relevant information on the firmware can be found on the wiki page at: https://wiki.freifunk.net/Berlin:Firmware. There you can also find the
+* [Release Notes](https://wiki.freifunk.net/Berlin:Firmware/v1.0.2)
 * a tutorial ([en](https://wiki.freifunk.net/Berlin:Firmware:En:Howto) / [de](https://wiki.freifunk.net/Berlin:Firmware:Howto)) on router configuration
 
-For questions write a mail to <berlin@berlin.freifunk.net>, open a discussion with 
+If you have any questions, send an email to <berlin@berlin.freifunk.net>, open a discussion with 
 @freifunk-berlin/firmware or come to our weekly meetings.
-If you find bugs please report them at: https://github.com/freifunk-berlin/firmware/issues
+If you find bugs, please report them at: https://github.com/freifunk-berlin/firmware/issues
 
 ## Development
 
 ### Info
 
 For the Berlin Freifunk firmware we use vanilla OpenWrt with additional patches and packages.
-The Makefile automates firmware creation (applies patches, integrates custom packages and uses
-the Imagebuilder of OpenWrt).
+The Makefile automates the build of the firmware (applies patches, integrates custom packages and uses the ImageBuilder of OpenWrt).
 
-The idea is to download OpenWrt via git, patch it with all patches in the `patches/` folder
-and configure it according to the configuration snippets in `configs/`. Then use the OpenWrt
-buildsystem to build all packages and the Imagebuilder. The packages to assemble into the final
-image for the router are taken from the imageflavors defined in `packagelist/`.
+The idea is to download OpenWrt via git, patch it with all the patches in the `patches/` folder and configure it according to the configuration snippets in `configs/`. Then use the OpenWrt
+build system to build all packages and the ImageBuilder. The packages that will be assembled into the final firmware image are taken from the image flavors defined in `packagelist/`.
 
-### Build Prerequisites
+### Build prerequisites
 
 Please take a look at the [OpenWrt documentation](https://openwrt.org/docs/guide-developer/build-system/install-buildsystem?s[]=prerequisites#prerequisites)
-for a complete and uptodate list of packages for your operating system. 
+for a complete and up-to-date list of packages for your operating system. 
 
-On Ubuntu/Debian:
+Alpine:
 ```
-apt-get install git build-essential libncurses5-dev zlib1g-dev gawk time \
-  unzip libxml-perl flex wget gawk gettext quilt python libssl-dev
+apk add asciidoc bash bc binutils bzip2 cdrkit coreutils diffutils \
+findutils flex g++ gawk gcc gettext git grep intltool libxslt \
+linux-headers make ncurses-dev openssl-dev patch perl \
+python3 rsync tar unzip util-linux wget zlib-dev
+```
+
+Arch / Manjaro:
+```
+# Essential prerequisites
+pacman -S --needed base-devel bash bzip2 git libelf libxslt ncurses \
+openssl python time unzip util-linux wget zlib
+ 
+# Optional prerequisites, depends on the package selection
+pacman -S --needed asciidoc help2man intltool perl-extutils-makemaker
+```
+
+CentOS / Fedora:
+```
+sudo dnf --skip-broken install bash-completion bzip2 gcc gcc-c++ git \
+make ncurses-devel patch perl-Data-Dumper perl-Thread-Queue python2 \
+python3 rsync tar unzip wget perl-base perl-File-Compare \
+perl-File-Copy perl-FindBin diffutils which
+```
+
+Debian / Ubuntu:
+```
+sudo apt install build-essential flex gawk gawk gettext git \
+libncurses5-dev libssl-dev libxml-perl python quilt time unzip wget zlib1g-dev 
+```
+
+Gentoo:
+```
+echo \
+app-arch/{bzip2,sharutils,unzip,zip} sys-process/time \
+app-text/asciidoc \
+dev-libs/{libusb-compat,libxslt,openssl} dev-util/intltool \
+dev-vcs/git net-misc/{rsync,wget} \
+sys-apps/util-linux sys-devel/{bc,bin86,dev86} \
+sys-libs/{ncurses,zlib} virtual/perl-ExtUtils-MakeMaker \
+| sed "s/\s/\n/g" \
+| sort \
+| sudo tee /etc/portage/sets/openwrt-prerequisites \
+&& sudo emerge -DuvNa "@openwrt-prerequisites"
 ```
 
 On openSUSE:
 ```
-zypper install --type pattern devel_basis
-zypper install git ncurses-devel zlib-devel gawk time \
-  unzip perl-libxml-perl flex wget gawk gettext-runtime quilt python libopenssl-devel
-```
-On Arch/Antergos:
-```
-pacman -S base-devel git ncurses lib32-zlib gawk time unzip perl-xml-libxml \
- flex wget gettext quilt python2 openssl
+sudo zypper install --no-recommends asciidoc bash bc binutils bzip2 \
+flex gawk gcc gcc-c++ gettext-tools git git-core intltool \
+libopenssl-devel libxslt-tools make ncurses-devel patch \
+perl-ExtUtils-MakeMaker python-devel rsync sdcc unzip util-linux \
+wget zlib-devel
 ```
 
-### Building all firmwares
+### Building the firmware for all targets
 
-To get the source and build the firmware locally use:
+To get the source code and build the firmware locally, use:
 
 ```
 git clone https://github.com/freifunk-berlin/firmware.git
@@ -62,20 +97,19 @@ make
 ```
 
 The build will take some time. You can improve the build time with [build options](https://openwrt.org/docs/guide-developer/build-system/use-buildsystem)
-such as `-j <number of cores>`. `V=s` will give more verbose error messages.
+such as `-j <number of cores>`. With `V=s` more detailed error messages are output.
 
 An internet connection is required during the build process. A good internet
 connection can improve the build time.
 
-You need approximately 10GB of space for the build.
+You will need about 10 GB of disk space for the build.
 
 ### Building individual packages
 
-To develop on a single package or to compile a special package, which is not available by default
-on OpenWrt or Freifunk-Berlin, you can use the SDK. The prebuilt SDK of the firmware you are 
-running on can be found in the TARGETS root-folder.
+To develop on a single package or to compile a special package that is not available by default on OpenWrt or Freifunk-Berlin, you can use the SDK.
+The precompiled SDK of the firmware you are using can be found in the root directory TARGETS.
 
-To build your own package with the SDK do the following:
+To build your own package using the SDK, follow these steps:
 
 ```
 (cd /tmp; wget https://firmware.berlin...SDK*.tar.xz)
@@ -85,19 +119,19 @@ make setup-sdk SDK_FILE=/tmp/<SDK-file from above>
 cd sdk-<target>
 ```
 
-This folder represents the environment, that was used during building the firmware, including all
-patches. You can customize the environment, install feeds and packages and update the existing
+This folder represents the environment that was used to create the firmware, including any
+patches. You can customize the environment, install feeds and packages, and modify the existing
 code.
-To build a single package use the normal OpwnWrt command:
+To build a single package, use the normal OpwnWrt command:
 
 ```
 make package/freifunk-berlin-ffwizard/compile
 ```
 
-### Directory Layout
+### Directory layout
 
-You can find the actual firmware images generated by the ImageBuilder (and the ImageBuilder itself)
-in `firmwares`. The layout looks like the following:
+The actual firmware images generated by the ImageBuilder (and the ImageBuilder itself) can be found
+in `firmwares`. The layout looks like this:
 
 ```
 firmwares/
@@ -122,145 +156,129 @@ firmwares/
               *.ipk
 ```
 
-As you notice there are several different image variants ("backbone", "default", etc.).
-These different *packages lists* are defined in `packages/`.
-See the "Features" section above for a description of the purpose of each package list.
-With the "OpenWrt-Imagebuilder" you can assemble your own image variant with your
-*packages lists* without having to compile everything yourself. The "OpenWrt-SDK" is
-the fastest way to build your own packages or programs without compiling OpenWrt itself.
-The "initrd" directory contains some initrd-images for netboot, which are required on
-some boards to initially install OpenWrt.
+As you notice, there are several different image variants ("backbone", "default", etc.).
+These different *package lists* are defined in `packagelists/`.
+For a description of the purpose of each package list, see the "Features" section above.
+With the "OpenWrt-ImageBuilder" you can assemble your own image variant with your
+*package lists* without having to compile everything yourself. The "OpenWrt-SDK" is
+the fastest way to build your own packages or programs without compiling OpenWrt yourself.
+The "initrd" directory contains some initrd images for netboot, which are used on
+some boards for the initial installation of OpenWrt.
 
-### customizing make
+### Customizing make
 
-`make` will use by default `TARGET` and `PACKAGES_LIST_DEFAULT` defined in
+By default `make` uses `TARGET` and `PACKAGES_LIST_DEFAULT` which are defined in
 `config.mk`. You can customize this by overriding them:
 
 ```
 make TARGET=mpc85xx PACKAGES_LIST_DEFAULT=backbone
 ```
-in addition you can build your own image from a prebuilt imagebuilder by something like:
+Additionally, you can create your own image from a pre-built ImageBuilder by doing something like:
 
 ```
 make images IB_FILE=<file> TARGET=... PACKAGES_LIST_DEFAULT=...
 ```
 
-The default target is `ar71xx-generic`. For a complete list of supported targets look in `configs/` for the target-specific configs.
-Each of these targets need a matching file in `profiles/` with the profiles (boards) that should be build with the imagebuilder.
+The default target is `ar71xx-generic`. For a complete list of supported targets, see the `configs/` directory for target-specific configurations.
+Each of these targets needs a matching file in `profiles/` with the profiles (boards) to be built with ImageBuilder.
 
-### Build-System-Structure  
+### Build system structure
 
-Where can I change something? What does these files do? 
+Where can I change something? What are these files for?
 
 ```
-config.mk                    - generic build-parameters, default target to build, select what 
-                               packagelists to build
-modules                      - defines all external repositories to use 
+config.mk                    - Generic build parameters, default target to build, choose which
+                               package lists should be built
+modules                      - Defines all external repositories to be used
                                (see https://gluon.readthedocs.io/en/latest/dev/build.html#feed-management)
-configs/                     - target-specific configuration snippets passed to OpenWrt buildsystem
-  common.config              - OpenWrt config-parameters for all targets
-  $(TARGET).config           - target-specific config. Gets added to common.config. 
-                               Options from target.config overwrite those from common.config.
-  common-autobuild.config    - gets added on top, when building via Makefile.autobuild
-patches/                     - patches against OpenWrt / individual feeds
-  openwrt                    - patches for OpenWrt-core
-  packages/$(FEED)           - patches for each feed used (closely relates to definitons in modules)
-packagelists/                - Package Lists 
-  profile-packages.txt       - allows to specify packages on a per router basis. Allows to add and remove
-                               packages defined by default OpenWrt list and out package list.
-profiles/                    - List of router profiles for each target - profile names match the OpenWrt
+configs/                     - Target-specific configuration snippets that are passed to the OpenWrt build system
+  common.config              - OpenWrt configuration parameters for all targets
+  $(TARGET).config           - Target specific configuration. Will be added to common.config.
+                               Options from target.config override those from common.config.
+  common-autobuild.config    - Added on top when building with Makefile.autobuild.
+patches/                     - Patches against OpenWrt / individual feeds
+  openwrt                    - Patches for OpenWrt-core
+  packages/$(FEED)           - Patches for each feed used (closely related to the definitions in modules).
+packagelists/                - Package lists 
+  profile-packages.txt       - Allows you to specify packets on a per-router basis. Allows adding and removing
+                               packages defined in the default OpenWrt list and in our package list.
+profiles/                    - List of router profiles for each target - profile names correspond to OpenWrt
                                board definition
-Makefile                     - Does all the stuff. Cloning and Updating OpenWrt, patching, running make
-Makefile.autobuild           - slightly reduced Makefile for CI builds (more granular steps, ...)
-scripts/assemble_firmware.sh - Script for running the Imagebuilder for a target
+Makefile                     - Does all the stuff. Cloning and updating OpenWrt, patching, running make.
+Makefile.autobuild           - Slightly reduced Makefile for CI builds (more granular steps, ...)
+scripts/assemble_firmware.sh - Script to run the ImageBuilder for a target
 ```
 
-### Continuous integration / GitHubActions
+### Continuous integration / GitHub Actions
 
 The firmware is [built
-automatically](https://github.com/freifunk-berlin/firmware/actions) via a [GitHubActions workflow](https://github.com/freifunk-berlin/firmware/blob/master/.github/workflows/build-firmware.yml). 
-A build is triggered by any PR or commit to the master branch. We switched from a selfhosted 
-[Buildbot-setup](https://buildbot.net/) to GitHubActions because this reduced the maintenance we need.
-
-Since the switch to GitHubActions nobody reimplemented a way of deploying / publishing the builds, so 
-the following sentences are just some kind of reminder for this ToDo.
-
-~~All branches whose name complies to the "X.Y.Z" pattern are built and put into the "stable" downloads directory:
-[http://buildbot.berlin.freifunk.net/buildbot/stable/](http://buildbot.berlin.freifunk.net/buildbot/stable/)~~
-
-~~All branches with names not fitting the "X.Y.Z" pattern are built and put into the "unstable" directory:
-[http://buildbot.berlin.freifunk.net/buildbot/unstable/](http://buildbot.berlin.freifunk.net/buildbot/unstable/)
-Note that in the directory there is no reference to the branch name; unstable builds can be identified by build number only.~~
+automatically](https://github.com/freifunk-berlin/firmware/actions) via a [GitHub Actions workflow](https://github.com/freifunk-berlin/firmware/blob/master/.github/workflows/build-firmware.yml). 
+A build is triggered by any PR or commit to the master branch.
 
 #### Creating a release
 
-Every release has a [semantic version number](http://semver.org); each major version has its own codename.
+Each release has a [semantic version number] (https://semver.org/); each major release has its own code name.
 We name our releases after important female computer scientists, hackers, etc.
-For inspiration please take a look at the related
+For inspiration, please see the related
 [ticket](https://github.com/freifunk-berlin/firmware/issues/24).
 
-For a new release, create a new branch. The branch name must be a semantic version
-number. Make sure you change the semantic version number and, for major releases,
-the codename in the README and config files (./configs/*)
-
-~~The buildbot will build the release and place the files in the stable direcotry
-once you pushed the new branch to github.~~
+A new branch must be created for a new release. The branch name must be a semantic version number.
+Make sure that you include the semantic version number and, for major releases
+the codename in the README and configuration files (./configs/*).
 
 ### Patches with "git format-patch"
 
-**Important:** all patches should be pushed upstream!
+**Important:** All patches should be pushed upstream!
 
-If a patch is not yet included upstream, it can be placed in the corresponding subdirectory below the `patches`
-directory. To create a correct patch-file just use the `make update-patches` command. It's a wrapper around 
-[`git format-patch`](https://git-scm.com/docs/git-format-patch) to transform local-changes into .patch files.
-This wrapper is borrowed from the [Freifunk Gluon buildsystem](https://github.com/freifunk-gluon/gluon), so 
-check their [documentation](https://gluon.readthedocs.io/en/latest/dev/basics.html#working-with-repositories).
+If a patch is not yet included in the upstream, it can be placed in the appropriate subdirectory below the `patches/`
+directory. To create a correct patch file, simply use the `make update-patches` command. It is a wrapper around 
+[`git format-patch`](https://git-scm.com/docs/git-format-patch) to convert local changes to .patch files.
+This wrapper is borrowed from the [Freifunk Gluon build system](https://github.com/freifunk-gluon/gluon), so 
+have a look at their [documentation](https://gluon.readthedocs.io/en/latest/dev/basics.html#working-with-repositories).
 
-#### Create a patch
+#### Creating a patch
 
-In order to add a patch file update your build environment by running:
+To add a patch file, update your build environment by running:
 
 ```bash
 make clean patch
 ```
-Then switch to the openwrt directory:
+Then switch to the OpenWrt directory:
 
 ```bash
 cd openwrt
 ```
-or continue to the relevant feed directory:
+or continue to the respective feed directory:
 
 ```bash
 cd feeds/luci
 ```
-use the normal `git commit` workflow to apply your changes to the code of the `patched` branch. When done convert
-change back to the root folder and run:
+use the normal `git commit` workflow to apply your changes to the code of the `patched` branch. When you are done,
+switch back to the root folder and run:
 
 ```bash
 make update-patches
 ```
-This will update all patches and show the changes by `git status patches/`. Mannually review them and commit the requred
-changes. Your new patch should show up as an untracked file in the relating subfolder.
+This will update all patches and show the changes through `git status patches/`. Check them manually and commit the required
+changes. Your new patch should show up as an untracked file in the appropriate subfolder.
 
-#### Modify a patch
+#### Modifying a patch
 
-To update an existing patch do the same as above:
+To update an existing patch, proceed as described above:
 
 ```bash
 make clean patch
 cd openwrt
 cd feeds/luci
 ```
-Then just add a new commit with your changes and squash it or rebase it to the originating commit. To update the 
-patch-file use the same `make update-patches` sequence as you did when creating the patch initially.
+Then simply add a new commit with your changes and squash it or rebase it to the original commit. To update the 
+patch file, use the same `make update-patches` sequence as when you initially created the patch.
 
-By squashing / rebasing you ensure, that your changes will not become a separate patch-file, but stays just a clean
-patch-file.
+By squashing / rebasing you ensure that your changes do not become a separate patch file, but stay in a clean patch file.
 
-#### Delete a patch
+#### Deleting a patch
 
-To remove a patch-file you have to remove it from the patch-subdirectory and update the build-
-environment:
+To remove a patch file, you must remove it from the patch subdirectory and update the build environment:
 
 ```bash
 git rm patches/openwrt/0010-unrelevant-change.patch
@@ -271,12 +289,12 @@ make update-patches
 
 #### Freifunk Berlin
 
-Please create a pull request for the project you want to submit a patch.
-If you are already member of the Freifunk Berlin team, please delete branches once they have been merged.
+Please create a pull request for the project you want to submit a patch for.
+If you are already a member of the Freifunk Berlin team, please delete branches once they have been merged.
 
 #### OpenWrt
 
-Create a commit in the openwrt directory that contains your change. Use `git
+Create a commit in the OpenWrt directory that contains your change. Use `git
 format-patch` to create a patch:
 
 ```
@@ -294,4 +312,4 @@ git send-email \
   0001-a-fancy-change.patch
 ```
 
-Additional information: https://dev.openwrt.org/wiki/SubmittingPatches
+Additional information: https://openwrt.org/submitting-patches

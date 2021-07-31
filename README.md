@@ -179,7 +179,7 @@ Additionally, you can create your own image from a pre-built ImageBuilder by doi
 make images IB_FILE=<file> TARGET=... PACKAGES_LIST_DEFAULT=...
 ```
 
-The default target is `ar71xx-generic`. For a complete list of supported targets, see the `configs/` directory for target-specific configurations.
+The default target is `ath79-generic`. For a complete list of supported targets, see the `configs/` directory for target-specific configurations.
 Each of these targets needs a matching file in `profiles/` with the profiles (boards) to be built with ImageBuilder.
 
 ### Build system structure

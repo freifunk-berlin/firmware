@@ -1,0 +1,37 @@
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Fri, 10 Apr 2020 12:29:58 +0200
+Subject: ath79/tiny: deactivate more features
+
+deactivate some drivers, interfaces and debug-features that
+* are not available on ath79
+* can usually not be used as of missing hardware-interfaces
+* reduce kernelsize by removing DEBUG functions
+
+diff --git a/target/linux/ath79/tiny/config-default b/target/linux/ath79/tiny/config-default
+index 8a83323bc290b1f4a05407efd3bd6e7e4755f451..e8316c0ad8a7b057e986679df10276d00888c50e 100644
+--- a/target/linux/ath79/tiny/config-default
++++ b/target/linux/ath79/tiny/config-default
+@@ -6,9 +6,23 @@ CONFIG_NET_DSA_MV88E6060=y
+ # CONFIG_NET_DSA_TAG_QCA is not set
+ CONFIG_NET_DSA_TAG_TRAILER=y
+ CONFIG_NET_SWITCHDEV=y
++# CONFIG_PARTITION_ADVANCED is not set
+ CONFIG_PHYLINK=y
+ # CONFIG_PHY_AR7100_USB is not set
+ # CONFIG_PHY_AR7200_USB is not set
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++# CONFIG_AIO is not set
++CONFIG_BLOCK=y
++# CONFIG_DEBUG_FS is not set
++# CONFIG_DEBUG_KERNEL is not set
++# CONFIG_HAVE_DEBUG_KMEMLEAK is not set
++# CONFIG_HAVE_DEBUG_STACKOVERFLOW is not set
++# CONFIG_HAVE_IDE is not set
++# CONFIG_HAVE_KVM is not set
++# CONFIG_ISDN is not set
++# CONFIG_NVMEM is not set
++# CONFIG_SND_DRIVERS is not set
++# CONFIG_STAGING is not set
++# CONFIG_VIRTIO_MENU is not set
+ # CONFIG_USB_SUPPORT is not set

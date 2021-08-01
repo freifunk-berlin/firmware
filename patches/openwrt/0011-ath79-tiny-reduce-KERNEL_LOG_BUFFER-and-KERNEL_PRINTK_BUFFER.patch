@@ -1,0 +1,22 @@
+From: Sven Roederer <freifunk@it-solutions.geroedel.de>
+Date: Sun, 27 Sep 2020 03:07:46 +0200
+Subject: ath79-tiny: reduce KERNEL_LOG_BUFFER and KERNEL_PRINTK_BUFFER
+
+kernel log_buffer size = 64k (was 128k)
+kernel printk_buffer size = 4k (was 8k)
+
+this frees some runtime RAM
+
+diff --git a/target/linux/ath79/tiny/config-default b/target/linux/ath79/tiny/config-default
+index 0405902d75827bb5606151cc277db69687f10261..7e795fb72d195ff73732f55c5ebb4894c56b6cfc 100644
+--- a/target/linux/ath79/tiny/config-default
++++ b/target/linux/ath79/tiny/config-default
+@@ -16,6 +16,8 @@ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_BLOCK=y
+ # CONFIG_DEBUG_FS is not set
+ # CONFIG_DEBUG_KERNEL is not set
++CONFIG_LOG_BUF_SHIFT=16
++CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT=12
+ # CONFIG_HAVE_DEBUG_KMEMLEAK is not set
+ # CONFIG_HAVE_DEBUG_STACKOVERFLOW is not set
+ # CONFIG_HAVE_IDE is not set

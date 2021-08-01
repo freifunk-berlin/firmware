@@ -1,0 +1,162 @@
+From: adminuser <adminuser@cvt.bln.roederer.dhs.org>
+Date: Sat, 26 Sep 2020 19:17:01 +0200
+Subject: ath79: deactivate usb on ath79-tiny
+
+* remove USB from all boards-pacakges
+* disable USB modules in kernel config
+
+diff --git a/target/linux/ath79/image/tiny-tp-link.mk b/target/linux/ath79/image/tiny-tp-link.mk
+index d5b36de577aadecdeec599ae708acc6a52b678b4..02d93795d9c5f103ef042fab8dbbcd4e49892383 100644
+--- a/target/linux/ath79/image/tiny-tp-link.mk
++++ b/target/linux/ath79/image/tiny-tp-link.mk
+@@ -4,7 +4,6 @@ define Device/tplink_tl-mr10u
+   $(Device/tplink-4mlzma)
+   SOC := ar9331
+   DEVICE_MODEL := TL-MR10U
+-  DEVICE_PACKAGES := kmod-usb-chipidea2
+   TPLINK_HWID := 0x00100101
+   SUPPORTED_DEVICES += tl-mr10u
+ endef
+@@ -16,7 +15,6 @@ define Device/tplink_tl-mr3020-v1
+   SOC := ar9331
+   DEVICE_MODEL := TL-MR3020
+   DEVICE_VARIANT := v1
+-  DEVICE_PACKAGES := kmod-usb-chipidea2 kmod-usb-ledtrig-usbport
+   TPLINK_HWID := 0x30200001
+   SUPPORTED_DEVICES += tl-mr3020
+ endef
+@@ -27,7 +25,6 @@ define Device/tplink_tl-mr3040-v2
+   SOC := ar9331
+   DEVICE_MODEL := TL-MR3040
+   DEVICE_VARIANT := v2
+-  DEVICE_PACKAGES := kmod-usb-chipidea2 kmod-usb-ledtrig-usbport
+   TPLINK_HWID := 0x30400002
+   SUPPORTED_DEVICES += tl-mr3040-v2
+ endef
+@@ -39,7 +36,6 @@ define Device/tplink_tl-mr3220-v1
+   DEVICE_MODEL := TL-MR3220
+   DEVICE_VARIANT := v1
+   TPLINK_HWID := 0x32200001
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+   SUPPORTED_DEVICES += tl-mr3220
+ endef
+ TARGET_DEVICES += tplink_tl-mr3220-v1
+@@ -50,7 +46,6 @@ define Device/tplink_tl-mr3420-v1
+   DEVICE_MODEL := TL-MR3420
+   DEVICE_VARIANT := v1
+   TPLINK_HWID := 0x34200001
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+   SUPPORTED_DEVICES += tl-mr3420
+ endef
+ TARGET_DEVICES += tplink_tl-mr3420-v1
+@@ -61,7 +56,6 @@ define Device/tplink_tl-mr3420-v2
+   DEVICE_MODEL := TL-MR3420
+   DEVICE_VARIANT := v2
+   TPLINK_HWID := 0x34200002
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+   SUPPORTED_DEVICES += tl-mr3420-v2
+ endef
+ TARGET_DEVICES += tplink_tl-mr3420-v2
+@@ -72,7 +66,6 @@ define Device/tplink_tl-mr3420-v3
+   DEVICE_MODEL := TL-MR3420
+   DEVICE_VARIANT := v3
+   TPLINK_HWID := 0x34200003
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+ endef
+ TARGET_DEVICES += tplink_tl-mr3420-v3
+ 
+@@ -228,7 +221,6 @@ define Device/tplink_tl-wr1043nd-v1
+   SOC := ar9132
+   DEVICE_MODEL := TL-WR1043N/ND
+   DEVICE_VARIANT := v1
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+   TPLINK_HWID := 0x10430001
+   SUPPORTED_DEVICES += tl-wr1043nd
+ endef
+@@ -238,7 +230,6 @@ define Device/tplink_tl-wr703n
+   $(Device/tplink-4mlzma)
+   SOC := ar9331
+   DEVICE_MODEL := TL-WR703N
+-  DEVICE_PACKAGES := kmod-usb-chipidea2
+   TPLINK_HWID := 0x07030101
+   SUPPORTED_DEVICES += tl-wr703n
+ endef
+@@ -259,7 +250,6 @@ define Device/tplink_tl-wr710n-v1
+   SOC := ar9331
+   DEVICE_MODEL := TL-WR710N
+   DEVICE_VARIANT := v1
+-  DEVICE_PACKAGES := kmod-usb-chipidea2 kmod-usb-ledtrig-usbport
+   TPLINK_HWID := 0x07100001
+   SUPPORTED_DEVICES += tl-wr710n
+ endef
+@@ -270,7 +260,6 @@ define Device/tplink_tl-wr710n-v2.1
+   SOC := ar9331
+   DEVICE_MODEL := TL-WR710N
+   DEVICE_VARIANT := v2.1
+-  DEVICE_PACKAGES := kmod-usb-chipidea2 kmod-usb-ledtrig-usbport
+   TPLINK_HWID := 0x07100002
+   TPLINK_HWREV := 0x2
+   SUPPORTED_DEVICES += tl-wr710n
+@@ -452,7 +441,6 @@ define Device/tplink_tl-wr842n-v1
+   SOC := ar7241
+   DEVICE_MODEL := TL-WR842N/ND
+   DEVICE_VARIANT := v1
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+   TPLINK_HWID := 0x8420001
+   SUPPORTED_DEVICES += tl-mr3420
+ endef
+@@ -463,7 +451,6 @@ define Device/tplink_tl-wr842n-v2
+   SOC := ar9341
+   DEVICE_MODEL := TL-WR842N/ND
+   DEVICE_VARIANT := v2
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+   TPLINK_HWID := 0x8420002
+   SUPPORTED_DEVICES += tl-wr842n-v2
+ endef
+diff --git a/target/linux/ath79/image/tiny-ubnt.mk b/target/linux/ath79/image/tiny-ubnt.mk
+index a8c5a2cf68d8851afcd66fe1857f1c549c5dec90..be7dd46761d4552f5cae8dc62747e24979f0d40e 100644
+--- a/target/linux/ath79/image/tiny-ubnt.mk
++++ b/target/linux/ath79/image/tiny-ubnt.mk
+@@ -31,7 +31,6 @@ endef
+ # UBNT_VERSION e.g. one of (6.0.0, 8.5.3)
+ define Device/ubnt
+   DEVICE_VENDOR := Ubiquiti
+-  DEVICE_PACKAGES := kmod-usb2
+   IMAGES += factory.bin
+   IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
+ 	append-rootfs | pad-rootfs | check-size | mkubntimage-split
+@@ -40,7 +39,6 @@ endef
+ define Device/ubnt-xm
+   $(Device/ubnt)
+   DEVICE_VARIANT := XM
+-  DEVICE_PACKAGES += kmod-usb-ohci
+   IMAGE_SIZE := 7448k
+   UBNT_BOARD := XM
+   UBNT_CHIP := ar7240
+diff --git a/target/linux/ath79/image/tiny.mk b/target/linux/ath79/image/tiny.mk
+index 29e411c058da8417ac2a2bd0d2df1591276e792a..420106f33264a902378cbe4b9dd1db1bcd33e5ad 100644
+--- a/target/linux/ath79/image/tiny.mk
++++ b/target/linux/ath79/image/tiny.mk
+@@ -74,7 +74,6 @@ define Device/pqi_air-pen
+   SOC := ar9330
+   DEVICE_VENDOR := PQI
+   DEVICE_MODEL := Air-Pen
+-  DEVICE_PACKAGES := kmod-usb2
+   IMAGE_SIZE := 7680k
+   SUPPORTED_DEVICES += pqi-air-pen
+ endef
+diff --git a/target/linux/ath79/tiny/config-default b/target/linux/ath79/tiny/config-default
+index 42243cfc481ab57f0b159535c8a3618c861070f9..8a83323bc290b1f4a05407efd3bd6e7e4755f451 100644
+--- a/target/linux/ath79/tiny/config-default
++++ b/target/linux/ath79/tiny/config-default
+@@ -7,7 +7,8 @@ CONFIG_NET_DSA_MV88E6060=y
+ CONFIG_NET_DSA_TAG_TRAILER=y
+ CONFIG_NET_SWITCHDEV=y
+ CONFIG_PHYLINK=y
+-CONFIG_PHY_AR7100_USB=y
+-CONFIG_PHY_AR7200_USB=y
++# CONFIG_PHY_AR7100_USB is not set
++# CONFIG_PHY_AR7200_USB is not set
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++# CONFIG_USB_SUPPORT is not set

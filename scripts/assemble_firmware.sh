@@ -177,13 +177,11 @@ for profile in $PROFILES ; do
 		info "Using package list $package_list"
 
 		packages=$(parse_pkg_list_file "${PKGLIST_DIR}/${package_list}.txt")
-		packages="${packages} ${model_packages}"
 
 		if [ -z "${packages}" ] ; then
 			info "skipping this usecase, as package list is empty"
 			continue
 		fi
-
 		hookfile=$(to_absolute_path "${PKGLIST_DIR}/${package_list}.sh")
 		if [ -f "$hookfile" ]; then
 			info "Using a post inst hook."
@@ -201,6 +199,6 @@ for profile in $PROFILES ; do
 		# ensure BIN_DIR is valid
 		mkdir -p "${DEST_DIR}/${package_list}"
 
-		make -C "${TEMP_DIR}/" image "PROFILE=$profile" "PACKAGES=$packages" "BIN_DIR=${DEST_DIR}/${package_list}" $img_params
+		make -C "${TEMP_DIR}/" image "PROFILE=$profile" "PACKAGES=$packages $model_packages" "BIN_DIR=${DEST_DIR}/${package_list}" $img_params
 	done
 done

@@ -4,6 +4,12 @@
 -kmod-usb-ohci
 -kmod-ppp
 -kmod-usb-serial
+-kmod-ipt-core
+-kmod-ipt-offload
+-kmod-nf-conntrack
+-kmod-nf-flow
+-kmod-nf-ipt
+-kmod-nf-reject
 -ppp
 -ppp-mod-pppoe
 -wpad
@@ -24,11 +30,14 @@ luci-app-owm-cmd
 
 # Common
 dnsmasq
+-ca-bundle
 -firewall
 -iptables
 -ip6tables
 iwinfo
 libiwinfo-lua
+-libustream-wolfssl
+-libwolfssl
 
 # OLSR
 olsrd

@@ -14,7 +14,6 @@ freifunk-berlin-olsrd-defaults
 freifunk-berlin-statistics-defaults
 freifunk-berlin-system-defaults
 freifunk-berlin-uhttpd-defaults
-community-profiles
 
 # Common
 mtr

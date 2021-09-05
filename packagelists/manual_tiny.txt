@@ -19,6 +19,7 @@ freifunk-berlin-migration
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-system-defaults
+# manually include, as we do not package the wizard
 community-profiles
 luci-app-owm-cmd
 

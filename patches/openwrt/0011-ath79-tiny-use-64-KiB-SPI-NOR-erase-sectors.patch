@@ -1,0 +1,21 @@
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Tue, 9 Nov 2021 21:39:14 +0100
+Subject: ath79: tiny: use 64 KiB SPI NOR erase sectors
+
+This patch removes CONFIG_MTD_SPI_NOR_USE_4K_SECTORS from the default
+symbols for the ath79/tiny target.
+
+Based on 68d91f08edd0efd47841a2e53d3437d570a61612 / 23cd9fafa89a8058a88763cc0526a1e85a9f7ebb this
+also removes 4K_SECTORS for in order to work around loosing config over sysupgrade.
+Reverts commit 05d35403b211ccb9bf20e2b3c0b7a30c82c6d6a2
+
+diff --git a/target/linux/ath79/tiny/config-default b/target/linux/ath79/tiny/config-default
+index e8316c0ad8a7b057e986679df10276d00888c50e..24b2f623b65869f8e234424ad410c13428c78379 100644
+--- a/target/linux/ath79/tiny/config-default
++++ b/target/linux/ath79/tiny/config-default
+@@ -1,5 +1,4 @@
+ CONFIG_LEDS_RESET=y
+-CONFIG_MTD_SPI_NOR_USE_4K_SECTORS=y
+ CONFIG_NET_DEVLINK=y
+ CONFIG_NET_DSA=y
+ CONFIG_NET_DSA_MV88E6060=y

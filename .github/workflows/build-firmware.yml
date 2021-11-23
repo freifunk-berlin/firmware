@@ -149,3 +149,47 @@ jobs:
         path: openwrt/bin/
     - run: df -h
       if: ${{ !cancelled() }}
+
+  images:
+    runs-on: ubuntu-18.04
+    needs: build
+
+    strategy:
+      matrix:
+        target: 
+          - ath79-generic
+          - ath79-mikrotik
+          - ath79-nand
+          - ath79-tiny
+          - bcm27xx-bcm2710
+          - ipq40xx-generic
+          - lantiq-xrx200
+          - mpc85xx-p1010
+          - mvebu-cortexa9
+          - ramips-mt7620
+          - ramips-mt7621
+          - ramips-mt76x8
+          - x86-generic
+        packagelist: 
+          - notunnel
+          - tunnel-berlin-tunneldigger
+          - manual
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install dependencies
+      run: sudo apt-get --quiet --assume-yes --no-install-recommends --no-show-upgraded install git build-essential libncurses5-dev zlib1g-dev gawk time unzip libxml-perl flex wget gawk gettext quilt python libssl-dev
+    - name: get imagebuilder
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ matrix.target }}_build-tools
+    - name: create images of flavor ${{ matrix.packagelist }}
+      run: make images TARGET=${{ matrix.target }} IB_FILE=*imagebuilder*.tar.xz PACKAGES_LIST_DEFAULT=${{ matrix.packagelist }}
+    - name: upload images
+      if: ${{ !cancelled() }}
+      continue-on-error: true
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ matrix.target }}_packagelist_${{ matrix.packagelist }}
+        path: firmwares/

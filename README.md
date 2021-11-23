@@ -218,6 +218,7 @@ On each CI-run some artifacts are kept which are linked to the related build. Th
 * `buildtools` - SDK and imagebuilder
 * `bins` - the contens of the openwrt/bin/ folder (all packages and "pure" (according to built in package-selection) firmware-images)
 * `logs` - the contens of the openwrt/logs/ folder (the log that would have been printed when building with V=s)
+* `packageslist` - the final firmware images build via imagebuilder (each packagelist type creates a separate artifact)
 
 All artifact filenames are prefixed by their target, e.g. `ath79-gerneric_`, `ramips-mt7621_`.
 

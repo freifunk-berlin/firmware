@@ -2,7 +2,10 @@ tplink_tl-mr3020-v1:tiny
 tplink_tl-mr3220-v1:tiny
 tplink_tl-wa801nd-v1:tiny
 tplink_tl-wa801nd-v3:tiny
+tplink_tl-wr1043nd-v1:low-ram
 tplink_tl-wr703n:tiny
+tplink_tl-wr710n-v1:low-ram
+tplink_tl-wr710n-v2.1:low-ram
 tplink_tl-wr740n-v1:tiny
 tplink_tl-wr740n-v3:tiny
 tplink_tl-wr740n-v4:tiny
@@ -16,3 +19,12 @@ tplink_tl-wr841-v8:tiny
 tplink_tl-wr841-v9:tiny
 tplink_tl-wr841-v10:tiny
 tplink_tl-wr841-v11:tiny
+tplink_tl-wr842n-v1:low-ram
+tplink_tl-wr842n-v2:low-ram
+ubnt_airrouter:low-ram
+ubnt_bullet-m-ar7240:low-ram
+ubnt_bullet-m-ar7241:low-ram
+ubnt_nanostation-loco-m:low-ram
+ubnt_nanostation-m:low-ram
+ubnt_picostation-m:low-ram
+ubnt_rocket-m:low-ram

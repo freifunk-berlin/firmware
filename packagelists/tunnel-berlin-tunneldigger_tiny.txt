@@ -1,3 +1,3 @@
 # "Tiny"-devices have to less hardware-capabilities for this package-collection
+# probably the "manual" image is an alternative
 #
-# so disable 4MB ...

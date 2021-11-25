@@ -1,0 +1,834 @@
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Tue, 15 Sep 2020 01:32:15 +0200
+Subject: ath79: move some 8/32MB devices to tiny subtarget
+
+* ubnt XM platform
+* some Tplink 8/32 (WR1043v1; WR842v1/v2; WR710)
+
+diff --git a/target/linux/ath79/generic/base-files/etc/board.d/01_leds b/target/linux/ath79/generic/base-files/etc/board.d/01_leds
+index fae5ac7c923419ba09bbdb696ea18dab6c38a767..3c0dc45b86e6a44c7435e9c39fea8bfd9e76caf9 100755
+--- a/target/linux/ath79/generic/base-files/etc/board.d/01_leds
++++ b/target/linux/ath79/generic/base-files/etc/board.d/01_leds
+@@ -350,13 +350,6 @@ tplink,tl-wpa8630p-v2.0-eu|\
+ tplink,tl-wpa8630p-v2.1-eu)
+ 	ucidef_set_led_switch "lan" "LAN" "green:lan" "switch0" "0x3c"
+ 	;;
+-tplink,tl-wr842n-v2)
+-	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth1"
+-	ucidef_set_led_switch "lan1" "LAN1" "green:lan1" "switch0" "0x04"
+-	ucidef_set_led_switch "lan2" "LAN2" "green:lan2" "switch0" "0x08"
+-	ucidef_set_led_switch "lan3" "LAN3" "green:lan3" "switch0" "0x10"
+-	ucidef_set_led_switch "lan4" "LAN4" "green:lan4" "switch0" "0x02"
+-	;;
+ trendnet,tew-823dru)
+ 	ucidef_set_led_netdev "wan" "WAN" "green:planet" "eth0"
+ 	;;
+@@ -371,17 +364,9 @@ ubnt,powerbeam-5ac-gen2)
+ 	ucidef_set_led_rssi "rssimediumhigh" "RSSIMEDIUMHIGH" "blue:rssi2" "wlan0" "51" "100"
+ 	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "blue:rssi3" "wlan0" "76" "100"
+ 	;;
+-ubnt,bullet-m-ar7240|\
+-ubnt,bullet-m-ar7241|\
+ ubnt,bullet-m-xw|\
+-ubnt,nanobridge-m|\
+-ubnt,nanostation-loco-m|\
+ ubnt,nanostation-loco-m-xw|\
+-ubnt,nanostation-m|\
+-ubnt,nanostation-m-xw|\
+-ubnt,picostation-m|\
+-ubnt,powerbridge-m|\
+-ubnt,rocket-m)
++ubnt,nanostation-m-xw)
+ 	ucidef_set_rssimon "wlan0" "200000" "1"
+ 	ucidef_set_led_rssi "rssilow" "RSSILOW" "red:link1" "wlan0" "1" "100"
+ 	ucidef_set_led_rssi "rssimediumlow" "RSSIMEDIUMLOW" "orange:link2" "wlan0" "26" "100"
+diff --git a/target/linux/ath79/generic/base-files/etc/board.d/02_network b/target/linux/ath79/generic/base-files/etc/board.d/02_network
+index 1e522b91c67565bf066191d3a480d4879a10dcd6..209bfc7a5f3269a3f2026290379bff3b6c4bfd1d 100755
+--- a/target/linux/ath79/generic/base-files/etc/board.d/02_network
++++ b/target/linux/ath79/generic/base-files/etc/board.d/02_network
+@@ -73,21 +73,14 @@ ath79_setup_interfaces()
+ 	tplink,re450-v3|\
+ 	tplink,tl-wr902ac-v1|\
+ 	ubnt,bullet-ac|\
+-	ubnt,bullet-m-ar7240|\
+-	ubnt,bullet-m-ar7241|\
+ 	ubnt,bullet-m-xw|\
+ 	ubnt,lap-120|\
+ 	ubnt,litebeam-ac-gen2|\
+ 	ubnt,nanobeam-ac|\
+-	ubnt,nanobridge-m|\
+ 	ubnt,nanostation-ac-loco|\
+-	ubnt,nanostation-loco-m|\
+ 	ubnt,nanostation-loco-m-xw|\
+-	ubnt,picostation-m|\
+ 	ubnt,powerbeam-5ac-500|\
+ 	ubnt,powerbeam-5ac-gen2|\
+-	ubnt,powerbridge-m|\
+-	ubnt,rocket-m|\
+ 	ubnt,unifiac-lite|\
+ 	ubnt,unifiac-lr|\
+ 	ubnt,unifiac-mesh|\
+@@ -149,9 +142,7 @@ ath79_setup_interfaces()
+ 	tplink,archer-c60-v2|\
+ 	tplink,archer-c60-v3|\
+ 	tplink,tl-wdr3500-v1|\
+-	tplink,tl-wr842n-v1|\
+-	tplink,tl-wr842n-v3|\
+-	ubnt,airrouter)
++	tplink,tl-wr842n-v3)
+ 		ucidef_set_interface_wan "eth1"
+ 		ucidef_add_switch "switch0" \
+ 			"0@eth0" "1:lan:4" "2:lan:3" "3:lan:2" "4:lan:1"
+@@ -183,7 +174,6 @@ ath79_setup_interfaces()
+ 	tplink,wbs210-v2|\
+ 	tplink,wbs510-v1|\
+ 	tplink,wbs510-v2|\
+-	ubnt,nanostation-m|\
+ 	ubnt,routerstation)
+ 		ucidef_set_interfaces_lan_wan "eth1" "eth0"
+ 		;;
+@@ -382,15 +372,6 @@ ath79_setup_interfaces()
+ 		ucidef_add_switch "switch0" \
+ 			"0@eth0" "2:lan:3" "3:lan:2" "4:lan:1" "5:lan:4"
+ 		;;
+-	tplink,tl-wr842n-v2)
+-		ucidef_set_interface_wan "eth1"
+-		ucidef_add_switch "switch0" \
+-			"0@eth0" "1:lan:4" "2:lan:1" "3:lan:2" "4:lan:3"
+-		;;
+-	tplink,tl-wr1043nd-v1)
+-		ucidef_add_switch "switch0" \
+-			"1:lan" "2:lan" "3:lan" "4:lan" "0:wan" "5@eth0"
+-		;;
+ 	tplink,tl-wr1043nd-v2|\
+ 	tplink,tl-wr1043nd-v3|\
+ 	tplink,tl-wr1045nd-v2)
+@@ -631,15 +612,6 @@ ath79_setup_macs()
+ 		wan_mac=$(mtd_get_mac_text mac 0x18)
+ 		label_mac=$wan_mac
+ 		;;
+-	ubnt,airrouter|\
+-	ubnt,bullet-m-ar7240|\
+-	ubnt,bullet-m-ar7241|\
+-	ubnt,nanobridge-m|\
+-	ubnt,nanostation-loco-m|\
+-	ubnt,nanostation-m|\
+-	ubnt,picostation-m|\
+-	ubnt,powerbridge-m|\
+-	ubnt,rocket-m|\
+ 	ubnt,unifi)
+ 		label_mac=$(cat /sys/class/ieee80211/phy0/macaddress)
+ 		;;
+diff --git a/target/linux/ath79/generic/base-files/etc/board.d/03_gpio_switches b/target/linux/ath79/generic/base-files/etc/board.d/03_gpio_switches
+index b3e0d0dd316d87b2fce576828aa882440aa3928b..56b255cfcc06ede1110707419fcd9d3fee8e1b20 100755
+--- a/target/linux/ath79/generic/base-files/etc/board.d/03_gpio_switches
++++ b/target/linux/ath79/generic/base-files/etc/board.d/03_gpio_switches
+@@ -81,9 +81,6 @@ ubnt,nanobeam-ac-gen2|\
+ ubnt,nanostation-ac)
+ 	ucidef_add_gpio_switch "poe_passthrough" "PoE Passthrough" "3"
+ 	;;
+-ubnt,nanostation-m)
+-	ucidef_add_gpio_switch "poe_passthrough" "PoE Passthrough" "8"
+-	;;
+ ubnt,nanostation-m-xw)
+ 	ucidef_add_gpio_switch "poe_passthrough" "PoE Passthrough" "2"
+ 	;;
+diff --git a/target/linux/ath79/generic/base-files/etc/hotplug.d/firmware/10-ath9k-eeprom b/target/linux/ath79/generic/base-files/etc/hotplug.d/firmware/10-ath9k-eeprom
+index 08d9e017a734e29c9b3be4c865e32f109847b4f5..9fb3d83c9fc2a8546ec7a75a9d7ab922119cfc7f 100644
+--- a/target/linux/ath79/generic/base-files/etc/hotplug.d/firmware/10-ath9k-eeprom
++++ b/target/linux/ath79/generic/base-files/etc/hotplug.d/firmware/10-ath9k-eeprom
+@@ -111,17 +111,7 @@ case "$FIRMWARE" in
+ 	netgear,wnr2200-8m|\
+ 	netgear,wnr2200-16m|\
+ 	pcs,cap324|\
+-	tplink,tl-wr2543-v1|\
+-	tplink,tl-wr842n-v1|\
+-	ubnt,airrouter|\
+-	ubnt,bullet-m-ar7240|\
+-	ubnt,bullet-m-ar7241|\
+-	ubnt,nanobridge-m|\
+-	ubnt,nanostation-loco-m|\
+-	ubnt,nanostation-m|\
+-	ubnt,picostation-m|\
+-	ubnt,powerbridge-m|\
+-	ubnt,rocket-m)
++	tplink,tl-wr2543-v1)
+ 		caldata_extract "art" 0x1000 0x1000
+ 		;;
+ 	openmesh,mr600-v1|\
+diff --git a/target/linux/ath79/image/Makefile b/target/linux/ath79/image/Makefile
+index c2d2474336bd6288d3babd9dc2a8d021f72d992e..7938687cd4ae28f080b3f8a377424b2b8c659588 100644
+--- a/target/linux/ath79/image/Makefile
++++ b/target/linux/ath79/image/Makefile
+@@ -82,6 +82,7 @@ endif
+ ifeq ($(SUBTARGET),tiny)
+ include tiny-netgear.mk
+ include tiny-tp-link.mk
++include tiny-ubnt.mk
+ endif
+ 
+ $(eval $(call BuildImage))
+diff --git a/target/linux/ath79/image/generic-tp-link.mk b/target/linux/ath79/image/generic-tp-link.mk
+index afab62e944bea928ec82a76eb8eab1bf86b9846e..8b65e7e1866539646f4a0bff95f4841997bee014 100644
+--- a/target/linux/ath79/image/generic-tp-link.mk
++++ b/target/linux/ath79/image/generic-tp-link.mk
+@@ -617,17 +617,6 @@ define Device/tplink_tl-wpa8630p-v2.1-eu
+ endef
+ TARGET_DEVICES += tplink_tl-wpa8630p-v2.1-eu
+ 
+-define Device/tplink_tl-wr1043nd-v1
+-  $(Device/tplink-8m)
+-  SOC := ar9132
+-  DEVICE_MODEL := TL-WR1043N/ND
+-  DEVICE_VARIANT := v1
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+-  TPLINK_HWID := 0x10430001
+-  SUPPORTED_DEVICES += tl-wr1043nd
+-endef
+-TARGET_DEVICES += tplink_tl-wr1043nd-v1
+-
+ define Device/tplink_tl-wr1043nd-v2
+   $(Device/tplink-8mlzma)
+   SOC := qca9558
+@@ -698,29 +687,6 @@ define Device/tplink_tl-wr2543-v1
+ endef
+ TARGET_DEVICES += tplink_tl-wr2543-v1
+ 
+-define Device/tplink_tl-wr710n-v1
+-  $(Device/tplink-8mlzma)
+-  SOC := ar9331
+-  DEVICE_MODEL := TL-WR710N
+-  DEVICE_VARIANT := v1
+-  DEVICE_PACKAGES := kmod-usb-chipidea2 kmod-usb-ledtrig-usbport
+-  TPLINK_HWID := 0x07100001
+-  SUPPORTED_DEVICES += tl-wr710n
+-endef
+-TARGET_DEVICES += tplink_tl-wr710n-v1
+-
+-define Device/tplink_tl-wr710n-v2.1
+-  $(Device/tplink-8mlzma)
+-  SOC := ar9331
+-  DEVICE_MODEL := TL-WR710N
+-  DEVICE_VARIANT := v2.1
+-  DEVICE_PACKAGES := kmod-usb-chipidea2 kmod-usb-ledtrig-usbport
+-  TPLINK_HWID := 0x07100002
+-  TPLINK_HWREV := 0x2
+-  SUPPORTED_DEVICES += tl-wr710n
+-endef
+-TARGET_DEVICES += tplink_tl-wr710n-v2.1
+-
+ define Device/tplink_tl-wr810n-v1
+   $(Device/tplink-8mlzma)
+   SOC := qca9531
+@@ -732,38 +698,6 @@ define Device/tplink_tl-wr810n-v1
+ endef
+ TARGET_DEVICES += tplink_tl-wr810n-v1
+ 
+-define Device/tplink_tl-wr810n-v2
+-  $(Device/tplink-8mlzma)
+-  SOC := qca9533
+-  DEVICE_MODEL := TL-WR810N
+-  DEVICE_VARIANT := v2
+-  TPLINK_HWID := 0x8100002
+-  SUPPORTED_DEVICES += tl-wr810n-v2
+-endef
+-TARGET_DEVICES += tplink_tl-wr810n-v2
+-
+-define Device/tplink_tl-wr842n-v1
+-  $(Device/tplink-8m)
+-  SOC := ar7241
+-  DEVICE_MODEL := TL-WR842N/ND
+-  DEVICE_VARIANT := v1
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+-  TPLINK_HWID := 0x8420001
+-  SUPPORTED_DEVICES += tl-mr3420
+-endef
+-TARGET_DEVICES += tplink_tl-wr842n-v1
+-
+-define Device/tplink_tl-wr842n-v2
+-  $(Device/tplink-8mlzma)
+-  SOC := ar9341
+-  DEVICE_MODEL := TL-WR842N/ND
+-  DEVICE_VARIANT := v2
+-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+-  TPLINK_HWID := 0x8420002
+-  SUPPORTED_DEVICES += tl-wr842n-v2
+-endef
+-TARGET_DEVICES += tplink_tl-wr842n-v2
+-
+ define Device/tplink_tl-wr842n-v3
+   $(Device/tplink-16mlzma)
+   SOC := qca9533
+diff --git a/target/linux/ath79/image/generic-ubnt.mk b/target/linux/ath79/image/generic-ubnt.mk
+index 733d803d7ab6c42f249f5f1b10ceb7d22e0edac2..6642d9d1cc7e82024e79ebb36fa50080814e8fcd 100644
+--- a/target/linux/ath79/image/generic-ubnt.mk
++++ b/target/linux/ath79/image/generic-ubnt.mk
+@@ -96,18 +96,6 @@ define Device/ubnt-xc
+   UBNT_VERSION := 8.5.3
+ endef
+ 
+-define Device/ubnt-xm
+-  $(Device/ubnt)
+-  DEVICE_VARIANT := XM
+-  DEVICE_PACKAGES += kmod-usb-ohci
+-  IMAGE_SIZE := 7448k
+-  UBNT_BOARD := XM
+-  UBNT_CHIP := ar7240
+-  UBNT_TYPE := XM
+-  UBNT_VERSION := 6.0.0
+-  KERNEL := kernel-bin | append-dtb | relocate-kernel | lzma | uImage lzma
+-endef
+-
+ define Device/ubnt-xw
+   $(Device/ubnt)
+   SOC := ar9342
+@@ -158,14 +146,6 @@ define Device/ubnt_aircube-isp
+ endef
+ TARGET_DEVICES += ubnt_aircube-isp
+ 
+-define Device/ubnt_airrouter
+-  $(Device/ubnt-xm)
+-  SOC := ar7241
+-  DEVICE_MODEL := AirRouter
+-  SUPPORTED_DEVICES += airrouter
+-endef
+-TARGET_DEVICES += ubnt_airrouter
+-
+ define Device/ubnt_bullet-ac
+   $(Device/ubnt-2wa)
+   DEVICE_MODEL := Bullet AC
+@@ -173,26 +153,6 @@ define Device/ubnt_bullet-ac
+ endef
+ TARGET_DEVICES += ubnt_bullet-ac
+ 
+-define Device/ubnt_bullet-m-ar7240
+-  $(Device/ubnt-xm)
+-  SOC := ar7240
+-  DEVICE_MODEL := Bullet M
+-  DEVICE_VARIANT := XM (AR7240)
+-  DEVICE_PACKAGES += rssileds
+-  SUPPORTED_DEVICES += bullet-m
+-endef
+-TARGET_DEVICES += ubnt_bullet-m-ar7240
+-
+-define Device/ubnt_bullet-m-ar7241
+-  $(Device/ubnt-xm)
+-  SOC := ar7241
+-  DEVICE_MODEL := Bullet M
+-  DEVICE_VARIANT := XM (AR7241)
+-  DEVICE_PACKAGES += rssileds
+-  SUPPORTED_DEVICES += bullet-m ubnt,bullet-m
+-endef
+-TARGET_DEVICES += ubnt_bullet-m-ar7241
+-
+ define Device/ubnt_bullet-m-xw
+   $(Device/ubnt-xw)
+   DEVICE_MODEL := Bullet M
+@@ -245,15 +205,6 @@ define Device/ubnt_nanobeam-ac-gen2
+ endef
+ TARGET_DEVICES += ubnt_nanobeam-ac-gen2
+ 
+-define Device/ubnt_nanobridge-m
+-  $(Device/ubnt-xm)
+-  SOC := ar7241
+-  DEVICE_MODEL := NanoBridge M
+-  DEVICE_PACKAGES += rssileds
+-  SUPPORTED_DEVICES += bullet-m
+-endef
+-TARGET_DEVICES += ubnt_nanobridge-m
+-
+ define Device/ubnt_nanostation-ac
+   $(Device/ubnt-wa)
+   DEVICE_MODEL := Nanostation AC
+@@ -268,15 +219,6 @@ define Device/ubnt_nanostation-ac-loco
+ endef
+ TARGET_DEVICES += ubnt_nanostation-ac-loco
+ 
+-define Device/ubnt_nanostation-loco-m
+-  $(Device/ubnt-xm)
+-  SOC := ar7241
+-  DEVICE_MODEL := Nanostation Loco M
+-  DEVICE_PACKAGES += rssileds
+-  SUPPORTED_DEVICES += bullet-m
+-endef
+-TARGET_DEVICES += ubnt_nanostation-loco-m
+-
+ define Device/ubnt_nanostation-loco-m-xw
+   $(Device/ubnt-xw)
+   DEVICE_MODEL := Nanostation Loco M
+@@ -285,15 +227,6 @@ define Device/ubnt_nanostation-loco-m-xw
+ endef
+ TARGET_DEVICES += ubnt_nanostation-loco-m-xw
+ 
+-define Device/ubnt_nanostation-m
+-  $(Device/ubnt-xm)
+-  SOC := ar7241
+-  DEVICE_MODEL := Nanostation M
+-  DEVICE_PACKAGES += rssileds
+-  SUPPORTED_DEVICES += nanostation-m
+-endef
+-TARGET_DEVICES += ubnt_nanostation-m
+-
+ define Device/ubnt_nanostation-m-xw
+   $(Device/ubnt-xw)
+   DEVICE_MODEL := Nanostation M
+@@ -302,15 +235,6 @@ define Device/ubnt_nanostation-m-xw
+ endef
+ TARGET_DEVICES += ubnt_nanostation-m-xw
+ 
+-define Device/ubnt_picostation-m
+-  $(Device/ubnt-xm)
+-  SOC := ar7241
+-  DEVICE_MODEL := Picostation M
+-  DEVICE_PACKAGES += rssileds
+-  SUPPORTED_DEVICES += bullet-m
+-endef
+-TARGET_DEVICES += ubnt_picostation-m
+-
+ define Device/ubnt_powerbeam-5ac-500
+   $(Device/ubnt-xc)
+   SOC := qca9558
+@@ -328,24 +252,6 @@ define Device/ubnt_powerbeam-5ac-gen2
+ endef
+ TARGET_DEVICES += ubnt_powerbeam-5ac-gen2
+ 
+-define Device/ubnt_powerbridge-m
+-  $(Device/ubnt-xm)
+-  SOC := ar7241
+-  DEVICE_MODEL := PowerBridge M
+-  DEVICE_PACKAGES += rssileds
+-  SUPPORTED_DEVICES += bullet-m
+-endef
+-TARGET_DEVICES += ubnt_powerbridge-m
+-
+-define Device/ubnt_rocket-m
+-  $(Device/ubnt-xm)
+-  SOC := ar7241
+-  DEVICE_MODEL := Rocket M
+-  DEVICE_PACKAGES += rssileds
+-  SUPPORTED_DEVICES += rocket-m
+-endef
+-TARGET_DEVICES += ubnt_rocket-m
+-
+ define Device/ubnt_routerstation_common
+   DEVICE_PACKAGES := -kmod-ath9k -wpad-basic-wolfssl -uboot-envtools kmod-usb-ohci \
+ 	kmod-usb2 fconfig
+diff --git a/target/linux/ath79/image/tiny-tp-link.mk b/target/linux/ath79/image/tiny-tp-link.mk
+index c918c6baa682e78b2b1c204fb9a55dc0a5aef1e7..d5b36de577aadecdeec599ae708acc6a52b678b4 100644
+--- a/target/linux/ath79/image/tiny-tp-link.mk
++++ b/target/linux/ath79/image/tiny-tp-link.mk
+@@ -223,6 +223,17 @@ define Device/tplink_tl-wa901nd-v5
+ endef
+ TARGET_DEVICES += tplink_tl-wa901nd-v5
+ 
++define Device/tplink_tl-wr1043nd-v1
++  $(Device/tplink-8m)
++  SOC := ar9132
++  DEVICE_MODEL := TL-WR1043N/ND
++  DEVICE_VARIANT := v1
++  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
++  TPLINK_HWID := 0x10430001
++  SUPPORTED_DEVICES += tl-wr1043nd
++endef
++TARGET_DEVICES += tplink_tl-wr1043nd-v1
++
+ define Device/tplink_tl-wr703n
+   $(Device/tplink-4mlzma)
+   SOC := ar9331
+@@ -243,6 +254,29 @@ define Device/tplink_tl-wr740n-v1
+ endef
+ TARGET_DEVICES += tplink_tl-wr740n-v1
+ 
++define Device/tplink_tl-wr710n-v1
++  $(Device/tplink-8mlzma)
++  SOC := ar9331
++  DEVICE_MODEL := TL-WR710N
++  DEVICE_VARIANT := v1
++  DEVICE_PACKAGES := kmod-usb-chipidea2 kmod-usb-ledtrig-usbport
++  TPLINK_HWID := 0x07100001
++  SUPPORTED_DEVICES += tl-wr710n
++endef
++TARGET_DEVICES += tplink_tl-wr710n-v1
++
++define Device/tplink_tl-wr710n-v2.1
++  $(Device/tplink-8mlzma)
++  SOC := ar9331
++  DEVICE_MODEL := TL-WR710N
++  DEVICE_VARIANT := v2.1
++  DEVICE_PACKAGES := kmod-usb-chipidea2 kmod-usb-ledtrig-usbport
++  TPLINK_HWID := 0x07100002
++  TPLINK_HWREV := 0x2
++  SUPPORTED_DEVICES += tl-wr710n
++endef
++TARGET_DEVICES += tplink_tl-wr710n-v2.1
++
+ define Device/tplink_tl-wr740n-v3
+   $(Device/tplink-4m)
+   SOC := ar7240
+@@ -327,6 +361,16 @@ define Device/tplink_tl-wr802n-v2
+ endef
+ TARGET_DEVICES += tplink_tl-wr802n-v2
+ 
++define Device/tplink_tl-wr810n-v2
++  $(Device/tplink-8mlzma)
++  SOC := qca9533
++  DEVICE_MODEL := TL-WR810N
++  DEVICE_VARIANT := v2
++  TPLINK_HWID := 0x8100002
++  SUPPORTED_DEVICES += tl-wr810n-v2
++endef
++TARGET_DEVICES += tplink_tl-wr810n-v2
++
+ define Device/tplink_tl-wr841-v5
+   $(Device/tplink-4m)
+   SOC := ar7240
+@@ -403,6 +447,28 @@ define Device/tplink_tl-wr841-v12
+ endef
+ TARGET_DEVICES += tplink_tl-wr841-v12
+ 
++define Device/tplink_tl-wr842n-v1
++  $(Device/tplink-8m)
++  SOC := ar7241
++  DEVICE_MODEL := TL-WR842N/ND
++  DEVICE_VARIANT := v1
++  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
++  TPLINK_HWID := 0x8420001
++  SUPPORTED_DEVICES += tl-mr3420
++endef
++TARGET_DEVICES += tplink_tl-wr842n-v1
++
++define Device/tplink_tl-wr842n-v2
++  $(Device/tplink-8mlzma)
++  SOC := ar9341
++  DEVICE_MODEL := TL-WR842N/ND
++  DEVICE_VARIANT := v2
++  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
++  TPLINK_HWID := 0x8420002
++  SUPPORTED_DEVICES += tl-wr842n-v2
++endef
++TARGET_DEVICES += tplink_tl-wr842n-v2
++
+ define Device/tplink_tl-wr940n-v3
+   $(Device/tplink-4mlzma)
+   SOC := tp9343
+diff --git a/target/linux/ath79/image/tiny-ubnt.mk b/target/linux/ath79/image/tiny-ubnt.mk
+new file mode 100644
+index 0000000000000000000000000000000000000000..a8c5a2cf68d8851afcd66fe1857f1c549c5dec90
+--- /dev/null
++++ b/target/linux/ath79/image/tiny-ubnt.mk
+@@ -0,0 +1,132 @@
++DEVICE_VARS += UBNT_BOARD UBNT_CHIP UBNT_TYPE UBNT_VERSION UBNT_REVISION
++
++# On M (XW) devices the U-Boot as of version 1.1.4-s1039 doesn't like
++# VERSION_DIST being on the place of major(?) version number, so we need to
++# use some number.
++UBNT_REVISION := $(VERSION_DIST)-$(REVISION)
++
++# mkubntimage is using the kernel image direct
++# routerboard creates partitions out of the ubnt header
++define Build/mkubntimage
++	-$(STAGING_DIR_HOST)/bin/mkfwimage -B $(UBNT_BOARD) \
++		-v $(UBNT_TYPE).$(UBNT_CHIP).v6.0.0-$(VERSION_DIST)-$(REVISION) \
++		-k $(IMAGE_KERNEL) -r $@ -o $@
++endef
++
++# all UBNT XM/WA devices expect the kernel image to have 1024k while flash, when
++# booting the image, the size doesn't matter.
++define Build/mkubntimage-split
++	-[ -f $@ ] && ( \
++	dd if=$@ of=$@.old1 bs=1024k count=1; \
++	dd if=$@ of=$@.old2 bs=1024k skip=1; \
++	$(STAGING_DIR_HOST)/bin/mkfwimage -B $(UBNT_BOARD) \
++		-v $(UBNT_TYPE).$(UBNT_CHIP).v$(UBNT_VERSION)-$(UBNT_REVISION) \
++		-k $@.old1 -r $@.old2 -o $@; \
++	rm $@.old1 $@.old2 )
++endef
++
++# UBNT_BOARD e.g. one of (XS2, XS5, RS, XM)
++# UBNT_TYPE e.g. one of (BZ, XM, XW)
++# UBNT_CHIP e.g. one of (ar7240, ar933x, ar934x)
++# UBNT_VERSION e.g. one of (6.0.0, 8.5.3)
++define Device/ubnt
++  DEVICE_VENDOR := Ubiquiti
++  DEVICE_PACKAGES := kmod-usb2
++  IMAGES += factory.bin
++  IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
++	append-rootfs | pad-rootfs | check-size | mkubntimage-split
++endef
++
++define Device/ubnt-xm
++  $(Device/ubnt)
++  DEVICE_VARIANT := XM
++  DEVICE_PACKAGES += kmod-usb-ohci
++  IMAGE_SIZE := 7448k
++  UBNT_BOARD := XM
++  UBNT_CHIP := ar7240
++  UBNT_TYPE := XM
++  UBNT_VERSION := 6.0.0
++  KERNEL := kernel-bin | append-dtb | relocate-kernel | lzma | uImage lzma
++endef
++
++define Device/ubnt_airrouter
++  $(Device/ubnt-xm)
++  SOC := ar7241
++  DEVICE_MODEL := AirRouter
++  SUPPORTED_DEVICES += airrouter
++endef
++TARGET_DEVICES += ubnt_airrouter
++
++define Device/ubnt_bullet-m-ar7240
++  $(Device/ubnt-xm)
++  SOC := ar7240
++  DEVICE_MODEL := Bullet M
++  DEVICE_VARIANT := XM (AR7240)
++  DEVICE_PACKAGES += rssileds
++  SUPPORTED_DEVICES += bullet-m
++endef
++TARGET_DEVICES += ubnt_bullet-m-ar7240
++
++define Device/ubnt_bullet-m-ar7241
++  $(Device/ubnt-xm)
++  SOC := ar7241
++  DEVICE_MODEL := Bullet M
++  DEVICE_VARIANT := XM (AR7241)
++  DEVICE_PACKAGES += rssileds
++  SUPPORTED_DEVICES += bullet-m ubnt,bullet-m
++endef
++TARGET_DEVICES += ubnt_bullet-m-ar7241
++
++define Device/ubnt_nanobridge-m
++  $(Device/ubnt-xm)
++  SOC := ar7241
++  DEVICE_MODEL := NanoBridge M
++  DEVICE_PACKAGES += rssileds
++  SUPPORTED_DEVICES += bullet-m
++endef
++TARGET_DEVICES += ubnt_nanobridge-m
++
++define Device/ubnt_nanostation-loco-m
++  $(Device/ubnt-xm)
++  SOC := ar7241
++  DEVICE_MODEL := Nanostation Loco M
++  DEVICE_PACKAGES += rssileds
++  SUPPORTED_DEVICES += bullet-m
++endef
++TARGET_DEVICES += ubnt_nanostation-loco-m
++
++define Device/ubnt_nanostation-m
++  $(Device/ubnt-xm)
++  SOC := ar7241
++  DEVICE_MODEL := Nanostation M
++  DEVICE_PACKAGES += rssileds
++  SUPPORTED_DEVICES += nanostation-m
++endef
++TARGET_DEVICES += ubnt_nanostation-m
++
++define Device/ubnt_picostation-m
++  $(Device/ubnt-xm)
++  SOC := ar7241
++  DEVICE_MODEL := Picostation M
++  DEVICE_PACKAGES += rssileds
++  SUPPORTED_DEVICES += bullet-m
++endef
++TARGET_DEVICES += ubnt_picostation-m
++
++define Device/ubnt_powerbridge-m
++  $(Device/ubnt-xm)
++  SOC := ar7241
++  DEVICE_MODEL := PowerBridge M
++  DEVICE_PACKAGES += rssileds
++  SUPPORTED_DEVICES += bullet-m
++endef
++TARGET_DEVICES += ubnt_powerbridge-m
++
++define Device/ubnt_rocket-m
++  $(Device/ubnt-xm)
++  SOC := ar7241
++  DEVICE_MODEL := Rocket M
++  DEVICE_PACKAGES += rssileds
++  SUPPORTED_DEVICES += rocket-m
++endef
++TARGET_DEVICES += ubnt_rocket-m
+diff --git a/target/linux/ath79/tiny/base-files/etc/board.d/01_leds b/target/linux/ath79/tiny/base-files/etc/board.d/01_leds
+index f0b4acf0662ee0df824ca36f20fcfb889e730fef..389aaceca29e7cf7d21a497444a06095e406c4d7 100755
+--- a/target/linux/ath79/tiny/base-files/etc/board.d/01_leds
++++ b/target/linux/ath79/tiny/base-files/etc/board.d/01_leds
+@@ -94,6 +94,13 @@ tplink,tl-wa850re-v2)
+ 	ucidef_set_led_rssi "rssimediumhigh" "RSSIMEDIUMHIGH" "blue:signal4" "wlan0" "60" "100"
+ 	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "blue:signal5" "wlan0" "80" "100"
+ 	;;
++tplink,tl-wr842n-v2)
++	ucidef_set_led_netdev "wan" "WAN" "tp-link:green:wan" "eth1"
++	ucidef_set_led_switch "lan1" "LAN1" "tp-link:green:lan1" "switch0" "0x04"
++	ucidef_set_led_switch "lan2" "LAN2" "tp-link:green:lan2" "switch0" "0x08"
++	ucidef_set_led_switch "lan3" "LAN3" "tp-link:green:lan3" "switch0" "0x10"
++	ucidef_set_led_switch "lan4" "LAN4" "tp-link:green:lan4" "switch0" "0x02"
++	;;
+ tplink,tl-wr940n-v3|\
+ tplink,tl-wr940n-v4|\
+ tplink,tl-wr941nd-v6)
+@@ -106,6 +113,20 @@ tplink,tl-wr941nd-v6)
+ tplink,tl-wr940n-v6)
+ 	ucidef_set_led_netdev "wan" "WAN" "blue:wan" "eth1"
+ 	;;
++ubnt,bullet-m-ar7240|\
++ubnt,bullet-m-ar7241|\
++ubnt,nanobridge-m|\
++ubnt,nanostation-loco-m|\
++ubnt,nanostation-m|\
++ubnt,picostation-m|\
++ubnt,powerbridge-m|\
++ubnt,rocket-m)
++	ucidef_set_rssimon "wlan0" "200000" "1"
++	ucidef_set_led_rssi "rssilow" "RSSILOW" "red:link1" "wlan0" "1" "100"
++	ucidef_set_led_rssi "rssimediumlow" "RSSIMEDIUMLOW" "orange:link2" "wlan0" "26" "100"
++	ucidef_set_led_rssi "rssimediumhigh" "RSSIMEDIUMHIGH" "green:link3" "wlan0" "51" "100"
++	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "green:link4" "wlan0" "76" "100"
++	;;
+ esac
+ 
+ board_config_flush
+diff --git a/target/linux/ath79/tiny/base-files/etc/board.d/02_network b/target/linux/ath79/tiny/base-files/etc/board.d/02_network
+index cca63520237ba21ef611b398fc983b361a2590e8..b84c73d6f7db66bd97663bb75c7817f8e585cbd8 100755
+--- a/target/linux/ath79/tiny/base-files/etc/board.d/02_network
++++ b/target/linux/ath79/tiny/base-files/etc/board.d/02_network
+@@ -50,7 +50,14 @@ ath79_setup_interfaces()
+ 	tplink,tl-wa901nd-v5|\
+ 	tplink,tl-wr703n|\
+ 	tplink,tl-wr802n-v1|\
+-	tplink,tl-wr802n-v2)
++	tplink,tl-wr802n-v2|\
++	ubnt,bullet-m-ar7240|\
++	ubnt,bullet-m-ar7241|\
++	ubnt,nanobridge-m|\
++	ubnt,nanostation-loco-m|\
++	ubnt,picostation-m|\
++	ubnt,powerbridge-m|\
++	ubnt,rocket-m)
+ 		ucidef_set_interface_lan "eth0"
+ 		;;
+ 	engenius,enh202-v1)
+@@ -66,10 +73,12 @@ ath79_setup_interfaces()
+ 	tplink,tl-wr841-v10|\
+ 	tplink,tl-wr841-v11|\
+ 	tplink,tl-wr841-v12|\
++	tplink,tl-wr842n-v1|\
+ 	tplink,tl-wr940n-v3|\
+ 	tplink,tl-wr940n-v4|\
+ 	tplink,tl-wr940n-v6|\
+-	tplink,tl-wr941nd-v6)
++	tplink,tl-wr941nd-v6|\
++	ubnt,airrouter)
+ 		ucidef_set_interface_wan "eth1"
+ 		ucidef_add_switch "switch0" \
+ 			"0@eth0" "1:lan:4" "2:lan:3" "3:lan:2" "4:lan:1"
+@@ -78,11 +87,16 @@ ath79_setup_interfaces()
+ 	tplink,tl-wr740n-v4|\
+ 	tplink,tl-wr740n-v5|\
+ 	tplink,tl-wr741nd-v4|\
+-	tplink,tl-wr841-v8)
++	tplink,tl-wr841-v8|\
++	tplink,tl-wr842n-v2)
+ 		ucidef_set_interface_wan "eth1"
+ 		ucidef_add_switch "switch0" \
+ 			"0@eth0" "1:lan:4" "2:lan:1" "3:lan:2" "4:lan:3"
+ 		;;
++	tplink,tl-wr1043nd-v1)
++		ucidef_add_switch "switch0" \
++			"1:lan" "2:lan" "3:lan" "4:lan" "0:wan" "5@eth0"
++		;;
+ 	tplink,tl-wr941-v2)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
+ 		;;
+@@ -90,6 +104,9 @@ ath79_setup_interfaces()
+ 		ucidef_add_switch "switch0" \
+ 			"0@eth0" "2:lan:1" "3:lan:2" "4:lan:3" "5:lan:4" "1:wan"
+ 		;;
++	ubnt,nanostation-m)
++		ucidef_set_interfaces_lan_wan "eth1" "eth0"
++		;;
+ 	*)
+ 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
+ 		;;
+@@ -106,7 +123,16 @@ ath79_setup_macs()
+ 		wan_mac=$(mtd_get_mac_ascii "nvram" "wan_mac")
+ 		label_mac=$wan_mac
+ 		;;
+-	engenius,enh202-v1)
++	engenius,enh202-v1|\
++	ubnt,airrouter|\
++	ubnt,bullet-m-ar7240|\
++	ubnt,bullet-m-ar7241|\
++	ubnt,nanobridge-m|\
++	ubnt,nanostation-loco-m|\
++	ubnt,nanostation-m|\
++	ubnt,picostation-m|\
++	ubnt,powerbridge-m|\
++	ubnt,rocket-m)
+ 		label_mac=$(cat /sys/class/ieee80211/phy0/macaddress)
+ 		;;
+ 	tplink,tl-wr941-v2|\
+diff --git a/target/linux/ath79/tiny/base-files/etc/board.d/03_gpio_switches b/target/linux/ath79/tiny/base-files/etc/board.d/03_gpio_switches
+new file mode 100755
+index 0000000000000000000000000000000000000000..91eeee7937c0f7fcfe0138e211666211fb0ada4f
+--- /dev/null
++++ b/target/linux/ath79/tiny/base-files/etc/board.d/03_gpio_switches
+@@ -0,0 +1,20 @@
++#!/bin/sh
++#
++# Copyright (C) 2018 OpenWrt.org
++#
++
++. /lib/functions/uci-defaults.sh
++
++board_config_update
++
++board=$(board_name)
++
++case "$board" in
++ubnt,nanostation-m)
++	ucidef_add_gpio_switch "poe_passthrough" "PoE Passthrough" "8"
++	;;
++esac
++
++board_config_flush
++
++exit 0
+diff --git a/target/linux/ath79/tiny/base-files/etc/hotplug.d/firmware/10-ath9k-eeprom b/target/linux/ath79/tiny/base-files/etc/hotplug.d/firmware/10-ath9k-eeprom
+index ffbc46afd0151b652244c5d366ae14b283bc1191..91c91e7aba24477584a705d02d901145cfc34e85 100644
+--- a/target/linux/ath79/tiny/base-files/etc/hotplug.d/firmware/10-ath9k-eeprom
++++ b/target/linux/ath79/tiny/base-files/etc/hotplug.d/firmware/10-ath9k-eeprom
+@@ -36,7 +36,17 @@ case "$FIRMWARE" in
+ 	tplink,tl-wr740n-v3|\
+ 	tplink,tl-wr741-v1|\
+ 	tplink,tl-wr743nd-v1|\
+-	tplink,tl-wr841-v7)
++	tplink,tl-wr841-v7|\
++	tplink,tl-wr842n-v1|\
++	ubnt,airrouter|\
++	ubnt,bullet-m-ar7240|\
++	ubnt,bullet-m-ar7241|\
++	ubnt,nanobridge-m|\
++	ubnt,nanostation-loco-m|\
++	ubnt,nanostation-m|\
++	ubnt,picostation-m|\
++	ubnt,powerbridge-m|\
++	ubnt,rocket-m)
+ 		caldata_extract "art" 0x1000 0x1000
+ 		;;
+ 	pqi,air-pen)
+diff --git a/target/linux/ath79/tiny/target.mk b/target/linux/ath79/tiny/target.mk
+index 91f135b56eda4534edfbf68414933cb42a75d1e2..66178abfd260c97cca5d26c43589d99a3093b37c 100644
+--- a/target/linux/ath79/tiny/target.mk
++++ b/target/linux/ath79/tiny/target.mk
+@@ -1,8 +1,8 @@
+-BOARDNAME:=Devices with small flash
++BOARDNAME:=Devices with small flash / low ram
+ FEATURES += small_flash
+ 
+ DEFAULT_PACKAGES += wpad-basic-wolfssl
+ 
+ define Target/Description
+-	Build firmware images for Atheros AR71xx/AR913x/AR934x based boards with small flash
++	Build firmware images for Atheros AR71xx/AR913x/AR934x based boards with small flash and low RAM (8MB)
+ endef

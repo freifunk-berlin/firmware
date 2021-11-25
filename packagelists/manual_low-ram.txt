@@ -12,36 +12,58 @@
 -kmod-nf-reject
 -ppp
 -ppp-mod-pppoe
--wpad
+-wpad-mini
 -wpad-basic-wolfssl
-wpad-mini
-opkg
--usign
+hostapd-basic
 
 # Defaults
 freifunk-berlin-dhcp-defaults
 freifunk-berlin-freifunk-defaults
-freifunk-berlin-migration
 freifunk-berlin-network-defaults
 freifunk-berlin-olsrd-defaults
 freifunk-berlin-system-defaults
-community-profiles
-luci-app-owm-cmd
+freifunk-berlin-uhttpd-defaults
 
 # Common
 dnsmasq
--ca-bundle
 -firewall
 -iptables
 -ip6tables
+
+# Utils
+tcpdump
+mtr
+ip
+iperf
+tmux
 iwinfo
 libiwinfo-lua
--libustream-wolfssl
--libwolfssl
+
+# GUI-basics
+uhttpd
+uhttpd-mod-ubus
+px5g-wolfssl
+luci-mod-freifunk
+luci-app-olsr
+freifunk-common-olsr
+luci-app-olsr-services
+luci-app-opkg
+luci-app-owm
+luci-app-owm-ant
+luci-app-owm-cmd
+luci-app-owm-gui
+luci-proto-ipv6
+luci-theme-bootstrap
+luci-theme-freifunk-generic
+# GUI addon
+luci-i18n-base-de
+luci-i18n-base-en
+luci-i18n-olsr-de
+luci-i18n-olsr-en
 
 # OLSR
 olsrd
-#olsrd-mod-arprefresh
+olsrd-mod-arprefresh
 olsrd-mod-dyn-gw
 olsrd-mod-jsoninfo
 olsrd-mod-nameservice
@@ -50,4 +72,5 @@ kmod-ipip
 
 # BATMAN
 kmod-batman-adv
+alfred
 batctl-tiny

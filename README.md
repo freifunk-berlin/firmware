@@ -214,6 +214,12 @@ scripts/assemble_firmware.sh - Script to run the ImageBuilder for a target
 The firmware is [built
 automatically](https://github.com/freifunk-berlin/firmware/actions) via a [GitHub Actions workflow](https://github.com/freifunk-berlin/firmware/blob/master/.github/workflows/build-firmware.yml). 
 A build is triggered by any PR or commit to the master branch.
+On each CI-run some artifacts are kept which are linked to the related build. The artifacs include:
+* `buildtools` - SDK and imagebuilder
+* `bins` - the contens of the openwrt/bin/ folder (all packages and "pure" (according to built in package-selection) firmware-images)
+* `logs` - the contens of the openwrt/logs/ folder (the log that would have been printed when building with V=s)
+
+All artifact filenames are prefixed by their target, e.g. `ath79-gerneric_`, `ramips-mt7621_`.
 
 #### Creating a release
 

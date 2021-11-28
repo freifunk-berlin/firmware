@@ -1,0 +1,25 @@
+From: Sven Roederer <devel-sven@geroedel.de>
+Date: Fri, 26 Nov 2021 17:28:30 +0100
+Subject: ath79: use SLOB-algo in place of SLUB-algo for Slab allocation on tiny-subtarget
+
+according to https://events.static.linuxfound.org/sites/events/files/slides/slaballocators.pdf the
+SLOB-allocator is smaller and should also work well on these type of boards. It's expected to have
+a lower memory-footprint, which will be a benefit for these boards.
+
+kernel.bin was about 6k smaller, did not check runtime-size.
+
+Signed-off-by: Sven Roederer <devel-sven@geroedel.de>
+
+diff --git a/target/linux/ath79/tiny/config-default b/target/linux/ath79/tiny/config-default
+index 9a64d820b327bf2bd52f40137bc759704ae45179..5ffb4eb7e70774f30ee8394eae3fca4d2c6ba83f 100644
+--- a/target/linux/ath79/tiny/config-default
++++ b/target/linux/ath79/tiny/config-default
+@@ -36,6 +36,8 @@ CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT=12
+ # CONFIG_ADVISE_SYSCALLS is not set
+ # CONFIG_BPF_SYSCALL is not set
+ # CONFIG_NETWORK_FILESYSTEMS is not set
++# CONFIG_SLUB is not set
++CONFIG_SLOB=y
+ # RUNTIME_TESTING_MENU is not set
+ # CONFIG_NET_VENDOR_3COM is not set
+ # CONFIG_NET_VENDOR_ADAPTEC is not set

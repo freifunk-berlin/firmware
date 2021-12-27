@@ -93,12 +93,25 @@ pre-patch: stamp-clean-pre-patch .stamp-pre-patch
 	GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/update.sh
 	touch $@
 
+# concat all files of patches/ into a stream and generate a chksum.
+# remove tailing " -" with cut
+define PATCH_CHKSUM
+$(shell find $(GLUON_PATCHESDIR) -type f -exec cat '{}' \; | sha256sum | cut -d " " -f 1)
+endef
+
 # patch openwrt and feeds working copy
 patch: stamp-clean-patched .stamp-patched
-.stamp-patched: .stamp-pre-patch $(wildcard $(GLUON_PATCHESDIR)/openwrt/*) $(wildcard $(GLUON_PATCHESDIR)/packages/*/*)
+.stamp-patched: .stamp-pre-patch $(wildcard $(GLUON_PATCHESDIR)/openwrt/*) $(wildcard $(GLUON_PATCHESDIR)/packages/*/*) .FORCE
 	@
-	$(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
-	touch $@
+	$(eval CURR_CHKSUM=$(call PATCH_CHKSUM))
+# create status-file with current checksum of patches if not present
+# check that current checksum matches previously stored checksum or reapply patches
+# and update .stamp file
+	if [ ! -f $@ ] || [ "$(CURR_CHKSUM)" != $(shell cat $@) ]; then
+	  echo "patches are out of sync ..."
+	  $(UMASK); GLUON_SITEDIR='$(GLUON_SITEDIR)' scripts/patch.sh
+	  echo $(CURR_CHKSUM) >$@
+	fi
 
 .stamp-build_rev: .FORCE
 ifneq (,$(wildcard .stamp-build_rev))
